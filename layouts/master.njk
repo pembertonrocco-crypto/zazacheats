@@ -130,6 +130,17 @@
         will-change:opacity,transform,filter;backface-visibility:hidden}
       html.zz-motion .components > *.zz-in,
       html.zz-motion.zz-revealed .components > *{opacity:1;transform:none;filter:none}
+      /* LCP: whatever is already on screen at first paint must not fade in.
+         Every page's first section — the hero, the product buy box, the
+         status shield — starts at opacity:0 with a blur and a 0.9s
+         transition, which holds the largest paint back for no benefit the
+         user can see (there is nothing to "reveal" on content that was
+         never scrolled to). The reveal script tags those elements with
+         .zz-instant so they paint immediately, while everything below the
+         fold keeps the full entrance. */
+      html.zz-motion .components > *.zz-instant,
+      html.zz-motion [data-zz-reveal].zz-instant{
+        transition:none!important;transition-delay:0s!important;will-change:auto}
       /* stagger is assigned per-batch by the reveal script (--zz-d), so it
          works for any number of sections and any nesting depth */
       html.zz-motion .components > *,
@@ -452,27 +463,43 @@
             el.classList.add('zz-in');
             setTimeout(function(){ el.style.removeProperty('--zz-d'); }, 1500 + i * 80);
           }
+          // Above the fold there is nothing to reveal — the user never
+          // scrolled to it — so show it with the transition suppressed
+          // instead of fading it in. This is what keeps the entrance
+          // animation from sitting in front of the LCP element.
+          function revealInstant(el){
+            el.classList.add('zz-instant', 'zz-in');
+          }
+
+          // Synchronous, before the first paint: this script is at the end of
+          // <body>, so layout is available here. Doing it in rAF (as it was)
+          // guarantees at least one painted frame with the hero at opacity 0.
+          var vh0 = window.innerHeight || h.clientHeight;
+          var pending = [];
+          for (var i = 0; i < targets.length; i++){
+            if (targets[i].getBoundingClientRect().top < vh0) revealInstant(targets[i]);
+            else pending.push(targets[i]);
+          }
+
           var io = new IntersectionObserver(function(entries){
             var batch = entries.filter(function(en){ return en.isIntersecting; });
             // stagger in visual order, not observer-callback order
             batch.sort(function(a, b){ return a.boundingClientRect.top - b.boundingClientRect.top; });
             batch.forEach(function(en, i){ reveal(en.target, i); io.unobserve(en.target); });
           }, { rootMargin:'0px 0px -6% 0px', threshold:0.03 });
-          targets.forEach(function(t){ io.observe(t); });
-          // reveal anything already in view on first paint (clean entrance, no
-          // wait), and re-check on full load in case images shifted layout —
-          // both batched in one rAF read pass, no layout thrash
-          function sweep(f){
+          pending.forEach(function(t){ io.observe(t); });
+
+          // Re-check once images have settled, in case loading them pushed
+          // something that was below the fold up into view.
+          window.addEventListener('load', function(){
             requestAnimationFrame(function(){
               var vh = window.innerHeight || h.clientHeight;
               var seen = 0;
-              targets.forEach(function(t){
-                if(!t.classList.contains('zz-in') && t.getBoundingClientRect().top < vh * f){ reveal(t, seen++); }
+              pending.forEach(function(t){
+                if(!t.classList.contains('zz-in') && t.getBoundingClientRect().top < vh){ reveal(t, seen++); }
               });
             });
-          }
-          sweep(0.98);
-          window.addEventListener('load', function(){ sweep(1); });
+          });
         }
         if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
         else run();

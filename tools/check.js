@@ -171,6 +171,30 @@ function checkA11y(page, html) {
   }
 }
 
+/* This theme carries a lot of inline <script>. A syntax error in any of them
+   silently kills that block on the live site, so parse every one. */
+function checkInlineJs(page, html) {
+  const re = /<script\b([^>]*)>([\s\S]*?)<\/script>/gi;
+  let m;
+  let n = 0;
+  while ((m = re.exec(html))) {
+    const attrs = m[1];
+    const body = m[2];
+    if (/\bsrc=/.test(attrs)) continue;
+    if (/type=["'](application\/ld\+json|text\/template)["']/.test(attrs)) continue;
+    if (!body.trim()) continue;
+    n++;
+    try {
+      // Module scripts may use import/export, which `new Function` rejects.
+      if (/type=["']module["']/.test(attrs)) new (require('vm').Script)(body, { filename: page });
+      else new Function(body);
+    } catch (e) {
+      err(page, `inline <script> #${n} has a syntax error — ${e.message}`);
+    }
+  }
+  return n;
+}
+
 function checkPerf(page, html) {
   const head = html.slice(0, html.indexOf('</head>'));
   // Every preconnect must precede the first external stylesheet to be useful.
@@ -192,6 +216,7 @@ if (DUMP) fs.mkdirSync(path.join(ROOT, '.render'), { recursive: true });
 
 let totalImgs = 0;
 let totalLd = 0;
+let totalJs = 0;
 
 for (const [name, components] of PAGES) {
   let html;
@@ -209,6 +234,7 @@ for (const [name, components] of PAGES) {
 
   totalLd += checkJsonLd(name, html);
   totalImgs += checkImages(name, html);
+  totalJs += checkInlineJs(name, html);
   checkMeta(name, html);
   checkHeadings(name, html);
   checkLinks(name, html);
@@ -255,6 +281,7 @@ if (errors.length) {
 
 console.log(
   `\n${PAGES.length} pages rendered · ${totalLd} JSON-LD blocks · ${totalImgs} images · ` +
+    `${totalJs} inline scripts parsed · ` +
     `${errors.length} errors · ${warns.length} warnings`
 );
 process.exit(errors.length ? 1 : 0);

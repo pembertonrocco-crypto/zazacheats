@@ -544,7 +544,14 @@
       },
 
       get cartLimitReached() {
-        return this.appCart.items.filter(i => !i.parentVariantId).length >= {{ shop.max_cart_limit }};
+        {#— The fallback is load-bearing, not defensive padding. If
+            shop.max_cart_limit is ever null/unset this interpolates to
+            nothing, emitting `length >= ;` — a syntax error that takes out
+            this entire <script>, and with it the whole productForm Alpine
+            component: variant picker, quantity, add-to-cart and buy-now all
+            stop responding on the product page. 100 stands in for "no
+            practical limit". —#}
+        return this.appCart.items.filter(i => !i.parentVariantId).length >= {{ shop.max_cart_limit if shop.max_cart_limit else 100 }};
       },
 
       addToCart: function () {

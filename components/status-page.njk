@@ -1396,10 +1396,21 @@ a.zs-card__cta{text-decoration:none}
     if(!row.id) row.id='log-'+(i+1);
     var btn=document.createElement('button');
     btn.type='button';btn.className='zs-log__link';btn.title='Copy link to this entry';
+    /* The visible glyph is an emoji, which screen readers announce as its
+       character name ("link symbol"). An explicit label \u2014 and a live region
+       for the result \u2014 makes the control and its outcome announceable. */
+    btn.setAttribute('aria-label','Copy link to this entry');
     btn.textContent='\uD83D\uDD17';
     btn.addEventListener('click',function(){
       var url=location.origin+location.pathname+'#'+row.id;
-      var done=function(){btn.textContent='\u2713';setTimeout(function(){btn.textContent='\uD83D\uDD17';},1400);};
+      var done=function(){
+        btn.textContent='\u2713';
+        btn.setAttribute('aria-label','Link copied');
+        setTimeout(function(){
+          btn.textContent='\uD83D\uDD17';
+          btn.setAttribute('aria-label','Copy link to this entry');
+        },1400);
+      };
       if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(done,done);}
       else{done();}
       history.replaceState(null,'','#'+row.id);
@@ -1503,10 +1514,16 @@ a.zs-card__cta{text-decoration:none}
     if(moreBtn)moreBtn.addEventListener('click',function(){showAll=true;apply();});
     var btns=log.querySelectorAll('[data-zs-filter]');
     Array.prototype.forEach.call(btns,function(btn){
+      // Expose which filter is active, not just visually.
+      btn.setAttribute('aria-pressed', btn.classList.contains('zs-filter__btn--on') ? 'true' : 'false');
       btn.addEventListener('click',function(){
         filter=btn.getAttribute('data-zs-filter')||'all';
         if(filter!=='all')showAll=true;
-        Array.prototype.forEach.call(btns,function(b){b.classList.toggle('zs-filter__btn--on',b===btn);});
+        Array.prototype.forEach.call(btns,function(b){
+          var on = b===btn;
+          b.classList.toggle('zs-filter__btn--on',on);
+          b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
         apply();
       });
     });

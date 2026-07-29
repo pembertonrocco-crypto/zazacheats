@@ -430,4 +430,13 @@
     font-size: 0.85rem;
   }
 }
+
+/* Respect prefers-reduced-motion. These entrance slides and infinite
+   pulses are decoration; this file was still animating regardless of the
+   user's setting. Scoped to this component's own selectors so it cannot
+   override the tuned reduced-motion rules other components define. */
+@media (prefers-reduced-motion: reduce){
+  .product-card-premium,
+  .product-card-premium .product-card-badge{animation:none}
+}
 </style>

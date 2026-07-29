@@ -23,15 +23,24 @@
         <span class="zzm__winbtns" aria-hidden="true"><span></span><span></span><span></span></span>
       </div>
 
+      {#— Completed ARIA tab pattern. The container already claimed
+          role="tablist", but the buttons had no role="tab"/aria-selected and
+          the panels no role="tabpanel", which leaves assistive tech
+          announcing a tablist with no tabs in it. Roving tabindex + arrow
+          keys are added in the script below. —#}
       <div class="zzm__tabs" role="tablist" aria-label="Menu tabs">
-        <button type="button" class="zzm__tab zzm__tab--active" data-zzm-tab="aim">AIM</button>
-        <button type="button" class="zzm__tab" data-zzm-tab="visuals">VISUALS</button>
-        <button type="button" class="zzm__tab" data-zzm-tab="misc">MISC</button>
+        <button type="button" class="zzm__tab zzm__tab--active" data-zzm-tab="aim"
+                role="tab" id="zzm-tab-aim" aria-controls="zzm-panel-aim" aria-selected="true" tabindex="0">AIM</button>
+        <button type="button" class="zzm__tab" data-zzm-tab="visuals"
+                role="tab" id="zzm-tab-visuals" aria-controls="zzm-panel-visuals" aria-selected="false" tabindex="-1">VISUALS</button>
+        <button type="button" class="zzm__tab" data-zzm-tab="misc"
+                role="tab" id="zzm-tab-misc" aria-controls="zzm-panel-misc" aria-selected="false" tabindex="-1">MISC</button>
       </div>
 
       <div class="zzm__body">
 
-        <div class="zzm__page zzm__page--active" data-zzm-page="aim">
+        <div class="zzm__page zzm__page--active" data-zzm-page="aim"
+             role="tabpanel" id="zzm-panel-aim" aria-labelledby="zzm-tab-aim" tabindex="0">
           <div class="zzm__row">
             <span class="zzm__label">Aim assist</span>
             <button type="button" class="zzm__toggle zzm__toggle--on" aria-pressed="true"><span class="zzm__knob"></span></button>
@@ -54,7 +63,8 @@
           </div>
         </div>
 
-        <div class="zzm__page" data-zzm-page="visuals">
+        <div class="zzm__page" data-zzm-page="visuals"
+             role="tabpanel" id="zzm-panel-visuals" aria-labelledby="zzm-tab-visuals" tabindex="0">
           <div class="zzm__row">
             <span class="zzm__label">Player ESP</span>
             <button type="button" class="zzm__toggle zzm__toggle--on" aria-pressed="true"><span class="zzm__knob"></span></button>
@@ -77,7 +87,8 @@
           </div>
         </div>
 
-        <div class="zzm__page" data-zzm-page="misc">
+        <div class="zzm__page" data-zzm-page="misc"
+             role="tabpanel" id="zzm-panel-misc" aria-labelledby="zzm-tab-misc" tabindex="0">
           <div class="zzm__row">
             <span class="zzm__label">No recoil</span>
             <button type="button" class="zzm__toggle zzm__toggle--on" aria-pressed="true"><span class="zzm__knob"></span></button>
@@ -194,14 +205,34 @@
   var panel = document.getElementById('zzm-panel');
   if(!panel) return;
 
-  /* tabs */
-  panel.querySelectorAll('[data-zzm-tab]').forEach(function(tab){
-    tab.addEventListener('click', function(){
-      panel.querySelectorAll('[data-zzm-tab]').forEach(function(t){ t.classList.remove('zzm__tab--active'); });
-      panel.querySelectorAll('[data-zzm-page]').forEach(function(p){ p.classList.remove('zzm__page--active'); });
-      tab.classList.add('zzm__tab--active');
-      var page = panel.querySelector('[data-zzm-page="' + tab.getAttribute('data-zzm-tab') + '"]');
-      if(page) page.classList.add('zzm__page--active');
+  /* tabs — ARIA tab pattern: roving tabindex, arrow/Home/End navigation */
+  var tabs = Array.prototype.slice.call(panel.querySelectorAll('[data-zzm-tab]'));
+
+  function selectTab(tab, focus){
+    tabs.forEach(function(t){
+      var on = t === tab;
+      t.classList.toggle('zzm__tab--active', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      // Only the selected tab is in the tab order; arrows move between them.
+      t.setAttribute('tabindex', on ? '0' : '-1');
+    });
+    panel.querySelectorAll('[data-zzm-page]').forEach(function(p){ p.classList.remove('zzm__page--active'); });
+    var page = panel.querySelector('[data-zzm-page="' + tab.getAttribute('data-zzm-tab') + '"]');
+    if(page) page.classList.add('zzm__page--active');
+    if(focus) tab.focus();
+  }
+
+  tabs.forEach(function(tab, i){
+    tab.addEventListener('click', function(){ selectTab(tab, false); });
+    tab.addEventListener('keydown', function(e){
+      var next = null;
+      if(e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+      else if(e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+      else if(e.key === 'Home') next = tabs[0];
+      else if(e.key === 'End') next = tabs[tabs.length - 1];
+      else return;
+      e.preventDefault();
+      selectTab(next, true);
     });
   });
 

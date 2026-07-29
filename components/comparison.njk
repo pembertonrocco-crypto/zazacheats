@@ -34,7 +34,17 @@
         <div class="comparison__before-img" id="comparisonBefore-{{ componentId }}">
           <img src="{{ properties.before_image }}" alt="Before" draggable="false" loading="lazy" decoding="async">
         </div>
-        <div class="comparison__handle" id="comparisonHandle-{{ componentId }}">
+        {#— The handle is a real slider widget: focusable, announced with a
+            name and a live value, and driven by arrows/Home/End. It was
+            previously a plain <div> with mouse and touch listeners only, so
+            the whole before/after comparison was unreachable by keyboard and
+            silent to screen readers. —#}
+        <div class="comparison__handle" id="comparisonHandle-{{ componentId }}"
+             role="slider" tabindex="0"
+             aria-label="Reveal more of the before or after image"
+             aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"
+             aria-valuetext="50% before, 50% after"
+             aria-controls="comparisonStage-{{ componentId }}">
           <div class="comparison__line"></div>
           <canvas class="comparison__canvas" id="comparisonCanvas-{{ componentId }}"></canvas>
           <div class="comparison__grip">
@@ -358,31 +368,66 @@
   drawParticles();
 
   var dragging = false;
+  var pos = 0.5; // single source of truth, 0..1
 
-  function setPos(clientX) {
-    var rect = stage.getBoundingClientRect();
-    var raw = (clientX - rect.left) / rect.width;
-    var clamped = Math.min(Math.max(raw, 0.01), 0.99);
-    beforeEl.style.clipPath = 'inset(0 ' + ((1 - clamped) * 100) + '% 0 0)';
-    handle.style.left = (clamped * 100) + '%';
+  function apply() {
+    beforeEl.style.clipPath = 'inset(0 ' + ((1 - pos) * 100) + '% 0 0)';
+    handle.style.left = (pos * 100) + '%';
+    // Keep the announced value in step with the visual one.
+    var pct = Math.round(pos * 100);
+    handle.setAttribute('aria-valuenow', pct);
+    handle.setAttribute('aria-valuetext', pct + '% before, ' + (100 - pct) + '% after');
   }
+
+  function set(v) {
+    pos = Math.min(Math.max(v, 0.01), 0.99);
+    apply();
+  }
+
+  function setFromX(clientX) {
+    var rect = stage.getBoundingClientRect();
+    set((clientX - rect.left) / rect.width);
+  }
+
+  apply();
 
   stage.addEventListener('mousedown', function(e) {
     dragging = true;
-    setPos(e.clientX);
+    setFromX(e.clientX);
   });
   stage.addEventListener('mousemove', function(e) {
-    setPos(e.clientX);
+    setFromX(e.clientX);
   });
   window.addEventListener('mouseup', function() { dragging = false; });
 
   stage.addEventListener('touchstart', function(e) {
     dragging = true;
-    setPos(e.touches[0].clientX);
+    setFromX(e.touches[0].clientX);
   }, { passive: true });
   window.addEventListener('touchmove', function(e) {
-    if (dragging) setPos(e.touches[0].clientX);
+    if (dragging) setFromX(e.touches[0].clientX);
   }, { passive: true });
   window.addEventListener('touchend', function() { dragging = false; });
+
+  /* Keyboard: the standard slider bindings. Arrows nudge by 2%, shift/page
+     by 10%, Home/End jump to either end. preventDefault stops the arrow keys
+     from scrolling the page while the handle has focus. */
+  handle.addEventListener('keydown', function(e) {
+    var step = e.shiftKey ? 0.1 : 0.02;
+    var next = null;
+    switch (e.key) {
+      case 'ArrowLeft':
+      case 'ArrowDown':  next = pos - step; break;
+      case 'ArrowRight':
+      case 'ArrowUp':    next = pos + step; break;
+      case 'PageDown':   next = pos - 0.1; break;
+      case 'PageUp':     next = pos + 0.1; break;
+      case 'Home':       next = 0; break;
+      case 'End':        next = 1; break;
+      default: return;
+    }
+    e.preventDefault();
+    set(next);
+  });
 })();
 </script>

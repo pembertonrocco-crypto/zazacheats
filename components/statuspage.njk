@@ -605,4 +605,18 @@
     text-align: left;
   }
 }
+
+/* Respect prefers-reduced-motion. These entrance slides and infinite
+   pulses are decoration; this file was still animating regardless of the
+   user's setting. Scoped to this component's own selectors so it cannot
+   override the tuned reduced-motion rules other components define. */
+@media (prefers-reduced-motion: reduce){
+  .status-page-header,
+  .status-overview,
+  .overview-dot,
+  .status-legend-container,
+  .service-card,
+  .indicator-pulse,
+  .status-footer-section{animation:none}
+}
 </style>

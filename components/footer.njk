@@ -434,4 +434,12 @@
 .ft__pay-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.2em;color:rgba(200,215,240,.35);margin-right:4px}
 .ft__pay-item{font-size:.72rem;font-weight:800;font-style:italic;color:rgba(220,232,255,.55)}
 .ft__pay-dot{color:rgba(200,215,240,.25)}
+
+/* Respect prefers-reduced-motion. These entrance slides and infinite
+   pulses are decoration; this file was still animating regardless of the
+   user's setting. Scoped to this component's own selectors so it cannot
+   override the tuned reduced-motion rules other components define. */
+@media (prefers-reduced-motion: reduce){
+  .ft__badge-dot{animation:none}
+}
 </style>

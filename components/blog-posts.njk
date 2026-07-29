@@ -15,9 +15,16 @@
   <div class="container">
 {% endif %}
 
+    {#— h1 when this component is the /blog page itself (it had none), h2 when
+        it is a section on another page. pro.css styles .section-title h1 and
+        h2 identically, so this is visually a no-op. —#}
     {% if properties.title %}
       <div class="section-title">
+        {% if templateName == 'blog' %}
+        <h1>{{ properties.title | renderString }}</h1>
+        {% else %}
         <h2>{{ properties.title | renderString }}</h2>
+        {% endif %}
       </div>
     {% endif %}
     {% if properties.subtitle %}

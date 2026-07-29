@@ -1,0 +1,3 @@
+node_modules/
+# rendered HTML dumps from `npm run check:html`
+.render/

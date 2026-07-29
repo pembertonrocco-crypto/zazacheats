@@ -73,9 +73,16 @@
 <title>{{ title }}</title>
 <meta name="description" content="{{ description }}">
 
-{#— Canonical + og:url: only for templates with known stable paths —#}
+{#— Canonical + og:url: only for templates with known stable paths.
+    The homepage and blog were missing, which left the site's two most
+    linked-to page types without a canonical — the homepage in particular
+    is the one most likely to be reached with tracking params (?ref=,
+    ?fbclid=) and split into duplicates. —#}
 {%- set canonicalPath = false -%}
-{%- if templateName == 'product' -%}{%- set canonicalPath = '/product/' ~ product.path -%}
+{%- if templateName == 'shop' -%}{%- set canonicalPath = '/' -%}
+{%- elif templateName == 'product' -%}{%- set canonicalPath = '/product/' ~ product.path -%}
+{%- elif templateName == 'blog' -%}{%- set canonicalPath = '/blog' -%}
+{%- elif templateName == 'blog-post' and blogPost.path -%}{%- set canonicalPath = '/blog/' ~ blogPost.path -%}
 {%- elif templateName == 'products' -%}{%- set canonicalPath = '/products' -%}
 {%- elif templateName == 'feedback' -%}{%- set canonicalPath = '/feedback' -%}
 {%- elif templateName == 'status' -%}{%- set canonicalPath = '/status' -%}
@@ -97,12 +104,17 @@
 
 <meta property="og:title" content="{{ title }}">
 <meta property="og:description" content="{{ description }}">
-{% if image %}<meta property="og:image" content="{{ image }}">{% endif %}
+{% if image %}<meta property="og:image" content="{{ image }}">
+{#— alt is what screen readers announce for a shared card, and several
+    platforms surface it; without it the card is an unlabelled image —#}
+<meta property="og:image:alt" content="{{ title }}">{% endif %}
 <meta property="og:type" content="{{ 'product' if templateName == 'product' else 'website' }}">
 <meta property="og:site_name" content="Zaza Cheats">
+<meta property="og:locale" content="en_US">
 <meta name="twitter:title" content="{{ title }}">
 <meta name="twitter:description" content="{{ description }}">
-{% if image %}<meta name="twitter:image" content="{{ image }}">{% endif %}
+{% if image %}<meta name="twitter:image" content="{{ image }}">
+<meta name="twitter:image:alt" content="{{ title }}">{% endif %}
 <meta name="twitter:card" content="{{ twitterCard if twitterCard else ('summary_large_image' if image else 'summary') }}">
 <link rel="icon" type="image/png" href="{{ shop.favicon_url }}">
 <meta name="theme-color" content="{{ '' | themeColor }}" />
@@ -115,7 +127,7 @@
   "name": "Zaza Cheats",
   "url": "https://zazacheats.net",
   "logo": {{ (shop.logo_url if shop.logo_url else shop.favicon_url) | json | safe }},
-  "email": "zkrtyy3@gmail.com",
+  "email": "support@zazacheats.net",
   "sameAs": ["https://discord.gg/zazacheats"]
 }
 </script>
@@ -152,6 +164,20 @@
     "bestRating": "5"
   }
   {%- endif %}
+}
+</script>
+{#— BreadcrumbList: gives the product result a Home › Products › Name trail
+    in place of a bare URL, and tells crawlers how the product sits in the
+    site hierarchy (there is no visible breadcrumb UI to mark up inline). —#}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://zazacheats.net/" },
+    { "@type": "ListItem", "position": 2, "name": "Products", "item": "https://zazacheats.net/products" },
+    { "@type": "ListItem", "position": 3, "name": {{ product.name | json | safe }}, "item": "https://zazacheats.net/product/{{ product.path }}" }
+  ]
 }
 </script>
 {% endif %}

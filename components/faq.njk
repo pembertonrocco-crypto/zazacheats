@@ -17,8 +17,16 @@
             <span>FAQ</span>
           </div>
         </div>
+        {#— This component is both a homepage section and the whole of /faq.
+            As a section it must stay an h2 under the page's h1; as a page it
+            IS the h1, and /faq previously shipped with no h1 at all. Same
+            class either way, so the visual result is identical. —#}
         {% if properties.title %}
+          {% if templateName == 'faq' %}
+        <h1 class="faq-title">{{ properties.title | renderString }}</h1>
+          {% else %}
         <h2 class="faq-title">{{ properties.title | renderString }}</h2>
+          {% endif %}
         {% endif %}
         {% if properties.subtitle %}
         <p class="faq-subtitle">{{ properties.subtitle | renderString }}</p>

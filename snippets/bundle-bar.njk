@@ -1,0 +1,90 @@
+{# =========================================================================
+   v72: BUNDLE-BAR — site-wide announcement bar for the free NFA bundles.
+   Sits at the very top of the sticky header, above the native announcement
+   component (which is unused, text=null). Dismissible; remembers via
+   localStorage 'zzb_bar_hide'. All value figures are REAL prices:
+   NFA 500-1000 = $2.50 each -> Month bundle $5.00, Lifetime bundle $12.50.
+   Static HTML, no template vars, safe under strict mode.
+   ========================================================================= #}
+<div class="zzbar" id="zz-bundle-bar" hidden>
+  <a class="zzbar__link" href="/product/zaza-rust-private-cheat#zz-bundles">
+    <span class="zzbar__gift" aria-hidden="true">🎁</span>
+    <span class="zzbar__text">
+      <strong class="zzbar__free">FREE NFA BUNDLE</strong>
+      <span class="zzbar__sep" aria-hidden="true">—</span>
+      <span class="zzbar__desc">up to <strong>$12.50 of accounts free</strong> with Month &amp; Lifetime keys</span>
+    </span>
+    <span class="zzbar__cta">Claim →</span>
+  </a>
+  <button type="button" class="zzbar__x" data-zzbar-close aria-label="Dismiss">×</button>
+</div>
+
+<style>
+.zzbar{position:relative;display:flex;align-items:center;background:linear-gradient(90deg,#12081f,#2a0f45 30%,#3a1358 50%,#2a0f45 70%,#12081f);background-size:200% 100%;animation:zzbar-bg 8s linear infinite;border-bottom:1px solid rgba(var(--cl-accent-rgb,191,64,191),.4);z-index:50}
+.zzbar[hidden]{display:none}
+@keyframes zzbar-bg{0%{background-position:0% 0}100%{background-position:200% 0}}
+.zzbar::after{content:'';position:absolute;top:0;left:-30%;width:22%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.09),transparent);transform:skewX(-18deg);animation:zzbar-sheen 4s ease-in-out infinite;pointer-events:none}
+@keyframes zzbar-sheen{0%,55%{left:-30%}95%,100%{left:120%}}
+.zzbar__link{flex:1;display:flex;align-items:center;justify-content:center;gap:10px;padding:9px 44px 9px 14px;text-decoration:none;color:#fff;font-size:.8rem;line-height:1.3;min-width:0}
+.zzbar__gift{font-size:1rem;flex-shrink:0;animation:zzbar-bounce 2.4s ease-in-out infinite}
+@keyframes zzbar-bounce{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-2px) rotate(5deg)}}
+.zzbar__text{display:flex;align-items:center;gap:7px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zzbar__free{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.12em;font-weight:800;color:#0a0714;background:linear-gradient(90deg,#4ade80,#a3e635);padding:3px 9px;border-radius:99px;flex-shrink:0;box-shadow:0 0 16px -4px rgba(74,222,128,.9)}
+.zzbar__sep{color:rgba(220,230,250,.4);flex-shrink:0}
+.zzbar__desc{color:rgba(225,233,250,.9);overflow:hidden;text-overflow:ellipsis}
+.zzbar__desc strong{color:#4ade80;font-weight:800}
+.zzbar__cta{flex-shrink:0;font-weight:800;font-size:.74rem;color:#fff;padding:6px 13px;border-radius:8px;background:linear-gradient(135deg,var(--cl-accent,#BF40BF),#7C3AED);box-shadow:0 4px 16px -6px rgba(var(--cl-accent-rgb,191,64,191),.9);transition:transform .15s ease,filter .15s ease}
+.zzbar__link:hover .zzbar__cta{transform:translateY(-1px);filter:brightness(1.12)}
+.zzbar__x{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;border:none;border-radius:7px;background:rgba(255,255,255,.06);color:rgba(220,230,250,.6);font-size:1.05rem;line-height:1;cursor:pointer;transition:background .15s,color .15s}
+.zzbar__x:hover{background:rgba(255,255,255,.14);color:#fff}
+@media (max-width:640px){
+  .zzbar__link{padding:8px 40px 8px 10px;gap:7px;font-size:.72rem}
+  .zzbar__sep,.zzbar__desc{display:none}
+  .zzbar__text::after{content:'up to $12.50 of NFAs free';color:rgba(225,233,250,.9);font-size:.72rem}
+  .zzbar__cta{padding:5px 10px;font-size:.68rem}
+}
+@media (prefers-reduced-motion:reduce){.zzbar,.zzbar::after,.zzbar__gift{animation:none}}
+</style>
+
+<script>
+(function(){
+  var bar=document.getElementById('zz-bundle-bar');
+  if(!bar) return;
+  var KEY='zzb_bar_hide';
+  try{ if(localStorage.getItem(KEY)) return; }catch(e){ return; }
+  bar.hidden=false;
+
+  /* The theme's navbar (.nb-wrapper) is position:fixed !important; top:0
+     !important — it floats over anything above it in the header. While the
+     bar is visible we push the nav down by the bar's on-screen height,
+     synced to scroll so the nav returns to top:0 exactly as the bar scrolls
+     away. Inline style with the 'important' priority outranks the
+     stylesheet's !important. */
+  var nav=document.querySelector('.nb-wrapper');
+  var ticking=false;
+
+  function offsetNav(){
+    if(!nav) return;
+    if(bar.hidden){ nav.style.removeProperty('top'); return; }
+    var rect=bar.getBoundingClientRect();
+    var visible=Math.max(0,rect.bottom);        // bar bottom relative to viewport
+    nav.style.setProperty('top',visible+'px','important');
+  }
+  function onScroll(){
+    if(ticking) return;
+    ticking=true;
+    requestAnimationFrame(function(){ offsetNav(); ticking=false; });
+  }
+
+  offsetNav();
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll,{passive:true});
+
+  var x=bar.querySelector('[data-zzbar-close]');
+  if(x) x.addEventListener('click',function(){
+    bar.hidden=true;
+    if(nav) nav.style.removeProperty('top');
+    try{ localStorage.setItem(KEY,'1'); }catch(e){}
+  });
+})();
+</script>

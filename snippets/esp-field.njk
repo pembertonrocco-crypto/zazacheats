@@ -1,0 +1,107 @@
+{# =========================================================================
+   ESP FIELD — homepage-wide ambient layer: faint corner-bracket ESP target
+   boxes drifting at depth over every section, echoing the hero canvas.
+   Boxes are biased toward the page edges so they never sit on the reading
+   column, and stay at low alpha so content always wins. Fixed canvas,
+   pointer-events none, pauses when the tab is hidden, honours
+   prefers-reduced-motion. Pure static HTML/JS.
+   ========================================================================= #}
+<style>
+#zz-espfield{position:fixed;inset:0;z-index:9997;pointer-events:none}
+</style>
+<script>
+(function(){
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var c = document.createElement('canvas');
+  c.id = 'zz-espfield';
+  c.setAttribute('aria-hidden','true');
+  document.body.prepend(c);
+  var ctx = c.getContext('2d');
+  var W, H, DPR, boxes = [], running = true, t = 0;
+  var MONO = '10px ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace';
+  var LABELS = ['PLAYER', 'PLAYER', 'SLEEPER', 'PLAYER', 'SCIENTIST', 'PLAYER'];
+
+  function rand(a, b){ return a + Math.random() * (b - a); }
+
+  function size(){
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    c.width = W * DPR; c.height = H * DPR;
+    c.style.width = W + 'px'; c.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+
+  function spawn(i, fresh){
+    var z = rand(0.4, 1);
+    var h = (W < 640 ? 64 : 96) * z * rand(0.85, 1.15);
+    var w = h * 0.46;
+    /* edge bias: keep boxes off the central reading column */
+    var side = (i % 2 === 0) ? rand(0.02, 0.2) : rand(0.8, 0.98);
+    return {
+      x: W * side,
+      y: fresh ? rand(-0.2, 1.1) * H : H + h,
+      w: w, h: h, z: z,
+      vx: rand(-0.04, 0.04) * z,
+      vy: -rand(0.05, 0.16) * z,          /* slow upward drift */
+      dist: Math.round(220 - z * 170 + rand(-9, 9)),
+      hp: rand(0.5, 0.98),
+      label: LABELS[i % LABELS.length],
+      phase: rand(0, Math.PI * 2),
+      alpha: rand(0.10, 0.22) * (W < 640 ? 0.7 : 1)
+    };
+  }
+
+  function make(){
+    var n = W < 640 ? 3 : 6;
+    boxes = [];
+    for(var i = 0; i < n; i++) boxes.push(spawn(i, true));
+  }
+
+  function drawBox(b){
+    var a = b.alpha * (0.75 + 0.25 * Math.sin(t * 1.1 + b.phase));
+    var x = b.x, y = b.y, w = b.w, h = b.h;
+    var L = Math.min(w, h) * 0.24;
+
+    ctx.strokeStyle = 'rgba(191,64,191,' + a.toFixed(3) + ')';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    /* corner brackets */
+    ctx.moveTo(x, y + L); ctx.lineTo(x, y); ctx.lineTo(x + L, y);
+    ctx.moveTo(x + w - L, y); ctx.lineTo(x + w, y); ctx.lineTo(x + w, y + L);
+    ctx.moveTo(x + w, y + h - L); ctx.lineTo(x + w, y + h); ctx.lineTo(x + w - L, y + h);
+    ctx.moveTo(x + L, y + h); ctx.lineTo(x, y + h); ctx.lineTo(x, y + h - L);
+    ctx.stroke();
+
+    /* label + distance */
+    ctx.font = MONO;
+    ctx.fillStyle = 'rgba(220,180,235,' + (a * 0.95).toFixed(3) + ')';
+    ctx.fillText(b.label, x, y - 6);
+    ctx.fillStyle = 'rgba(233,167,233,' + (a * 0.85).toFixed(3) + ')';
+    ctx.fillText(b.dist + 'm', x + w + 6, y + 9);
+
+    /* health bar */
+    ctx.fillStyle = 'rgba(255,255,255,' + (a * 0.25).toFixed(3) + ')';
+    ctx.fillRect(x - 6, y, 2.5, h);
+    ctx.fillStyle = 'rgba(74,222,128,' + (a * 1.1).toFixed(3) + ')';
+    ctx.fillRect(x - 6, y + h * (1 - b.hp), 2.5, h * b.hp);
+  }
+
+  function frame(){
+    if(!running){ requestAnimationFrame(frame); return; }
+    t += 0.016;
+    ctx.clearRect(0, 0, W, H);
+    for(var i = 0; i < boxes.length; i++){
+      var b = boxes[i];
+      b.x += b.vx; b.y += b.vy;
+      if(b.y + b.h < -30) boxes[i] = spawn(i, false);
+      drawBox(boxes[i]);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  document.addEventListener('visibilitychange', function(){ running = !document.hidden; });
+  window.addEventListener('resize', function(){ size(); make(); }, {passive:true});
+  size(); make(); requestAnimationFrame(frame);
+})();
+</script>

@@ -1,0 +1,143 @@
+{# ───────────────────────────────────────────────────────────────
+   zaza-description.njk — the product Description tab.
+   Now shows the FULL feature list (relocated here from
+   zaza-product-block.njk) instead of the old short accordion.
+   Styling: .zz-fl* + .zz-eyebrow/.zz-h2 are defined globally by
+   zaza-product-block.njk's <style> block (which still renders on this
+   page). A .zzd-scoped override in that same block stacks the
+   categories so they fit this narrower column. .zzd__watch / .zzd__foot
+   styles live in components/product-page.njk.
+──────────────────────────────────────────────────────────────── #}
+
+{% if product.description|length > 0 %}
+<div class="zzd__intro pp-editor editor">{{ product.description | safe }}</div>
+{% endif %}
+
+<p class="zz-eyebrow">// FULL FEATURE LIST</p>
+<h3 class="zz-h2">Everything in the build, spelled out</h3>
+<div class="zz-fl">
+
+  <div class="zz-fl__cat">
+    <div class="zz-fl__head">
+      <span class="zz-fl__tag zz-fl__tag--esp">[ PLAYER ESP ]</span>
+      <span class="zz-fl__count">14 features</span>
+    </div>
+    <ul class="zz-fl__list">
+      <li>Player Box ESP</li>
+      <li>Player Corner Box ESP</li>
+      <li>Player Skeleton ESP</li>
+      <li>Player Snapline ESP</li>
+      <li>Player Name ESP</li>
+      <li>Player Distance ESP</li>
+      <li>Player Weapon ESP</li>
+      <li>Player Viewline</li>
+      <li>Player Radar ESP</li>
+      <li>Player Slot ESP <em>(with images)</em></li>
+      <li>Player Cloth ESP</li>
+      <li>Player Chams <em>(custom settings)</em></li>
+      <li>Player Weapon Chams <em>(custom settings)</em></li>
+      <li>Player RGB Chams</li>
+    </ul>
+  </div>
+
+  <div class="zz-fl__cat">
+    <div class="zz-fl__head">
+      <span class="zz-fl__tag zz-fl__tag--aim">[ AIMBOT ]</span>
+      <span class="zz-fl__count">20 features</span>
+    </div>
+    <ul class="zz-fl__list">
+      <li>Aimbot</li>
+      <li>Aimbot Prediction</li>
+      <li>Aimbot Nearest Bone</li>
+      <li>Aimbot Smoothing <em>(custom settings)</em></li>
+      <li>Hitbox Override <em>(always headshot)</em></li>
+      <li>Aim Line</li>
+      <li>Silent Aim</li>
+      <li>No Recoil <em>(custom settings)</em></li>
+      <li>No Spread <em>(custom settings)</em></li>
+      <li>Full Automatic</li>
+      <li>Fast Eoka <em>(customize chance %)</em></li>
+      <li>Super Melee</li>
+      <li>Fake Shoot</li>
+      <li>Fast Heal <em>(syringe &amp; bandage)</em></li>
+      <li>Instant Revive</li>
+      <li>Keep Wounded Alive</li>
+      <li>Quick Bullets</li>
+      <li>Hit Distance</li>
+      <li>Hit Sound</li>
+      <li>Hit Material <em>(glass, water, metal)</em></li>
+    </ul>
+  </div>
+
+  <div class="zz-fl__cat">
+    <div class="zz-fl__head">
+      <span class="zz-fl__tag zz-fl__tag--world">[ WORLD ESP ]</span>
+      <span class="zz-fl__count">17+ features</span>
+    </div>
+    <ul class="zz-fl__list">
+      <li>Ores</li>
+      <li>Hemp</li>
+      <li>Tool Cupboard</li>
+      <li>Weapons</li>
+      <li>Melee Weapons</li>
+      <li>Heal Items</li>
+      <li>Backpack</li>
+      <li>Supply Drop</li>
+      <li>Auto Turrets</li>
+      <li>Minicopter</li>
+      <li>Normal Crate</li>
+      <li>Helicopter Crate</li>
+      <li>Bradley Crate</li>
+      <li>Player Corpse</li>
+      <li>Tool Box</li>
+      <li>Elite Crate</li>
+      <li>Military Crate <em>&amp; more&hellip;</em></li>
+    </ul>
+  </div>
+
+  <div class="zz-fl__cat">
+    <div class="zz-fl__head">
+      <span class="zz-fl__tag zz-fl__tag--misc">[ MISC ]</span>
+      <span class="zz-fl__count">25 features</span>
+    </div>
+    <ul class="zz-fl__list">
+      <li>Galaxy Sky</li>
+      <li>Admin Flag</li>
+      <li>Safe Admin Flag</li>
+      <li>Spiderman</li>
+      <li>Gravity</li>
+      <li>Sky Color Changer</li>
+      <li>Night Mode</li>
+      <li>Stars Changer</li>
+      <li>Send Gesture</li>
+      <li>Time Changer</li>
+      <li>Omni Sprint</li>
+      <li>Debug Camera</li>
+      <li>Third Person</li>
+      <li>FOV Changer</li>
+      <li>Always Day</li>
+      <li>Zoom</li>
+      <li>Cloud Color</li>
+      <li>Fly</li>
+      <li>Crosshair</li>
+      <li>Silent Walk</li>
+      <li>Moon Changer</li>
+      <li>Walk Through Players</li>
+      <li>Inventory Fast Loot</li>
+      <li>No View Lower</li>
+      <li>No View Bob</li>
+    </ul>
+  </div>
+
+</div>
+<p class="zz-fl__note">Anything marked <em>custom settings</em> is fully tunable in the in-game menu — sliders, toggles and per-feature keybinds.</p>
+<p class="zz-fl__note zz-fl__note--upd">Note: As updates continue, more features will be added — check the <em>showcase video</em> to see the whole menu.</p>
+
+<a class="zzd__watch" href="https://www.youtube.com/watch?v=VjcprZSnYh0"
+   target="_blank" rel="noopener"
+   onclick="var s=document.querySelector('.zaza-showcase');if(s){event.preventDefault();s.scrollIntoView({behavior:'smooth',block:'start'});}">
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6"/><path d="M10 8.5v7l6-3.5-6-3.5Z" fill="currentColor"/></svg>
+  <span>Watch it all in action — showcase video</span>
+</a>
+
+<p class="zzd__foot">Instant key delivery &nbsp;·&nbsp; Free updates &nbsp;·&nbsp; Live detection status page</p>

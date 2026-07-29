@@ -1,0 +1,618 @@
+<style>
+  nav[data-component-id="navbar"],
+  .navbar[data-component-id="navbar"],
+  [data-component-id="navbar"] {
+    position: static !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .navbar.fixed-top,
+  .navbar.sticky-top,
+  .fixed-top,
+  .sticky-top {
+    position: static !important;
+  }
+
+  .nb-wrapper {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 1000 !important;
+    pointer-events: none !important;
+    padding: 1.25rem 1.5rem 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .nb-wrapper > *,
+  .nb-wrapper * {
+    pointer-events: auto !important;
+  }
+
+  body {
+    padding-top: 0 !important;
+  }
+
+  .nb-pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1100px;
+    background: rgba(6, 9, 22, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 10px;
+    padding: 0.75rem 0.6rem 0.75rem 1.5rem;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.04) inset, 0 8px 40px rgba(0,0,0,0.55);
+    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+    overflow: visible;
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .nb-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .nb-brand img {
+    height: 26px;
+    width: auto;
+    border-radius: 4px;
+  }
+
+  .nb-brand span {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .nb-links {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+  }
+
+  .nb-links a {
+    display: block;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    border-radius: 6px;
+    letter-spacing: 0.005em;
+    transition: color 0.15s ease, background 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .nb-links a:hover {
+    color: rgba(255, 255, 255, 0.92);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .nb-links a.nb-link--active {
+    color: #ffffff;
+  }
+
+  .nb-links a.nb-link--btn {
+    background: rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+  }
+
+  .nb-links a.nb-link--btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Affiliates: money icon + NEW badge in brand violet so the earn-with-us
+     link reads as an offer. Green is reserved for the status/undetected signal. */
+  .nb-aff {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    color: rgba(230, 179, 255, 0.92) !important;
+  }
+  .nb-aff:hover {
+    color: #f0d5ff !important;
+    background: rgba(191, 64, 191, 0.12) !important;
+  }
+  .nb-aff__ico {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+    color: #BF40BF;
+  }
+  .nb-aff__new {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    padding: 3px 5px;
+    border-radius: 4px;
+    color: #e6b3ff;
+    background: rgba(191, 64, 191, 0.16);
+    border: 1px solid rgba(191, 64, 191, 0.38);
+    animation: nbAffPulse 2.6s ease-in-out infinite;
+  }
+  @keyframes nbAffPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(191, 64, 191, 0); }
+    50% { box-shadow: 0 0 0 3px rgba(191, 64, 191, 0.16); }
+  }
+
+  /* Status link: green + live dot — the undetected signal */
+  .nb-links a.nb-status,
+  .nb-mobile-menu a.nb-status {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 7px;
+    color: rgba(134, 239, 172, 0.92) !important;
+  }
+  .nb-links a.nb-status:hover,
+  .nb-mobile-menu a.nb-status:hover {
+    color: #bbf7d0 !important;
+    background: rgba(34, 197, 94, 0.1) !important;
+  }
+  .nb-mobile-menu a.nb-status {
+    display: flex !important;
+  }
+  .nb-status__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: #22c55e;
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55);
+    animation: nbStatusPulse 2.2s ease-out infinite;
+  }
+  @keyframes nbStatusPulse {
+    0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+    70% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nb-aff__new,
+    .nb-status__dot { animation: none; }
+  }
+
+  .nb-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nb-actions a,
+  .nb-actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    height: 42px;
+    padding: 0 1.3rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+    box-sizing: border-box;
+  }
+
+  .nb-actions a:hover,
+  .nb-actions button:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.22);
+    color: #fff;
+  }
+
+  .nb-actions .nb-cart {
+    padding: 0 0.88rem;
+    position: relative;
+  }
+
+  .nb-actions .nb-cart svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .nb-actions .nb-cart:hover svg {
+    color: #fff;
+  }
+
+  .nb-actions .nb-cart .count {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: linear-gradient(135deg, #BF40BF, #7C3AED);
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    border-radius: 3px;
+    min-width: 15px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+    line-height: 1;
+  }
+
+  .nb-toggler {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 42px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0;
+  }
+
+  .nb-toggler span {
+    display: block;
+    width: 16px;
+    height: 1.5px;
+    background: rgba(255, 255, 255, 0.75);
+    border-radius: 1px;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease;
+  }
+
+  .nb-toggler[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(5.5px) rotate(45deg);
+  }
+  .nb-toggler[aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0.4);
+  }
+  .nb-toggler[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-5.5px) rotate(-45deg);
+  }
+
+  .nb-mobile-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    background: rgba(6, 9, 22, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 10px;
+    padding: 1rem;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.65);
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .nb-mobile-menu.is-open {
+    display: flex;
+  }
+
+  .nb-mobile-menu a,
+  .nb-mobile-menu button {
+    display: block;
+    width: 100%;
+    padding: 0.65rem 1rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+    color: rgba(255, 255, 255, 0.55);
+    text-decoration: none;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: left;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+
+  .nb-mobile-menu a:hover,
+  .nb-mobile-menu button:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .nb-mobile-menu a.nb-aff {
+    display: flex !important;
+    align-items: center;
+    gap: 7px;
+  }
+  .nb-mobile-menu a.nb-aff .nb-aff__new {
+    margin-left: auto;
+  }
+
+  .nb-mobile-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.07);
+    margin: 0.4rem 0;
+    border: none;
+  }
+
+  .nb-mobile-menu .nb-mobile-actions {
+    display: flex;
+    gap: 0.5rem;
+    padding-top: 0.25rem;
+  }
+
+  .nb-mobile-menu .nb-mobile-actions a,
+  .nb-mobile-menu .nb-mobile-actions button {
+    flex: 1;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    color: #fff;
+    font-weight: 600;
+    padding: 0.65rem;
+  }
+
+  .nb-mobile-menu .nb-mobile-actions a:hover,
+  .nb-mobile-menu .nb-mobile-actions button:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .nb-pill-inner {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    overflow: visible;
+  }
+
+  @media (max-width: 768px) {
+    .nb-wrapper {
+      padding: 0.9rem 1rem 0;
+    }
+
+    .nb-pill {
+      padding: 0.5rem 0.5rem 0.5rem 1.1rem;
+      border-radius: 8px;
+    }
+
+    .nb-links,
+    .nb-actions {
+      display: none;
+    }
+
+    .nb-toggler {
+      display: flex;
+    }
+  }
+.nb-getkey{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:.55rem 1.05rem;border-radius:10px;
+  background:linear-gradient(135deg,#BF40BF,#7C3AED);color:#fff !important;
+  font-weight:700;font-size:.85rem;text-decoration:none;white-space:nowrap;
+  box-shadow:0 6px 18px -8px rgba(191,64,191,.75);
+  transition:filter .2s,transform .2s;
+}
+.nb-getkey:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.nb-getkey--mobile{justify-content:center;margin:4px 0}
+@media (prefers-reduced-motion:reduce){.nb-getkey{transition:none}}
+</style>
+
+<div class="nb-wrapper">
+  <nav class="nb-pill-inner" aria-label="Primary">
+    <div class="nb-pill">
+      {% if global.components.navbar.show_shop_name or global.components.navbar.show_logo %}
+      <a class="nb-brand" href="{{ '/' | shopUrl }}">
+        {% if global.components.navbar.show_logo and shop.image_url %}
+        <img src="{{ shop.image_url }}" alt="{{ shop.name }}" />
+        {% endif %}
+        {% if global.components.navbar.show_shop_name %}
+        <span>{{ shop.name }}</span>
+        {% endif %}
+      </a>
+      {% endif %}
+
+      <ul class="nb-links">
+        {% for link in global.components.navbar.left_links %}
+        <li>
+          <a
+            href="{{ link.link | shopUrl }}"
+            target="{{ '_blank' if link.new_tab }}" rel="{{ 'noopener' if link.new_tab }}"
+            class="{{ 'nb-link--btn' if link.shape == 'button' else '' }}{{ ' nb-link--active' if link.link == '/' or link.link == '' }}{{ ' nb-status' if link.link == '/status' }}"
+          >{% if link.link == '/status' %}<span class="nb-status__dot" aria-hidden="true"></span>{% endif %}{{ link.text if link.text else 'Link' }}</a>
+        </li>
+        {% endfor %}
+        <li>
+          <a href="{{ '/why-us' | shopUrl }}" class="{{ ' nb-link--active' if request_path == '/why-us' }}">Why Us</a>
+        </li>
+        <li>
+          <a href="{{ '/affiliates' | shopUrl }}" class="nb-aff{{ ' nb-link--active' if request_path == '/affiliates' }}">
+            <svg class="nb-aff__ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v18M15.5 7.5c0-1.66-1.57-2.5-3.5-2.5s-3.5.9-3.5 2.75S10 10.5 12 11s3.75 1.06 3.75 2.9S14 16.75 12 16.75s-3.75-.9-3.75-2.6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Affiliates</span>
+            <span class="nb-aff__new">NEW</span>
+          </a>
+        </li>
+      </ul>
+
+      <ul class="nb-actions">
+        {% for link in global.components.navbar.right_links %}
+        <li>
+          <a
+            href="{{ link.link | shopUrl }}"
+            target="{{ '_blank' if link.new_tab }}" rel="{{ 'noopener' if link.new_tab }}"
+            class="{{ 'nb-status' if link.link == '/status' }}"
+          >{% if link.link == '/status' %}<span class="nb-status__dot" aria-hidden="true"></span>{% endif %}{{ link.text if link.text else 'Link' }}</a>
+        </li>
+        {% endfor %}
+
+        <li class="nb-getkey-li">
+          <a class="nb-getkey" href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2L3 6.5V11.5C3 16.25 6.9 20.7 12 22C17.1 20.7 21 16.25 21 11.5V6.5L12 2Z" fill="currentColor"/></svg>
+            <span>Get Key</span>
+          </a>
+        </li>
+
+        {% if not global.components.navbar.hide_cart %}
+        <li>
+          <a class="nb-cart" href="{{ '/cart' | shopUrl }}" aria-label="Cart">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M7 22q-.825 0-1.412-.587T5 20t.588-1.412T7 18t1.413.588T9 20t-.587 1.413T7 22m10 0q-.825 0-1.412-.587T15 20t.588-1.412T17 18t1.413.588T19 20t-.587 1.413T17 22M6.15 6l2.4 5h7l2.75-5zM5.2 4h14.75q.575 0 .875.513t.025 1.037l-3.55 6.4q-.275.5-.737.775T15.55 13H8.1L7 15h11q.425 0 .713.288T19 16t-.288.713T18 17H7q-1.125 0-1.7-.987t-.05-1.963L6.6 11.6L3 4H2q-.425 0-.712-.288T1 3t.288-.712T2 2h1.625q.275 0 .525.15t.375.425zm3.35 7h7z"/></svg>
+            <template x-if="appCart.countWithQuantities > 0">
+              <span class="count">
+                <span x-text="appCart.countWithQuantities > 9 ? '9+' : appCart.countWithQuantities"></span>
+              </span>
+            </template>
+          </a>
+        </li>
+        {% endif %}
+
+        {% if not global.components.navbar.hide_customer_dashboard %}
+        <li>
+          {% if shop_customer %}
+          <a href="{{ '/customer/dashboard' | shopUrl }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 18 18" style="flex-shrink:0" fill="none">
+              <path d="M2.60518 13.1674C3.69058 10.7157 6.14168 9 8.99999 9C11.7634 9 14.1462 10.6037 15.2822 12.9257C15.3564 13.0774 15.4289 13.2326 15.4797 13.3894C15.8649 14.5805 15.1811 15.8552 13.9874 16.2313C12.705 16.6354 11.0072 17 8.99999 17C6.99283 17 5.29503 16.6354 4.01259 16.2313C2.74425 15.8317 2.05162 14.4186 2.60518 13.1674Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 7.50049C10.7952 7.50049 12.25 6.04543 12.25 4.25049C12.25 2.45554 10.7952 1.00049 9 1.00049C7.20482 1.00049 5.75 2.45554 5.75 4.25049C5.75 6.04543 7.20482 7.50049 9 7.50049Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            My Account
+          </a>
+          {% else %}
+          <button type="button" data-bs-toggle="modal" data-bs-target="#customer-login-modal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 18 18" style="flex-shrink:0" fill="none">
+              <path d="M2.60518 13.1674C3.69058 10.7157 6.14168 9 8.99999 9C11.7634 9 14.1462 10.6037 15.2822 12.9257C15.3564 13.0774 15.4289 13.2326 15.4797 13.3894C15.8649 14.5805 15.1811 15.8552 13.9874 16.2313C12.705 16.6354 11.0072 17 8.99999 17C6.99283 17 5.29503 16.6354 4.01259 16.2313C2.74425 15.8317 2.05162 14.4186 2.60518 13.1674Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 7.50049C10.7952 7.50049 12.25 6.04543 12.25 4.25049C12.25 2.45554 10.7952 1.00049 9 1.00049C7.20482 1.00049 5.75 2.45554 5.75 4.25049C5.75 6.04543 7.20482 7.50049 9 7.50049Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Customer Portal
+          </button>
+          {% endif %}
+        </li>
+        {% endif %}
+      </ul>
+
+      <button
+        class="nb-toggler"
+        id="nb-toggler"
+        type="button"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="nb-mobile-menu"
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <div class="nb-mobile-menu" id="nb-mobile-menu">
+      {% for link in global.components.navbar.left_links %}
+      <a href="{{ link.link | shopUrl }}" target="{{ '_blank' if link.new_tab }}" rel="{{ 'noopener' if link.new_tab }}" class="{{ 'nb-status' if link.link == '/status' }}">{% if link.link == '/status' %}<span class="nb-status__dot" aria-hidden="true"></span>{% endif %}{{ link.text if link.text else 'Link' }}</a>
+      {% endfor %}
+      {% for link in global.components.navbar.right_links %}
+      <a href="{{ link.link | shopUrl }}" target="{{ '_blank' if link.new_tab }}" rel="{{ 'noopener' if link.new_tab }}" class="{{ 'nb-status' if link.link == '/status' }}">{% if link.link == '/status' %}<span class="nb-status__dot" aria-hidden="true"></span>{% endif %}{{ link.text if link.text else 'Link' }}</a>
+      {% endfor %}
+      <a href="{{ '/why-us' | shopUrl }}">Why Us</a>
+      <a href="{{ '/affiliates' | shopUrl }}" class="nb-aff">
+        <svg class="nb-aff__ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v18M15.5 7.5c0-1.66-1.57-2.5-3.5-2.5s-3.5.9-3.5 2.75S10 10.5 12 11s3.75 1.06 3.75 2.9S14 16.75 12 16.75s-3.75-.9-3.75-2.6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Affiliates</span>
+        <span class="nb-aff__new">NEW</span>
+      </a>
+      <hr class="nb-mobile-divider" />
+      <div class="nb-mobile-actions">
+        {% if not global.components.navbar.hide_customer_dashboard %}
+          {% if shop_customer %}
+          <a href="{{ '/customer/dashboard' | shopUrl }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 18 18" style="flex-shrink:0" fill="none">
+              <path d="M2.60518 13.1674C3.69058 10.7157 6.14168 9 8.99999 9C11.7634 9 14.1462 10.6037 15.2822 12.9257C15.3564 13.0774 15.4289 13.2326 15.4797 13.3894C15.8649 14.5805 15.1811 15.8552 13.9874 16.2313C12.705 16.6354 11.0072 17 8.99999 17C6.99283 17 5.29503 16.6354 4.01259 16.2313C2.74425 15.8317 2.05162 14.4186 2.60518 13.1674Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 7.50049C10.7952 7.50049 12.25 6.04543 12.25 4.25049C12.25 2.45554 10.7952 1.00049 9 1.00049C7.20482 1.00049 5.75 2.45554 5.75 4.25049C5.75 6.04543 7.20482 7.50049 9 7.50049Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            My Account
+          </a>
+          {% else %}
+          <button type="button" data-bs-toggle="modal" data-bs-target="#customer-login-modal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 18 18" style="flex-shrink:0" fill="none">
+              <path d="M2.60518 13.1674C3.69058 10.7157 6.14168 9 8.99999 9C11.7634 9 14.1462 10.6037 15.2822 12.9257C15.3564 13.0774 15.4289 13.2326 15.4797 13.3894C15.8649 14.5805 15.1811 15.8552 13.9874 16.2313C12.705 16.6354 11.0072 17 8.99999 17C6.99283 17 5.29503 16.6354 4.01259 16.2313C2.74425 15.8317 2.05162 14.4186 2.60518 13.1674Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 7.50049C10.7952 7.50049 12.25 6.04543 12.25 4.25049C12.25 2.45554 10.7952 1.00049 9 1.00049C7.20482 1.00049 5.75 2.45554 5.75 4.25049C5.75 6.04543 7.20482 7.50049 9 7.50049Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Customer Portal
+          </button>
+          {% endif %}
+        {% endif %}
+        <a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="nb-getkey nb-getkey--mobile">Get Key</a>
+        {% if not global.components.navbar.hide_cart %}
+        <a href="{{ '/cart' | shopUrl }}">Cart</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+</div>
+
+<script>
+(function () {
+  var toggler = document.getElementById('nb-toggler');
+  var menu = document.getElementById('nb-mobile-menu');
+  if (!toggler || !menu) return;
+
+  function setOpen(open) {
+    menu.classList.toggle('is-open', open);
+    toggler.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggler.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+  function isOpen() {
+    return menu.classList.contains('is-open');
+  }
+
+  toggler.addEventListener('click', function () {
+    setOpen(!isOpen());
+  });
+
+  // Escape closes and returns focus to the toggler
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && isOpen()) {
+      setOpen(false);
+      toggler.focus();
+    }
+  });
+
+  // Tapping outside the menu closes it
+  document.addEventListener('click', function (e) {
+    if (isOpen() && !menu.contains(e.target) && !toggler.contains(e.target)) {
+      setOpen(false);
+    }
+  });
+
+  // Choosing a link closes the menu (covers same-page anchors too)
+  menu.addEventListener('click', function (e) {
+    if (e.target.closest('a')) setOpen(false);
+  });
+})();
+</script>

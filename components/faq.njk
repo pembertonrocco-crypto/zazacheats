@@ -1,0 +1,596 @@
+<section class="faq-section py-20 bg-block-{{ properties.background }} component" data-component-id="{{ componentId }}">
+  <div class="faq-glows" aria-hidden="true">
+    <div class="faq-glow faq-glow--left"></div>
+    <div class="faq-glow faq-glow--right"></div>
+  </div>
+  <div class="faq-wrap">
+    <div class="faq-layout">
+      <div class="faq-left">
+        <div class="faq-badge-wrap">
+          <div class="faq-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 20 20" style="flex-shrink:0">
+              <path fill="rgba(180,210,255,0.8)" d="M11.739 16.213a2 2 0 1 1-4 0a2 2 0 0 1 4 0Z"/>
+              <path fill="rgba(180,210,255,0.8)" fill-rule="evenodd" d="M9.71 4.765c-.67 0-1.245.2-1.65.486c-.39.276-.583.597-.639.874a1.45 1.45 0 0 1-2.842-.574c.227-1.126.925-2.045 1.809-2.67c.92-.65 2.086-1.016 3.322-1.016c2.557 0 5.208 1.71 5.208 4.456c0 1.59-.945 2.876-2.169 3.626a1.45 1.45 0 0 1-1.514-2.474c.57-.349.783-.794.783-1.152c0-.574-.715-1.556-2.308-1.556Z" clip-rule="evenodd"/>
+              <path fill="rgba(180,210,255,0.5)" fill-rule="evenodd" d="M9.71 8.63c.8 0 1.45.648 1.45 1.45v1.502a1.45 1.45 0 1 1-2.9 0V10.08c0-.8.649-1.45 1.45-1.45Z" clip-rule="evenodd"/>
+              <path fill="rgba(180,210,255,0.5)" fill-rule="evenodd" d="M13.239 7.966a1.45 1.45 0 0 1-.5 1.99l-2.284 1.367a1.45 1.45 0 0 1-1.49-2.488l2.285-1.368a1.45 1.45 0 0 1 1.989.5Z" clip-rule="evenodd"/>
+            </svg>
+            <span>FAQ</span>
+          </div>
+        </div>
+        {% if properties.title %}
+        <h2 class="faq-title">{{ properties.title | renderString }}</h2>
+        {% endif %}
+        {% if properties.subtitle %}
+        <p class="faq-subtitle">{{ properties.subtitle | renderString }}</p>
+        {% endif %}
+      </div>
+      <div class="faq-right">
+        {# FAQPage rich-result markup, generated from the real dashboard-configured items #}
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {%- for item in properties.items -%}
+            {
+              "@type": "Question",
+              "name": {{ item.question | json | safe }},
+              "acceptedAnswer": { "@type": "Answer", "text": {{ item.answer | json | safe }} }
+            }{{ "," if not loop.last }}
+            {%- endfor -%}
+          ]
+        }
+        </script>
+
+        <div class="faq-search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="search" class="faq-search__input" data-faq-search placeholder="Search questions&hellip;" aria-label="Search FAQ">
+          <kbd class="faq-search__kbd" aria-hidden="true">/</kbd>
+        </div>
+        <div class="faq-controls">
+          <span class="faq-count" data-faq-count aria-live="polite"></span>
+          <button type="button" class="faq-toggleall" data-faq-toggleall aria-expanded="false">Expand all</button>
+        </div>
+        <p class="faq-noresults" data-faq-noresults hidden>No matches &mdash; try different words, or ask us directly below.</p>
+        {% for item in properties.items %}
+        {% set faqId = componentId ~ '-' ~ loop.index %}
+        <div class="faq-item" data-faq-id="{{ faqId }}" id="faq-item-{{ faqId }}">
+          <button class="faq-btn" type="button" aria-expanded="false" aria-controls="faq-body-{{ faqId }}">
+            <span class="faq-question">{{ item.question | renderString }}</span>
+            <span class="faq-plus" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </button>
+          <div class="faq-body" id="faq-body-{{ faqId }}" role="region" hidden>
+            <p class="faq-answer">{{ item.answer | renderString }}</p>
+            <button type="button" class="faq-copylink" data-faq-copylink="faq-item-{{ faqId }}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7.07 0l3.54-3.54a5 5 0 1 0-7.07-7.07L12 4.93" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M14 10a5 5 0 0 0-7.07 0l-3.54 3.54a5 5 0 1 0 7.07 7.07L12 19.07" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <span data-faq-copylabel>Copy link to this answer</span>
+            </button>
+          </div>
+        </div>
+        {% endfor %}
+
+        {# PINNED HONEST ANSWER — static, always last, links the NFA upsell #}
+        <details class="zzfaq-pin">
+          <summary class="zzfaq-pin__q">
+            <span class="zzfaq-pin__badge">THE HONEST ANSWER</span>
+            <span class="zzfaq-pin__t">Will I get banned?</span>
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </summary>
+          <div class="zzfaq-pin__a">
+            <p>No cheat provider can honestly promise a 0% ban rate — anti-cheat is an arms race, and anyone claiming "zero bans, guaranteed" is lying to you. What we <b>can</b> promise: our build's detection status is verified and dated on the <a href="{{ '/status' | shopUrl }}">status page</a>, red incidents never get deleted from the log, and when something changes we say so before you buy.</p>
+            <p>And because the risk is never zero, we're the store that plans for it: <a href="{{ '/product/rust-nfa' | shopUrl }}">NFA accounts from $1.00</a> mean a worst-case ban costs you pocket change instead of your main. Buy the key, keep a spare account, play smart.</p>
+          </div>
+        </details>
+
+        <div class="faq-stuck">
+          <div class="faq-stuck__text">
+            <span class="faq-stuck__t">Didn't find your answer?</span>
+            <span class="faq-stuck__d">Real humans in the Discord, usually within minutes.</span>
+          </div>
+          <div class="faq-stuck__btns">
+            <a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="faq-stuck__btn faq-stuck__btn--buy">Get your key</a>
+            <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener" class="faq-stuck__btn">Ask on Discord</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.zzfaq-pin{margin-top:14px;border:1px solid rgba(245,196,81,.3);border-radius:14px;overflow:hidden;
+  background:linear-gradient(160deg,rgba(245,196,81,.06),rgba(12,15,30,.55))}
+.zzfaq-pin__q{display:flex;align-items:center;gap:12px;cursor:pointer;list-style:none;padding:16px 18px}
+.zzfaq-pin__q::-webkit-details-marker{display:none}
+/* smooth open/close (progressive enhancement, no-op on older browsers) */
+.zzfaq-pin{interpolate-size:allow-keywords}
+.zzfaq-pin::details-content{block-size:0;overflow:hidden;
+  transition:block-size .32s cubic-bezier(.22,1,.36,1),content-visibility .32s allow-discrete}
+.zzfaq-pin[open]::details-content{block-size:auto}
+@media (prefers-reduced-motion:reduce){.zzfaq-pin::details-content{transition:none}}
+.zzfaq-pin__badge{flex-shrink:0;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.58rem;font-weight:800;
+  letter-spacing:.18em;color:#0b0a05;background:linear-gradient(135deg,#ffe9a3,#e8b53a);border-radius:999px;padding:5px 10px}
+.zzfaq-pin__t{flex:1;font-weight:700;color:#fff;font-size:1rem}
+.zzfaq-pin__q svg{color:rgba(200,215,240,.5);transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.zzfaq-pin[open] .zzfaq-pin__q svg{transform:rotate(180deg)}
+.zzfaq-pin__a{padding:0 18px 16px;color:rgba(220,232,255,.75);font-size:.94rem;line-height:1.65}
+.zzfaq-pin__a p{margin:0 0 10px}
+.zzfaq-pin__a a{color:#f7d474;font-weight:700;text-decoration:none}
+.zzfaq-pin__a a:hover{text-decoration:underline}
+@media (max-width:560px){.zzfaq-pin__q{flex-wrap:wrap;gap:8px}}
+
+.faq-section {
+  position: relative;
+  background: #06091a;
+  font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+  overflow: hidden;
+  padding-top: 7.5rem;
+  padding-bottom: 7.5rem;
+}
+
+.faq-glows {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.faq-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+}
+
+.faq-glow--left {
+  width: 90px;
+  height: 90px;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 280px;
+  background: radial-gradient(circle, rgba(124,58,237, 0.75) 0%, transparent 70%);
+}
+
+.faq-glow--right {
+  width: 120px;
+  height: 120px;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 340px;
+  background: radial-gradient(circle, rgba(191,64,191, 0.7) 0%, transparent 70%);
+}
+
+.faq-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.faq-layout {
+  position: relative;
+  display: grid;
+  grid-template-columns: 38% 1fr;
+  gap: 5rem;
+}
+
+.faq-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(38% - 2.5rem);
+}
+
+.faq-right {
+  grid-column: 2;
+  padding-top: 0.25rem;
+}
+
+.faq-badge-wrap {
+  margin-bottom: 1.75rem;
+}
+
+.faq-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 999px;
+  padding: 0.38rem 1.05rem 0.38rem 0.75rem;
+  color: rgba(255,255,255,0.72);
+  font-size: 0.79rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+
+.faq-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15%; right: 15%;
+  height: 6px;
+  background: linear-gradient(90deg, transparent, rgba(180,210,255,0.18) 40%, rgba(180,210,255,0.18) 60%, transparent);
+  border-radius: 999px;
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.faq-badge::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 15%; right: 15%;
+  height: 6px;
+  background: linear-gradient(90deg, transparent, rgba(180,210,255,0.12) 40%, rgba(180,210,255,0.12) 60%, transparent);
+  border-radius: 999px;
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.faq-badge span {
+  font-size: 0.79rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(255,255,255,0.72);
+}
+
+.faq-title {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin: 0 0 1.1rem;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #ffffff 65%,
+    #dae6ff 85%,
+    #a8c4ff 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.faq-subtitle {
+  font-size: 0.9rem;
+  color: rgba(200, 215, 240, 0.5);
+  line-height: 1.8;
+  margin: 0;
+  max-width: 340px;
+}
+
+.faq-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.faq-item:first-child {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.faq-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+}
+
+.faq-question {
+  font-size: 0.925rem;
+  font-weight: 600;
+  color: rgba(220, 230, 255, 0.85);
+  line-height: 1.5;
+  transition: color 0.2s ease;
+}
+
+.faq-item.is-open .faq-question {
+  color: #fff;
+}
+
+.faq-plus {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(160, 196, 255, 0.35);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+}
+
+.faq-item.is-open .faq-plus {
+  transform: rotate(45deg);
+  color: rgba(191,64,191, 0.9);
+}
+
+.faq-body {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faq-body:not([hidden]) {
+  display: block;
+}
+
+.faq-answer {
+  padding: 0 0 1.5rem;
+  font-size: 0.875rem;
+  color: rgba(200, 215, 240, 0.7);
+  line-height: 1.85;
+  margin: 0;
+  white-space: pre-line;
+  max-width: 560px;
+}
+
+@media (max-width: 860px) {
+  .faq-layout {
+    display: block;
+  }
+
+  .faq-left {
+    position: static;
+    width: 100%;
+    margin-bottom: 2.5rem;
+  }
+
+  .faq-subtitle {
+    max-width: 100%;
+  }
+}
+/* ===== flashy upgrades ===== */
+.faq-glow{animation:faqGlowFloat 9s ease-in-out infinite}
+.faq-glow--right{animation-delay:-4.5s}
+@keyframes faqGlowFloat{0%,100%{transform:translate(0,0) scale(1);opacity:.7}50%{transform:translate(12px,-14px) scale(1.1);opacity:1}}
+
+.faq-reveal-ready .faq-item{opacity:0;transform:translateY(22px);
+  transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+.faq-reveal-ready .faq-item.faq-in{opacity:1;transform:translateY(0)}
+.faq-item{transition:border-color .3s,background .3s}
+@media (prefers-reduced-motion: reduce){
+  .faq-glow{animation:none!important}
+  .faq-reveal-ready .faq-item{opacity:1!important;transform:none!important}
+}
+.faq-search{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:0 16px;
+  border:1px solid rgba(191,64,191,.2);border-radius:12px;background:rgba(255,255,255,.02);
+  transition:border-color .2s}
+.faq-search:focus-within{border-color:rgba(191,64,191,.55)}
+.faq-search svg{flex-shrink:0;color:rgba(200,215,240,.45)}
+.faq-search__input{flex:1;padding:13px 0;border:0;background:transparent;color:#fff;
+  font-size:.9rem;font-family:inherit;outline:none}
+.faq-search__input::placeholder{color:rgba(200,215,240,.35)}
+.faq-noresults{margin:0 0 14px;font-size:.84rem;color:rgba(200,215,240,.55);font-style:italic}
+.faq-stuck{margin-top:18px;display:flex;align-items:center;gap:14px;padding:16px 18px;
+  border:1px solid rgba(88,101,242,.25);border-radius:14px;background:rgba(88,101,242,.06)}
+.faq-stuck__text{flex:1;display:flex;flex-direction:column;line-height:1.35;min-width:0}
+.faq-stuck__t{font-size:.9rem;font-weight:800;color:#fff}
+.faq-stuck__d{font-size:.76rem;color:rgba(200,215,240,.6)}
+.faq-stuck__btn{flex-shrink:0;padding:.65rem 1.2rem;border-radius:10px;font-size:.82rem;font-weight:800;
+  color:#fff;text-decoration:none;background:linear-gradient(135deg,#5865F2,#7C3AED);
+  box-shadow:0 8px 22px -10px rgba(88,101,242,.8);transition:transform .2s}
+.faq-stuck__btn:hover{transform:translateY(-2px)}
+@media (max-width:520px){.faq-stuck{flex-direction:column;text-align:center}.faq-stuck__btn{width:100%;text-align:center}}
+.faq-stuck__btns{display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap}
+.faq-stuck__btn--buy{background:linear-gradient(135deg,#BF40BF,#7C3AED);color:#fff;border:none;
+  box-shadow:0 8px 22px -10px rgba(191,64,191,.8)}
+.faq-stuck__btn--buy:hover{filter:brightness(1.12)}
+@media (max-width:520px){.faq-stuck__btns{width:100%;flex-direction:column}}
+
+/* --- FAQ v2 additions: search hint, controls, highlight, copy-link --- */
+.faq-search{position:relative}
+.faq-search__kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;color:rgba(200,215,240,.45);
+  border:1px solid rgba(200,215,240,.18);border-radius:5px;padding:2px 7px;pointer-events:none}
+@media (max-width:640px){.faq-search__kbd{display:none}}
+.faq-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 2px 14px}
+.faq-count{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.06em;color:rgba(200,215,240,.5)}
+.faq-toggleall{background:none;border:1px solid rgba(200,215,240,.16);border-radius:8px;cursor:pointer;
+  padding:5px 12px;font-size:.72rem;font-weight:700;color:rgba(220,230,250,.75);transition:border-color .2s,color .2s}
+.faq-toggleall:hover{border-color:rgba(191,64,191,.5);color:#fff}
+.faq-mark{background:rgba(191,64,191,.35);color:#fff;border-radius:3px;padding:0 2px}
+.faq-copylink{display:inline-flex;align-items:center;gap:6px;margin-top:12px;
+  background:none;border:none;cursor:pointer;padding:0;
+  font-size:.72rem;color:rgba(200,215,240,.45);transition:color .2s}
+.faq-copylink:hover{color:#d98ad9}
+.faq-copylink.is-copied{color:#22c55e}
+.faq-item:target{scroll-margin-top:90px}
+</style>
+
+<script>
+(function () {
+  var DURATION = 380;
+  var section = document.querySelector('[data-component-id="{{ componentId }}"]');
+  var items = Array.prototype.slice.call(section.querySelectorAll('.faq-item'));
+  var TOTAL = items.length;
+
+  /* stash pristine question HTML so search highlighting is fully reversible */
+  items.forEach(function (it) {
+    var q = it.querySelector('.faq-question');
+    it._faqQHtml = q.innerHTML;
+    it._faqQPlain = q.children.length === 0; /* only highlight plain-text questions */
+  });
+
+  function closeItem(item) {
+    var body = item.querySelector('.faq-body');
+    var btn = item.querySelector('.faq-btn');
+    if (!item.classList.contains('is-open')) return;
+    item.classList.remove('is-open');
+    btn.setAttribute('aria-expanded', 'false');
+    body.style.maxHeight = '0';
+    clearTimeout(item._faqTimer);
+    item._faqTimer = setTimeout(function () {
+      if (!item.classList.contains('is-open')) body.setAttribute('hidden', '');
+    }, DURATION);
+  }
+
+  function openItem(item, instant) {
+    var body = item.querySelector('.faq-body');
+    var btn = item.querySelector('.faq-btn');
+    clearTimeout(item._faqTimer);
+    body.removeAttribute('hidden');
+    body.style.maxHeight = instant ? 'none' : body.scrollHeight + 'px';
+    item.classList.add('is-open');
+    btn.setAttribute('aria-expanded', 'true');
+  }
+
+  /* ---- results counter + expand/collapse all ---- */
+  var countEl = section.querySelector('[data-faq-count]');
+  var toggleAll = section.querySelector('[data-faq-toggleall]');
+  function setCount(shown, filtering) {
+    if (!countEl) return;
+    countEl.textContent = filtering ? (shown + ' of ' + TOTAL + ' questions') : (TOTAL + ' questions');
+  }
+  setCount(TOTAL, false);
+
+  var allOpen = false;
+  function syncToggleAll() {
+    if (!toggleAll) return;
+    toggleAll.textContent = allOpen ? 'Collapse all' : 'Expand all';
+    toggleAll.setAttribute('aria-expanded', allOpen ? 'true' : 'false');
+  }
+  if (toggleAll) {
+    toggleAll.addEventListener('click', function () {
+      allOpen = !allOpen;
+      items.forEach(function (it) {
+        if (it.style.display === 'none') return;
+        allOpen ? openItem(it) : closeItem(it);
+      });
+      syncToggleAll();
+    });
+  }
+
+  /* ---- live search: filter + highlight + auto-expand small result sets ---- */
+  var search = section.querySelector('[data-faq-search]');
+  var noRes = section.querySelector('[data-faq-noresults]');
+
+  function escapeHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function highlight(item, q) {
+    var span = item.querySelector('.faq-question');
+    if (!q || !item._faqQPlain) { span.innerHTML = item._faqQHtml; return; }
+    var text = span.textContent, lower = text.toLowerCase(), out = '', i = 0, hit;
+    while ((hit = lower.indexOf(q, i)) !== -1) {
+      out += escapeHtml(text.slice(i, hit)) + '<mark class="faq-mark">' + escapeHtml(text.slice(hit, hit + q.length)) + '</mark>';
+      i = hit + q.length;
+    }
+    out += escapeHtml(text.slice(i));
+    span.innerHTML = out;
+  }
+
+  if (search) {
+    search.addEventListener('input', function () {
+      var q = search.value.trim().toLowerCase(), shown = 0, matches = [];
+      items.forEach(function (it) {
+        var txt = it.textContent.toLowerCase();
+        var hit = !q || txt.indexOf(q) !== -1;
+        it.style.display = hit ? '' : 'none';
+        highlight(it, hit ? q : '');
+        if (hit) { shown++; matches.push(it); }
+      });
+      if (noRes) noRes.hidden = shown > 0;
+      setCount(shown, !!q);
+      /* few matches? open them so the answer is visible without another click */
+      if (q.length >= 2 && shown > 0 && shown <= 3) {
+        matches.forEach(function (it) { openItem(it); });
+      } else if (!q) {
+        items.forEach(closeItem);
+        allOpen = false; syncToggleAll();
+      }
+    });
+  }
+
+  /* ---- accordion clicks ---- */
+  items.forEach(function (item) {
+    var btn = item.querySelector('.faq-btn');
+    btn.addEventListener('click', function () {
+      var isOpen = item.classList.contains('is-open');
+      items.forEach(function (other) { if (other !== item) closeItem(other); });
+      isOpen ? closeItem(item) : openItem(item);
+      allOpen = false; syncToggleAll();
+    });
+  });
+
+  /* ---- keyboard: "/" focuses search; arrows/Home/End move between questions ---- */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === '/' && search && !/input|textarea|select/i.test(document.activeElement.tagName)) {
+      e.preventDefault(); search.focus();
+    }
+  });
+  var btns = items.map(function (it) { return it.querySelector('.faq-btn'); });
+  btns.forEach(function (btn, idx) {
+    btn.addEventListener('keydown', function (e) {
+      var visible = btns.filter(function (b) { return b.closest('.faq-item').style.display !== 'none'; });
+      var vi = visible.indexOf(btn);
+      if (vi === -1) return;
+      var target = null;
+      if (e.key === 'ArrowDown') target = visible[(vi + 1) % visible.length];
+      else if (e.key === 'ArrowUp') target = visible[(vi - 1 + visible.length) % visible.length];
+      else if (e.key === 'Home') target = visible[0];
+      else if (e.key === 'End') target = visible[visible.length - 1];
+      if (target) { e.preventDefault(); target.focus(); }
+    });
+  });
+
+  /* ---- deep links: open item from URL hash; copy-link buttons ---- */
+  function openFromHash() {
+    var hash = location.hash.replace('#', '');
+    if (!hash) return;
+    var target = document.getElementById(hash);
+    if (!target || !target.classList.contains('faq-item') || !section.contains(target)) return;
+    items.forEach(function (other) { if (other !== target) closeItem(other); });
+    openItem(target, true);
+    setTimeout(function () { target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 60);
+  }
+  window.addEventListener('hashchange', openFromHash);
+  openFromHash();
+
+  section.querySelectorAll('[data-faq-copylink]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var url = location.origin + location.pathname + '#' + btn.getAttribute('data-faq-copylink');
+      var label = btn.querySelector('[data-faq-copylabel]');
+      function done() {
+        if (!label) return;
+        var prev = label.textContent;
+        label.textContent = 'Link copied!';
+        btn.classList.add('is-copied');
+        setTimeout(function () { label.textContent = prev; btn.classList.remove('is-copied'); }, 1800);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done, function () { window.prompt('Copy this link:', url); });
+      } else {
+        window.prompt('Copy this link:', url);
+      }
+    });
+  });
+
+  /* scroll-reveal: stagger FAQ items in */
+  (function(){
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !items.length) return;
+    section.classList.add('faq-reveal-ready');
+    items.forEach(function(it,i){ it.style.transitionDelay = Math.min(i*70,350)+'ms'; });
+    if(!('IntersectionObserver' in window)){ items.forEach(function(it){it.classList.add('faq-in');}); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('faq-in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    items.forEach(function(it){ io.observe(it); });
+  })();
+})();
+</script>

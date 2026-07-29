@@ -1,0 +1,180 @@
+{#
+  store-conversion-strip.njk — shared conversion section for the products page.
+  SellAuth Nunjucks constraint: static HTML only. No synthetic loops or {% set %} arrays.
+  Reviews are real, copied verbatim from components/feedbacks.njk.
+#}
+
+<div class="scs">
+
+  {# ---- Live status ribbon: transparency as a selling point ---- #}
+  <a href="/status" class="scs-status">
+    <span class="scs-status__pulse" aria-hidden="true"></span>
+    <span class="scs-status__text">
+      <span class="scs-status__t">Check live detection status before you buy</span>
+      <span class="scs-status__d">We publish the real state of every build — verify it yourself first.</span>
+    </span>
+    <span class="scs-status__go">View status
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+  </a>
+
+  {# ---- How buying works: kills the "will I actually get it?" fear ---- #}
+  <div class="scs-steps">
+    <p class="scs-eyebrow">// FROM CHECKOUT TO IN-GAME</p>
+    <div class="scs-steps__row">
+      <div class="scs-step">
+        <span class="scs-step__ico" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.5"/></svg>
+        </span>
+        <span class="scs-step__t">Pick a duration &amp; pay</span>
+        <span class="scs-step__d">Automated secure checkout. No waiting on a human.</span>
+      </div>
+      <span class="scs-step__arrow" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <div class="scs-step">
+        <span class="scs-step__ico" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14 7a4 4 0 1 1-3.2 6.4L7 17.2V20H4v-3l6.6-6.6A4 4 0 0 1 14 7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="15.5" cy="9.5" r="1" fill="currentColor"/></svg>
+        </span>
+        <span class="scs-step__t">Key delivered instantly</span>
+        <span class="scs-step__d">Loader + serial on screen and saved to your account.</span>
+      </div>
+      <span class="scs-step__arrow" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <div class="scs-step">
+        <span class="scs-step__ico" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="scs-step__t">Inject &amp; play</span>
+        <span class="scs-step__d">Run the loader, enter your key, load into Rust.</span>
+      </div>
+    </div>
+    <p class="scs-steps__note">Build goes down during your key? We add the time back or replace your key.</p>
+  </div>
+
+  {# ---- Claims we refuse to make: the honest differentiator, compact form ---- #}
+  <div class="scs-refuse">
+    <span class="scs-refuse__label">WE'LL NEVER CLAIM:</span>
+    <span class="scs-refuse__items">
+      <s>"100% undetected forever"</s>
+      <s>"0% ban rate"</s>
+      <s>"risk-free"</s>
+    </span>
+    <span class="scs-refuse__real">Nobody honest can. The dated truth is what the status page above is for.</span>
+  </div>
+
+  {# ---- Real reviews teaser ---- #}
+  <div class="scs-proof">
+    <div class="scs-proof__cards">
+      <figure class="scs-quote">
+        <div class="scs-quote__stars" aria-hidden="true">★★★★★</div>
+        <blockquote>Undetected for weeks of daily play. The install process is dummy proof and the team behind it is super responsive. Makes the game way more fun again.</blockquote>
+        <figcaption>✓ Verified buyer</figcaption>
+      </figure>
+      <figure class="scs-quote">
+        <div class="scs-quote__stars" aria-hidden="true">★★★★☆</div>
+        <blockquote>Good cheat overall. Undetected and easy to install with fast support. Just took me a bit to figure out one feature, but the team helped sort it.</blockquote>
+        <figcaption>✓ Verified buyer</figcaption>
+      </figure>
+    </div>
+    <a href="/feedback" class="scs-proof__link">Read all <span data-zz-rc>78</span> verified reviews →</a>
+    <p class="scs-proof__prov">Imported word-for-word from our previous storefront &mdash; new reviews post automatically after purchase.</p>
+  </div>
+
+  {# ---- Pre-sale Discord CTA ---- #}
+  <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener"  class="scs-discord">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#zz-ico-discord"/></svg>
+    <span class="scs-discord__text">
+      <span class="scs-discord__t">Not sure yet? Talk to us first.</span>
+      <span class="scs-discord__d">Join the Discord, see the community, ask anything — before spending a penny.</span>
+    </span>
+    <span class="scs-discord__btn">Join Discord</span>
+  </a>
+
+  <p class="scs-policies">Read before you buy: <a href="{{ '/refund-policy' | shopUrl }}">Refund policy</a> &middot; <a href="{{ '/terms-of-service' | shopUrl }}">Terms</a> &mdash; the rules you're agreeing to, upfront.</p>
+
+</div>
+
+<style>
+.scs{max-width:880px;margin:64px auto 0;display:flex;flex-direction:column;gap:22px;
+  font-family:'Satoshi','Inter',system-ui,sans-serif}
+.scs-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;letter-spacing:.16em;color:#BF40BF;margin:0 0 16px;text-align:center}
+
+/* status ribbon */
+.scs-status{display:flex;align-items:center;gap:16px;padding:16px 20px;text-decoration:none;
+  border:1px solid rgba(34,197,94,.22);border-radius:16px;background:rgba(34,197,94,.05);
+  transition:border-color .25s,background .25s,transform .25s}
+.scs-status:hover{border-color:rgba(34,197,94,.5);background:rgba(34,197,94,.09);transform:translateY(-2px)}
+.scs-status__pulse{flex-shrink:0;width:12px;height:12px;border-radius:50%;background:#22c55e;position:relative}
+.scs-status__pulse::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:1px solid rgba(34,197,94,.5);animation:scsPing 2.2s ease-out infinite}
+@keyframes scsPing{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+.scs-status__text{flex:1;display:flex;flex-direction:column;line-height:1.35;min-width:0}
+.scs-status__t{font-size:.94rem;font-weight:800;color:#fff}
+.scs-status__d{font-size:.78rem;color:rgba(200,215,240,.6)}
+.scs-status__go{flex-shrink:0;display:inline-flex;align-items:center;gap:7px;font-size:.82rem;font-weight:700;color:#4ade80}
+
+/* steps */
+.scs-steps{padding:26px 24px;border:1px solid rgba(191,64,191,.14);border-radius:18px;background:rgba(255,255,255,.015)}
+.scs-steps__row{display:flex;align-items:stretch;gap:8px}
+.scs-step{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;min-width:0}
+.scs-step__ico{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;color:#c084fc;
+  border:1px solid rgba(191,64,191,.25);background:rgba(191,64,191,.08)}
+.scs-step__t{font-size:.86rem;font-weight:800;color:#fff;line-height:1.25}
+.scs-step__d{font-size:.73rem;color:rgba(200,215,240,.55);line-height:1.45}
+.scs-step__arrow{align-self:center;color:rgba(191,64,191,.55);flex-shrink:0}
+.scs-steps__note{margin:18px 0 0;text-align:center;font-size:.76rem;color:rgba(200,215,240,.55)}
+@media (max-width:640px){
+  .scs-steps__row{flex-direction:column;gap:14px}
+  .scs-step__arrow{transform:rotate(90deg)}
+}
+
+/* proof */
+.scs-proof__cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.scs-proof__cards{grid-template-columns:1fr}}
+.scs-quote{margin:0;padding:18px 20px;border:1px solid rgba(191,64,191,.14);border-radius:16px;background:rgba(255,255,255,.015)}
+.scs-quote__stars{color:#fbbf24;font-size:.82rem;letter-spacing:.04em;margin-bottom:8px}
+.scs-quote blockquote{margin:0;font-size:.86rem;line-height:1.6;color:rgba(220,230,245,.85)}
+.scs-quote figcaption{margin-top:10px;font-size:.72rem;color:rgba(200,215,240,.5)}
+.scs-proof__link{display:block;margin-top:12px;text-align:center;font-size:.82rem;font-weight:700;color:#c084fc;text-decoration:none}
+.scs-proof__link:hover{color:#e0b3ff;text-decoration:underline}
+
+/* discord */
+.scs-discord{display:flex;align-items:center;gap:16px;padding:18px 20px;text-decoration:none;
+  border:1px solid rgba(88,101,242,.25);border-radius:16px;background:rgba(88,101,242,.07);
+  transition:border-color .25s,background .25s,transform .25s}
+.scs-discord:hover{border-color:rgba(88,101,242,.6);background:rgba(88,101,242,.13);transform:translateY(-2px)}
+.scs-discord > svg{flex-shrink:0;color:#8b96f5}
+.scs-discord__text{flex:1;display:flex;flex-direction:column;line-height:1.35;min-width:0}
+.scs-discord__t{font-size:.94rem;font-weight:800;color:#fff}
+.scs-discord__d{font-size:.78rem;color:rgba(200,215,240,.6)}
+.scs-discord__btn{flex-shrink:0;padding:.6rem 1.2rem;border-radius:10px;font-size:.82rem;font-weight:800;color:#fff;
+  background:linear-gradient(135deg,#5865F2,#7C3AED);box-shadow:0 8px 22px -10px rgba(88,101,242,.8)}
+@media (max-width:520px){
+  .scs-status,.scs-discord{flex-wrap:wrap}
+  .scs-status__go,.scs-discord__btn{width:100%;justify-content:center;text-align:center;margin-top:4px}
+}
+@media (prefers-reduced-motion:reduce){
+  .scs-status,.scs-discord{transition:none}
+  .scs-status__pulse::after{animation:none}
+}
+
+/* refuse-claims row */
+.scs-refuse{display:flex;align-items:center;justify-content:center;gap:10px 14px;flex-wrap:wrap;
+  padding:13px 18px;border:1px solid rgba(239,68,68,.2);border-radius:14px;
+  background:linear-gradient(180deg,rgba(239,68,68,.05),rgba(255,255,255,.01));text-align:center}
+.scs-refuse__label{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.62rem;
+  letter-spacing:.14em;color:rgba(252,165,165,.85);white-space:nowrap}
+.scs-refuse__items{display:inline-flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.scs-refuse__items s{font-size:.8rem;font-weight:800;color:rgba(255,255,255,.55);
+  text-decoration:line-through;text-decoration-color:rgba(239,68,68,.75);text-decoration-thickness:2px;
+  white-space:nowrap}
+.scs-refuse__real{flex-basis:100%;font-size:.73rem;color:rgba(220,230,250,.55);line-height:1.5}
+
+/* provenance + policies */
+.scs-proof__prov{margin:7px 0 0;text-align:center;font-size:.7rem;color:rgba(200,215,240,.65);line-height:1.5}
+.scs-policies{margin:2px 0 0;text-align:center;font-size:.72rem;color:rgba(200,215,240,.68)}
+.scs-policies a{color:rgba(200,215,240,.75);text-decoration:none;border-bottom:1px solid rgba(200,215,240,.25);
+  transition:color .2s,border-color .2s}
+.scs-policies a:hover{color:#fff;border-color:rgba(191,64,191,.6)}
+</style>

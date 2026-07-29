@@ -1,0 +1,487 @@
+<a
+  class="pc"
+  href="{{ 'javascript:void(0);' if product.type == 'group' else ( ('/product/' + product.path) | shopUrl ) }}"
+  data-bs-toggle="{{ 'modal' if product.type == 'group' else '' }}"
+  data-bs-target="{{ '#group-modal-' ~ product.id if product.type == 'group' else '' }}"
+>
+  <span class="zz-neon" aria-hidden="true"></span>
+  <span class="pc__spot" aria-hidden="true"></span>
+  <div class="pc__thumb-wrap">
+    {% if product.image_urls|length > 0 %}
+    <img src="{{ product.image_urls[0] }}" alt="{{ product.name }}" class="pc__thumb aspect-product-card-image object-product-image" loading="lazy" />
+    {% elif product.image_url %}
+    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="pc__thumb aspect-product-card-image object-product-image" loading="lazy" />
+    {% else %}
+    <div class="pc__thumb pc__thumb--empty aspect-product-card-image">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 256 256" fill="none">
+        <path fill="currentColor" d="m222.72 67.91l-88-48.18a13.9 13.9 0 0 0-13.44 0l-88 48.18A14 14 0 0 0 26 80.18v95.64a14 14 0 0 0 7.28 12.27l88 48.18a13.92 13.92 0 0 0 13.44 0l88-48.18a14 14 0 0 0 7.28-12.27V80.18a14 14 0 0 0-7.28-12.27ZM127 30.25a2 2 0 0 1 1.92 0L212.51 76l-33.94 18.57l-84.52-46.26ZM122 223l-83-45.43a2 2 0 0 1-1-1.75V86.66l84 46ZM43.49 76l38.07-20.85l84.51 46.26L128 122.24ZM218 175.82a2 2 0 0 1-1 1.75L134 223v-90.36l36-19.71V152a6 6 0 0 0 12 0v-45.63l36-19.71Z"/>
+      </svg>
+    </div>
+    {% endif %}
+
+    <div class="pc__tl">
+      {% render_snippet "status-badge.njk", pname=product.name, pid=product.id %}
+      {% if product.product_badges.card|length > 0 %}
+      {% for productBadge in product.product_badges.card %}
+      <span class="pc__badge" style="background-color: {{ productBadge.color }};">
+        {% if productBadge.icon %}<i class="{{ productBadge.icon }} fa-fw"></i>{% endif %}
+        {{ productBadge.label }}
+      </span>
+      {% endfor %}
+      {% endif %}
+    </div>
+
+    <span class="pc__view">
+      View
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 16 16" fill="none">
+        <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+
+    {# ---- ESP lock-on hover treatment ---- #}
+    <span class="pc__esp" aria-hidden="true">
+      <span class="pc__esp-c pc__esp-c--tl"></span>
+      <span class="pc__esp-c pc__esp-c--tr"></span>
+      <span class="pc__esp-c pc__esp-c--bl"></span>
+      <span class="pc__esp-c pc__esp-c--br"></span>
+      <span class="pc__esp-scan"></span>
+      <span class="pc__esp-tag">▸ TARGET ACQUIRED</span>
+    </span>
+  </div>
+
+  <div class="pc__body">
+    <div class="pc__top">
+      <h3 class="pc__name">{{ product.name }}</h3>
+      <div class="pc__stock-wrap">
+        {% if product.type == 'group' %}
+          <span class="pc__stock pc__stock--in">{{ product.products | length }} Products</span>
+        {% elif product.stock === 0 %}
+          <span class="pc__stock pc__stock--out">Out of Stock</span>
+        {% elif product.stock === -1 %}
+          <span class="pc__stock pc__stock--in">In Stock</span>
+        {% elif product.hide_stock_count %}
+          <span class="pc__stock pc__stock--in">In Stock</span>
+        {% elif product.stock < 5 %}
+          <span class="pc__stock pc__stock--low">{{ product.stock }} Left</span>
+        {% else %}
+          <span class="pc__stock pc__stock--in">{{ product.stock }} Left</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="pc__bottom">
+      <div class="pc__pricing">
+        <span class="pc__label">Starting at</span>
+        <span class="pc__price">
+          {% if product.min_price %}
+            <span x-text="appCurrency.format({{ product.min_price }}, '{{ product.currency }}')">{{ formatPrice(product.min_price, product.currency) }}</span>
+          {% else %}
+            —
+          {% endif %}
+          {% if product.min_price_slash %}
+            <s class="pc__slash">
+              <span x-text="appCurrency.format({{ product.min_price_slash }}, '{{ product.currency }}')">{{ formatPrice(product.min_price_slash, product.currency) }}</span>
+            </s>
+          {% endif %}
+        </span>
+      </div>
+      <div class="pc__buy">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" class="pc__buy-icon">
+          <path fill="currentColor" d="M7 22q-.825 0-1.412-.587T5 20t.588-1.412T7 18t1.413.588T9 20t-.587 1.413T7 22m10 0q-.825 0-1.412-.587T15 20t.588-1.412T17 18t1.413.588T19 20t-.587 1.413T17 22M6.15 6l2.4 5h7l2.75-5zM5.2 4h14.75q.575 0 .875.513t.025 1.037l-3.55 6.4q-.275.5-.737.775T15.55 13H8.1L7 15h11q.425 0 .713.288T19 16t-.288.713T18 17H7q-1.125 0-1.7-.987t-.05-1.963L6.6 11.6L3 4H2q-.425 0-.712-.288T1 3t.288-.712T2 2h1.625q.275 0 .525.15t.375.425zm3.35 7h7z"/>
+        </svg>
+        <span>{{ 'View' if product.type == 'group' else 'Buy' }}</span>
+      </div>
+    </div>
+  </div>
+</a>
+
+<style>
+.pc {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  background: #0a0e22;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  overflow: hidden;
+  font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+  transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pc::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 18%;
+  right: 18%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(180, 210, 255, 0.35) 50%, transparent);
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
+}
+
+.pc::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -40%;
+  width: 140%;
+  height: 80%;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(191,64,191, 0.28) 0%,
+    rgba(124,58,237, 0.14) 30%,
+    rgba(191,64,191, 0.04) 60%,
+    transparent 75%
+  );
+  opacity: 0;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.pc:hover {
+  background: #0c1128;
+  border-color: rgba(180, 210, 255, 0.18);
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px -12px rgba(10, 15, 50, 0.7);
+}
+
+.pc:hover::before {
+  opacity: 1;
+}
+
+.pc:hover::after {
+  opacity: 1;
+}
+
+.pc__thumb-wrap,
+.pc__body {
+  position: relative;
+  z-index: 1;
+}
+
+.pc__thumb-wrap {
+  position: relative;
+  margin: 10px 10px 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #06091a;
+  z-index: 1;
+  box-shadow: 0 14px 26px -14px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04);
+  transition: transform 0.45s cubic-bezier(0.16,1,0.3,1), box-shadow 0.45s cubic-bezier(0.16,1,0.3,1);
+}
+
+.pc:hover .pc__thumb-wrap {
+  transform: translateY(-5px);
+  box-shadow: 0 24px 36px -14px rgba(0,0,0,0.78), 0 0 26px -6px rgba(191,64,191,0.32), 0 0 0 1px rgba(255,255,255,0.07);
+}
+
+.pc__thumb {
+  width: 100%;
+  display: block;
+  border-radius: 14px;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pc:hover .pc__thumb {
+  transform: scale(1.05);
+}
+
+.pc__thumb--empty {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(200, 220, 255, 0.14);
+  border-radius: 14px;
+}
+
+.pc__badges {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  z-index: 3;
+}
+
+.pc__tl {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  z-index: 3;
+}
+
+.pc__badge {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #ffffff;
+  padding: 4px 9px;
+  border-radius: 999px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.pc__view {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-family: 'Satoshi', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  background: rgba(10, 14, 34, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pc:hover .pc__view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pc__body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+
+.pc__top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pc__name {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+.pc__stock-wrap {
+  flex-shrink: 0;
+}
+
+.pc__stock {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 999px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pc__stock--in {
+  background: rgba(34, 197, 94, 0.1);
+  color: rgba(74, 222, 128, 0.9);
+  border: 1px solid rgba(34, 197, 94, 0.18);
+}
+
+.pc__stock--low {
+  background: rgba(234, 179, 8, 0.1);
+  color: rgba(250, 204, 21, 0.95);
+  border: 1px solid rgba(234, 179, 8, 0.2);
+}
+
+.pc__stock--out {
+  background: rgba(200, 220, 255, 0.04);
+  color: rgba(200, 220, 255, 0.3);
+  border: 1px solid rgba(200, 220, 255, 0.07);
+}
+
+.pc__bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pc__pricing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.pc__label {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(200, 220, 255, 0.35);
+  line-height: 1;
+}
+
+.pc__price {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  text-shadow: 0 0 18px rgba(191,64,191,.55);
+  transition: text-shadow .25s;
+}
+.pc:hover .pc__price { text-shadow: 0 0 26px rgba(191,64,191,.9); }
+
+.pc__slash {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(200, 220, 255, 0.28);
+  text-decoration: line-through;
+  letter-spacing: 0;
+}
+
+.pc__buy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  background: linear-gradient(135deg, #BF40BF 0%, #7C3AED 100%);
+  border-radius: 12px;
+  font-family: 'Satoshi', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: background 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 6px 18px -8px rgba(191,64,191, 0.8);
+}
+
+.pc:hover .pc__buy {
+  background: linear-gradient(135deg, #d24fd2 0%, #8b4df0 100%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.16) inset, 0 8px 22px -8px rgba(191, 64, 191, 0.95);
+  transform: translateY(-1px);
+}
+
+.pc__buy-icon {
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .pc__body {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .pc__name {
+    font-size: 14px;
+  }
+
+  .pc__price {
+    font-size: 18px;
+  }
+
+  .pc__buy {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  .pc__view {
+    display: none;
+  }
+}
+
+/* ===== v50: staggered card entrance =====
+   Runs when the parent section receives .zz-in from the sitewide reveal
+   observer, so cards cascade upward the moment the grid scrolls into view.
+   No-JS / reduced-motion / failsafe (.zz-revealed) all render instantly. */
+@media (prefers-reduced-motion: no-preference) {
+  html.zz-motion .zz-in .products .pc {
+    animation: zzPcIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  html.zz-motion .zz-in .products > :nth-child(2) .pc { animation-delay: 0.09s; }
+  html.zz-motion .zz-in .products > :nth-child(3) .pc { animation-delay: 0.18s; }
+  html.zz-motion .zz-in .products > :nth-child(4) .pc { animation-delay: 0.27s; }
+  html.zz-motion .zz-in .products > :nth-child(5) .pc { animation-delay: 0.36s; }
+  html.zz-motion .zz-in .products > :nth-child(6) .pc { animation-delay: 0.45s; }
+  html.zz-motion.zz-revealed .products .pc { animation: none; }
+}
+@keyframes zzPcIn {
+  from { opacity: 0; transform: translateY(22px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ===== v50: cursor-tracking spotlight border =====
+   --pcx / --pcy are fed by the delegated pointermove listener in polish.njk.
+   Desktop fine-pointer only; invisible everywhere else. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .pc__spot {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    background: radial-gradient(230px circle at var(--pcx, 50%) var(--pcy, 50%),
+      rgba(191, 64, 191, 0.14), transparent 65%);
+  }
+  .pc__spot::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: radial-gradient(190px circle at var(--pcx, 50%) var(--pcy, 50%),
+      rgba(219, 140, 255, 0.9), rgba(124, 58, 237, 0.25) 55%, transparent 75%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+  }
+  .pc:hover .pc__spot { opacity: 1; }
+}
+</style>

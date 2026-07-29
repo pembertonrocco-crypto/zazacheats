@@ -1,0 +1,434 @@
+<section class="container py-20 component" id="{{ componentId }}" data-component-id="{{ componentId }}" style="position:relative;overflow:hidden">
+  <div class="products-glow products-glow--left" aria-hidden="true"></div>
+  <div class="products-glow products-glow--right" aria-hidden="true"></div>
+  <div class="products-grid-bg" aria-hidden="true"></div>
+  <div class="products-reticle" aria-hidden="true">
+    <span class="products-reticle__ring"></span>
+    <span class="products-reticle__ring products-reticle__ring--dash"></span>
+    <span class="products-reticle__cross"></span>
+  </div>
+  <span class="products-frame products-frame--tl" aria-hidden="true"></span>
+  <span class="products-frame products-frame--tr" aria-hidden="true"></span>
+  <span class="products-frame products-frame--bl" aria-hidden="true"></span>
+  <span class="products-frame products-frame--br" aria-hidden="true"></span>
+  <div class="products-badge-wrap">
+    <div class="products-badge">
+      <span class="products-badge__blip" aria-hidden="true"></span>
+      <span class="products-badge__txt">// THE ARSENAL</span>
+    </div>
+  </div>
+  {% if properties.title %}
+  <div class="section-title">
+    <h2>{{ properties.title | renderString }}</h2>
+  </div>
+  {% endif %}
+  {% if properties.subtitle %}
+  <div class="section-subtitle">
+    <p>{{ properties.subtitle | renderString }}</p>
+  </div>
+  {% endif %}
+
+  {# ---- DOSSIER: real feature readout pulled from the live menu (same
+       names shown in the interactive demo above). Static HTML only. ---- #}
+  <div class="zzds" aria-label="Feature overview">
+    <div class="zzds__col">
+      <span class="zzds__h"><span class="zzds__hdot" aria-hidden="true"></span>VISUALS</span>
+      <span class="zzds__chips">
+        <span class="zzds__c">Player ESP</span><span class="zzds__c">Corner Box</span><span class="zzds__c">Skeleton</span><span class="zzds__c">Name + Distance</span><span class="zzds__c">Weapon ESP</span><span class="zzds__c">Chams</span>
+      </span>
+    </div>
+    <div class="zzds__col">
+      <span class="zzds__h"><span class="zzds__hdot" aria-hidden="true"></span>AIM</span>
+      <span class="zzds__chips">
+        <span class="zzds__c">Aimbot</span><span class="zzds__c">Silent Aim</span><span class="zzds__c">Custom Crosshair</span><span class="zzds__c">Bullet Tracer</span>
+      </span>
+    </div>
+    <div class="zzds__col">
+      <span class="zzds__h"><span class="zzds__hdot" aria-hidden="true"></span>AWARENESS</span>
+      <span class="zzds__chips">
+        <span class="zzds__c">Real Map Radar</span><span class="zzds__c">Enemy Looking Alert</span><span class="zzds__c">Screen Arrows</span><span class="zzds__c">Inside/Outside Check</span>
+      </span>
+    </div>
+    <a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="zzds__all">Full feature list <svg width="10" height="10" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+
+  <div>
+    <div class="row products{% if sortedItems|length == 1 %} products--single{% elif sortedItems|length == 2 %} products--pair{% endif %}">
+      {% if properties.ids|length == 0 %}
+        {% for item in sortedItems %}
+          {% if item.type == 'group' or not item.group_id %}
+            <div class="{% if sortedItems|length == 1 %}col-12 col-md-10 col-lg-7 mx-auto{% elif sortedItems|length == 2 %}col-12 col-sm-6{% else %}col-12 col-md-6 col-lg-4{% endif %} mb-4">
+              {% render_snippet "product-card.njk", product=item %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        {% for item in helpers.components.products.getItemsByIds(sortedItems, properties.ids) %}
+          <div class="{% if properties.ids|length == 1 %}col-12 col-md-10 col-lg-7 mx-auto{% elif properties.ids|length == 2 %}col-12 col-sm-6{% else %}col-12 col-md-6 col-lg-4{% endif %} mb-4">
+            {% render_snippet "product-card.njk", product=item %}
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+
+  {% if properties.show_view_all and sortedItems|length > 1 %}
+  <div class="products-view-all">
+    <a href="{{ '/products' | shopUrl }}" class="products-view-all__btn">
+      View All Products
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+  {% endif %}
+
+  {# ---- ROUTER: honest "which key?" guidance. Duration names match the
+       real variants badged on the product page. Static HTML only. ---- #}
+  <div class="zzrt" aria-label="Which key should I get?">
+    <p class="zzrt__q">// WHICH KEY?</p>
+    <div class="zzrt__grid">
+      <a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="zzrt__cell">
+        <span class="zzrt__k">TESTING THE WATERS</span>
+        <span class="zzrt__v">1 Day Key</span>
+        <span class="zzrt__d">Full menu, nothing locked. See if it's for you.</span>
+      </a>
+      <a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="zzrt__cell zzrt__cell--hot">
+        <span class="zzrt__tag">MOST POPULAR</span>
+        <span class="zzrt__k">PLAYING THE WIPE</span>
+        <span class="zzrt__v">1 Week Key</span>
+        <span class="zzrt__d">Covers a weekly wipe end to end — in, dominant, out.</span>
+      </a>
+      <a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="zzrt__cell">
+        <span class="zzrt__k">DONE WITH RENEWALS</span>
+        <span class="zzrt__v">Lifetime Key</span>
+        <span class="zzrt__d">One payment, every update we ever ship.</span>
+      </a>
+    </div>
+    <p class="zzrt__nfa">Worried about your main? <a href="{{ '/product/rust-nfa' | shopUrl }}">NFA accounts</a> make a worst-case ban a shrug, not a funeral.</p>
+  </div>
+
+  <div class="zzps" aria-label="Purchase details">
+    <span class="zzps__i">KEY ON SCREEN IN SECONDS</span>
+    <span class="zzps__d" aria-hidden="true"></span>
+    <span class="zzps__i">CARD · APPLE PAY · CRYPTO</span>
+    <span class="zzps__d" aria-hidden="true"></span>
+    <span class="zzps__i">24H+ DOWNTIME = TIME ADDED TO YOUR KEY</span>
+  </div>
+</section>
+
+{% for group in sortedItems %}
+  {% if group.type == 'group' %}
+    <div class="modal fade" id="group-modal-{{ group.id }}" tabindex="-1" aria-labelledby="group-modal-{{ group.id }}-label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="group-modal-{{ group.id }}-label">
+              {{ group.name }} Products
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="products row">
+              {% for product in group.products %}
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                  {% render_snippet "product-card.njk", product=product %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endfor %}
+
+<style>
+.products-glow--left {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0%;
+  background: radial-gradient(circle, rgba(124,58,237,0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.products-glow--right {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  top: 30%;
+  right: 0%;
+  background: radial-gradient(circle, rgba(191,64,191,0.16) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(110px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.products-badge-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.products-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.42rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(191,64,191,.3);
+  background: rgba(12,9,20,.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.products-badge__blip {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #BF40BF;
+  box-shadow: 0 0 10px rgba(191,64,191,.9);
+  animation: prodBlip 1.8s infinite;
+}
+@keyframes prodBlip { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+.products-badge__txt {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .66rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  color: #d98ad9;
+}
+
+/* ---- section title: glow + targeting underline ---- */
+[data-component-id] .section-title { position: relative; z-index: 1; }
+[data-component-id] .section-title h2 {
+  text-shadow: 0 0 40px rgba(191,64,191,.45);
+}
+.section-title h2::after {
+  content: '';
+  display: block;
+  width: 120px;
+  height: 2px;
+  margin: 14px auto 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #BF40BF, transparent);
+  box-shadow: 0 0 14px rgba(191,64,191,.8);
+  animation: prodUnderline 3.2s ease-in-out infinite;
+}
+@keyframes prodUnderline { 0%,100%{width:120px;opacity:.8} 50%{width:190px;opacity:1} }
+
+/* ---- backdrop: faint targeting grid + rotating reticle ---- */
+.products-grid-bg {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(191,64,191,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(191,64,191,.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 55%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 55%, #000 20%, transparent 75%);
+}
+
+.products-reticle {
+  position: absolute; left: 50%; top: 58%; transform: translate(-50%,-50%);
+  width: 560px; height: 560px; pointer-events: none; z-index: 0; opacity: .5;
+}
+.products-reticle__ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 1px solid rgba(191,64,191,.16);
+}
+.products-reticle__ring--dash {
+  inset: 12%;
+  border: 1px dashed rgba(191,64,191,.22);
+  animation: prodSpin 40s linear infinite;
+}
+@keyframes prodSpin { to { transform: rotate(360deg); } }
+.products-reticle__cross::before,
+.products-reticle__cross::after {
+  content: ''; position: absolute; background: rgba(191,64,191,.1);
+}
+.products-reticle__cross::before { left: 50%; top: 4%; bottom: 4%; width: 1px; }
+.products-reticle__cross::after { top: 50%; left: 4%; right: 4%; height: 1px; }
+
+/* ---- corner frame around the section ---- */
+.products-frame {
+  position: absolute; width: 22px; height: 22px; z-index: 1;
+  border-color: rgba(191,64,191,.4); border-style: solid; border-width: 0;
+}
+.products-frame--tl { top: 34px; left: 14px; border-top-width: 2px; border-left-width: 2px; }
+.products-frame--tr { top: 34px; right: 14px; border-top-width: 2px; border-right-width: 2px; }
+.products-frame--bl { bottom: 34px; left: 14px; border-bottom-width: 2px; border-left-width: 2px; }
+.products-frame--br { bottom: 34px; right: 14px; border-bottom-width: 2px; border-right-width: 2px; }
+
+@media (max-width: 640px) {
+  .products-reticle { width: 340px; height: 340px; }
+  .products-frame { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .products-badge__blip, .products-reticle__ring--dash { animation: none; }
+  .section-title h2::after { animation: none; }
+}
+
+.products-view-all {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.products-view-all__btn {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.products-view-all__btn svg {
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.products-view-all__btn:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.products-view-all__btn:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* ===== flashy upgrades ===== */
+.products--single{justify-content:center}
+.products--single > [class*="col-"]{display:flex;justify-content:center}
+.products--single .product-card,.products--single .pc{width:100%}
+
+/* balanced, centered two-up layout for exactly 2 products */
+.products--pair{max-width:860px;margin-left:auto;margin-right:auto;justify-content:center}
+.products--pair > [class*="col-"]{display:flex}
+.products--pair .pc{width:100%}
+@media (min-width:576px){.products--pair{row-gap:0}}
+.products-glow{animation:prodGlow 11s ease-in-out infinite}
+.products-glow--right{animation-delay:-5.5s}
+@keyframes prodGlow{0%,100%{transform:translate(0,0) scale(1);opacity:.55}50%{transform:translate(16px,-12px) scale(1.12);opacity:.9}}
+.products-reveal-ready .row.products > [class*="col-"]{opacity:0;transform:translateY(26px);
+  transition:opacity .65s cubic-bezier(.16,1,.3,1),transform .65s cubic-bezier(.16,1,.3,1)}
+.products-reveal-ready .row.products > [class*="col-"].prod-in{opacity:1;transform:translateY(0)}
+@media (prefers-reduced-motion: reduce){
+  .products-glow{animation:none!important}
+  .products-reveal-ready .row.products > [class*="col-"]{opacity:1!important;transform:none!important}
+}
+</style>
+<script>
+(function(){
+  var section=document.querySelector('[data-component-id="{{ componentId }}"]');
+  if(!section) return;
+  var cols=section.querySelectorAll('.row.products > [class*="col-"]');
+  if(!cols.length) return;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){return;}
+  section.classList.add('products-reveal-ready');
+  cols.forEach(function(c,i){ c.style.transitionDelay=Math.min(i*80,400)+'ms'; });
+  if(!('IntersectionObserver' in window)){cols.forEach(function(c){c.classList.add('prod-in');});return;}
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('prod-in');io.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -6% 0px'});
+  cols.forEach(function(c){io.observe(c);});
+})();
+</script>
+
+<style>
+/* ===== dossier strip ===== */
+.zzds{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  max-width:920px;margin:26px auto 34px;padding:16px 18px;
+  border:1px solid rgba(191,64,191,.18);border-radius:12px;
+  background:rgba(8,11,28,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.zzds__col{display:flex;flex-direction:column;gap:9px;min-width:0}
+.zzds__h{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;
+  font-size:.66rem;font-weight:700;letter-spacing:.16em;color:rgba(231,236,255,.55)}
+.zzds__hdot{width:5px;height:5px;transform:rotate(45deg);background:var(--cl-accent,#BF40BF);
+  box-shadow:0 0 8px rgba(var(--cl-accent-rgb,191,64,191),.7)}
+.zzds__chips{display:flex;flex-wrap:wrap;gap:5px}
+.zzds__c{font-size:.7rem;line-height:1;padding:5px 8px;border-radius:5px;white-space:nowrap;
+  color:rgba(235,238,255,.82);background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.08)}
+.zzds__all{grid-column:1/-1;justify-self:center;display:inline-flex;align-items:center;gap:6px;
+  margin-top:2px;font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.1em;
+  color:rgba(var(--cl-accent-rgb,191,64,191),.95);text-decoration:none}
+.zzds__all:hover{color:#fff}
+@media (max-width:760px){.zzds{grid-template-columns:1fr;gap:16px}}
+
+/* ===== which-key router ===== */
+.zzrt{position:relative;z-index:2;max-width:920px;margin:34px auto 0;text-align:center}
+.zzrt__q{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.18em;
+  color:rgba(var(--cl-accent-rgb,191,64,191),.9);margin:0 0 12px}
+.zzrt__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.zzrt__cell{position:relative;display:flex;flex-direction:column;gap:5px;padding:16px 14px;
+  border:1px solid rgba(255,255,255,.09);border-radius:11px;text-decoration:none;text-align:left;
+  background:rgba(8,11,28,.5);transition:border-color .18s ease,transform .18s ease,background .18s ease}
+.zzrt__cell:hover{border-color:rgba(var(--cl-accent-rgb,191,64,191),.55);transform:translateY(-2px);
+  background:rgba(var(--cl-accent-rgb,191,64,191),.07)}
+.zzrt__cell--hot{border-color:rgba(var(--cl-accent-rgb,191,64,191),.4)}
+.zzrt__tag{position:absolute;top:-9px;left:14px;padding:3px 8px;border-radius:999px;
+  font-family:'JetBrains Mono',monospace;font-size:.56rem;font-weight:800;letter-spacing:.14em;
+  color:#fff;background:var(--cl-accent,#BF40BF)}
+.zzrt__k{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:700;letter-spacing:.14em;
+  color:rgba(231,236,255,.45)}
+.zzrt__v{font-size:1.02rem;font-weight:800;color:#fff}
+.zzrt__d{font-size:.76rem;line-height:1.45;color:rgba(200,215,240,.6)}
+.zzrt__nfa{margin:14px 0 0;font-size:.8rem;color:rgba(200,215,240,.6)}
+.zzrt__nfa a{color:rgba(var(--cl-accent-rgb,191,64,191),.95);font-weight:700;text-decoration:none}
+.zzrt__nfa a:hover{text-decoration:underline}
+@media (max-width:760px){.zzrt__grid{grid-template-columns:1fr}.zzrt__cell{text-align:center;align-items:center}}
+
+/* ===== reticle lock-on ===== */
+.products-reticle{transition:left .55s cubic-bezier(.22,1,.36,1),top .55s cubic-bezier(.22,1,.36,1),
+  opacity .3s ease,width .55s cubic-bezier(.22,1,.36,1),height .55s cubic-bezier(.22,1,.36,1)}
+.products-reticle.zz-lock{opacity:.9;width:340px;height:340px}
+.products-reticle.zz-lock .products-reticle__ring{border-color:rgba(191,64,191,.45)}
+@media (prefers-reduced-motion:reduce){.products-reticle{transition:none}}
+</style>
+
+<script>
+(function(){
+  /* Reticle lock-on: the decorative reticle glides to whichever product
+     card is hovered, then drifts home. Pointer-only, reduced-motion off. */
+  var section=document.querySelector('[data-component-id="{{ componentId }}"]');
+  if(!section) return;
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if(!window.matchMedia||!window.matchMedia('(hover: hover)').matches) return;
+  var ret=section.querySelector('.products-reticle'); if(!ret) return;
+  var home={left:'50%',top:'58%'};
+  var cards=section.querySelectorAll('.row.products > [class*="col-"]');
+  if(!cards.length) return;
+  var t=null;
+  cards.forEach(function(card){
+    card.addEventListener('pointerenter',function(){
+      clearTimeout(t);
+      var s=section.getBoundingClientRect(), c=card.getBoundingClientRect();
+      ret.style.left=(c.left - s.left + c.width/2)+'px';
+      ret.style.top=(c.top - s.top + c.height/2)+'px';
+      ret.classList.add('zz-lock');
+    });
+    card.addEventListener('pointerleave',function(){
+      t=setTimeout(function(){
+        ret.style.left=home.left; ret.style.top=home.top;
+        ret.classList.remove('zz-lock');
+      },350);
+    });
+  });
+})();
+</script>

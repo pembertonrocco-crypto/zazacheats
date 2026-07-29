@@ -1,0 +1,606 @@
+{# =========================================================================
+   v81: COUPON MODEL. The affiliate code is now also a live 5%-off coupon.
+   Buyer saves 5%, affiliate earns their tier rate on the discounted
+   subtotal. Link (?a=code) still attributes AND now auto-applies the same
+   coupon at checkout, so link traffic and code traffic converge.
+   Coupon stays 5% forever; only the commission tier moves on rank-up.
+   -------------------------------------------------------------------------
+   v56: not-enrolled state is now a real self-serve application form
+   (desired code + Discord ID). It POSTs to the affiliate-apply Worker,
+   which posts to a Discord review channel; Approve auto-sets the code via
+   the SellAuth API and DMs the applicant. Enrolled state unchanged.
+   -------------------------------------------------------------------------
+   AFFILIATE HQ — rebuilt customer affiliate page.
+   Real platform data only: shop.affiliate_percentage, shop_customer.
+   affiliate_code, referred_customers (+paginator), balance route.
+   Static HTML/CSS/JS otherwise — no {% set %} object arrays, no synthetic
+   loops (SellAuth Nunjucks rule). Clipboard uses a shared helper with a
+   fallback; share buttons are plain intent URLs.
+   ========================================================================= #}
+<div class="container component" data-component-id="{{ componentId }}">
+  <section class="py-5-nav">
+    <div class="row">
+      <div class="col-12 col-lg-3 mb-4">
+        {% render_snippet "customer-sidebar.njk" %}
+      </div>
+      <div class="col-12 col-lg-9 zaf">
+
+        {% if shop_customer.affiliate_code %}
+
+          {# ---------- header ---------- #}
+          <div class="zaf__head">
+            <p class="zaf__eyebrow">// AFFILIATE OPS</p>
+            <h2 class="zaf__title">Your link. Their key. <span class="zaf__accent">Your cut.</span></h2>
+            <p class="zaf__sub">Your code takes <strong>5% off</strong> for whoever uses it and pays you <strong><span data-zrank-rate>{{ shop.affiliate_percentage }}</span>%</strong> on every Rust cheat key it moves — credited straight to your store balance, spendable at checkout like cash. Refer more, rank up, and the higher rate applies to everything you&rsquo;ve already sold. NFA products aren&rsquo;t part of the program.</p>
+          </div>
+
+          {# ---------- link console ---------- #}
+          <div class="zaf__console">
+            <div class="zaf__console-bar">
+              <span class="zaf__console-dot" aria-hidden="true"></span>
+              <span class="zaf__console-label">YOUR CODE</span>
+              <span class="zaf__console-code">saves them <strong>5%</strong></span>
+            </div>
+            <div class="zaf__console-body zaf__console-body--coupon">
+              <span class="zaf__coupon" id="zaf-coupon">{{ shop_customer.affiliate_code }}</span>
+              <button type="button" class="zaf__btn zaf__btn--primary" data-zaf-copy-target="zaf-coupon">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M7 9.667A2.667 2.667 0 0 1 9.667 7h8.666A2.667 2.667 0 0 1 21 9.667v8.666A2.667 2.667 0 0 1 18.333 21H9.667A2.667 2.667 0 0 1 7 18.333z"/><path d="M4.012 16.737A2 2 0 0 1 3 15V5c0-1.1.9-2 2-2h10c.75 0 1.158.385 1.5 1"/></g></svg>
+                <span data-zaf-label>Copy code</span>
+              </button>
+            </div>
+            <div class="zaf__console-split">
+              <span class="zaf__console-label">OR SEND THE LINK &mdash; APPLIES THE 5% AUTOMATICALLY</span>
+            </div>
+            <div class="zaf__console-body">
+              <span class="zaf__url" id="zaf-url">{{ shop.url }}/?a={{ shop_customer.affiliate_code }}</span>
+              <div class="zaf__console-actions">
+                <button type="button" class="zaf__btn zaf__btn--primary" data-zaf-copy-target="zaf-url">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M7 9.667A2.667 2.667 0 0 1 9.667 7h8.666A2.667 2.667 0 0 1 21 9.667v8.666A2.667 2.667 0 0 1 18.333 21H9.667A2.667 2.667 0 0 1 7 18.333z"/><path d="M4.012 16.737A2 2 0 0 1 3 15V5c0-1.1.9-2 2-2h10c.75 0 1.158.385 1.5 1"/></g></svg>
+                  <span data-zaf-label>Copy link</span>
+                </button>
+                {% if shop.affiliate_code_editable %}
+                <button type="button" class="zaf__btn zaf__btn--ghost" title="Edit affiliate code"
+                  @click="appAffiliate.modalEditCodeOpen('{{ shop_customer.affiliate_code }}')">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4l10.5-10.5a2.83 2.83 0 0 0-4-4L4 16v4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.8"/></svg>
+                  Edit code
+                </button>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          {# ---------- share row ---------- #}
+          <div class="zaf__share">
+            <span class="zaf__share-label">SHARE IT</span>
+            <button type="button" class="zaf__chip" data-zaf-copy-target="zaf-blurb-short">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.2.4c1.7.4 2.5 1 3.3 1.7A16 16 0 0 0 12 4c-2.4 0-4.3.5-6.5 1.1.8-.7 1.8-1.4 3.3-1.7L8.6 3a19.8 19.8 0 0 0-4.9 1.4S1.4 8 1 15.2c2 2.3 5 2.3 5 2.3l.6-.8c-1-.4-2.2-1-3.2-2.2 1.2.9 3.1 1.9 6.1 2.1h4.9c3-.2 4.9-1.2 6.1-2.1-1 1.2-2.1 1.8-3.2 2.2l.7.8s3 0 5-2.3C22.6 8 20.3 4.4 20.3 4.4zM8.9 13.6c-.7 0-1.3-.7-1.3-1.5s.6-1.5 1.3-1.5 1.3.7 1.3 1.5-.6 1.5-1.3 1.5zm6.2 0c-.7 0-1.3-.7-1.3-1.5s.6-1.5 1.3-1.5 1.3.7 1.3 1.5-.6 1.5-1.3 1.5z"/></svg>
+              <span data-zaf-label>Copy Discord blurb</span>
+            </button>
+            <a class="zaf__chip" target="_blank" rel="noopener"
+               href="https://twitter.com/intent/tweet?text=Private%20Rust%20build%20with%20a%20public%2C%20dated%20detection%20status%20page%20you%20can%20check%20before%20buying%20%E2%80%94%20{{ shop.url }}/%3Fa%3D{{ shop_customer.affiliate_code }}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.8 7.8L23.3 22h-6.3l-4.9-6.4L6.5 22H3.4l7.3-8.3L1 2h6.5l4.4 5.9L18.9 2zm-1.1 18h1.7L7.6 3.9H5.8L17.8 20z"/></svg>
+              Post on X
+            </a>
+            <a class="zaf__chip" target="_blank" rel="noopener"
+               href="https://t.me/share/url?url={{ shop.url }}/%3Fa%3D{{ shop_customer.affiliate_code }}&text=Private%20Rust%20build%20%E2%80%94%20check%20the%20live%20detection%20status%20before%20you%20buy">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.9 16.6l-.4 4c.6 0 .8-.2 1.1-.5l2.6-2.5 5.4 4c1 .5 1.7.2 2-.9L23.9 4c.3-1.3-.5-1.9-1.5-1.5L1.6 10.6c-1.3.5-1.3 1.2-.2 1.6l5.3 1.6L18.9 6c.6-.4 1.1-.2.7.2L9.9 16.6z"/></svg>
+              Telegram
+            </a>
+            <template id="zaf-blurb-short">I play with Zaza's private Rust build — full menu on every key, live detection status page you can check before spending anything. Code {{ shop_customer.affiliate_code }} = 5% off: {{ shop.url }}/?a={{ shop_customer.affiliate_code }}</template>
+          </div>
+
+          {# ---------- stats ---------- #}
+          <div class="zaf__stats">
+            <div class="zaf__stat">
+              <span class="zaf__stat-k">YOUR RATE</span>
+              <span class="zaf__stat-v"><span data-zrank-rate>{{ shop.affiliate_percentage }}</span>%<span class="zaf__rank-chip" data-zrank-name hidden></span></span>
+              <span class="zaf__stat-d">on cheat keys your code or link moves</span>
+            </div>
+            <div class="zaf__stat">
+              <span class="zaf__stat-k">THEY SAVE</span>
+              <span class="zaf__stat-v">5%</span>
+              <span class="zaf__stat-d">off cheat keys &mdash; the reason people actually use your code</span>
+            </div>
+            <div class="zaf__stat">
+              <span class="zaf__stat-k">REFERRALS</span>
+              <span class="zaf__stat-v">{% if referred_customers_paginator and referred_customers_paginator.total %}{{ referred_customers_paginator.total }}{% else %}{{ referred_customers | length }}{% endif %}</span>
+              <span class="zaf__stat-d">customers who bought via your code or link</span>
+            </div>
+            <a href="{{ '/customer/balance' | shopUrl }}" class="zaf__stat zaf__stat--link">
+              <span class="zaf__stat-k">EARNINGS</span>
+              <span class="zaf__stat-v">Balance <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="zaf__stat-d">view total &amp; history — spend at checkout</span>
+            </a>
+          </div>
+
+
+          {# ---------- rank ladder ---------- #}
+          <div class="zaf__rank" data-zrank-root data-zrank-count="{% if referred_customers_paginator and referred_customers_paginator.total %}{{ referred_customers_paginator.total }}{% else %}{{ referred_customers | length }}{% endif %}">
+            <div class="zaf__rank-head">
+              <p class="zaf__kit-h" style="margin:0">// YOUR RANK</p>
+              <p class="zaf__rank-next" data-zrank-next></p>
+            </div>
+            <div class="zaf__rank-bar"><span class="zaf__rank-fill" data-zrank-fill></span></div>
+            <div class="zaf__rank-ladder">
+              <div class="zaf__rank-step" data-zrank-step="0" data-zrank-min="0">
+                <span class="zaf__rank-t">Bronze</span><span class="zaf__rank-p">5%</span><span class="zaf__rank-r">0 referrals</span>
+              </div>
+              <div class="zaf__rank-step" data-zrank-step="1" data-zrank-min="3">
+                <span class="zaf__rank-t">Silver</span><span class="zaf__rank-p">10%</span><span class="zaf__rank-r">3 referrals</span>
+              </div>
+              <div class="zaf__rank-step" data-zrank-step="2" data-zrank-min="10">
+                <span class="zaf__rank-t">Gold</span><span class="zaf__rank-p">15%</span><span class="zaf__rank-r">10 referrals</span>
+              </div>
+              <div class="zaf__rank-step" data-zrank-step="3" data-zrank-min="25">
+                <span class="zaf__rank-t">Diamond</span><span class="zaf__rank-p">20%</span><span class="zaf__rank-r">25 referrals</span>
+              </div>
+            </div>
+            <p class="zaf__rank-fine">Referrals are unique customers who actually bought. Rank up and the new rate is backdated to every sale you&rsquo;ve made &mdash; the difference is paid into your balance automatically, so ranking late costs you nothing. Your rate is paid on the discounted subtotal; the buyer&rsquo;s 5% stays 5% at every rank, so your code never gets less attractive as you climb.</p>
+          </div>
+
+          {# ---------- how it pays ---------- #}
+          <div class="zaf__how">
+            <div class="zaf__how-step"><span class="zaf__how-n">01</span><span class="zaf__how-t">Give out your code</span><span class="zaf__how-d">Discord bio, server, group chat, video description. It's a real discount, so people have a reason to take it.</span></div>
+            <div class="zaf__how-step"><span class="zaf__how-n">02</span><span class="zaf__how-t">They save 5%</span><span class="zaf__how-d">Typed at checkout, or applied for them if they came through <code>?a={{ shop_customer.affiliate_code }}</code>. Either way the sale is yours.</span></div>
+            <div class="zaf__how-step"><span class="zaf__how-n">03</span><span class="zaf__how-t">You get paid</span><span class="zaf__how-d">Your rate on each cheat key lands in your store balance automatically — no invoices, no waiting on us. Rank top-ups are paid in daily.</span></div>
+          </div>
+
+          {# ---------- toolkit ---------- #}
+          <div class="zaf__kit">
+            <p class="zaf__kit-h">// COPY-PASTE KIT</p>
+            <div class="zaf__kit-item">
+              <p class="zaf__kit-txt" id="zaf-blurb-a">Running Zaza's private Rust build this wipe. Every key gets the full menu — ESP, aim, radar, the lot — and their detection status page is public and dated, so check it yourself before you spend a penny. Code <strong>{{ shop_customer.affiliate_code }}</strong> takes 5% off: {{ shop.url }}/?a={{ shop_customer.affiliate_code }}</p>
+              <button type="button" class="zaf__btn zaf__btn--ghost zaf__btn--sm" data-zaf-copy-target="zaf-blurb-a"><span data-zaf-label>Copy</span></button>
+            </div>
+            <div class="zaf__kit-item">
+              <p class="zaf__kit-txt" id="zaf-blurb-b">If you're going to cheat in Rust, do it with a store that shows you the detection status before checkout instead of after. 5% off with <strong>{{ shop_customer.affiliate_code }}</strong> — {{ shop.url }}/?a={{ shop_customer.affiliate_code }}</p>
+              <button type="button" class="zaf__btn zaf__btn--ghost zaf__btn--sm" data-zaf-copy-target="zaf-blurb-b"><span data-zaf-label>Copy</span></button>
+            </div>
+            <div class="zaf__rules">
+              <p class="zaf__rules-h">GROUND RULES</p>
+              <p class="zaf__rules-p">Don't spam servers that didn't ask. Don't invent claims — "undetected forever" and "0% ban rate" get referrals refunded and codes revoked; link the status page instead. Your own code on your own account still gives you the 5% off, but pays no commission — that's automatic, not a warning. Don't post your code to public coupon-scraper sites; that's an instant revoke. Break these and the code goes; play it straight and it prints.</p>
+            </div>
+          </div>
+
+          {# ---------- referred table ---------- #}
+          <div class="zaf__table-card">
+            <p class="zaf__kit-h">// YOUR REFERRALS</p>
+            {% if referred_customers.length > 0 %}
+            <table class="zaf__table">
+              <thead>
+                <tr><th>Customer</th><th>You earned</th><th>Date</th></tr>
+              </thead>
+              <tbody>
+                {% for customer in referred_customers %}
+                <tr>
+                  <td>{{ customer.email }}</td>
+                  <td class="zaf__earn"><span x-text="appCurrency.format({{ customer.affiliate_referrer_earnings }}, 'USD')">{{ formatPrice(customer.affiliate_referrer_earnings, 'USD') }}</span></td>
+                  <td>{{ customer.created_at | formatDateTime }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+            <div class="zaf__empty">
+              <p class="zaf__empty-t">No referrals yet — your link is live and waiting.</p>
+              <p class="zaf__empty-d">First one's the hardest. Copy a blurb above, drop it where your Rust friends are, and this table starts filling itself.</p>
+            </div>
+            {% endif %}
+          </div>
+
+          {% if referred_customers_paginator.last_page > 1 %}
+            {% render_snippet "pagination.njk", paginator=referred_customers_paginator %}
+          {% endif %}
+
+        {% else %}
+
+          {# ---------- not enrolled ---------- #}
+          <div class="zaf__head">
+            <p class="zaf__eyebrow">// AFFILIATE OPS</p>
+            <h2 class="zaf__title">Get paid to say <span class="zaf__accent">what you'd say anyway.</span></h2>
+            <p class="zaf__sub">You get a discount code with your name on it. Whoever uses it saves <strong>5%</strong>, and you earn <strong>{{ shop.affiliate_percentage }}%</strong> of every Rust cheat key it moves &mdash; credited automatically to store balance and spendable at checkout. Rank up to <strong>20%</strong>. NFA products aren&rsquo;t part of the program.</p>
+          </div>
+          <div class="zaf__enroll">
+            <div class="zaf__how" style="margin:0 0 20px">
+              <div class="zaf__how-step"><span class="zaf__how-n">01</span><span class="zaf__how-t">Apply below</span><span class="zaf__how-d">Pick the code you want and drop your Discord ID. Thirty seconds, no call, no forms to chase.</span></div>
+              <div class="zaf__how-step"><span class="zaf__how-n">02</span><span class="zaf__how-t">We review it</span><span class="zaf__how-d">We check it over and approve you. You get a DM on Discord the moment you're in.</span></div>
+              <div class="zaf__how-step"><span class="zaf__how-n">03</span><span class="zaf__how-t">Earn on autopilot</span><span class="zaf__how-d">Your code goes live as a real 5%-off coupon. {{ shop.affiliate_percentage }}% of every cheat key it moves, straight to your balance.</span></div>
+            </div>
+
+            {# ---------- application form (static HTML, JS-enhanced) ---------- #}
+            <form class="zaf__form" id="zaf-apply-form"
+                  data-endpoint="https://zaza-affiliate-apply.pemberton-rocco.workers.dev/apply"
+                  data-email="{{ shop_customer.email | default('') }}"
+                  data-customer-id="{{ shop_customer.id | default('') }}"
+                  novalidate>
+              <p class="zaf__kit-h" style="margin:0 0 14px">// AFFILIATE APPLICATION</p>
+
+              <div class="zaf__field">
+                <label class="zaf__label" for="zaf-ap-code">Affiliate code you want</label>
+                <input class="zaf__input" id="zaf-ap-code" type="text" inputmode="latin"
+                       autocomplete="off" maxlength="32" placeholder="e.g. yourname" spellcheck="false" />
+                <p class="zaf__hint">Letters, numbers, <code>-</code> and <code>_</code> only. This becomes both your coupon code and your link:</p>
+                <p class="zaf__preview" id="zaf-ap-preview">{{ shop.url }}/?a=<span id="zaf-ap-preview-code">yourcode</span></p>
+              </div>
+
+              <div class="zaf__field">
+                <label class="zaf__label" for="zaf-ap-discord">Your Discord user ID</label>
+                <input class="zaf__input" id="zaf-ap-discord" type="text" inputmode="numeric"
+                       autocomplete="off" maxlength="20" placeholder="e.g. 123456789012345678" />
+                <p class="zaf__hint">This is how we DM your approval. Discord → Settings → Advanced → turn on <strong>Developer Mode</strong>, then right-click your name → <strong>Copy User ID</strong>. It's a long number, not your username.</p>
+              </div>
+
+              <div class="zaf__field">
+                <label class="zaf__label" for="zaf-ap-dname">Discord username <span class="zaf__opt">(optional)</span></label>
+                <input class="zaf__input" id="zaf-ap-dname" type="text" autocomplete="off"
+                       maxlength="40" placeholder="e.g. yourname" />
+              </div>
+
+              <div class="zaf__field">
+                <label class="zaf__label" for="zaf-ap-audience">Where will you promote? <span class="zaf__opt">(optional, helps us say yes)</span></label>
+                <textarea class="zaf__input zaf__textarea" id="zaf-ap-audience" rows="3" maxlength="300"
+                          placeholder="Server, YouTube/TikTok, group chat, wipe crews… roughly how many people and where."></textarea>
+              </div>
+
+              <label class="zaf__check">
+                <input type="checkbox" id="zaf-ap-agree" />
+                <span>I'll promote honestly — link the public status page, no invented claims like "undetected forever" or "0% ban rate", and no spamming servers that didn't ask.</span>
+              </label>
+
+              <button type="submit" class="zaf__btn zaf__btn--primary" id="zaf-ap-submit" disabled>
+                <span data-zaf-ap-label>Submit application</span>
+              </button>
+
+              <p class="zaf__msg" id="zaf-ap-msg" role="status" hidden></p>
+            </form>
+
+            <p class="zaf__alt">Prefer to ask a human? <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener">Ping us on Discord</a> or <a href="{{ '/customer/tickets' | shopUrl }}">open a ticket</a>.</p>
+          </div>
+
+        {% endif %}
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="components">
+  {% for componentId in components_order %}
+    {% render_component componentId %}
+  {% endfor %}
+</div>
+
+{% render_snippet "affiliate-edit-code-modal.njk" %}
+
+<style>
+.zaf__eyebrow{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.18em;color:rgba(var(--cl-accent-rgb,191,64,191),.9);margin:0 0 8px}
+.zaf__title{font-family:'Satoshi','Inter',sans-serif;font-weight:800;font-size:clamp(1.5rem,3vw,2.1rem);color:#fff;margin:0 0 8px;line-height:1.15}
+.zaf__accent{color:var(--cl-accent,#BF40BF)}
+.zaf__sub{font-size:.92rem;color:rgba(200,215,240,.65);margin:0 0 22px;max-width:560px}
+.zaf__sub strong{color:#fff}
+
+.zaf__console{border:1px solid rgba(var(--cl-accent-rgb,191,64,191),.3);border-radius:12px;overflow:hidden;background:rgba(8,11,28,.7);margin-bottom:14px}
+.zaf__console-bar{display:flex;align-items:center;gap:10px;padding:9px 14px;background:rgba(var(--cl-accent-rgb,191,64,191),.08);border-bottom:1px solid rgba(var(--cl-accent-rgb,191,64,191),.18)}
+.zaf__console-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.8)}
+.zaf__console-label{font-family:'JetBrains Mono',monospace;font-size:.64rem;font-weight:700;letter-spacing:.16em;color:rgba(235,238,255,.7)}
+.zaf__console-code{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.66rem;color:rgba(200,215,240,.5)}
+.zaf__console-code strong{color:rgba(var(--cl-accent-rgb,191,64,191),.95)}
+.zaf__console-body{display:flex;align-items:center;gap:12px;padding:16px 14px;flex-wrap:wrap}
+.zaf__console-body--coupon{padding-bottom:14px}
+.zaf__console-split{padding:0 14px 4px;border-top:1px dashed rgba(255,255,255,.09);margin-top:2px;padding-top:11px}
+.zaf__console-split .zaf__console-label{font-size:.58rem;color:rgba(231,236,255,.4)}
+.zaf__coupon{flex:1;min-width:180px;font-family:'JetBrains Mono',monospace;font-size:clamp(1.35rem,4vw,1.9rem);font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff;word-break:break-all;text-shadow:0 0 26px rgba(var(--cl-accent-rgb,191,64,191),.55)}
+.zaf__url{font-family:'JetBrains Mono',monospace;font-size:clamp(.78rem,1.6vw,.95rem);color:#fff;word-break:break-all;flex:1;min-width:220px}
+.zaf__console-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+.zaf__btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:8px;font-size:.82rem;font-weight:700;line-height:1;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:filter .15s ease,border-color .15s ease,transform .12s ease}
+.zaf__btn--primary{background:var(--cl-accent,#BF40BF);color:#fff;box-shadow:0 5px 18px rgba(var(--cl-accent-rgb,191,64,191),.3)}
+.zaf__btn--primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.zaf__btn--ghost{background:rgba(255,255,255,.04);color:rgba(235,238,255,.85);border-color:rgba(255,255,255,.14)}
+.zaf__btn--ghost:hover{border-color:rgba(var(--cl-accent-rgb,191,64,191),.5)}
+.zaf__btn--sm{padding:6px 11px;font-size:.72rem}
+.zaf__btn.zaf--copied{background:#16a34a;border-color:#16a34a;color:#fff}
+
+.zaf__share{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.zaf__share-label{font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:700;letter-spacing:.16em;color:rgba(231,236,255,.45)}
+.zaf__chip{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;font-size:.76rem;font-weight:600;color:rgba(235,238,255,.85);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);text-decoration:none;cursor:pointer;transition:border-color .15s ease}
+.zaf__chip:hover{border-color:rgba(var(--cl-accent-rgb,191,64,191),.55)}
+.zaf__chip.zaf--copied{border-color:#16a34a;color:#4ade80}
+
+.zaf__stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.zaf__stat{display:flex;flex-direction:column;gap:4px;padding:15px 16px;border:1px solid rgba(255,255,255,.09);border-radius:11px;background:rgba(8,11,28,.5);text-decoration:none}
+.zaf__stat--link{transition:border-color .15s ease,transform .15s ease}
+.zaf__stat--link:hover{border-color:rgba(var(--cl-accent-rgb,191,64,191),.55);transform:translateY(-2px)}
+.zaf__stat-k{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:700;letter-spacing:.16em;color:rgba(231,236,255,.45)}
+.zaf__stat-v{font-size:1.35rem;font-weight:800;color:#fff;display:inline-flex;align-items:center;gap:7px}
+.zaf__stat-d{font-size:.72rem;color:rgba(200,215,240,.55)}
+
+.zaf__how{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
+.zaf__how-step{display:flex;flex-direction:column;gap:5px;padding:15px 16px;border:1px solid rgba(255,255,255,.09);border-radius:11px;background:rgba(8,11,28,.5)}
+.zaf__how-n{font-family:'JetBrains Mono',monospace;font-size:.66rem;font-weight:800;color:rgba(var(--cl-accent-rgb,191,64,191),.9)}
+.zaf__how-t{font-size:.9rem;font-weight:800;color:#fff}
+.zaf__how-d{font-size:.75rem;line-height:1.5;color:rgba(200,215,240,.6)}
+.zaf__how-d code{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:rgba(var(--cl-accent-rgb,191,64,191),.95);background:rgba(var(--cl-accent-rgb,191,64,191),.1);padding:1px 5px;border-radius:4px}
+
+.zaf__kit{border:1px solid rgba(255,255,255,.09);border-radius:12px;background:rgba(8,11,28,.5);padding:16px;margin-bottom:22px}
+.zaf__kit-h{font-family:'JetBrains Mono',monospace;font-size:.66rem;font-weight:700;letter-spacing:.16em;color:rgba(var(--cl-accent-rgb,191,64,191),.9);margin:0 0 12px}
+.zaf__kit-item{display:flex;align-items:flex-start;gap:12px;padding:12px;border:1px solid rgba(255,255,255,.07);border-radius:9px;background:rgba(255,255,255,.02);margin-bottom:10px}
+.zaf__kit-txt{flex:1;margin:0;font-size:.8rem;line-height:1.55;color:rgba(220,230,250,.8)}
+.zaf__rules{margin-top:4px;padding:12px;border:1px solid rgba(250,204,21,.22);border-radius:9px;background:rgba(250,204,21,.05)}
+.zaf__rules-h{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:800;letter-spacing:.16em;color:#facc15;margin:0 0 5px}
+.zaf__rules-p{margin:0;font-size:.76rem;line-height:1.55;color:rgba(220,230,250,.7)}
+
+.zaf__table-card{border:1px solid rgba(255,255,255,.09);border-radius:12px;background:rgba(8,11,28,.5);padding:16px;margin-bottom:16px}
+.zaf__table{width:100%;border-collapse:collapse}
+.zaf__table th{font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(231,236,255,.45);text-align:left;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.1)}
+.zaf__table td{font-size:.8rem;color:rgba(220,230,250,.8);padding:10px;border-bottom:1px solid rgba(255,255,255,.05)}
+.zaf__table tbody tr:hover{background:rgba(var(--cl-accent-rgb,191,64,191),.05)}
+.zaf__earn span{color:#4ade80;font-weight:700}
+.zaf__empty{text-align:center;padding:26px 12px}
+.zaf__empty-t{font-weight:800;color:#fff;margin:0 0 6px}
+.zaf__empty-d{font-size:.8rem;color:rgba(200,215,240,.6);margin:0;max-width:420px;margin-inline:auto}
+
+.zaf__enroll{border:1px solid rgba(var(--cl-accent-rgb,191,64,191),.25);border-radius:12px;background:rgba(8,11,28,.55);padding:20px}
+
+.zaf__form{border-top:1px solid rgba(255,255,255,.08);padding-top:18px}
+
+/* ---- rank ladder ---- */
+.zaf__rank{border:1px solid rgba(var(--cl-accent-rgb,191,64,191),.22);border-radius:12px;background:rgba(8,11,28,.5);padding:16px 18px;margin-bottom:18px}
+.zaf__rank-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.zaf__rank-next{margin:0;font-size:.78rem;color:rgba(200,215,240,.7)}
+.zaf__rank-next strong{color:var(--cl-accent,#BF40BF);font-weight:800}
+.zaf__rank-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden;margin-bottom:14px}
+.zaf__rank-fill{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,rgba(var(--cl-accent-rgb,191,64,191),.7),var(--cl-accent,#BF40BF));transition:width .6s cubic-bezier(.4,0,.2,1)}
+.zaf__rank-ladder{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.zaf__rank-step{display:flex;flex-direction:column;gap:2px;padding:10px 8px;border-radius:9px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);opacity:.45;transition:opacity .2s ease,border-color .2s ease,background .2s ease}
+.zaf__rank-step.is-reached{opacity:1}
+.zaf__rank-step.is-current{opacity:1;border-color:rgba(var(--cl-accent-rgb,191,64,191),.6);background:rgba(var(--cl-accent-rgb,191,64,191),.1);box-shadow:0 0 22px -8px rgba(var(--cl-accent-rgb,191,64,191),.7)}
+.zaf__rank-t{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.1em;color:rgba(220,230,250,.75)}
+.zaf__rank-step.is-current .zaf__rank-t{color:#fff}
+.zaf__rank-p{font-size:1.05rem;font-weight:800;color:#fff}
+.zaf__rank-step.is-current .zaf__rank-p{color:var(--cl-accent,#BF40BF)}
+.zaf__rank-r{font-size:.66rem;color:rgba(200,215,240,.5)}
+.zaf__rank-fine{margin:12px 0 0;font-size:.72rem;line-height:1.55;color:rgba(200,215,240,.55)}
+.zaf__rank-chip{margin-left:8px;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.1em;padding:3px 8px;border-radius:99px;border:1px solid rgba(var(--cl-accent-rgb,191,64,191),.45);background:rgba(var(--cl-accent-rgb,191,64,191),.12);color:var(--cl-accent,#BF40BF);vertical-align:middle}
+@media (max-width:620px){.zaf__rank-ladder{grid-template-columns:repeat(2,1fr)}}
+.zaf__field{margin-bottom:15px}
+.zaf__label{display:block;font-size:.82rem;font-weight:700;color:#fff;margin:0 0 6px}
+.zaf__opt{font-weight:500;color:rgba(200,215,240,.5)}
+.zaf__input{width:100%;padding:10px 13px;border-radius:9px;border:1px solid rgba(255,255,255,.14);background:rgba(8,11,28,.65);color:#fff;font-size:.9rem;font-family:inherit;transition:border-color .15s ease,box-shadow .15s ease}
+.zaf__input::placeholder{color:rgba(200,215,240,.35)}
+.zaf__input:focus{outline:none;border-color:rgba(var(--cl-accent-rgb,191,64,191),.7);box-shadow:0 0 0 3px rgba(var(--cl-accent-rgb,191,64,191),.15)}
+.zaf__input.zaf--invalid{border-color:rgba(248,113,113,.7)}
+.zaf__textarea{resize:vertical;min-height:66px;line-height:1.5}
+.zaf__hint{margin:6px 0 0;font-size:.72rem;line-height:1.5;color:rgba(200,215,240,.55)}
+.zaf__hint code{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:rgba(var(--cl-accent-rgb,191,64,191),.95);background:rgba(var(--cl-accent-rgb,191,64,191),.1);padding:0 4px;border-radius:3px}
+.zaf__preview{margin:8px 0 0;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:rgba(220,230,250,.8);word-break:break-all}
+.zaf__preview #zaf-ap-preview-code{color:var(--cl-accent,#BF40BF);font-weight:700}
+.zaf__check{display:flex;align-items:flex-start;gap:10px;margin:4px 0 18px;font-size:.78rem;line-height:1.5;color:rgba(220,230,250,.75);cursor:pointer}
+.zaf__check input{margin-top:2px;width:16px;height:16px;flex-shrink:0;accent-color:var(--cl-accent,#BF40BF)}
+.zaf__form .zaf__btn--primary{width:100%;justify-content:center;padding:12px}
+.zaf__form .zaf__btn--primary:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none;filter:none}
+.zaf__msg{margin:14px 0 0;padding:11px 14px;border-radius:9px;font-size:.82rem;line-height:1.5}
+.zaf__msg--ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.35);color:#4ade80}
+.zaf__msg--info{background:rgba(250,204,21,.08);border:1px solid rgba(250,204,21,.3);color:#fde047}
+.zaf__msg--err{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.35);color:#fca5a5}
+.zaf__alt{margin:16px 0 0;text-align:center;font-size:.78rem;color:rgba(200,215,240,.55)}
+.zaf__alt a{color:rgba(var(--cl-accent-rgb,191,64,191),.95);text-decoration:none}
+.zaf__alt a:hover{text-decoration:underline}
+
+@media (max-width:980px){.zaf__stats{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:760px){
+  .zaf__stats,.zaf__how{grid-template-columns:1fr}
+  .zaf__kit-item{flex-direction:column}
+}
+</style>
+
+<script>
+(function(){
+  /* Shared copy handler: buttons carry data-zaf-copy-target = id of an
+     element (or <template>) whose text gets copied. Fallback for browsers
+     without the async clipboard API. */
+  function grab(id){
+    var el=document.getElementById(id); if(!el) return '';
+    return (el.content ? el.content.textContent : el.textContent).trim();
+  }
+  function done(btn){
+    var label=btn.querySelector('[data-zaf-label]');
+    var prev=label?label.textContent:null;
+    btn.classList.add('zaf--copied');
+    if(label) label.textContent='Copied!';
+    setTimeout(function(){
+      btn.classList.remove('zaf--copied');
+      if(label&&prev) label.textContent=prev;
+    },1800);
+  }
+  document.querySelectorAll('[data-zaf-copy-target]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var txt=grab(btn.getAttribute('data-zaf-copy-target')); if(!txt) return;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){done(btn);},function(){fallback(txt,btn);});
+      } else { fallback(txt,btn); }
+    });
+  });
+  function fallback(txt,btn){
+    try{
+      var ta=document.createElement('textarea');
+      ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta); done(btn);
+    }catch(e){}
+  }
+})();
+</script>
+
+<script>
+/* Rank ladder. Derives rank from the referral count already rendered by
+   SellAuth — no API call, no extra data source. Must stay in sync with
+   RANKS/BASE_RATE in the affiliate worker. */
+(function(){
+  var root=document.querySelector('[data-zrank-root]');
+  if(!root) return;
+
+  /* BUYER_DISCOUNT is fixed at every rank — the coupon is always 5% off.
+     Only `rate` (what the affiliate earns) moves. Keep in sync with the
+     worker's RANKS/BUYER_DISCOUNT. */
+  var BUYER_DISCOUNT=5;
+
+  var RANKS=[
+    {name:'Bronze',rate:5,min:0},
+    {name:'Silver',rate:10,min:3},
+    {name:'Gold',rate:15,min:10},
+    {name:'Diamond',rate:20,min:25}
+  ];
+
+  var count=parseInt((root.getAttribute('data-zrank-count')||'0').replace(/[^0-9]/g,''),10);
+  if(isNaN(count)) count=0;
+
+  var idx=0;
+  for(var i=0;i<RANKS.length;i++){ if(count>=RANKS[i].min) idx=i; }
+  var cur=RANKS[idx];
+  var next=RANKS[idx+1]||null;
+
+  // rate readouts
+  Array.prototype.forEach.call(document.querySelectorAll('[data-zrank-rate]'),function(el){
+    el.textContent=cur.rate;
+  });
+  var chip=document.querySelector('[data-zrank-name]');
+  if(chip){ chip.textContent=cur.name.toUpperCase(); chip.hidden=false; }
+
+  // ladder states
+  Array.prototype.forEach.call(root.querySelectorAll('[data-zrank-step]'),function(el){
+    var step=parseInt(el.getAttribute('data-zrank-step'),10);
+    if(step<=idx) el.classList.add('is-reached');
+    if(step===idx) el.classList.add('is-current');
+  });
+
+  // progress + next-rank line
+  var nextEl=root.querySelector('[data-zrank-next]');
+  var fill=root.querySelector('[data-zrank-fill]');
+  if(next){
+    var span=next.min-cur.min;
+    var done=count-cur.min;
+    var pct=span>0?Math.max(0,Math.min(100,(done/span)*100)):100;
+    if(fill) fill.style.width=pct+'%';
+    var need=next.min-count;
+    if(nextEl) nextEl.innerHTML=need+' more referral'+(need===1?'':'s')+' to <strong>'+next.name+' &mdash; '+next.rate+'%</strong>';
+  }else{
+    if(fill) fill.style.width='100%';
+    if(nextEl) nextEl.innerHTML='<strong>Top rank reached.</strong> You&rsquo;re on the best rate we do.';
+  }
+})();
+</script>
+
+<script>
+/* Affiliate application intake. Progressive enhancement: the form is plain
+   HTML; this wires validation, a live link preview, and a fetch to the
+   review Worker (endpoint read from data-endpoint). */
+(function(){
+  var form=document.getElementById('zaf-apply-form');
+  if(!form) return;
+
+  var endpoint=form.getAttribute('data-endpoint')||'';
+  var email=form.getAttribute('data-email')||'';
+  var customerId=form.getAttribute('data-customer-id')||'';
+
+  var codeEl=document.getElementById('zaf-ap-code');
+  var previewEl=document.getElementById('zaf-ap-preview-code');
+  var discordEl=document.getElementById('zaf-ap-discord');
+  var dnameEl=document.getElementById('zaf-ap-dname');
+  var audienceEl=document.getElementById('zaf-ap-audience');
+  var agreeEl=document.getElementById('zaf-ap-agree');
+  var submitEl=document.getElementById('zaf-ap-submit');
+  var labelEl=submitEl.querySelector('[data-zaf-ap-label]');
+  var msgEl=document.getElementById('zaf-ap-msg');
+
+  var STORE_KEY='zaf_affiliate_applied';
+
+  function cleanCode(v){ return (v||'').toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,32); }
+  function validCode(){ return codeEl.value.length>=3; }
+  function validDiscord(){ return /^\d{17,20}$/.test(discordEl.value.trim()); }
+
+  function refresh(){
+    codeEl.value=cleanCode(codeEl.value);
+    previewEl.textContent=codeEl.value||'yourcode';
+    submitEl.disabled=!(validCode()&&validDiscord()&&agreeEl.checked);
+    codeEl.classList.toggle('zaf--invalid',codeEl.value.length>0&&!validCode());
+    discordEl.classList.toggle('zaf--invalid',discordEl.value.length>0&&!validDiscord());
+  }
+
+  function showMsg(kind,text){
+    msgEl.hidden=false;
+    msgEl.className='zaf__msg zaf__msg--'+kind;
+    msgEl.textContent=text;
+  }
+
+  function lockSubmitted(text){
+    showMsg('ok',text);
+    codeEl.disabled=discordEl.disabled=dnameEl.disabled=audienceEl.disabled=agreeEl.disabled=true;
+    submitEl.disabled=true;
+    labelEl.textContent='Application sent';
+  }
+
+  ['input','change'].forEach(function(ev){
+    codeEl.addEventListener(ev,refresh);
+    discordEl.addEventListener(ev,refresh);
+    agreeEl.addEventListener(ev,refresh);
+  });
+
+  // If they already applied on this device, reflect that on load.
+  try{
+    if(localStorage.getItem(STORE_KEY)==='1'){
+      lockSubmitted("You've already applied — we'll DM you on Discord once it's reviewed.");
+    }
+  }catch(e){}
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    if(submitEl.disabled) return;
+
+    if(!endpoint||endpoint.indexOf('REPLACE-WITH')!==-1){
+      showMsg('err','Applications are not wired up yet — please ping us on Discord or open a ticket.');
+      return;
+    }
+    if(!customerId){
+      showMsg('err','We could not read your account. Please refresh or re-login, then try again.');
+      return;
+    }
+
+    submitEl.disabled=true;
+    labelEl.textContent='Sending…';
+    msgEl.hidden=true;
+
+    fetch(endpoint,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({
+        customer_id:customerId,
+        email:email,
+        code:codeEl.value,
+        discord_id:discordEl.value.trim(),
+        discord_username:dnameEl.value.trim(),
+        audience:audienceEl.value.trim()
+      })
+    }).then(function(r){
+      return r.json().catch(function(){return {};}).then(function(data){return {status:r.status,data:data};});
+    }).then(function(res){
+      if(res.status>=200&&res.status<300&&res.data.ok){
+        try{localStorage.setItem(STORE_KEY,'1');}catch(e){}
+        lockSubmitted("Application in! We'll review it and DM you on Discord — usually quickly. Keep those DMs open.");
+      }else if(res.status===409){
+        try{localStorage.setItem(STORE_KEY,'1');}catch(e){}
+        lockSubmitted(res.data.error||"You already have an application in review.");
+      }else{
+        showMsg('err',res.data.error||'Something went wrong. Please try again in a moment.');
+        submitEl.disabled=false;
+        labelEl.textContent='Submit application';
+      }
+    }).catch(function(){
+      showMsg('err','Network error. Please try again.');
+      submitEl.disabled=false;
+      labelEl.textContent='Submit application';
+    });
+  });
+
+  refresh();
+})();
+</script>

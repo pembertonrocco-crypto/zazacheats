@@ -1,0 +1,400 @@
+{
+    "templates": {
+        "shop": {
+            "layout": "master",
+            "components": {
+                "hero": {
+                    "type": "hero",
+                    "properties": {
+                        "title": "Undetected Rust Cheats.",
+                        "subtitle": "Aim, ESP and configs in one private build \u2014 instant key delivery, a live detection status page you can check first, and support that actually answers.",
+                        "cta": null,
+                        "cta_text": null,
+                        "show_searchbar": true,
+                        "show_feedback_rating": true,
+                        "show_products_sold": true,
+                        "show_total_customers": true,
+                        "alignment": "center",
+                        "height": "medium",
+                        "background_image": "DEFAULT",
+                        "side_image": null
+                    }
+                },
+                "products": {
+                    "type": "products",
+                    "properties": {
+                        "title": "Our products",
+                        "subtitle": "One product, done properly. Pick a duration, pay by card or crypto, and your key is on screen in seconds."
+                    }
+                },
+                "comparison-1776691489791": {
+                    "type": "comparison",
+                    "properties": {
+                        "title": "Same Server. <span class=\"text-highlight\">Different Information.<\/span>",
+                        "subtitle": "Drag the slider \u2014 two raw screenshots, ESP off and on. No editing.",
+                        "before_image": "https:\/\/i.ibb.co\/qY5Xs4qj\/11111.png",
+                        "after_image": "https:\/\/i.ibb.co\/XZ3LYvSF\/22222.png"
+                    }
+                },
+                "feedbacks-1776878048349": {
+                    "type": "feedbacks",
+                    "properties": {
+                        "title": "Don't take our word for it.",
+                        "subtitle": "Our customers speak for themselves. Here's what they had to say.",
+                        "amount": "10",
+                        "hide_automatic_feedbacks": true
+                    }
+                },
+                "faq-1776422690117": {
+                    "type": "faq",
+                    "properties": {
+                        "title": "Frequently Asked Questions",
+                        "subtitle": "Got questions? We've got answers. Here's everything you need to know about getting started with {{ shop.name }}.",
+                        "items": [
+                            {
+                                "question": "What payment methods do you accept?",
+                                "answer": "We accept a variety of payment methods including credit\/debit cards, cryptocurrency, and more. Available options will be shown at checkout."
+                            },
+                            {
+                                "question": "How do I contact support?",
+                                "answer": "You can reach us through our Discord server or by opening a ticket. We typically respond within  10 minutes if we are online!"
+                            },
+                            {
+                                "question": "Are your products safe to use?",
+                                "answer": "Yes. Every product we sell is tested before listing. We have a status page (Locate at the top of the homepage) where you can see if our products are either Undetected, Updating or Detected."
+                            },
+                            {
+                                "question": "Do you offer any discounts?",
+                                "answer": "We occasionally run promotions and sales. Follow our socials or join our Discord to stay updated on any deals."
+                            },
+                            {
+                                "question": "Can I use the product on multiple PC's?",
+                                "answer": "Each purchase is licensed for a single PC HWID. We do this to prevent abuse of key sharing to ensure it is fair for all our users and to keep our detection rate low."
+                            }
+                        ],
+                        "background": "primary"
+                    }
+                },
+                "cta-1776516114100": {
+                    "type": "cta",
+                    "properties": {
+                        "overline": "Ready to get started",
+                        "title": "The last Rust cheat you'll ever need.",
+                        "subtitle": "Watch the showcase, read the reviews, check the live status \u2014 then decide for yourself.",
+                        "btn_primary_text": "Get your key",
+                        "btn_primary_link": "\/#products",
+                        "btn_secondary_text": "Join Discord",
+                        "btn_secondary_link": null,
+                        "show_globe": true
+                    }
+                }
+            },
+            "components_order": [
+                "hero",
+                "products",
+                "comparison-1776691489791",
+                "feedbacks-1776878048349",
+                "faq-1776422690117",
+                "cta-1776516114100"
+            ]
+        },
+        "cart": {
+            "layout": "master",
+            "components": {
+                "cart-page": {
+                    "type": "cart-page",
+                    "properties": []
+                }
+            },
+            "components_order": [
+                "cart-page"
+            ]
+        },
+        "products": {
+            "layout": "master",
+            "components": {
+                "products-page": {
+                    "type": "products-page",
+                    "properties": {
+                        "default_title": "Our Products",
+                        "category_title": "{{ category.name }} Products"
+                    }
+                }
+            },
+            "components_order": [
+                "products-page"
+            ]
+        },
+        "product": {
+            "layout": "master",
+            "components": {
+                "product-page": {
+                    "type": "product-page",
+                    "properties": {
+                        "hide_add_to_cart": false,
+                        "hide_buy_now": false
+                    }
+                }
+            },
+            "components_order": [
+                "product-page"
+            ]
+        },
+        "feedback": {
+            "layout": "master",
+            "components": {
+                "feedback-page": {
+                    "type": "feedback-page",
+                    "properties": []
+                }
+            },
+            "components_order": [
+                "feedback-page"
+            ]
+        },
+        "status": {
+            "layout": "master",
+            "components": {
+                "status-page": {
+                    "type": "status-page",
+                    "properties": []
+                }
+            },
+            "components_order": [
+                "status-page"
+            ]
+        },
+        "faq": {
+            "layout": "master",
+            "components": [],
+            "components_order": []
+        },
+        "terms": {
+            "layout": "master",
+            "components": {
+                "terms-page": {
+                    "type": "terms-page",
+                    "properties": []
+                }
+            },
+            "components_order": [
+                "terms-page"
+            ]
+        },
+        "privacy-policy": {
+            "layout": "master",
+            "components": {
+                "privacy-policy-page": {
+                    "type": "privacy-policy-page",
+                    "properties": []
+                }
+            },
+            "components_order": [
+                "privacy-policy-page"
+            ]
+        },
+        "refund-policy": {
+            "layout": "master",
+            "components": {
+                "refund-policy-page": {
+                    "type": "refund-policy-page",
+                    "properties": []
+                }
+            },
+            "components_order": [
+                "refund-policy-page"
+            ]
+        },
+        "blog": {
+            "layout": "master",
+            "components": {
+                "blog-posts": {
+                    "type": "blog-posts",
+                    "properties": {
+                        "title": "Our Blog"
+                    }
+                }
+            },
+            "components_order": [
+                "blog-posts"
+            ]
+        },
+        "blog-post": {
+            "layout": "master",
+            "components": {
+                "blog-post": {
+                    "type": "blog-post-page",
+                    "properties": []
+                }
+            },
+            "components_order": [
+                "blog-post"
+            ]
+        },
+        "customer-dashboard": {
+            "layout": "master",
+            "components": [],
+            "components_order": []
+        },
+        "customer-invoices": {
+            "layout": "master",
+            "components": [],
+            "components_order": []
+        },
+        "customer-tickets": {
+            "layout": "master",
+            "components": [],
+            "components_order": []
+        },
+        "customer-ticket": {
+            "layout": "master",
+            "components": [],
+            "components_order": []
+        },
+        "customer-balance": {
+            "layout": "master",
+            "components": [],
+            "components_order": []
+        },
+        "customer-affiliate": {
+            "layout": "master",
+            "components": [],
+            "components_order": []
+        },
+        "maintenance": {
+            "layout": "master",
+            "components": [],
+            "components_order": []
+        },
+        "custom-page-1783695101419": {
+            "name": "Affiliates",
+            "slug": "affiliates",
+            "layout": "master",
+            "components": [],
+            "components_order": []
+        },
+        "custom-page-1784674289387": {
+            "name": "Checkout",
+            "slug": "pay",
+            "layout": "master",
+            "components": [],
+            "components_order": []
+        },
+        "custom-page-1784812811432": {
+            "name": "Why Choose Us?",
+            "slug": "why-us",
+            "layout": "master",
+            "components": [],
+            "components_order": []
+        }
+    },
+    "global": {
+        "properties": {
+            "theme_color": "#BF40BF",
+            "primary_background_color": "#06091a",
+            "secondary_background_color": "#141414",
+            "primary_border_color": "#ffffff0d",
+            "font": "Poppins",
+            "snow": false,
+            "snow_color": "#ffffff",
+            "product_card_image_aspect_ratio": "16\/9",
+            "product_page_image_aspect_ratio": "16\/9",
+            "product_image_fit": "cover",
+            "group_card_image_aspect_ratio": "16\/9",
+            "group_image_fit": "cover",
+            "blog_card_image_aspect_ratio": "16\/9",
+            "blog_image_fit": "cover",
+            "disable_smooth_scroll": false,
+            "smooth_scroll": true
+        },
+        "components": {
+            "announcement": {
+                "text": null,
+                "link": null,
+                "link_text": null
+            },
+            "navbar": {
+                "show_shop_name": true,
+                "show_logo": true,
+                "left_links": [
+                    {
+                        "text": "Home",
+                        "link": "\/",
+                        "shape": "regular"
+                    },
+                    {
+                        "text": "Products",
+                        "link": "\/products",
+                        "shape": "regular"
+                    },
+                    {
+                        "text": "Reviews",
+                        "link": "\/feedback",
+                        "shape": "regular"
+                    },
+                    {
+                        "text": "Status",
+                        "link": "\/status",
+                        "shape": "regular"
+                    }
+                ],
+                "right_links": [],
+                "hide_currency_selector": false,
+                "hide_customer_dashboard": false,
+                "hide_cart": false
+            },
+            "footer": {
+                "show_shop_name": true,
+                "show_logo": false,
+                "show_socials": true,
+                "links_title": "Navigation",
+                "links": [
+                    {
+                        "text": "Home",
+                        "link": "\/"
+                    },
+                    {
+                        "text": "Products",
+                        "link": "\/products"
+                    },
+                    {
+                        "text": "Feedback",
+                        "link": "\/feedback"
+                    },
+                    {
+                        "text": "Status",
+                        "link": "\/status",
+                        "shape": "regular"
+                    },
+                    {
+                        "text": "Blog",
+                        "link": "\/blog"
+                    }
+                ],
+                "links_2_title": "Legal",
+                "links_2": [
+                    {
+                        "text": "Terms of Service",
+                        "link": "\/terms-of-service"
+                    },
+                    {
+                        "text": "Privacy Policy",
+                        "link": "\/privacy-policy"
+                    },
+                    {
+                        "text": "Refund Policy",
+                        "link": "\/refund-policy"
+                    }
+                ]
+            },
+            "popup": {
+                "enabled": true,
+                "header": "meow",
+                "message": "meow",
+                "coupon": "meow",
+                "delay": "1",
+                "dismiss_duration": "5"
+            }
+        }
+    }
+}

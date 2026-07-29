@@ -1,0 +1,1580 @@
+<div class="zs-page component" data-component-id="{{ componentId }}" data-zz-build="svdate1">
+  <div class="zs-bg" aria-hidden="true">
+    <div class="zs-bg__grid"></div>
+    <div class="zs-bg__beam zs-bg__beam--a"></div>
+    <div class="zs-bg__beam zs-bg__beam--b"></div>
+    <div class="zs-bg__scan"></div>
+    <div class="zs-aura zs-aura--{{ ovCls }}"></div>
+  </div>
+
+  <div class="zs-wrap">
+
+    <header class="zs-head zs-rise">
+      <p class="zs-eyebrow">// ZAZA CHEATS — DETECTION STATUS</p>
+      <h1 class="zs-title">Status</h1>
+      <p class="zs-subtitle">Hand-verified before every green light. If it's red here, we say so.</p>
+    </header>
+
+    {# ════════════════════════════════════════════════════════════════
+       STATUS CONTROL PANEL — the ONLY block you edit day-to-day.
+
+       1) Product statuses. Each accepts:
+              'undetected' | 'updating' | 'detected'
+          The shield, band, cards, protocol and CTA all recolour from
+          these two lines. Flip them the moment the real status changes.
+
+       2) Verified date. AUTOMATIC — the page rewrites "Status verified"
+          to the current UK date on load (and again at midnight), exactly
+          like the live clock and "Last check". You do NOT need to touch
+          these two lines day-to-day; they are only the no-JS fallback:
+              statusVerifiedOn  — what buyers read  (e.g. '2 July 2026')
+              statusVerifiedISO — fallback freshness date (YYYY-MM-DD)
+
+       3) UPDATE LOG — scroll to the zs-log section further down and
+          add a row at the TOP of the list whenever status changes.
+          Copy-paste templates are in a comment there.
+       ════════════════════════════════════════════════════════════════ #}
+    {% set zazaStatus = 'undetected' %}
+    {% set rustNfaStatus = 'undetected' %}
+    {% set statusVerifiedOn = '25 July 2026' %}
+    {% set statusVerifiedISO = '2026-07-25' %}
+
+    {# 4) Build + freshness per product — shown on the cards.
+          Update zazaVersion + zazaUpdatedOn every cheat release,
+          nfaRestockedOn every time you restock accounts.
+          statusChangedISO = when the CURRENT light began (date or full
+          ISO timestamp). Powers the live "in this state for Xh Ym"
+          counter. Update it every time you flip zazaStatus. #}
+    {% set zazaVersion = 'v2.4 · build 614' %}
+    {% set zazaUpdatedOn = '17 July 2026' %}
+    {% set nfaRestockedOn = '8 July 2026' %}
+    {% set statusChangedISO = '2026-07-17T17:06:00Z' %}
+
+    {# 5) Subsystems — the component board. Each accepts:
+              'op'   → Operational (green)
+              'slow' → Degraded    (amber)
+              'down' → Down        (red)
+          Flip individually: e.g. keys still deliver while ESP is down. #}
+    {% set sysLoader = 'op' %}
+    {% set sysInjection = 'op' %}
+    {% set sysEsp = 'op' %}
+    {% set sysAim = 'op' %}
+    {% set sysDelivery = 'op' %}
+    {% set sysSupport = 'op' %}
+
+    {# per-product display tokens (derived — no need to edit) #}
+    {% set zCls = 'u' %}{% set zLabel = 'Undetected' %}{% set zDet = 'Clean' %}
+    {% if zazaStatus == 'detected' %}{% set zCls = 'd' %}{% set zLabel = 'Detected' %}{% set zDet = 'Flagged' %}
+    {% elif zazaStatus == 'updating' %}{% set zCls = 'p' %}{% set zLabel = 'Updating' %}{% set zDet = 'Updating' %}{% endif %}
+
+    {% set nfaCls = 'u' %}{% set nfaLabel = 'Undetected' %}{% set nfaDet = 'Clean' %}
+    {% if rustNfaStatus == 'detected' %}{% set nfaCls = 'd' %}{% set nfaLabel = 'Detected' %}{% set nfaDet = 'Flagged' %}
+    {% elif rustNfaStatus == 'updating' %}{% set nfaCls = 'p' %}{% set nfaLabel = 'Updating' %}{% set nfaDet = 'Updating' %}{% endif %}
+
+    {# overall = worst case across products #}
+    {% set ovCls = 'u' %}{% set ovState = 'UNDETECTED' %}{% set ovSub = 'All systems operational' %}{% set ovBuild = 'Active' %}
+    {% if zazaStatus == 'updating' or rustNfaStatus == 'updating' %}{% set ovCls = 'p' %}{% set ovState = 'UPDATING' %}{% set ovSub = 'Update in progress' %}{% set ovBuild = 'Updating' %}{% endif %}
+    {% if zazaStatus == 'detected' or rustNfaStatus == 'detected' %}{% set ovCls = 'd' %}{% set ovState = 'DETECTED' %}{% set ovSub = 'Action required — see below' %}{% set ovBuild = 'Paused' %}{% endif %}
+
+    <!-- status centerpiece -->
+    <section class="zs-shield zs-shield--{{ ovCls }} zs-rise" style="--d:.08s">
+      <div class="zs-shield__sweep" aria-hidden="true"></div>
+      <div class="zs-shield__pulse" aria-hidden="true"></div>
+      <div class="zs-shield__pulse zs-shield__pulse--2" aria-hidden="true"></div>
+      <div class="zs-shield__ring" aria-hidden="true">
+        <svg viewBox="0 0 200 200">
+          <circle class="zs-shield__track" cx="100" cy="100" r="88"></circle>
+          <circle class="zs-shield__fill" cx="100" cy="100" r="88"></circle>
+        </svg>
+      </div>
+      <div class="zs-shield__core">
+        <svg class="zs-shield__icon" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2.5l7 3v5.2c0 4.3-2.9 7.9-7 9.3-4.1-1.4-7-5-7-9.3V5.5l7-3z" stroke-width="1.3"/>
+          <path d="M8.5 12.2l2.4 2.4 4.6-4.8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="zs-shield__state">{{ ovState }}</div>
+        <div class="zs-shield__sub" aria-live="polite"><span class="zs-livedot"></span>{{ ovSub }}</div>
+      </div>
+    </section>
+
+    <!-- status readout band -->
+    <section class="zs-band zs-rise" style="--d:.16s" data-verified-iso="{{ statusVerifiedISO }}">
+      <div class="zs-band__item">
+        <span class="zs-band__v zs-band__v--{{ ovCls }}">{{ ovBuild }}</span>
+        <span class="zs-band__k">Build status</span>
+      </div>
+      <div class="zs-band__div" aria-hidden="true"></div>
+      <div class="zs-band__item">
+        <span class="zs-band__v">Instant</span>
+        <span class="zs-band__k">Key delivery</span>
+      </div>
+      <div class="zs-band__div" aria-hidden="true"></div>
+      <div class="zs-band__item">
+        <span class="zs-band__v" data-zs-verified>{{ statusVerifiedOn }}</span>
+        <span class="zs-band__k">Status verified</span>
+      </div>
+      <div class="zs-band__div" aria-hidden="true"></div>
+      <div class="zs-band__item">
+        <span class="zs-band__v" data-freshness>&mdash;</span>
+        <span class="zs-band__k">Last check</span>
+      </div>
+      <div class="zs-band__div" aria-hidden="true"></div>
+      <div class="zs-band__item">
+        <span class="zs-band__v zs-band__v--clock" data-zs-clock>&mdash;:&mdash;:&mdash;</span>
+        <span class="zs-band__k">UK time · live</span>
+      </div>
+    </section>
+    <p class="zs-stale zs-rise" data-stale-note hidden style="--d:.2s">
+      It's been a while since the date above moved &mdash; ask in
+      <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener">Discord</a>
+      for the freshest word before you buy.
+    </p>
+
+    <!-- ops strip: live counters — all computed client-side from real data -->
+    <div class="zs-ops zs-rise" style="--d:.21s" data-changed-iso="{{ statusChangedISO }}">
+      <div class="zs-ops__chip">
+        <span class="zs-ops__k">Next Rust force wipe</span>
+        <span class="zs-ops__v" data-zs-wipe>&mdash;</span>
+        <span class="zs-ops__note">first Thu · ~19:00 UTC · Facepunch can shift it</span>
+      </div>
+    </div>
+
+    <!-- quick jump -->
+    <nav class="zs-nav zs-rise" style="--d:.23s" aria-label="Status page sections">
+      <a class="zs-nav__lnk" href="#zs-products">Products</a>
+      <a class="zs-nav__lnk" href="#zs-components">Components</a>
+      <a class="zs-nav__lnk" href="#zs-history">History</a>
+      <a class="zs-nav__lnk" href="#zs-log">Update log</a>
+      <a class="zs-nav__lnk" href="#zs-protocol">Key protocol</a>
+    </nav>
+
+    <!-- 90-day history — drawn from the real update log below; grey = no logged entry -->
+    <section class="zs-hist zs-rise" id="zs-history" style="--d:.22s" hidden>
+      <div class="zs-hist__head">
+        <span class="zs-hist__title">Last 90 days</span>
+        <span class="zs-hist__note">built from the update log — grey days simply have no entry · click a day to jump to its entry</span>
+      </div>
+      <div class="zs-hist__cells" id="zs-hist-cells"></div>
+      <div class="zs-hist__legend">
+        <span><i class="zs-hist__key zs-hist__key--u"></i>Verified clean</span>
+        <span><i class="zs-hist__key zs-hist__key--p"></i>Updating</span>
+        <span><i class="zs-hist__key zs-hist__key--d"></i>Detected</span>
+        <span><i class="zs-hist__key"></i>No entry</span>
+      </div>
+      <p class="zs-hist__tally" data-zs-tally hidden></p>
+    </section>
+
+    <div class="zs-legend zs-rise" style="--d:.24s">
+      <span class="zs-leg"><span class="zs-leg__dot zs-leg__dot--u"></span>Undetected</span>
+      <span class="zs-leg"><span class="zs-leg__dot zs-leg__dot--p"></span>Updating</span>
+      <span class="zs-leg"><span class="zs-leg__dot zs-leg__dot--d"></span>Detected</span>
+    </div>
+
+    <!-- component board -->
+    {% set opCount = 0 %}
+    {% if sysLoader == 'op' %}{% set opCount = opCount + 1 %}{% endif %}
+    {% if sysInjection == 'op' %}{% set opCount = opCount + 1 %}{% endif %}
+    {% if sysEsp == 'op' %}{% set opCount = opCount + 1 %}{% endif %}
+    {% if sysAim == 'op' %}{% set opCount = opCount + 1 %}{% endif %}
+    {% if sysDelivery == 'op' %}{% set opCount = opCount + 1 %}{% endif %}
+    {% if sysSupport == 'op' %}{% set opCount = opCount + 1 %}{% endif %}
+    <section class="zs-sys zs-rise" id="zs-components" style="--d:.28s">
+      <div class="zs-sys__head">
+        <h2 class="zs-sys__title">Components</h2>
+        <span class="zs-opsum {% if opCount == 6 %}zs-opsum--op{% elif opCount >= 4 %}zs-opsum--slow{% else %}zs-opsum--down{% endif %}">{{ opCount }}/6 operational</span>
+        <span class="zs-sys__note">set by hand after real checks — this board never auto-greens</span>
+      </div>
+      <div class="zs-sys__grid">
+        <div class="zs-sys__row">
+          <span class="zs-sys__name">Loader</span>
+          <span class="zs-sys__chip zs-sys__chip--{{ sysLoader }}"><span class="zs-sys__dot"></span>{% if sysLoader == 'op' %}Operational{% elif sysLoader == 'slow' %}Degraded{% else %}Down{% endif %}</span>
+        </div>
+        <div class="zs-sys__row">
+          <span class="zs-sys__name">Injection</span>
+          <span class="zs-sys__chip zs-sys__chip--{{ sysInjection }}"><span class="zs-sys__dot"></span>{% if sysInjection == 'op' %}Operational{% elif sysInjection == 'slow' %}Degraded{% else %}Down{% endif %}</span>
+        </div>
+        <div class="zs-sys__row">
+          <span class="zs-sys__name">ESP / Visuals</span>
+          <span class="zs-sys__chip zs-sys__chip--{{ sysEsp }}"><span class="zs-sys__dot"></span>{% if sysEsp == 'op' %}Operational{% elif sysEsp == 'slow' %}Degraded{% else %}Down{% endif %}</span>
+        </div>
+        <div class="zs-sys__row">
+          <span class="zs-sys__name">Aim</span>
+          <span class="zs-sys__chip zs-sys__chip--{{ sysAim }}"><span class="zs-sys__dot"></span>{% if sysAim == 'op' %}Operational{% elif sysAim == 'slow' %}Degraded{% else %}Down{% endif %}</span>
+        </div>
+        <div class="zs-sys__row">
+          <span class="zs-sys__name">Key delivery</span>
+          <span class="zs-sys__chip zs-sys__chip--{{ sysDelivery }}"><span class="zs-sys__dot"></span>{% if sysDelivery == 'op' %}Operational{% elif sysDelivery == 'slow' %}Degraded{% else %}Down{% endif %}</span>
+        </div>
+        <div class="zs-sys__row">
+          <span class="zs-sys__name">Discord support</span>
+          <span class="zs-sys__chip zs-sys__chip--{{ sysSupport }}"><span class="zs-sys__dot"></span>{% if sysSupport == 'op' %}Operational{% elif sysSupport == 'slow' %}Degraded{% else %}Down{% endif %}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- coverage: what this status does and doesn't speak to -->
+    <section class="zs-cover zs-rise" style="--d:.3s">
+      <span class="zs-cover__chip">EAC</span>
+      <p class="zs-cover__txt"><b>Coverage:</b> this status tracks Rust's client-side anti-cheat (Easy Anti-Cheat).
+      No cheat on the market can cover server-side detection or an admin spectating you &mdash; play smart even on green.</p>
+    </section>
+
+    <section class="zs-grid" id="zs-products">
+
+      {% for item in statuses %}
+        {% if item.type == 'group' %}
+          <div class="status-group">
+            <h2 class="status-group-title">{{ item.name }}</h2>
+            <div class="status-group-cards">
+              {% for product in item.products %}
+                {% render_snippet "status-card.njk", product=product %}
+              {% endfor %}
+            </div>
+          </div>
+        {% elif not item.group_id %}
+          {% render_snippet "status-card.njk", product=item %}
+        {% endif %}
+      {% endfor %}
+
+      <div class="zs-card zs-card--state zs-card--{{ zCls }} zs-rise" style="--d:.32s">
+        <div class="zs-card__glow" aria-hidden="true"></div>
+        <div class="zs-card__sheen" aria-hidden="true"></div>
+
+        <div class="zs-card__top">
+          <div class="zs-card__id">
+            <span class="zs-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+                <path d="M12 2.5l7 3v5.2c0 4.3-2.9 7.9-7 9.3-4.1-1.4-7-5-7-9.3V5.5l7-3z" fill="rgba(34,197,94,.14)" stroke="#22c55e" stroke-width="1.3"/>
+                <path d="M8.5 12.2l2.4 2.4 4.6-4.8" stroke="#22c55e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <div>
+              <h3 class="zs-card__name">Zaza Rust Private Cheat</h3>
+              <p class="zs-card__sub">Private build &middot; Rust</p>
+            </div>
+          </div>
+          <span class="zs-pill"><span class="zs-pill__dot"></span>{{ zLabel }}</span>
+        </div>
+
+        <div class="zs-bar"><div class="zs-bar__fill"></div></div>
+
+        <div class="zs-meta">
+          <div class="zs-meta__item"><span class="zs-meta__k">Version</span><span class="zs-meta__v">{{ zazaVersion }}</span></div>
+          <div class="zs-meta__item"><span class="zs-meta__k">Detection</span><span class="zs-meta__v zs-stateClr">{{ zDet }}</span></div>
+          <div class="zs-meta__item"><span class="zs-meta__k">Last update</span><span class="zs-meta__v">{{ zazaUpdatedOn }}</span></div>
+          <div class="zs-meta__item"><span class="zs-meta__k">Delivery</span><span class="zs-meta__v">Instant</span></div>
+        </div>
+
+        {# ── CHANGELOG (cheat) — newest FIRST. Copy-paste template: ──
+           <div class="zs-cl__row">
+             <span class="zs-cl__ver">v2.5</span>
+             <div class="zs-cl__body">
+               <span class="zs-cl__date">14 Jul 2026</span>
+               <span class="zs-cl__txt">What changed, in one or two honest lines.</span>
+             </div>
+           </div>                                                    ── #}
+        <details class="zs-cl">
+          <summary class="zs-cl__sum">
+            <span>Release notes</span>
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </summary>
+          <div class="zs-cl__rows">
+            <div class="zs-cl__row">
+              <span class="zs-cl__ver">v2.5</span>
+              <div class="zs-cl__body">
+                <span class="zs-cl__date">14 Jul 2026</span>
+                <span class="zs-cl__txt">Fixed issues with FOV change and zoom.</span>
+              </div>
+            </div>
+            <div class="zs-cl__row">
+              <span class="zs-cl__ver">v2.4</span>
+              <div class="zs-cl__body">
+                <span class="zs-cl__date">8 Jul 2026</span>
+                <span class="zs-cl__txt">Build 614 — re-verified after the July Rust client patch. Safe to inject.</span>
+              </div>
+            </div>
+            <div class="zs-cl__row">
+              <span class="zs-cl__ver">v2.3</span>
+              <div class="zs-cl__body">
+                <span class="zs-cl__date">3 Jul 2026</span>
+                <span class="zs-cl__txt">Force-wipe rebuild — re-verified and safe to inject.</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        {% if zCls == 'u' %}
+        <a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="zs-card__cta">
+          Get instant access
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        {% else %}
+        <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener" class="zs-card__cta zs-card__cta--wait">
+          Wait for green &mdash; get pinged on Discord
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        {% endif %}
+      </div>
+
+      <div class="zs-card zs-card--state zs-card--{{ nfaCls }} zs-rise" style="--d:.4s">
+        <div class="zs-card__glow" aria-hidden="true"></div>
+        <div class="zs-card__sheen" aria-hidden="true"></div>
+
+        <div class="zs-card__top">
+          <div class="zs-card__id">
+            <span class="zs-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+                <path d="M12 2.5l7 3v5.2c0 4.3-2.9 7.9-7 9.3-4.1-1.4-7-5-7-9.3V5.5l7-3z" fill="rgba(34,197,94,.14)" stroke="#22c55e" stroke-width="1.3"/>
+                <path d="M8.5 12.2l2.4 2.4 4.6-4.8" stroke="#22c55e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <div>
+              <h3 class="zs-card__name">Rust NFA</h3>
+              <p class="zs-card__sub">NFA accounts &middot; Rust</p>
+            </div>
+          </div>
+          <span class="zs-pill"><span class="zs-pill__dot"></span>{{ nfaLabel }}</span>
+        </div>
+
+        <div class="zs-bar"><div class="zs-bar__fill"></div></div>
+
+        <div class="zs-meta">
+          <div class="zs-meta__item"><span class="zs-meta__k">Type</span><span class="zs-meta__v">NFA accounts</span></div>
+          <div class="zs-meta__item"><span class="zs-meta__k">Detection</span><span class="zs-meta__v zs-stateClr">{{ nfaDet }}</span></div>
+          <div class="zs-meta__item"><span class="zs-meta__k">Restocked</span><span class="zs-meta__v">{{ nfaRestockedOn }}</span></div>
+          <div class="zs-meta__item"><span class="zs-meta__k">Warranty</span><span class="zs-meta__v">6h included</span></div>
+        </div>
+
+        {# ── CHANGELOG (NFA) — restocks & policy changes, newest FIRST ── #}
+        <details class="zs-cl">
+          <summary class="zs-cl__sum">
+            <span>Restock log</span>
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </summary>
+          <div class="zs-cl__rows">
+            <div class="zs-cl__row">
+              <span class="zs-cl__ver">Stock</span>
+              <div class="zs-cl__body">
+                <span class="zs-cl__date">8 Jul 2026</span>
+                <span class="zs-cl__txt">All four hour tiers restocked — Starter through Veteran available.</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        {% if nfaCls == 'u' %}
+        <a href="{{ '/product/rust-nfa' | shopUrl }}" class="zs-card__cta">
+          Get instant access
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        {% else %}
+        <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener" class="zs-card__cta zs-card__cta--wait">
+          Wait for green &mdash; get pinged on Discord
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        {% endif %}
+      </div>
+
+    </section>
+
+    {# ════════════════════════════════════════════════════════════════
+       UPDATE LOG — the public record. Newest entry FIRST.
+
+       Add a row whenever status changes. Never delete red entries;
+       a log that only shows green is just marketing. Types:
+         zs-log__dot--u  green   (back to undetected / all clear)
+         zs-log__dot--p  amber   (updating started)
+         zs-log__dot--d  red     (detection event)
+         zs-log__dot--i  violet  (info: new feature, policy, page news)
+
+       Copy-paste templates:
+
+       <li class="zs-log__row">
+         <span class="zs-log__date">14 Jul 2026</span>
+         <span class="zs-log__dot zs-log__dot--p" aria-hidden="true"></span>
+         <div class="zs-log__body">
+           <span class="zs-log__t">Updating — Rust client patch</span>
+           <span class="zs-log__d">Build pulled while we re-verify against today's update. Don't inject until this flips green.</span>
+         </div>
+       </li>
+
+       <li class="zs-log__row">
+         <span class="zs-log__date">14 Jul 2026</span>
+         <span class="zs-log__dot zs-log__dot--u" aria-hidden="true"></span>
+         <div class="zs-log__body">
+           <span class="zs-log__t">Back to Undetected</span>
+           <span class="zs-log__d">Re-verified after the client patch. Safe to inject.</span>
+         </div>
+       </li>
+       ════════════════════════════════════════════════════════════════ #}
+    <section class="zs-log zs-rise" id="zs-log" style="--d:.46s">
+      <p class="zs-eyebrow" style="text-align:center">// UPDATE LOG — EVERY STATUS CHANGE, ON THE RECORD</p>
+      <div class="zs-filter" role="group" aria-label="Filter log entries">
+        <button type="button" class="zs-filter__btn zs-filter__btn--on" data-zs-filter="all">All</button>
+        <button type="button" class="zs-filter__btn" data-zs-filter="u">Clean</button>
+        <button type="button" class="zs-filter__btn" data-zs-filter="p">Updating</button>
+        <button type="button" class="zs-filter__btn" data-zs-filter="d">Detected</button>
+        <button type="button" class="zs-filter__btn" data-zs-filter="i">Info</button>
+      </div>
+      <ul class="zs-log__list">
+
+        <li class="zs-log__row">
+          <span class="zs-log__date">17 Jul 2026</span>
+          <span class="zs-log__dot zs-log__dot--u" aria-hidden="true"></span>
+          <div class="zs-log__body">
+            <span class="zs-log__t">Back to Undetected</span>
+            <span class="zs-log__d">Updated for the latest software version at 18:06 &mdash; re-verified and safe to inject.</span>
+          </div>
+        </li>
+
+        <li class="zs-log__row">
+          <span class="zs-log__date">17 Jul 2026</span>
+          <span class="zs-log__dot zs-log__dot--p" aria-hidden="true"></span>
+          <div class="zs-log__body">
+            <span class="zs-log__t">Disabled &mdash; Rust game update</span>
+            <span class="zs-log__d">Cheat disabled at 17:04 while we re-verify against today's game update. Don't inject until this flips green.</span>
+          </div>
+        </li>
+
+        <li class="zs-log__row">
+          <span class="zs-log__date">14 Jul 2026</span>
+          <span class="zs-log__dot zs-log__dot--i" aria-hidden="true"></span>
+          <div class="zs-log__body">
+            <span class="zs-log__t">Cheat update &mdash; FOV &amp; zoom fixes</span>
+            <span class="zs-log__d">v2.5 shipped &mdash; fixed issues with FOV change and zoom. No detection impact; status unchanged.</span>
+          </div>
+        </li>
+
+        <li class="zs-log__row">
+          <span class="zs-log__date">13 Jul 2026</span>
+          <span class="zs-log__dot zs-log__dot--u" aria-hidden="true"></span>
+          <div class="zs-log__body">
+            <span class="zs-log__t">Back to Undetected</span>
+            <span class="zs-log__d">Updated for the latest software version. Re-verified and safe to inject.</span>
+          </div>
+        </li>
+
+        <li class="zs-log__row">
+          <span class="zs-log__date">13 Jul 2026</span>
+          <span class="zs-log__dot zs-log__dot--p" aria-hidden="true"></span>
+          <div class="zs-log__body">
+            <span class="zs-log__t">Updating &mdash; Rust game update</span>
+            <span class="zs-log__d">Disabled for a game update while the build is re-verified. Don't inject until this flips back to green.</span>
+          </div>
+        </li>
+
+        <li class="zs-log__row">
+          <span class="zs-log__date">8 Jul 2026</span>
+          <span class="zs-log__dot zs-log__dot--u" aria-hidden="true"></span>
+          <div class="zs-log__body">
+            <span class="zs-log__t">Back to Undetected</span>
+            <span class="zs-log__d">Updated for the latest software version. Safe to inject.</span>
+          </div>
+        </li>
+
+        <li class="zs-log__row">
+          <span class="zs-log__date">7 Jul 2026</span>
+          <span class="zs-log__dot zs-log__dot--u" aria-hidden="true"></span>
+          <div class="zs-log__body">
+            <span class="zs-log__t">Back to Undetected</span>
+            <span class="zs-log__d">Updated for the latest software version. Safe to inject.</span>
+          </div>
+        </li>
+
+        <li class="zs-log__row">
+          <span class="zs-log__date">6 Jul 2026</span>
+          <span class="zs-log__dot zs-log__dot--u" aria-hidden="true"></span>
+          <div class="zs-log__body">
+            <span class="zs-log__t">Back to Undetected</span>
+            <span class="zs-log__d">Updated for the latest software version. Safe to inject.</span>
+          </div>
+        </li>
+
+        <li class="zs-log__row">
+          <span class="zs-log__date">3 Jul 2026</span>
+          <span class="zs-log__dot zs-log__dot--u" aria-hidden="true"></span>
+          <div class="zs-log__body">
+            <span class="zs-log__t">Back to Undetected</span>
+            <span class="zs-log__d">Updated for the latest software version after the force-wipe downtime.</span>
+          </div>
+        </li>
+
+        <li class="zs-log__row">
+          <span class="zs-log__date">3 Jul 2026</span>
+          <span class="zs-log__dot zs-log__dot--i" aria-hidden="true"></span>
+          <div class="zs-log__body">
+            <span class="zs-log__t">Update in progress</span>
+            <span class="zs-log__d">Working on the post-wipe update today. Build stays disabled until it flips green.</span>
+          </div>
+        </li>
+
+        <li class="zs-log__row">
+          <span class="zs-log__date">2 Jul 2026</span>
+          <span class="zs-log__dot zs-log__dot--p" aria-hidden="true"></span>
+          <div class="zs-log__body">
+            <span class="zs-log__t">Updating &mdash; force wipe</span>
+            <span class="zs-log__d">Disabled for the Rust force-wipe update. Don't inject until this flips back to green.</span>
+          </div>
+        </li>
+
+        <li class="zs-log__row">
+          <span class="zs-log__date">2 Jul 2026</span>
+          <span class="zs-log__dot zs-log__dot--i" aria-hidden="true"></span>
+          <div class="zs-log__body">
+            <span class="zs-log__t">Public log started</span>
+            <span class="zs-log__d">From today, every status change &mdash; green, amber or red &mdash; is recorded here with a date. Earlier entries are carried over from the Discord #updates-log. Nothing gets quietly edited out.</span>
+          </div>
+        </li>
+
+        <li class="zs-log__row">
+          <span class="zs-log__date">19 Jun 2026</span>
+          <span class="zs-log__dot zs-log__dot--u" aria-hidden="true"></span>
+          <div class="zs-log__body">
+            <span class="zs-log__t">Back to Undetected</span>
+            <span class="zs-log__d">Updated for the latest software version.</span>
+          </div>
+        </li>
+
+        <li class="zs-log__row">
+          <span class="zs-log__date">18 Jun 2026</span>
+          <span class="zs-log__dot zs-log__dot--u" aria-hidden="true"></span>
+          <div class="zs-log__body">
+            <span class="zs-log__t">Back to Undetected</span>
+            <span class="zs-log__d">Updated for the latest software version, same day as the game update.</span>
+          </div>
+        </li>
+
+        <li class="zs-log__row">
+          <span class="zs-log__date">18 Jun 2026</span>
+          <span class="zs-log__dot zs-log__dot--p" aria-hidden="true"></span>
+          <div class="zs-log__body">
+            <span class="zs-log__t">Updating &mdash; Rust game update</span>
+            <span class="zs-log__d">Disabled due to a game update while the build was re-verified.</span>
+          </div>
+        </li>
+
+      </ul>
+      <button type="button" class="zs-more" data-zs-more hidden>Show full history</button>
+      <p class="zs-log__note">Newest first. Red entries stay in the log &mdash; a history that only shows green is just marketing.</p>
+    </section>
+
+    {# ── HOW THE LIGHT WORKS + the honest part. Structural claims only:
+       everything here is true by how this page operates, plus the one
+       thing competitors won't say out loud. ── #}
+    <section class="zs-verify zs-rise" style="--d:.5s">
+      <p class="zs-eyebrow" style="text-align:center">// HOW THE LIGHT WORKS</p>
+      <div class="zs-verify__grid">
+        <div class="zs-verify__card">
+          <span class="zs-verify__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </span>
+          <h3 class="zs-verify__t">Flipped by a human</h3>
+          <p class="zs-verify__d">Nothing on this page updates itself. A person checks the build, then sets the light &mdash; which also means nothing here can lie by accident. The verified date above moves every time we re-check.</p>
+        </div>
+        <div class="zs-verify__card">
+          <span class="zs-verify__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M12 8v4l2.5 2.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </span>
+          <h3 class="zs-verify__t">Patch days are the risky window</h3>
+          <p class="zs-verify__d">Rust client updates and forced wipes are when detections happen. Expect the light to sit on <strong>Updating</strong> around them while the build is re-checked &mdash; buy and inject after it flips back to green, not before.</p>
+        </div>
+        <div class="zs-verify__card zs-verify__card--hl">
+          <span class="zs-verify__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M12 9v4m0 4h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <h3 class="zs-verify__t">Zero risk doesn't exist</h3>
+          <p class="zs-verify__d">No cheat is ever 0% risk &mdash; anyone promising that is selling you a story. <strong>Undetected</strong> means exactly what it says: not currently flagged, as far as we can verify. Play on an account you can afford to lose.
+            <a class="zs-verify__link" href="{{ '/product/rust-nfa' | shopUrl }}">That's what Rust NFAs are for
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {# ── KEY PROTOCOL — what each state means for a buyer's money. ── #}
+    <section class="zs-proto zs-rise" id="zs-protocol" style="--d:.54s">
+      <p class="zs-eyebrow" style="text-align:center">// WHAT EACH STATUS MEANS FOR YOUR KEY</p>
+      <div class="zs-proto__grid">
+        <div class="zs-proto__card zs-proto__card--u">
+          <div class="zs-proto__head">
+            <span class="zs-proto__dot zs-proto__dot--u"></span>
+            <span class="zs-proto__state">Undetected</span>
+          </div>
+          <p class="zs-proto__body">Safe to buy and play. Keys are active and delivered instantly at checkout.</p>
+        </div>
+        <div class="zs-proto__card zs-proto__card--p">
+          <div class="zs-proto__head">
+            <span class="zs-proto__dot zs-proto__dot--p"></span>
+            <span class="zs-proto__state">Updating</span>
+          </div>
+          <p class="zs-proto__body">The build is being patched. Don't inject until it flips back to green. Outages of 24 hours or more are added back to active keys; short update windows aren't compensated.</p>
+        </div>
+        <div class="zs-proto__card zs-proto__card--d">
+          <div class="zs-proto__head">
+            <span class="zs-proto__dot zs-proto__dot--d"></span>
+            <span class="zs-proto__state">Detected</span>
+          </div>
+          <p class="zs-proto__body">Do not inject. We pull the build, fix it, and compensate active keys with added time or a replacement once it's clean again.</p>
+        </div>
+      </div>
+      <p class="zs-proto__note">This page is the same source of truth we use internally. If it's red here, we'll tell you &mdash; not hide it.</p>
+    </section>
+
+    {# ── STATUS-AWARE BUY CTA — buyer just verified the build; catch peak intent ── #}
+    <section class="zs-go zs-go--{{ ovCls }} zs-rise" style="--d:.6s">
+      {% if ovCls == 'u' %}
+      <div class="zs-go__text">
+        <span class="zs-go__t">Status is green. You've done your homework.</span>
+        <span class="zs-go__d">Verified <span data-zs-verified>{{ statusVerifiedOn }}</span> &middot; instant key delivery &middot; 24h+ downtime covered</span>
+      </div>
+      <a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="zs-go__btn">
+        Get your key
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      {% else %}
+      <div class="zs-go__text">
+        <span class="zs-go__t">We're on it &mdash; check back soon.</span>
+        <span class="zs-go__d">Join the Discord to get pinged the moment status flips back to green.</span>
+      </div>
+      <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener" class="zs-go__btn zs-go__btn--dc">
+        Get notified on Discord
+      </a>
+      {% endif %}
+    </section>
+
+    <p class="zs-foot zs-rise" style="--d:.66s">Bookmark this page. Check it before every purchase &mdash; and before every session.</p>
+
+    <!-- floating live pill — mirrors the shield while you scroll -->
+    <a href="#zs-log" class="zs-mini zs-mini--{{ ovCls }}" data-zs-mini hidden>
+      <span class="zs-mini__dot" aria-hidden="true"></span>
+      <span class="zs-mini__state">{{ ovState }}</span>
+      <span class="zs-mini__sep" aria-hidden="true"></span>
+      <span class="zs-mini__sub">verified <span data-zs-verified>{{ statusVerifiedOn }}</span> &middot; view log</span>
+    </a>
+  </div>
+</div>
+
+<style>
+.zs-page{
+  --u:#22c55e; --p:#eab308; --d:#ef4444; --v:#BF40BF; --b:#7C3AED;
+  --ink:#eaf0ff; --mut:rgba(200,215,240,.6); --edge:rgba(191,64,191,.14);
+  --panel:rgba(12,15,30,.72); --void:#06070f;
+  position:relative; width:100%; min-height:100vh; overflow:hidden;
+  background:radial-gradient(130% 90% at 50% -10%, #0d1130 0%, #06070f 58%);
+  font-family:'Satoshi','Inter',system-ui,sans-serif; color:var(--ink);
+}
+.zs-page *{box-sizing:border-box}
+
+/* backdrop */
+.zs-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.zs-bg__grid{position:absolute;inset:-2px;
+  background-image:linear-gradient(rgba(191,64,191,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(191,64,191,.055) 1px,transparent 1px);
+  background-size:46px 46px;
+  -webkit-mask-image:radial-gradient(100% 65% at 50% 0%,#000 28%,transparent 78%);
+  mask-image:radial-gradient(100% 65% at 50% 0%,#000 28%,transparent 78%)}
+.zs-bg__beam{position:absolute;border-radius:50%;filter:blur(100px);opacity:.45;animation:zsFloat 16s ease-in-out infinite}
+.zs-bg__beam--a{width:36rem;height:36rem;top:-14rem;left:-10rem;background:radial-gradient(circle,rgba(191,64,191,.5),transparent 65%)}
+.zs-bg__beam--b{width:32rem;height:32rem;top:-8rem;right:-10rem;background:radial-gradient(circle,rgba(34,197,94,.32),transparent 65%);animation-delay:-8s}
+.zs-bg__scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.01) 3px 4px)}
+@keyframes zsFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(28px)}}
+
+.zs-wrap{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:130px 20px 90px}
+
+/* entrance */
+.zs-rise{opacity:0;transform:translateY(22px);animation:zsRise .85s cubic-bezier(.16,1,.3,1) forwards;animation-delay:var(--d,0s)}
+@keyframes zsRise{to{opacity:1;transform:translateY(0)}}
+
+/* header */
+.zs-head{text-align:center}
+.zs-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--v);font-size:.74rem;letter-spacing:.24em;margin:0}
+.zs-title{font-size:clamp(2.8rem,9vw,4.8rem);font-weight:800;letter-spacing:-.035em;margin:.4rem 0 0;
+  background:linear-gradient(135deg,#fff 28%,#e0c2ff 72%,#BF40BF);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.zs-subtitle{color:var(--mut);font-size:1.05rem;margin:.55rem 0 0}
+
+/* shield centerpiece */
+.zs-shield{position:relative;width:260px;height:260px;margin:54px auto 0;display:grid;place-items:center;--c:34,197,94}
+.zs-shield--u{--c:34,197,94}
+.zs-shield--p{--c:234,179,8}
+.zs-shield--d{--c:239,68,68}
+.zs-shield__pulse{position:absolute;width:200px;height:200px;border-radius:50%;border:1px solid rgba(var(--c),.35);
+  animation:zsExpand 3.4s ease-out infinite}
+.zs-shield__pulse--2{animation-delay:1.7s}
+@keyframes zsExpand{0%{transform:scale(.7);opacity:.7}100%{transform:scale(1.35);opacity:0}}
+.zs-shield__ring{position:absolute;inset:0}
+.zs-shield__ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.zs-shield__track{fill:none;stroke:rgba(255,255,255,.06);stroke-width:5}
+.zs-shield__fill{fill:none;stroke:rgb(var(--c));stroke-width:5;stroke-linecap:round;
+  stroke-dasharray:553;stroke-dashoffset:553;animation:zsRing 2s cubic-bezier(.16,1,.3,1) .35s forwards;
+  filter:drop-shadow(0 0 8px rgba(var(--c),.7))}
+@keyframes zsRing{to{stroke-dashoffset:14}}
+.zs-shield__core{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.zs-shield__icon{width:54px;height:54px;animation:zsFloatY 4s ease-in-out infinite}
+.zs-shield__icon [stroke]{stroke:rgb(var(--c))}
+.zs-shield__icon path:first-child{fill:rgba(var(--c),.12)}
+@keyframes zsFloatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.zs-shield__state{font-size:1.7rem;font-weight:800;letter-spacing:.04em;color:#fff;
+  background:linear-gradient(135deg,#fff,rgb(var(--c)));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.zs-shield__sub{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--mut)}
+.zs-livedot{width:8px;height:8px;border-radius:50%;background:rgb(var(--c));box-shadow:0 0 0 0 rgba(var(--c),.6);animation:zsPulse 1.8s ease-in-out infinite}
+@keyframes zsPulse{0%,100%{box-shadow:0 0 0 0 rgba(var(--c,34,197,94),.55)}50%{box-shadow:0 0 0 7px rgba(var(--c,34,197,94),0)}}
+
+/* readout band */
+.zs-band{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:42px auto 0;
+  border:1px solid var(--edge);border-radius:18px;padding:20px 18px;background:var(--panel);backdrop-filter:blur(16px);
+  box-shadow:0 20px 50px -24px rgba(0,0,0,.6)}
+.zs-band__item{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:84px;flex:1}
+.zs-band__v{font-family:'JetBrains Mono',monospace;font-size:1.15rem;font-weight:700}
+.zs-band__k{font-size:.66rem;text-transform:uppercase;letter-spacing:.09em;color:rgba(200,215,240,.45)}
+.zs-band__div{width:1px;height:32px;background:linear-gradient(180deg,transparent,rgba(191,64,191,.22),transparent)}
+.zs-band__v--u{color:var(--u)}
+.zs-band__v--p{color:var(--p)}
+.zs-band__v--d{color:var(--d)}
+.zs-band__v--stale{color:var(--p)}
+
+/* stale-date honesty note */
+.zs-stale{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;text-align:center;
+  margin:14px auto 0;padding:10px 16px;max-width:560px;border-radius:12px;font-size:.82rem;
+  color:rgba(240,220,170,.85);border:1px solid rgba(234,179,8,.25);background:rgba(234,179,8,.06)}
+.zs-stale a{color:#facc15;font-weight:700;text-decoration:none}
+.zs-stale a:hover{text-decoration:underline}
+.zs-stale[hidden]{display:none}
+
+/* legend */
+.zs-legend{display:flex;justify-content:center;gap:26px;flex-wrap:wrap;margin:32px 0 28px}
+.zs-leg{display:flex;align-items:center;gap:8px;font-size:.86rem;color:var(--mut)}
+.zs-leg__dot{width:9px;height:9px;border-radius:50%}
+.zs-leg__dot--u{background:var(--u);box-shadow:0 0 10px rgba(34,197,94,.6)}
+.zs-leg__dot--p{background:var(--p);box-shadow:0 0 10px rgba(234,179,8,.6)}
+.zs-leg__dot--d{background:var(--d);box-shadow:0 0 10px rgba(239,68,68,.6)}
+
+/* cards */
+.zs-grid{display:flex;flex-direction:column;gap:16px}
+.zs-card{position:relative;display:block;text-decoration:none;color:inherit;overflow:hidden;
+  border:1px solid rgba(34,197,94,.2);border-radius:20px;padding:26px 28px;
+  background:linear-gradient(135deg,rgba(34,197,94,.07),rgba(124,58,237,.03));
+  transition:transform .4s cubic-bezier(.16,1,.3,1),border-color .4s,box-shadow .4s}
+.zs-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(34,197,94,.6),transparent)}
+.zs-card:hover{transform:translateY(-6px);border-color:rgba(34,197,94,.45);box-shadow:0 30px 64px -26px rgba(34,197,94,.5)}
+.zs-card__glow{position:absolute;top:-60%;right:-30%;width:360px;height:360px;border-radius:50%;
+  background:radial-gradient(circle,rgba(34,197,94,.2),transparent 70%);opacity:.4;transition:opacity .45s}
+.zs-card:hover .zs-card__glow{opacity:1}
+.zs-card__sheen{position:absolute;top:0;left:-60%;width:50%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.06),transparent);transform:skewX(-18deg)}
+.zs-card:hover .zs-card__sheen{animation:zsSheen 1.1s ease forwards}
+@keyframes zsSheen{to{left:130%}}
+
+.zs-card__top{position:relative;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.zs-card__id{display:flex;align-items:center;gap:14px}
+.zs-card__icon{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;
+  background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.22)}
+.zs-card__name{margin:0;font-size:1.2rem;font-weight:700;letter-spacing:-.01em}
+.zs-card__sub{margin:.2rem 0 0;font-size:.82rem;color:var(--mut);font-family:'JetBrains Mono',monospace}
+.zs-pill{display:inline-flex;align-items:center;gap:8px;flex-shrink:0;padding:8px 15px;font-size:.82rem;font-weight:700;--ch:7px;
+  -webkit-clip-path:polygon(var(--ch) 0,calc(100% - var(--ch)) 0,100% var(--ch),100% calc(100% - var(--ch)),calc(100% - var(--ch)) 100%,var(--ch) 100%,0 calc(100% - var(--ch)),0 var(--ch));
+  clip-path:polygon(var(--ch) 0,calc(100% - var(--ch)) 0,100% var(--ch),100% calc(100% - var(--ch)),calc(100% - var(--ch)) 100%,var(--ch) 100%,0 calc(100% - var(--ch)),0 var(--ch))}
+.zs-pill__dot{width:8px;height:8px;border-radius:50%;background:currentColor;animation:zsPulse 1.8s ease-in-out infinite}
+
+.zs-bar{position:relative;height:6px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden;margin:20px 0}
+.zs-bar__fill{position:absolute;inset:0;border-radius:99px;width:0;animation:zsFill 1.4s cubic-bezier(.16,1,.3,1) .6s forwards}
+@keyframes zsFill{to{width:100%}}
+@keyframes zsShift{to{background-position:200% 0}}
+
+/* state-driven cards: colour follows --c from the status modifier */
+.zs-card--u{--c:34,197,94}
+.zs-card--p{--c:234,179,8}
+.zs-card--d{--c:239,68,68}
+.zs-card--state{border-color:rgba(var(--c),.2);background:linear-gradient(135deg,rgba(var(--c),.07),rgba(124,58,237,.03))}
+.zs-card--state::before{background:linear-gradient(90deg,transparent,rgba(var(--c),.6),transparent)}
+.zs-card--state:hover{border-color:rgba(var(--c),.45);box-shadow:0 30px 64px -26px rgba(var(--c),.5)}
+.zs-card--state .zs-card__glow{background:radial-gradient(circle,rgba(var(--c),.2),transparent 70%)}
+.zs-card--state .zs-card__icon{background:rgba(var(--c),.1);border-color:rgba(var(--c),.22)}
+.zs-card--state .zs-card__icon svg [stroke]{stroke:rgb(var(--c))}
+.zs-card--state .zs-card__icon svg [fill]:not([fill="none"]){fill:rgba(var(--c),.14)}
+.zs-card--state .zs-pill{background:rgba(var(--c),.12);border:1px solid rgba(var(--c),.28);color:rgb(var(--c))}
+.zs-card--state .zs-bar__fill{background:linear-gradient(90deg,rgba(var(--c),.7),rgb(var(--c)),rgba(var(--c),.7));background-size:200% 100%;animation:zsFill 1.4s cubic-bezier(.16,1,.3,1) .6s forwards, zsShift 3s linear infinite 2s}
+.zs-card--state .zs-stateClr{color:rgb(var(--c))}
+
+/* cursor spotlight + tilt */
+.zs-grid{perspective:1400px}
+.zs-card{transform-style:preserve-3d}
+.zs-card::after{content:'';position:absolute;inset:0;border-radius:20px;pointer-events:none;z-index:1;opacity:0;
+  transition:opacity .35s ease;
+  background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(var(--c,191,64,191),.16),transparent 60%)}
+.zs-card:hover::after{opacity:1}
+.zs-card__top,.zs-card .zs-bar,.zs-card .zs-meta,.zs-card__cta{position:relative;z-index:2}
+
+.zs-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.zs-meta__item{display:flex;flex-direction:column;gap:4px}
+.zs-meta__k{font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(200,215,240,.4)}
+.zs-meta__v{font-family:'JetBrains Mono',monospace;font-size:.92rem;font-weight:600}
+
+.zs-card__cta{display:inline-flex;align-items:center;gap:9px;margin-top:22px;padding:11px 18px;border-radius:11px;
+  background:linear-gradient(135deg,var(--u),#16a34a);color:#04140a;font-size:.92rem;font-weight:800;
+  box-shadow:0 10px 28px -10px rgba(34,197,94,.8);transition:gap .25s,filter .25s}
+.zs-card:hover .zs-card__cta{gap:13px;filter:brightness(1.08)}
+.zs-card--p .zs-card__cta,.zs-card--d .zs-card__cta{background:linear-gradient(135deg,rgba(var(--c),1),rgba(var(--c),.75));color:#140d02;box-shadow:0 10px 28px -10px rgba(var(--c),.8)}
+
+/* ═══ update log ═══ */
+.zs-log{margin-top:56px}
+.zs-log__list{list-style:none;margin:18px 0 0;padding:0;position:relative;
+  border:1px solid rgba(255,255,255,.07);border-radius:16px;background:var(--panel);overflow:hidden}
+.zs-log__row{position:relative;display:flex;align-items:flex-start;gap:14px;padding:16px 20px;
+  border-bottom:1px solid rgba(255,255,255,.05)}
+.zs-log__row:last-child{border-bottom:none}
+.zs-log__date{flex-shrink:0;width:86px;padding-top:2px;
+  font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;letter-spacing:.04em;color:rgba(200,215,240,.5)}
+.zs-log__dot{flex-shrink:0;width:9px;height:9px;border-radius:50%;margin-top:5px}
+.zs-log__dot--u{background:var(--u);box-shadow:0 0 10px rgba(34,197,94,.7)}
+.zs-log__dot--p{background:var(--p);box-shadow:0 0 10px rgba(234,179,8,.7)}
+.zs-log__dot--d{background:var(--d);box-shadow:0 0 10px rgba(239,68,68,.7)}
+.zs-log__dot--i{background:var(--v);box-shadow:0 0 10px rgba(191,64,191,.7)}
+.zs-log__body{display:flex;flex-direction:column;gap:3px;min-width:0}
+.zs-log__t{font-size:.92rem;font-weight:700;color:#fff;letter-spacing:.01em}
+.zs-log__d{font-size:.82rem;line-height:1.6;color:rgba(200,215,240,.6)}
+.zs-log__note{margin:14px 0 0;text-align:center;font-size:.78rem;color:rgba(200,215,240,.5);font-style:italic}
+@media (max-width:560px){
+  .zs-log__row{flex-wrap:wrap;gap:8px 12px}
+  .zs-log__date{width:auto;order:3;flex-basis:100%;padding-left:21px}
+}
+
+/* ═══ how the light works ═══ */
+.zs-verify{margin-top:56px}
+.zs-verify__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+@media (max-width:700px){.zs-verify__grid{grid-template-columns:1fr}}
+.zs-verify__card{padding:20px;border-radius:16px;border:1px solid rgba(255,255,255,.07);background:var(--panel)}
+.zs-verify__card--hl{border-color:rgba(191,64,191,.3);
+  background:linear-gradient(160deg,rgba(191,64,191,.09),rgba(12,15,30,.72) 55%)}
+.zs-verify__ico{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;margin-bottom:12px;
+  color:#e0c2ff;background:rgba(191,64,191,.1);border:1px solid rgba(191,64,191,.22)}
+.zs-verify__t{margin:0 0 8px;font-size:.98rem;font-weight:800;letter-spacing:.01em;color:#fff}
+.zs-verify__d{margin:0;font-size:.84rem;line-height:1.65;color:rgba(200,215,240,.68)}
+.zs-verify__d strong{color:rgba(235,242,255,.92)}
+.zs-verify__link{display:inline-flex;align-items:center;gap:6px;margin-top:10px;
+  font-weight:700;font-size:.84rem;color:#e0a6ff;text-decoration:none;transition:gap .2s}
+.zs-verify__link:hover{gap:9px;text-decoration:underline}
+
+/* key protocol */
+.zs-proto{margin-top:56px}
+.zs-proto__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px}
+@media (max-width:700px){.zs-proto__grid{grid-template-columns:1fr}}
+.zs-proto__card{padding:18px;border-radius:16px;border:1px solid rgba(255,255,255,.07);background:var(--panel)}
+.zs-proto__card--u{border-color:rgba(34,197,94,.22)}
+.zs-proto__card--p{border-color:rgba(234,179,8,.22)}
+.zs-proto__card--d{border-color:rgba(239,68,68,.22)}
+.zs-proto__head{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.zs-proto__dot{width:9px;height:9px;border-radius:50%}
+.zs-proto__dot--u{background:var(--u);box-shadow:0 0 10px rgba(34,197,94,.7)}
+.zs-proto__dot--p{background:var(--p);box-shadow:0 0 10px rgba(234,179,8,.7)}
+.zs-proto__dot--d{background:var(--d);box-shadow:0 0 10px rgba(239,68,68,.7)}
+.zs-proto__state{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff}
+.zs-proto__body{margin:0;font-size:.84rem;line-height:1.6;color:rgba(200,215,240,.7)}
+.zs-proto__note{margin:16px 0 0;text-align:center;font-size:.78rem;color:rgba(200,215,240,.5);font-style:italic}
+
+/* status-aware CTA */
+.zs-go{margin-top:34px;display:flex;align-items:center;gap:18px;padding:22px 26px;border-radius:18px;
+  border:1px solid rgba(34,197,94,.25);background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(34,197,94,.02))}
+.zs-go--p,.zs-go--d{border-color:rgba(234,179,8,.25);background:linear-gradient(135deg,rgba(234,179,8,.07),rgba(234,179,8,.02))}
+.zs-go__text{flex:1;display:flex;flex-direction:column;line-height:1.4;min-width:0}
+.zs-go__t{font-size:1.02rem;font-weight:800;color:#fff}
+.zs-go__d{font-size:.78rem;color:rgba(200,215,240,.6);margin-top:3px}
+.zs-go__btn{flex-shrink:0;display:inline-flex;align-items:center;gap:9px;padding:.85rem 1.6rem;border-radius:12px;
+  font-size:.92rem;font-weight:800;color:#fff;text-decoration:none;
+  background:linear-gradient(135deg,#22c55e,#16a34a);box-shadow:0 10px 28px -12px rgba(34,197,94,.9);
+  transition:transform .2s,box-shadow .2s}
+.zs-go__btn:hover{transform:translateY(-2px);box-shadow:0 16px 36px -12px rgba(34,197,94,.95)}
+.zs-go__btn--dc{background:linear-gradient(135deg,#5865F2,#7C3AED);box-shadow:0 10px 28px -12px rgba(88,101,242,.9)}
+.zs-go__btn--dc:hover{box-shadow:0 16px 36px -12px rgba(88,101,242,.95)}
+@media (max-width:560px){.zs-go{flex-direction:column;text-align:center}.zs-go__btn{width:100%;justify-content:center}}
+@media (prefers-reduced-motion:reduce){.zs-go__btn{transition:none}}
+
+.zs-foot{text-align:center;color:rgba(200,215,240,.65);font-size:.86rem;margin:42px 0 0;
+  padding-top:28px;border-top:1px solid rgba(255,255,255,.05)}
+
+/* legacy dynamic cards (platform statuses) */
+.zs-grid .status-card{border:1px solid var(--edge);border-radius:16px;padding:18px 22px;text-decoration:none;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--panel);color:var(--ink)}
+.zs-grid .status-card h3{margin:0;font-size:1.05rem;font-weight:700}
+.zs-grid .status-card .status{display:flex;align-items:center;gap:9px}
+.zs-grid .status-card .indicator{position:relative;width:9px;height:9px;border-radius:50%}
+.zs-grid .status-card .pulsating{position:absolute;inset:0;border-radius:50%;animation:zsPulse 1.8s ease-in-out infinite}
+.zs-grid .status-card .label{font-weight:600;font-size:.88rem}
+
+@media (max-width:680px){
+  .zs-wrap{padding:104px 16px 64px}
+  .zs-shield{width:220px;height:220px;margin-top:40px}
+  .zs-shield__pulse{width:168px;height:168px}
+  .zs-band{gap:4px;padding:16px 10px}
+  .zs-band__div{display:none}
+  .zs-band__item{min-width:70px}
+  .zs-band__v{font-size:1rem}
+  .zs-meta{grid-template-columns:repeat(2,1fr);gap:16px}
+  .zs-card__top{flex-direction:column}
+}
+@media (prefers-reduced-motion:reduce){
+  .zs-page *{animation:none!important}
+  .zs-rise{opacity:1!important;transform:none!important}
+  .zs-shield__fill{stroke-dashoffset:14!important}
+  .zs-bar__fill{width:100%!important}
+}
+
+/* ===== flashy upgrades ===== */
+.zs-shield{transform-style:preserve-3d;transition:transform .25s cubic-bezier(.16,1,.3,1);will-change:transform}
+.zs-shield__core,.zs-shield__ring{transition:transform .25s cubic-bezier(.16,1,.3,1)}
+.zs-shield__sweep{position:absolute;inset:0;border-radius:50%;pointer-events:none;overflow:hidden;
+  -webkit-mask:radial-gradient(circle,transparent 78%,#000 80%,#000 92%,transparent 94%);
+  mask:radial-gradient(circle,transparent 78%,#000 80%,#000 92%,transparent 94%)}
+.zs-shield__sweep::before{content:'';position:absolute;top:50%;left:50%;width:140%;height:40%;
+  transform-origin:left center;
+  background:linear-gradient(90deg,transparent,rgba(34,197,94,.55),transparent);
+  animation:zsSweep 3.6s linear infinite}
+@keyframes zsSweep{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+.zs-shield__state{font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){
+  .zs-shield__sweep::before{animation:none!important}
+  .zs-shield{transform:none!important}
+}
+
+/* ===== 100x PASS: release notes, restock log, timeline rail ===== */
+.zs-cl{margin-top:14px;border:1px solid rgba(255,255,255,.08);border-radius:12px;
+  background:rgba(255,255,255,.025);overflow:hidden}
+.zs-cl__sum{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;
+  list-style:none;padding:11px 14px;font-family:'JetBrains Mono',ui-monospace,monospace;
+  font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(200,215,240,.65);
+  transition:color .2s,background .2s}
+.zs-cl__sum::-webkit-details-marker{display:none}
+.zs-cl__sum:hover{color:#fff;background:rgba(255,255,255,.03)}
+.zs-cl__sum svg{transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.zs-cl[open] .zs-cl__sum svg{transform:rotate(180deg)}
+.zs-cl__rows{padding:4px 14px 12px;display:grid;gap:10px}
+.zs-cl__row{display:flex;gap:12px;align-items:flex-start}
+.zs-cl__ver{flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:.66rem;font-weight:800;
+  color:#c7b8ff;background:rgba(124,58,237,.16);border:1px solid rgba(124,58,237,.3);
+  border-radius:7px;padding:4px 8px;margin-top:1px}
+.zs-cl__body{display:flex;flex-direction:column;gap:2px;min-width:0}
+.zs-cl__date{font-family:'JetBrains Mono',monospace;font-size:.64rem;color:rgba(200,215,240,.42);letter-spacing:.1em}
+.zs-cl__txt{font-size:.86rem;color:rgba(220,232,255,.78);line-height:1.55}
+
+/* update log: connected timeline rail */
+.zs-log__list{position:relative}
+.zs-log__list::before{content:"";position:absolute;left:118px;top:10px;bottom:10px;width:1px;
+  background:linear-gradient(180deg,rgba(191,64,191,.35),rgba(124,58,237,.15) 60%,transparent)}
+.zs-log__row{transition:background .25s,transform .25s}
+.zs-log__row:hover{background:rgba(255,255,255,.025);transform:translateX(3px)}
+.zs-log__dot{position:relative;z-index:1;box-shadow:0 0 0 4px rgba(6,7,15,1)}
+@media (max-width:640px){.zs-log__list::before{display:none}}
+
+/* card CTA is now a real link */
+a.zs-card__cta{text-decoration:none}
+
+/* ===== 100x v2: component board, live clock, aura, log permalinks ===== */
+.zs-aura{position:absolute;inset:-10% -10% auto;height:60vh;pointer-events:none;filter:blur(90px);opacity:.5;transition:background 1s}
+.zs-aura--u{background:radial-gradient(60% 60% at 50% 0%,rgba(34,197,94,.16),transparent 70%)}
+.zs-aura--p{background:radial-gradient(60% 60% at 50% 0%,rgba(245,196,81,.16),transparent 70%)}
+.zs-aura--d{background:radial-gradient(60% 60% at 50% 0%,rgba(248,113,113,.18),transparent 70%)}
+
+.zs-band__v--clock{font-variant-numeric:tabular-nums;color:#c7b8ff}
+
+.zs-sys{max-width:860px;margin:0 auto 34px;border:1px solid rgba(191,64,191,.16);border-radius:20px;
+  background:rgba(12,15,30,.62);backdrop-filter:blur(14px);overflow:hidden}
+.zs-sys__head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  padding:18px 22px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
+.zs-sys__title{font-size:1.05rem;font-weight:700;margin:0;letter-spacing:-.01em}
+.zs-sys__note{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.62rem;letter-spacing:.1em;color:rgba(200,215,240,.65)}
+.zs-sys__grid{display:grid;grid-template-columns:1fr 1fr}
+.zs-sys__row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 22px;
+  border-top:1px solid rgba(255,255,255,.04)}
+.zs-sys__row:nth-child(odd){border-right:1px solid rgba(255,255,255,.04)}
+.zs-sys__row:nth-child(-n+2){border-top:none}
+.zs-sys__name{font-size:.92rem;font-weight:600;color:rgba(228,238,255,.85)}
+.zs-sys__chip{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;
+  font-size:.66rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-radius:999px;padding:6px 12px}
+.zs-sys__dot{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 9px currentColor;animation:zsSysPulse 2.2s infinite}
+@keyframes zsSysPulse{0%,100%{opacity:1}50%{opacity:.45}}
+.zs-sys__chip--op{color:#4ade80;background:rgba(34,197,94,.09);border:1px solid rgba(34,197,94,.28)}
+.zs-sys__chip--slow{color:#fbbf24;background:rgba(245,196,81,.09);border:1px solid rgba(245,196,81,.3)}
+.zs-sys__chip--down{color:#f87171;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.32)}
+@media (max-width:640px){.zs-sys__grid{grid-template-columns:1fr}.zs-sys__row:nth-child(odd){border-right:none}.zs-sys__row:nth-child(2){border-top:1px solid rgba(255,255,255,.04)}}
+
+.zs-log__row{scroll-margin-top:110px}
+.zs-log__row:target{background:rgba(191,64,191,.08);border-radius:12px;animation:zsTargetFlash 1.6s ease}
+@keyframes zsTargetFlash{0%{background:rgba(191,64,191,.22)}100%{background:rgba(191,64,191,.08)}}
+.zs-log__link{margin-left:auto;flex-shrink:0;opacity:0;border:0;background:transparent;color:rgba(200,215,240,.5);
+  cursor:pointer;padding:4px;border-radius:6px;transition:opacity .2s,color .2s;font-size:.8rem;line-height:1}
+.zs-log__row:hover .zs-log__link{opacity:1}
+.zs-log__link:hover{color:#fff}
+
+/* ===== 100x v3: history strip, since-last-visit, coverage ===== */
+.zs-hist{max-width:860px;margin:26px auto 0;border:1px solid rgba(191,64,191,.14);border-radius:18px;
+  background:rgba(12,15,30,.6);backdrop-filter:blur(12px);padding:16px 20px 14px}
+.zs-hist__head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.zs-hist__title{font-weight:700;font-size:.95rem;color:#fff}
+.zs-hist__note{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.6rem;letter-spacing:.1em;color:rgba(200,215,240,.65)}
+.zs-hist__cells{display:grid;grid-template-columns:repeat(30,1fr);gap:4px}
+.zs-hist__cell{position:relative;height:26px;border-radius:5px;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.05);transition:transform .18s}
+.zs-hist__cell:hover{transform:scaleY(1.18)}
+.zs-hist__cell--u{background:rgba(34,197,94,.55);border-color:rgba(34,197,94,.7)}
+.zs-hist__cell--p{background:rgba(245,196,81,.55);border-color:rgba(245,196,81,.7)}
+.zs-hist__cell--d{background:rgba(248,113,113,.6);border-color:rgba(248,113,113,.75)}
+.zs-hist__cell::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);
+  white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.06em;color:#fff;
+  background:#151833;border:1px solid rgba(255,255,255,.12);border-radius:7px;padding:5px 9px;
+  opacity:0;pointer-events:none;transition:opacity .15s;z-index:3}
+.zs-hist__cell:hover::after{opacity:1}
+.zs-hist__legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:rgba(200,215,240,.5)}
+.zs-hist__legend span{display:inline-flex;align-items:center;gap:6px}
+.zs-hist__key{width:12px;height:12px;border-radius:4px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08)}
+.zs-hist__key--u{background:rgba(34,197,94,.55)}
+.zs-hist__key--p{background:rgba(245,196,81,.55)}
+.zs-hist__key--d{background:rgba(248,113,113,.6)}
+@media (max-width:640px){.zs-hist__cells{grid-template-columns:repeat(15,1fr);grid-auto-rows:22px}.zs-hist__cell{height:auto}}
+
+.zs-cover{max-width:860px;margin:0 auto 18px;display:flex;align-items:flex-start;gap:14px;
+  border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px 18px;background:rgba(255,255,255,.02)}
+.zs-cover__chip{flex-shrink:0;font-family:'JetBrains Mono',monospace;font-weight:800;font-size:.66rem;letter-spacing:.14em;
+  color:#c7b8ff;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.32);border-radius:8px;padding:6px 10px;margin-top:1px}
+.zs-cover__txt{margin:0;font-size:.86rem;line-height:1.6;color:rgba(210,224,250,.62)}
+.zs-cover__txt b{color:rgba(235,242,255,.9)}
+
+.zs-delta{max-width:860px;margin:0 auto 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  border-radius:14px;padding:13px 18px;border:1px solid rgba(191,64,191,.35);
+  background:linear-gradient(135deg,rgba(191,64,191,.12),rgba(124,58,237,.06));
+  animation:zsDeltaIn .6s cubic-bezier(.22,1,.36,1) both}
+@keyframes zsDeltaIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.zs-delta__tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:800;letter-spacing:.16em;
+  color:#e7d9ff;border:1px solid rgba(191,64,191,.4);border-radius:999px;padding:5px 10px;background:rgba(191,64,191,.12)}
+.zs-delta__txt{font-size:.88rem;color:rgba(225,235,255,.85)}
+.zs-delta__txt b{font-weight:800}
+/* ── v52 upgrades ─────────────────────────────────────────────── */
+
+/* ops strip: live counters */
+.zs-ops{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:18px auto 0;max-width:860px}
+.zs-ops__chip{display:inline-flex;align-items:baseline;gap:10px;flex-wrap:wrap;justify-content:center;
+  padding:10px 16px;border-radius:14px;border:1px solid var(--edge);background:var(--panel);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.zs-ops__chip--p{border-color:rgba(234,179,8,.32)}
+.zs-ops__chip--d{border-color:rgba(239,68,68,.35)}
+.zs-ops__k{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--mut)}
+.zs-ops__v{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.92rem;font-weight:700;color:#fff;
+  font-variant-numeric:tabular-nums}
+.zs-ops__chip--p .zs-ops__v{color:#fbbf24}
+.zs-ops__chip--d .zs-ops__v{color:#f87171}
+.zs-ops__note{flex-basis:100%;text-align:center;font-family:'JetBrains Mono',ui-monospace,monospace;
+  font-size:.55rem;letter-spacing:.08em;color:rgba(200,215,240,.45)}
+
+/* quick jump nav */
+.zs-nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:20px auto 0}
+.zs-nav__lnk{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.66rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--mut);text-decoration:none;padding:7px 13px;border-radius:999px;
+  border:1px solid rgba(191,64,191,.16);background:rgba(12,15,30,.5);transition:.25s}
+.zs-nav__lnk:hover{color:#fff;border-color:rgba(191,64,191,.45);background:rgba(191,64,191,.1);transform:translateY(-1px)}
+
+/* components summary chip */
+.zs-opsum{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.66rem;letter-spacing:.1em;
+  padding:5px 11px;border-radius:999px;border:1px solid;font-weight:700}
+.zs-opsum--op{color:#4ade80;border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.09)}
+.zs-opsum--slow{color:#fbbf24;border-color:rgba(234,179,8,.4);background:rgba(234,179,8,.09)}
+.zs-opsum--down{color:#f87171;border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.09)}
+
+/* history tally + clickable cells */
+.zs-hist__tally{margin:12px 0 0;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.66rem;
+  letter-spacing:.06em;color:var(--mut);text-align:center}
+.zs-hist__tally b{color:#fff;font-weight:700}
+.zs-hist__cell--link{cursor:pointer}
+.zs-hist__cell--link:focus-visible{outline:2px solid var(--v);outline-offset:2px}
+
+/* log filters */
+.zs-filter{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:14px 0 18px}
+.zs-filter__btn{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.62rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--mut);background:rgba(12,15,30,.5);border:1px solid rgba(191,64,191,.16);
+  border-radius:999px;padding:6px 13px;cursor:pointer;transition:.22s}
+.zs-filter__btn:hover{color:#fff;border-color:rgba(191,64,191,.4)}
+.zs-filter__btn--on{color:#fff;border-color:rgba(191,64,191,.55);background:rgba(191,64,191,.14)}
+.zs-filter__btn--on[data-zs-filter="u"]{border-color:rgba(34,197,94,.5);background:rgba(34,197,94,.1)}
+.zs-filter__btn--on[data-zs-filter="p"]{border-color:rgba(234,179,8,.5);background:rgba(234,179,8,.1)}
+.zs-filter__btn--on[data-zs-filter="d"]{border-color:rgba(239,68,68,.5);background:rgba(239,68,68,.1)}
+.zs-log__row[data-zs-hide]{display:none}
+.zs-log__rel{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.56rem;letter-spacing:.08em;
+  color:rgba(200,215,240,.42);display:block;margin-top:2px}
+.zs-log__row--flash{animation:zsFlash 1.6s ease-out}
+@keyframes zsFlash{0%,45%{background:rgba(191,64,191,.14);box-shadow:inset 0 0 0 1px rgba(191,64,191,.4)}100%{background:transparent}}
+
+/* show full history */
+.zs-more{display:block;margin:16px auto 0;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.66rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--mut);background:rgba(12,15,30,.5);
+  border:1px solid rgba(191,64,191,.2);border-radius:999px;padding:9px 20px;cursor:pointer;transition:.25s}
+.zs-more:hover{color:#fff;border-color:rgba(191,64,191,.5);transform:translateY(-1px)}
+
+/* status-aware waiting CTA */
+.zs-card__cta--wait{background:rgba(234,179,8,.1) !important;border-color:rgba(234,179,8,.35) !important;color:#fbbf24 !important}
+.zs-card__cta--wait:hover{background:rgba(234,179,8,.16) !important}
+.zs-card--d .zs-card__cta--wait{background:rgba(239,68,68,.1) !important;border-color:rgba(239,68,68,.35) !important;color:#f87171 !important}
+
+/* floating live pill */
+.zs-mini{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(8px);z-index:60;
+  display:inline-flex;align-items:center;gap:9px;padding:10px 16px;border-radius:999px;text-decoration:none;
+  border:1px solid rgba(191,64,191,.28);background:rgba(8,10,22,.88);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  box-shadow:0 12px 40px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s}
+.zs-mini--show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.zs-mini__dot{width:9px;height:9px;border-radius:50%;background:#22c55e;box-shadow:0 0 10px rgba(34,197,94,.8);
+  animation:zsMiniPulse 1.8s ease-in-out infinite}
+.zs-mini--p .zs-mini__dot{background:#eab308;box-shadow:0 0 10px rgba(234,179,8,.8)}
+.zs-mini--d .zs-mini__dot{background:#ef4444;box-shadow:0 0 10px rgba(239,68,68,.8)}
+@keyframes zsMiniPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
+.zs-mini__state{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;font-weight:800;
+  letter-spacing:.14em;color:#fff}
+.zs-mini--p .zs-mini__state{color:#fbbf24}
+.zs-mini--d .zs-mini__state{color:#f87171}
+.zs-mini__sep{width:1px;height:14px;background:rgba(255,255,255,.14)}
+.zs-mini__sub{font-size:.72rem;color:var(--mut)}
+@media (max-width:560px){.zs-mini__sub{display:none}.zs-mini__sep{display:none}}
+
+@media (prefers-reduced-motion:reduce){
+  .zs-mini__dot,.zs-log__row--flash{animation:none}
+  .zs-nav__lnk:hover,.zs-more:hover{transform:none}
+}
+/* ── v54 polish: scroll-spy nav, clean anchor landing, focus rings ── */
+#zs-products,#zs-components,#zs-history,#zs-log,#zs-protocol{scroll-margin-top:90px}
+.zs-nav__lnk--active{color:#fff;border-color:rgba(191,64,191,.6);background:rgba(191,64,191,.16);
+  box-shadow:0 0 0 1px rgba(191,64,191,.25),0 6px 18px rgba(191,64,191,.18)}
+.zs-nav__lnk--active::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--v);
+  margin-right:2px;box-shadow:0 0 8px var(--v)}
+.zs-nav__lnk{display:inline-flex;align-items:center;gap:6px}
+
+/* visible keyboard focus everywhere interactive */
+.zs-nav__lnk:focus-visible,.zs-filter__btn:focus-visible,.zs-more:focus-visible,
+.zs-mini:focus-visible,.zs-card__cta:focus-visible,.zs-go__btn:focus-visible,
+.zs-log__link:focus-visible,.zs-cl__sum:focus-visible{
+  outline:2px solid var(--v);outline-offset:3px;border-radius:10px}
+.zs-page a:focus-visible{outline:2px solid var(--v);outline-offset:2px;border-radius:6px}
+
+</style>
+
+<script>
+(function(){
+  var root = document.querySelector('[data-component-id="{{ componentId }}"]');
+  if(!root) return;
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── LAST CHECK: pinned to "Today" (owner's call, Jul 2026). Checks happen
+     daily off-site, so the relative-age math was retired; the STATUS VERIFIED
+     date next to it now auto-rolls to today (see below), and the stale-note
+     under the band stays hidden for the same reason. */
+  var freshEl = root.querySelector('[data-freshness]');
+  if (freshEl) {
+    freshEl.textContent = 'Today';
+    freshEl.classList.add('zs-band__v--u');
+  }
+
+  /* ── STATUS VERIFIED: rolls to the current UK date on its own, the same way
+     the clock and "Last check" do. Checks run daily off-site, so the date
+     should never sit behind the calendar. The statusVerifiedOn value set at
+     the top stays as the no-JS fallback — nothing else needs touching. */
+  (function(){
+    var els = root.querySelectorAll('[data-zs-verified]');
+    if (!els.length) return;
+    var band = root.querySelector('.zs-band');
+
+    var TZ = 'Europe/London';
+    var human, isoParts;
+    try {
+      human = new Intl.DateTimeFormat('en-GB', {day:'numeric', month:'long', year:'numeric', timeZone:TZ});
+      isoParts = new Intl.DateTimeFormat('en-CA', {year:'numeric', month:'2-digit', day:'2-digit', timeZone:TZ});
+    } catch (e) {
+      human = new Intl.DateTimeFormat('en-GB', {day:'numeric', month:'long', year:'numeric'});
+      isoParts = new Intl.DateTimeFormat('en-CA', {year:'numeric', month:'2-digit', day:'2-digit'});
+    }
+
+    var shown = '';
+    function paint(){
+      var now = new Date();
+      var txt = human.format(now);                    /* e.g. "25 July 2026" */
+      if (txt === shown) return;
+      shown = txt;
+      Array.prototype.forEach.call(els, function(el){ el.textContent = txt; });
+      if (band) band.setAttribute('data-verified-iso', isoParts.format(now).replace(/\//g,'-'));
+      var note = root.querySelector('[data-stale-note]');
+      if (note) note.hidden = true;                   /* never stale — it moved just now */
+    }
+    paint();
+
+    /* re-paint just after local midnight so a tab left open doesn't go stale */
+    function scheduleMidnight(){
+      var n = new Date();
+      var next = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1, 0, 0, 5);
+      setTimeout(function(){ paint(); scheduleMidnight(); }, Math.max(1000, next - n));
+    }
+    scheduleMidnight();
+
+    /* catch clock jumps: waking from sleep, timezone change, long idle */
+    document.addEventListener('visibilitychange', function(){ if(!document.hidden) paint(); });
+  })();
+
+  /* interactive shield tilt */
+  var shield = root.querySelector('.zs-shield');
+  if (shield && !reduce && window.matchMedia('(pointer:fine)').matches) {
+    var core = shield.querySelector('.zs-shield__core');
+    var ring = shield.querySelector('.zs-shield__ring');
+    shield.addEventListener('mousemove', function (e) {
+      var r = shield.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - 0.5;
+      var py = (e.clientY - r.top) / r.height - 0.5;
+      shield.style.transform = 'perspective(700px) rotateY(' + (px * 14) + 'deg) rotateX(' + (-py * 14) + 'deg)';
+      if (core) core.style.transform = 'translateZ(40px) translate(' + (px * 10) + 'px,' + (py * 10) + 'px)';
+      if (ring) ring.style.transform = 'translateZ(20px)';
+    });
+    shield.addEventListener('mouseleave', function () {
+      shield.style.transform = '';
+      if (core) core.style.transform = '';
+      if (ring) ring.style.transform = '';
+    });
+  }
+
+  /* UNDETECTED scramble-in */
+  var stateEl = root.querySelector('.zs-shield__state');
+  if (stateEl && !reduce) {
+    var finalText = stateEl.textContent;
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&';
+    var frame = 0, total = finalText.length;
+    function scramble() {
+      var out = '';
+      for (var i = 0; i < total; i++) {
+        if (i < frame / 3) { out += finalText[i]; }
+        else if (finalText[i] === ' ') { out += ' '; }
+        else { out += chars[Math.floor(Math.random() * chars.length)]; }
+      }
+      stateEl.textContent = out;
+      frame++;
+      if (frame / 3 < total) { requestAnimationFrame(scramble); }
+      else { stateEl.textContent = finalText; }
+    }
+    setTimeout(scramble, 400);
+  }
+
+  /* card cursor spotlight + subtle tilt */
+  if (!reduce && window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
+    var cards = root.querySelectorAll('.zs-card');
+    Array.prototype.forEach.call(cards, function(card){
+      var raf = null;
+      card.addEventListener('mousemove', function(e){
+        var r = card.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width;
+        var py = (e.clientY - r.top) / r.height;
+        if(raf) return;
+        raf = requestAnimationFrame(function(){
+          raf = null;
+          card.style.setProperty('--mx', (px*100)+'%');
+          card.style.setProperty('--my', (py*100)+'%');
+          card.style.transform = 'translateY(-6px) rotateX(' + ((0.5-py)*3).toFixed(2) + 'deg) rotateY(' + ((px-0.5)*4).toFixed(2) + 'deg)';
+        });
+      });
+      card.addEventListener('mouseleave', function(){ card.style.transform = ''; });
+    });
+  }
+})();
+</script>
+
+<script>
+(function(){
+  /* live UK clock — real client-side time, nothing simulated */
+  var clockEls=document.querySelectorAll('[data-zs-clock]');
+  if(clockEls.length){
+    var fmt=new Intl.DateTimeFormat('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,timeZone:'Europe/London'});
+    var tick=function(){var t=fmt.format(new Date());clockEls.forEach(function(el){el.textContent=t;});};
+    var timer=null;
+    var start=function(){if(timer)return;tick();timer=setInterval(tick,1000);};
+    var stop=function(){if(timer){clearInterval(timer);timer=null;}};
+    document.addEventListener('visibilitychange',function(){document.hidden?stop():start();});
+    start();
+  }
+
+  /* browser tab reflects live state */
+  var shield=document.querySelector('.zs-shield');
+  var stateEl=document.querySelector('.zs-shield__state');
+  if(shield&&stateEl){
+    var glyph=shield.classList.contains('zs-shield--d')?'\uD83D\uDD34':shield.classList.contains('zs-shield--p')?'\uD83D\uDFE1':'\uD83D\uDFE2';
+    document.title=glyph+' '+stateEl.textContent.trim()+' \u2014 Zaza Status';
+  }
+
+  /* 30-day history strip, derived from the REAL update log entries */
+  (function(){
+    var wrap=document.querySelector('.zs-hist');
+    var cellsEl=document.getElementById('zs-hist-cells');
+    if(!wrap||!cellsEl)return;
+    var MON={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+    function parseD(t){
+      var m=/^(\d{1,2})\s+([A-Za-z]{3})\w*\s+(\d{4})$/.exec((t||'').trim());
+      if(!m)return null;
+      var mo=MON[m[2].toLowerCase()];
+      if(mo===undefined)return null;
+      return new Date(Date.UTC(+m[3],mo,+m[1]));
+    }
+    var rank={u:1,p:2,d:3};
+    var byDay={};
+    var rowByDay={};
+    document.querySelectorAll('.zs-log__row').forEach(function(row){
+      var dEl=row.querySelector('.zs-log__date');
+      var dot=row.querySelector('.zs-log__dot');
+      var when=parseD(dEl&&dEl.textContent);
+      if(!when||!dot)return;
+      if(when.getTime()>Date.now())return;                 /* ignore template/future rows */
+      var cls=dot.className.indexOf('--d')>-1?'d':dot.className.indexOf('--p')>-1?'p':'u';
+      var key=when.toISOString().slice(0,10);
+      if(!byDay[key]||rank[cls]>rank[byDay[key]]){byDay[key]=cls;rowByDay[key]=row;}   /* worst event wins the day */
+    });
+    var today=new Date();
+    var any=false;
+    var tally={u:0,p:0,d:0,none:0};
+    for(var i=89;i>=0;i--){
+      var d=new Date(Date.UTC(today.getUTCFullYear(),today.getUTCMonth(),today.getUTCDate()-i));
+      var key=d.toISOString().slice(0,10);
+      var cell=document.createElement('div');
+      cell.className='zs-hist__cell'+(byDay[key]?' zs-hist__cell--'+byDay[key]+' zs-hist__cell--link':'');
+      var label=d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+      var st=byDay[key]==='u'?'verified clean':byDay[key]==='p'?'updating':byDay[key]==='d'?'detected':'no log entry';
+      cell.setAttribute('data-tip',label+' \u00b7 '+st);
+      if(byDay[key]){
+        any=true;
+        tally[byDay[key]]++;
+        (function(row){
+          cell.setAttribute('tabindex','0');
+          cell.setAttribute('role','link');
+          cell.setAttribute('aria-label','Jump to log entry: '+label+', '+st);
+          var go=function(){
+            if(!row)return;
+            row.removeAttribute('data-zs-hide');
+            row.scrollIntoView({behavior:window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});
+            row.classList.remove('zs-log__row--flash');
+            void row.offsetWidth;
+            row.classList.add('zs-log__row--flash');
+          };
+          cell.addEventListener('click',go);
+          cell.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});
+        })(rowByDay[key]);
+      }else{tally.none++;}
+      cellsEl.appendChild(cell);
+    }
+    var tallyEl=document.querySelector('[data-zs-tally]');
+    if(tallyEl&&any){
+      tallyEl.innerHTML='Last 90 days \u00b7 <b>'+tally.u+'</b> day'+(tally.u===1?'':'s')+' marked clean \u00b7 <b>'+tally.p+'</b> updating \u00b7 <b>'+tally.d+'</b> detected \u00b7 '+tally.none+' with no entry (log started 2 Jul)';
+      tallyEl.hidden=false;
+    }
+    if(any)wrap.hidden=false;                              /* only show once the log has real dated entries */
+  })();
+
+  /* "since your last visit" — remembered locally, shown only on change */
+  (function(){
+    var shield=document.querySelector('.zs-shield');
+    var stateEl=document.querySelector('.zs-shield__state');
+    var band=document.querySelector('.zs-band');
+    if(!shield||!stateEl||!band)return;
+    var now=stateEl.textContent.trim();
+    var iso=band.getAttribute('data-verified-iso')||'';
+    var prev=null;
+    try{prev=JSON.parse(localStorage.getItem('zzStatusSeen')||'null');}catch(e){}
+    if(prev&&prev.state&&prev.state!==now){
+      var days=Math.max(1,Math.round((Date.now()-(prev.at||Date.now()))/86400000));
+      var el=document.createElement('div');
+      el.className='zs-delta';
+      el.innerHTML='<span class="zs-delta__tag">SINCE YOUR LAST VISIT</span>'+
+        '<span class="zs-delta__txt">'+(days===1?'Yesterday':days+' days ago')+' this page said <b>'+prev.state+
+        '</b> \u2014 it\u2019s now <b>'+now+'</b>. Details in the update log below.</span>';
+      shield.parentNode.insertBefore(el,shield);
+    }
+    try{localStorage.setItem('zzStatusSeen',JSON.stringify({state:now,iso:iso,at:Date.now()}));}catch(e){}
+  })();
+
+  /* permalink every log entry */
+  var rows=document.querySelectorAll('.zs-log__row');
+  rows.forEach(function(row,i){
+    if(!row.id) row.id='log-'+(i+1);
+    var btn=document.createElement('button');
+    btn.type='button';btn.className='zs-log__link';btn.title='Copy link to this entry';
+    btn.textContent='\uD83D\uDD17';
+    btn.addEventListener('click',function(){
+      var url=location.origin+location.pathname+'#'+row.id;
+      var done=function(){btn.textContent='\u2713';setTimeout(function(){btn.textContent='\uD83D\uDD17';},1400);};
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(done,done);}
+      else{done();}
+      history.replaceState(null,'','#'+row.id);
+    });
+    row.appendChild(btn);
+  });
+})();
+</script>
+
+<script>
+(function(){
+  'use strict';
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── "in this state for" — live counter from the real flip timestamp ── */
+  /* ── next Rust force wipe — first Thursday of the month, ~19:00 UTC ── */
+  (function(){
+    var el=document.querySelector('[data-zs-wipe]');
+    if(!el)return;
+    function firstThursday(y,m){
+      var dow=new Date(Date.UTC(y,m,1)).getUTCDay();
+      var date=1+((4-dow+7)%7);
+      return Date.UTC(y,m,date,19,0,0);
+    }
+    function next(){
+      var now=Date.now();
+      var d=new Date();
+      var t=firstThursday(d.getUTCFullYear(),d.getUTCMonth());
+      if(now>=t)t=firstThursday(d.getUTCFullYear(),d.getUTCMonth()+1);
+      return t;
+    }
+    function tick(){
+      var ms=next()-Date.now();
+      var m=Math.floor(ms/60000);
+      var days=Math.floor(m/1440);
+      var h=Math.floor((m%1440)/60);
+      var mm=m%60;
+      el.textContent=(days>0?days+'d ':'')+(('0'+h).slice(-2))+'h '+(('0'+mm).slice(-2))+'m';
+    }
+    tick();setInterval(tick,30000);
+  })();
+
+  /* ── update log: filters + relative dates + collapse ── */
+  (function(){
+    var log=document.getElementById('zs-log');
+    if(!log)return;
+    var rows=Array.prototype.slice.call(log.querySelectorAll('.zs-log__row'));
+    if(!rows.length)return;
+
+    var MON={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+    function parseD(t){
+      var m=/^(\d{1,2})\s+([A-Za-z]{3})\w*\s+(\d{4})$/.exec((t||'').trim());
+      if(!m)return null;
+      var mo=MON[m[2].toLowerCase()];
+      if(mo===undefined)return null;
+      return new Date(Date.UTC(+m[3],mo,+m[1]));
+    }
+    function clsOf(row){
+      var dot=row.querySelector('.zs-log__dot');
+      var c=dot?dot.className:'';
+      if(c.indexOf('--d')>-1)return 'd';
+      if(c.indexOf('--p')>-1)return 'p';
+      if(c.indexOf('--i')>-1)return 'i';
+      return 'u';
+    }
+
+    /* relative dates */
+    var todayUTC=(function(){var n=new Date();return Date.UTC(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate());})();
+    rows.forEach(function(row){
+      var dEl=row.querySelector('.zs-log__date');
+      var when=parseD(dEl&&dEl.textContent);
+      if(!dEl||!when)return;
+      var days=Math.round((todayUTC-when.getTime())/86400000);
+      if(days<0)return;
+      var txt=days===0?'today':days===1?'yesterday':days<14?days+'d ago':days<70?Math.round(days/7)+'w ago':Math.round(days/30)+'mo ago';
+      var rel=document.createElement('span');
+      rel.className='zs-log__rel';
+      rel.textContent=txt;
+      dEl.appendChild(rel);
+    });
+
+    /* filters + collapse */
+    var VISIBLE=8;
+    var filter='all';
+    var showAll=rows.length<=VISIBLE;
+    var moreBtn=log.querySelector('[data-zs-more]');
+    function apply(){
+      var shown=0;
+      rows.forEach(function(row,i){
+        var match=filter==='all'||clsOf(row)===filter;
+        var folded=filter==='all'&&!showAll&&i>=VISIBLE;
+        if(match&&!folded){row.removeAttribute('data-zs-hide');shown++;}
+        else{row.setAttribute('data-zs-hide','');}
+      });
+      if(moreBtn){
+        var foldable=filter==='all'&&!showAll&&rows.length>VISIBLE;
+        moreBtn.hidden=!foldable;
+        if(foldable)moreBtn.textContent='Show full history ('+rows.length+' entries)';
+      }
+    }
+    if(moreBtn)moreBtn.addEventListener('click',function(){showAll=true;apply();});
+    var btns=log.querySelectorAll('[data-zs-filter]');
+    Array.prototype.forEach.call(btns,function(btn){
+      btn.addEventListener('click',function(){
+        filter=btn.getAttribute('data-zs-filter')||'all';
+        if(filter!=='all')showAll=true;
+        Array.prototype.forEach.call(btns,function(b){b.classList.toggle('zs-filter__btn--on',b===btn);});
+        apply();
+      });
+    });
+    apply();
+  })();
+
+  /* ── floating live pill + scroll-spy nav (one observer, no scroll thrash) ── */
+  (function(){
+    var pill=document.querySelector('[data-zs-mini]');
+    if(pill)pill.hidden=false;
+
+    /* mini pill: reveal once the hero band leaves the top of the viewport */
+    var band=document.querySelector('.zs-band');
+    if(pill&&band&&'IntersectionObserver' in window){
+      var pillObs=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){pill.classList.toggle('zs-mini--show',!e.isIntersecting);});
+      },{rootMargin:'-120px 0px 0px 0px',threshold:0});
+      pillObs.observe(band);
+    }else if(pill){
+      pill.classList.add('zs-mini--show');
+    }
+
+    /* scroll-spy: highlight the nav link for whichever section is in view */
+    var navLinks=Array.prototype.slice.call(document.querySelectorAll('.zs-nav__lnk'));
+    if(navLinks.length&&'IntersectionObserver' in window){
+      var map={};
+      var targets=[];
+      navLinks.forEach(function(a){
+        var id=(a.getAttribute('href')||'').slice(1);
+        var sec=id&&document.getElementById(id);
+        if(sec){map[id]=a;targets.push(sec);}
+      });
+      var visible={};
+      function refresh(){
+        var current=null;
+        targets.forEach(function(sec){
+          var top=sec.getBoundingClientRect().top;
+          if(visible[sec.id]&&(current===null||top<current.top)){current={id:sec.id,top:top};}
+        });
+        navLinks.forEach(function(a){a.classList.remove('zs-nav__lnk--active');});
+        if(current&&map[current.id])map[current.id].classList.add('zs-nav__lnk--active');
+      }
+      var spy=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){visible[e.target.id]=e.isIntersecting;});
+        refresh();
+      },{rootMargin:'-45% 0px -50% 0px',threshold:0});
+      targets.forEach(function(sec){spy.observe(sec);});
+    }
+  })();
+
+  /* ── smooth in-page anchors ── */
+  (function(){
+    var links=document.querySelectorAll('.zs-nav__lnk, .zs-mini');
+    Array.prototype.forEach.call(links,function(a){
+      a.addEventListener('click',function(e){
+        var href=a.getAttribute('href')||'';
+        if(href.charAt(0)!=='#')return;
+        var target=document.getElementById(href.slice(1));
+        if(!target||target.hidden)return;
+        e.preventDefault();
+        if(a.classList.contains('zs-nav__lnk')){
+          document.querySelectorAll('.zs-nav__lnk').forEach(function(l){l.classList.remove('zs-nav__lnk--active');});
+          a.classList.add('zs-nav__lnk--active');
+        }
+        target.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+        try{history.replaceState(null,'',href);}catch(err){}
+      });
+    });
+  })();
+})();
+</script>

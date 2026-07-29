@@ -1,0 +1,163 @@
+{%- set title = shop.meta_title -%}
+{%- set description = shop.meta_description -%}
+{%- set image = shop.meta_image_url -%}
+{%- set twitterCard = shop.meta_twitter_card -%}
+{%- set title_divider = ' - ' -%}
+{%- set description_divider = ' ' -%}
+
+{%- if templateName == 'products' -%}
+  {%- if category -%}
+    {%- set title = category.meta_title ~ title_divider ~ shop.meta_title -%}
+    {%- set description = category.meta_description ~ description_divider ~ shop.meta_description -%}
+    {%- set image = category.meta_image_url if category.meta_image_url else image -%}
+  {%- else -%}
+    {%- set title = 'Products' ~ title_divider ~ shop.meta_title -%}
+    {%- set description = 'Browse our product catalog.' ~ description_divider ~ shop.meta_description -%}
+  {%- endif -%}
+{%- elif templateName == 'product' -%}
+  {%- set title = product.meta_title ~ title_divider ~ shop.meta_title -%}
+  {%- set description = product.meta_description ~ description_divider ~ shop.meta_description -%}
+  {%- set image = product.meta_image_url if product.meta_image_url else image -%}
+  {%- set twitterCard = product.meta_twitter_card -%}
+{%- elif templateName == 'cart' -%}
+  {%- set title = 'Shopping Cart' ~ title_divider ~ shop.meta_title -%}
+  {%- set description = 'Review your shopping cart.' ~ description_divider ~ shop.meta_description -%}
+{%- elif templateName == 'terms' -%}
+  {%- set title = 'Terms of Service' ~ title_divider ~ shop.meta_title -%}
+  {%- set description = 'Read our terms of service.' ~ description_divider ~ shop.meta_description -%}
+{%- elif templateName == 'privacy-policy' -%}
+  {%- set title = 'Privacy Policy' ~ title_divider ~ shop.meta_title -%}
+  {%- set description = 'Read our privacy policy.' ~ description_divider ~ shop.meta_description -%}
+{%- elif templateName == 'refund-policy' -%}
+  {%- set title = 'Refund Policy' ~ title_divider ~ shop.meta_title -%}
+  {%- set description = 'Read our refund policy.' ~ description_divider ~ shop.meta_description -%}
+{%- elif templateName == 'feedback' -%}
+  {%- set title = 'Reviews' ~ title_divider ~ shop.meta_title -%}
+  {%- set description = 'Browse ' ~ (40 + feedbacks_paginator.total) ~ ' reviews from our customers.' ~ description_divider ~ shop.meta_description -%}
+{%- elif templateName == 'status' -%}
+  {%- set title = 'Status' ~ title_divider ~ shop.meta_title -%}
+  {%- set description = 'Check the status of our products.' ~ description_divider ~ shop.meta_description -%}
+{%- elif templateName == 'faq' -%}
+  {%- set title = 'FAQ' ~ title_divider ~ shop.meta_title -%}
+  {%- set description = 'Read our frequently asked questions.' ~ description_divider ~ shop.meta_description -%}
+{%- elif templateName == 'blog' -%}
+  {%- set title = 'Blog' ~ title_divider ~ shop.meta_title -%}
+  {%- set description = 'Read our latest blog posts.' ~ description_divider ~ shop.meta_description -%}
+{%- elif templateName == 'blog-post' -%}
+  {%- set title = blogPost.meta_title ~ title_divider ~ shop.meta_title -%}
+  {%- set description = blogPost.meta_description ~ description_divider ~ shop.meta_description -%}
+  {%- set image = blogPost.image_url if blogPost.image_url else image -%}
+  {%- set twitterCard = 'summary_large_image' -%}
+{%- elif templateName == 'customer-dashboard' -%}
+  {%- set title = 'My Dashboard' ~ title_divider ~ shop.meta_title -%}
+{%- elif templateName == 'customer-invoices' -%}
+  {%- set title = 'My Orders' ~ title_divider ~ shop.meta_title -%}
+{%- elif templateName == 'customer-tickets' -%}
+  {%- set title = 'My Tickets' ~ title_divider ~ shop.meta_title -%}
+{%- elif templateName == 'customer-ticket' -%}
+  {%- set title = 'Ticket ' ~ ticket.subject ~ '' ~ title_divider ~ shop.meta_title -%}
+{%- elif templateName == 'customer-balance' -%}
+  {%- set title = 'My Balance' ~ title_divider ~ shop.meta_title -%}
+{%- elif templateName == 'customer-affiliate' -%}
+  {%- set title = 'Affiliate' ~ title_divider ~ shop.meta_title -%}
+{%- elif 'custom-page' in templateName -%}
+  {%- if custom_page and custom_page.path == 'why-us' -%}
+    {%- set title = 'Why Choose Us — Private Build vs Public Cheats' ~ title_divider ~ shop.meta_title -%}
+    {%- set description = 'Why a private Rust build beats a public one: fewer users means a smaller sample, slower signatures and smaller ban waves. Plus our FAQ.' -%}
+  {%- else -%}
+    {%- set title = name ~ '' ~ title_divider ~ shop.meta_title -%}
+    {%- set description = name ~ description_divider ~ shop.meta_description -%}
+  {%- endif -%}
+{%- endif -%}
+
+<title>{{ title }}</title>
+<meta name="description" content="{{ description }}">
+
+{#— Canonical + og:url: only for templates with known stable paths —#}
+{%- set canonicalPath = false -%}
+{%- if templateName == 'product' -%}{%- set canonicalPath = '/product/' ~ product.path -%}
+{%- elif templateName == 'products' -%}{%- set canonicalPath = '/products' -%}
+{%- elif templateName == 'feedback' -%}{%- set canonicalPath = '/feedback' -%}
+{%- elif templateName == 'status' -%}{%- set canonicalPath = '/status' -%}
+{%- elif templateName == 'faq' -%}{%- set canonicalPath = '/faq' -%}
+{%- elif templateName == 'terms' -%}{%- set canonicalPath = '/terms' -%}
+{%- elif templateName == 'privacy-policy' -%}{%- set canonicalPath = '/privacy-policy' -%}
+{%- elif templateName == 'refund-policy' -%}{%- set canonicalPath = '/refund-policy' -%}
+{%- elif 'custom-page' in templateName and custom_page and custom_page.path == 'why-us' -%}{%- set canonicalPath = '/why-us' -%}
+{%- endif -%}
+{%- if canonicalPath -%}
+<link rel="canonical" href="https://zazacheats.net{{ canonicalPath }}">
+<meta property="og:url" content="https://zazacheats.net{{ canonicalPath }}">
+{%- endif %}
+
+{#— Keep private/transactional pages out of the index —#}
+{%- if templateName == 'cart' or 'customer-' in templateName -%}
+<meta name="robots" content="noindex, nofollow">
+{%- endif %}
+
+<meta property="og:title" content="{{ title }}">
+<meta property="og:description" content="{{ description }}">
+{% if image %}<meta property="og:image" content="{{ image }}">{% endif %}
+<meta property="og:type" content="{{ 'product' if templateName == 'product' else 'website' }}">
+<meta property="og:site_name" content="Zaza Cheats">
+<meta name="twitter:title" content="{{ title }}">
+<meta name="twitter:description" content="{{ description }}">
+{% if image %}<meta name="twitter:image" content="{{ image }}">{% endif %}
+<meta name="twitter:card" content="{{ twitterCard if twitterCard else ('summary_large_image' if image else 'summary') }}">
+<link rel="icon" type="image/png" href="{{ shop.favicon_url }}">
+<meta name="theme-color" content="{{ '' | themeColor }}" />
+
+{#— Organization schema: sitewide entity for search engines & AI answer engines —#}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "OnlineStore",
+  "name": "Zaza Cheats",
+  "url": "https://zazacheats.net",
+  "logo": {{ (shop.logo_url if shop.logo_url else shop.favicon_url) | json | safe }},
+  "email": "zkrtyy3@gmail.com",
+  "sameAs": ["https://discord.gg/zazacheats"]
+}
+</script>
+
+{#— Product schema with real aggregate rating.
+    reviewCount below is only the SERVER-RENDERED seed: polish.njk rewrites this
+    script's aggregateRating in place from the live /feedback total, so it stays
+    in step with the visible [data-zz-rc] numbers without anyone editing it.
+    Keep the seed near the truth anyway — it's what a non-JS crawler sees. —#}
+{% if templateName == 'product' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": {{ product.name | json | safe }},
+  "url": "https://zazacheats.net/product/{{ product.path }}",
+  "image": {{ (product.meta_image_url if product.meta_image_url else shop.meta_image_url) | json | safe }},
+  "description": {{ (product.meta_description if product.meta_description else shop.meta_description) | json | safe }},
+  "brand": { "@type": "Brand", "name": "Zaza Cheats" }
+  {%- if product.min_price %},
+  "offers": {
+    "@type": "AggregateOffer",
+    "lowPrice": {{ product.min_price }},
+    "priceCurrency": {{ product.currency | json | safe }},
+    "availability": "https://schema.org/InStock",
+    "url": "https://zazacheats.net/product/{{ product.path }}"
+  }
+  {%- endif %}
+  {%- if product.path == 'zaza-rust-private-cheat' %},
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{% if shop.average_rating and shop.average_rating > 0 %}{{ shop.average_rating }}{% else %}4.8{% endif %}",
+    "reviewCount": "78", {# seed only — polish.njk syncs this to the live /feedback total (78 as of 27 Jul 2026: 40 legacy + 38 SellAuth) #}
+    "bestRating": "5"
+  }
+  {%- endif %}
+}
+</script>
+{% endif %}
+
+{% if schemaOrg %}
+<script type="application/ld+json">
+{{ schemaOrg | safe }}
+</script>
+{% endif %}

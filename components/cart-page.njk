@@ -1,0 +1,722 @@
+<div class="container component" data-component-id="{{ componentId }}">
+  <div x-data="cartPage">
+    <section class="py-5-nav cart">
+      <div class="section-title">
+        <h1>Shopping Cart</h1>
+      </div>
+      <div class="row">
+        <div class="col-12 col-lg-8 mb-4">
+          <div x-cloak x-show="fullCartShowMessages" class="fade show">
+            <div class="alert alert-warning p-4 rounded mb-4">
+              <template x-for="(message, index) in fullCartMessages" :key="index">
+                <p x-text="message"></p>
+              </template>
+            </div>
+          </div>
+
+          <div>
+            <div x-show="fullCartLoading" class="p-4 border rounded text-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+
+            <template x-if="!fullCartLoading">
+              <div>
+                <template x-if="fullCart.length === 0">
+                  <div class="p-4 border rounded text-center">
+                    <p class="text-muted mb-3">Your cart is empty.</p>
+                    <a href="/products" class="btn btn-outline-primary btn-sm">Browse products</a>
+                  </div>
+                </template>
+
+                <template x-if="fullCart.length > 0">
+                  <div class="d-flex flex-column gap-3">
+                    <template x-for="(cartItem, index) in fullCart" :key="index">
+                      <div class="d-flex flex-column p-1 flex-sm-row justify-content-sm-between p-sm-0 border rounded-3 cart-item-bg text-white">
+                        <div class="flex-grow-1 d-flex gap-2 text-truncate">
+                          <div class="d-flex justify-content-center align-items-center w-100 position-relative p-1 py-1 p-sm-3 py-sm-3 aspect-product-card-image">
+                            <template x-if="cartItem.product.image_url">
+                              <img :src="cartItem.product.image_url" :alt="cartItem.product.name" class="w-100 rounded-2 aspect-product-card-image object-product-image" loading="lazy" />
+                            </template>
+                            <template x-if="!cartItem.product.image_url">
+                              <div class="d-flex justify-content-center align-items-center text-muted aspect-product-card-image">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="cart-placeholder-svg" viewBox="0 0 256 256">
+                                  <path
+                                    fill="currentColor"
+                                    d="m222.72 67.91l-88-48.18a13.9 13.9 0 0 0-13.44 0l-88 48.18A14 14 0 0 0 26 80.18v95.64a14 14 0 0 0 7.28 12.27l88 48.18a13.92 13.92 0 0 0 13.44 0l88-48.18a14 14 0 0 0 7.28-12.27V80.18a14 14 0 0 0-7.28-12.27ZM127 30.25a2 2 0 0 1 1.92 0L212.51 76l-33.94 18.57l-84.52-46.26ZM122 223l-83-45.43a2 2 0 0 1-1-1.75V86.66l84 46ZM43.49 76l38.07-20.85l84.51 46.26L128 122.24ZM218 175.82a2 2 0 0 1-1 1.75L134 223v-90.36l36-19.71V152a6 6 0 0 0 12 0v-45.63l36-19.71Z"
+                                  />
+                                </svg>
+                              </div>
+                            </template>
+                          </div>
+
+                          <div class="flex-grow-1 text-start pe-2 py-1 pe-sm-3 py-sm-3 text-truncate">
+                            <div class="d-flex justify-content-between align-items-center gap-2 text-truncate">
+                              <a :href="'/product/' + cartItem.product.path" class="text-white fw-bold text-truncate text-decoration-none cart-product-link">
+                                <span x-text="cartItem.product.name"></span>
+                              </a>
+                              <button
+                                type="button"
+                                @click="removeItem(index)"
+                                class="btn p-0 text-white d-sm-none cart-remove-mobile"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="cart-remove-icon-sm" viewBox="0 0 24 24"><path fill="currentColor" d="m12 13.4l-4.9 4.9q-.275.275-.7.275t-.7-.275t-.275-.7t.275-.7l4.9-4.9l-4.9-4.9q-.275-.275-.275-.7t.275-.7t.7-.275t.7.275l4.9 4.9l4.9-4.9q.275-.275.7-.275t.7.275t.275.7t-.275.7L13.4 12l4.9 4.9q.275.275.275.7t-.275.7t-.7.275t-.7-.275z"/></svg>
+                              </button>
+                            </div>
+                            <p class="small text-truncate mb-0 cart-variant-text" x-text="cartItem.variant.name"></p>
+                            <template x-if="getAvailableVolumeDiscount(index)">
+                              <div class="small text-truncate cart-discount-text mt-1">
+                                Buy <span x-text="getAvailableVolumeDiscount(index)?.quantity - cartItem.quantity"></span> more to get a <span x-text="getAvailableVolumeDiscount(index)?.percentage"></span>% discount.
+                              </div>
+                            </template>
+                            <template x-if="cartItem.addons && cartItem.addons.length > 0">
+                              <div class="d-flex align-items-center gap-1 mt-1">
+                                <template x-for="(addon, addonIndex) in cartItem.addons" :key="addonIndex">
+                                  <div class="cart-addon-badge">
+                                    <span x-text="addon.product.name"></span>
+                                  </div>
+                                </template>
+                              </div>
+                            </template>
+                          </div>
+                        </div>
+                        
+                        <div class="d-flex align-items-center justify-content-between ps-1 pe-4 pt-2 pb-1 mt-2 justify-content-sm-end ps-sm-0 py-sm-0 mt-sm-0 gap-md-4 gap-lg-5 pe-lg-5 cart-controls">
+                          <div class="d-flex gap-1 rounded-2 overflow-hidden cart-quantity-controls">
+                            <button
+                              type="button"
+                              @click="changeQuantity(index, cartItem.quantity - 1)"
+                              :disabled="cartItem.quantity <= getMinQuantity(index)"
+                              class="btn p-0 d-flex justify-content-center align-items-center cart-qty-btn"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" class="cart-qty-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M6 13q-.425 0-.712-.288T5 12t.288-.712T6 11h12q.425 0 .713.288T19 12t-.288.713T18 13z"/></svg>
+                            </button>
+                            <input
+                              type="number"
+                              x-model.number="cartItem.quantity"
+                              class="form-control text-center border-0 cart-qty-input"
+                            />
+                            <button
+                              type="button"
+                              @click="changeQuantity(index, cartItem.quantity + 1)"
+                              :disabled="cartItem.quantity >= getMaxQuantity(index)"
+                              class="btn p-0 d-flex justify-content-center align-items-center cart-qty-btn"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" class="cart-qty-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M11 13H6q-.425 0-.712-.288T5 12t.288-.712T6 11h5V6q0-.425.288-.712T12 5t.713.288T13 6v5h5q.425 0 .713.288T19 12t-.288.713T18 13h-5v5q0 .425-.288.713T12 19t-.712-.288T11 18z"/></svg>
+                            </button>
+                          </div>
+                          <div>
+                            <p class="fw-medium text-center mb-0 cart-price-text">
+                              <span x-text="appCurrency.format(getItemSinglePrice(index), cartItem.product.currency)"></span>
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            @click="removeItem(index)"
+                            class="btn p-0 text-white d-none d-sm-block cart-remove-desktop"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="cart-remove-icon" fill="currentColor" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg>
+                          </button>
+                        </div>
+                      </div>
+                    </template>
+                  </div>
+                </template>
+              </div>
+            </template>
+          </div>
+
+          {# NFA upsell — shown only when the cart has a Day/Week cheat key
+             (cheat product present, variant NOT month/lifetime) and no NFA
+             yet. Honest product-fit framing, not a popularity claim. #}
+          <div class="zzup" id="zz-nfa-upsell" hidden>
+            <div class="zzup__icon" aria-hidden="true">🛡️</div>
+            <div class="zzup__body">
+              <p class="zzup__t">Running it on your main? Don't.</p>
+              <p class="zzup__d">Add a disposable NFA account and keep your real one clean — 500–1000 hrs, <strong>$2.50</strong>, with up to 3 free replacements inside 6 hours.</p>
+            </div>
+            <button type="button" class="zzup__btn" data-zzup-add>+ Add NFA · $2.50</button>
+          </div>
+
+        </div>
+        <div class="col-12 col-lg-4">
+          <div class="d-flex flex-column gap-4 p-4 border rounded form">
+            <form @submit.prevent="window.location.href='/pay'">
+              <div class="pb-2 border-bottom">
+                <label class="form-label">Your Order</label>
+                <div class="d-flex justify-content-between">
+                  <span class="text-muted">Subtotal</span>
+                  <span class="fw-bold" x-text="appCurrency.format(cartTotalPrice, cartCurrency)"></span>
+                </div>
+                {# Bundle discount preview: mirrors the SellAuth Bundle Offer
+                   rules so buyers see the free-NFA discount BEFORE checkout
+                   instead of a scary full-price subtotal. Display only — the
+                   real discount is applied by SellAuth at checkout. #}
+                <div class="d-flex justify-content-between" id="zz-cartdisc" hidden>
+                  <span style="color:#4ade80">🎁 Bundle discount <small style="color:rgba(200,215,240,.55)">(applies at checkout)</small></span>
+                  <span class="fw-bold" style="color:#4ade80" data-zz-disc-amt></span>
+                </div>
+                <div class="d-flex justify-content-between" id="zz-carttotal" hidden>
+                  <span class="text-muted">You pay</span>
+                  <span class="fw-bold" data-zz-disc-total></span>
+                </div>
+              </div>
+
+              {% if altcha %}
+                <div
+                  x-cloak
+                  x-show="!altchaPayload"
+                  class="transition-opacity"
+                  x-transition:enter="transition ease-out duration-300 transform"
+                  x-transition:enter-start="opacity-0"
+                  x-transition:enter-end="opacity-100"
+                  x-transition:leave="transition ease-in duration-200 transform"
+                  x-transition:leave-start="opacity-100"
+                  x-transition:leave-end="opacity-0"
+                >
+                  <altcha-widget
+                    challengejson='{{ altcha | json }}'
+                    auto="onload"
+                    hidefooter="true"
+                    hidelogo="true"
+                    x-ref="altcha"
+                  ></altcha-widget>
+                </div>
+              {% endif %}
+
+              <div x-cloak x-show="submitError" class="alert alert-danger p-4 rounded my-4">
+                <span x-text="submitError"></span>
+              </div>
+
+              <div class="cart-code" id="zz-cart-code" hidden>
+                <span class="cart-code__txt">Your scratch code <b data-zz-cart-code>&mdash;</b> (<span data-zz-cart-pct>10</span>% off) is still active &mdash; apply it at checkout.</span>
+                <button type="button" class="cart-code__copy" data-zz-cart-copy>Copy</button>
+              </div>
+
+              <button
+                type="submit"
+                class="w-100 mt-4 btn btn-outline-primary"
+                :disabled="fullCartLoading || fullCart.length === 0 || isSubmitting || submitDisabled"
+              >
+                <span>Checkout</span>
+                <template x-if="!isSubmitting">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="currentColor" viewBox="0 0 256 256"><path d="M230.14,58.87A8,8,0,0,0,224,56H62.68L56.6,22.57A8,8,0,0,0,48.73,16H24a8,8,0,0,0,0,16h18L67.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,160,204a28,28,0,1,0,28-28H91.17a8,8,0,0,1-7.87-6.57L80.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,230.14,58.87ZM104,204a12,12,0,1,1-12-12A12,12,0,0,1,104,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,200,204Zm4-74.57A8,8,0,0,1,196.1,136H77.22L65.59,72H214.41Z"></path></svg>
+                </template>
+                <template x-if="isSubmitting">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-5 animate-spin" fill="currentColor" viewBox="0 0 256 256"><path d="M232,128a104,104,0,0,1-208,0c0-41,23.81-78.36,60.66-95.27a8,8,0,0,1,6.68,14.54C60.15,61.59,40,93.27,40,128a88,88,0,0,0,176,0c0-34.73-20.15-66.41-51.34-80.73a8,8,0,0,1,6.68-14.54C208.19,49.64,232,87,232,128Z"></path></svg>
+                </template>
+              </button>
+
+              <div class="cart-trust">
+                <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> Secure checkout</span>
+                <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> Instant key delivery</span>
+                <a href="/status"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Live status</a>
+              </div>
+              <p class="cart-policies">Read before you buy: <a href="{{ '/refund-policy' | shopUrl }}">Refund policy</a> &middot; <a href="{{ '/terms-of-service' | shopUrl }}">Terms</a></p>
+
+              <a href="{{ '/product/rust-nfa' | shopUrl }}" class="cart-pair">
+                <span class="cart-pair__ico" aria-hidden="true">🛡️</span>
+                <span class="cart-pair__txt"><b>Running it on your main? Don't.</b> Add a disposable NFA account &mdash; from $1.00, with the free 6-hour replacement warranty.</span>
+                <span class="cart-pair__cta">View &rarr;</span>
+              </a>
+              <style>
+              .cart-trust{margin-top:12px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;
+                font-size:.72rem;color:rgba(200,215,240,.55)}
+              .cart-trust span,.cart-trust a{display:inline-flex;align-items:center;gap:6px}
+              .cart-trust svg{opacity:.7}
+              .cart-trust a{color:rgba(192,132,252,.85);text-decoration:none;font-weight:600}
+              .cart-trust a:hover{color:#e0b3ff;text-decoration:underline}
+              .cart-policies{margin:8px 0 0;text-align:center;font-size:.7rem;color:rgba(200,215,240,.68)}
+              .cart-policies a{color:rgba(200,215,240,.75);text-decoration:none;border-bottom:1px solid rgba(200,215,240,.25);
+                transition:color .2s,border-color .2s}
+              .cart-policies a:hover{color:#fff;border-color:rgba(191,64,191,.6)}
+              .cart-code{margin-top:14px;display:flex;align-items:center;gap:10px;padding:10px 12px;
+                border:1px solid rgba(234,179,8,.3);border-radius:12px;background:rgba(234,179,8,.06)}
+              .cart-code__txt{flex:1;font-size:.76rem;line-height:1.45;color:rgba(240,230,200,.85)}
+              .cart-code__txt b{color:#fbbf24;font-weight:800;letter-spacing:.04em}
+              .cart-code__copy{flex-shrink:0;padding:.42rem .8rem;border-radius:9px;border:1px solid rgba(234,179,8,.4);
+                background:rgba(234,179,8,.12);color:#fbbf24;font-size:.72rem;font-weight:800;cursor:pointer;
+                transition:background .2s,border-color .2s}
+              .cart-code__copy:hover{background:rgba(234,179,8,.22);border-color:rgba(234,179,8,.7)}
+              .cart-code__copy.is-done{color:#4ade80;border-color:rgba(34,197,94,.5);background:rgba(34,197,94,.1)}
+              .cart-pair{margin-top:12px;display:flex;align-items:center;gap:11px;padding:11px 13px;
+                border:1px solid rgba(191,64,191,.16);border-radius:12px;background:rgba(191,64,191,.04);
+                text-decoration:none;transition:border-color .2s,background .2s}
+              .cart-pair:hover{border-color:rgba(191,64,191,.45);background:rgba(191,64,191,.09)}
+              .cart-pair__ico{flex-shrink:0;font-size:1.05rem}
+              .cart-pair__txt{flex:1;font-size:.74rem;line-height:1.5;color:rgba(200,215,240,.65)}
+              .cart-pair__txt b{color:#fff}
+              .cart-pair__cta{flex-shrink:0;font-size:.76rem;font-weight:800;color:#c084fc}
+              </style>
+              <script>
+              /* Scratch-code reminder: shows ONLY when this visitor holds a real,
+                 unexpired claim written by the scratch popup (expiry there is
+                 capped at the drop deadline, so this can never advertise a dead code). */
+              (function(){
+                try {
+                  var raw = window.localStorage.getItem('zz_sc_claim');
+                  if(!raw) return;
+                  var o = JSON.parse(raw);
+                  if(!o || (o.exp && Date.now() > o.exp)){ window.localStorage.removeItem('zz_sc_claim'); return; }
+                  var claim = JSON.parse(o.v);
+                  if(!claim || !claim.code) return;
+                  var box = document.getElementById('zz-cart-code');
+                  if(!box) return;
+                  box.querySelector('[data-zz-cart-code]').textContent = claim.code;
+                  var pctEl = box.querySelector('[data-zz-cart-pct]');
+                  if(pctEl && claim.pct) pctEl.textContent = claim.pct;
+                  box.hidden = false;
+                  var btn = box.querySelector('[data-zz-cart-copy]');
+                  if(btn) btn.addEventListener('click', function(){
+                    var done = function(){
+                      btn.classList.add('is-done'); btn.textContent = 'Copied';
+                      setTimeout(function(){ btn.classList.remove('is-done'); btn.textContent = 'Copy'; }, 1800);
+                    };
+                    if(navigator.clipboard && navigator.clipboard.writeText){
+                      navigator.clipboard.writeText(claim.code).then(done).catch(done);
+                    } else {
+                      var t = document.createElement('textarea'); t.value = claim.code;
+                      document.body.appendChild(t); t.select();
+                      try { document.execCommand('copy'); } catch(e){}
+                      document.body.removeChild(t); done();
+                    }
+                  });
+                } catch(e){}
+              })();
+              </script>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('cartPage', () => ({
+      fullCart: [],
+      fullCartLoading: false,
+      fullCartMessages: [],
+      fullCartShowMessages: false,
+      isSubmitting: false,
+      submitError: null,
+      submitDisabled: false,
+      altchaPayload: null,
+
+      init: function () {
+        if (this.appCart.items.length > 0) {
+          this.fetchFullCart();
+        }
+
+        {% if altcha %}
+          this.addAltchaEventListener();
+        {% endif %}
+      },
+
+      fetchFullCart: async function () {
+        this.fullCartLoading = true;
+        this.fullCartMessages = [];
+        this.fullCartShowMessages = false;
+
+        const url = new URL('{{ '/v1/cart' | apiInternalUrl }}');
+        url.searchParams.append('shopId', '{{ shop.id }}');
+        url.searchParams.append('cart', JSON.stringify(this.appCart.items));
+
+        try {
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+          });
+
+          const responseData = await response.json();
+
+          if (responseData?.messages && responseData.messages.length > 0) {
+            this.fullCartMessages = responseData.messages;
+            this.fullCartShowMessages = true;
+            setTimeout(() => {
+              this.fullCartShowMessages = false;
+            }, 5000);
+          }
+
+          // Update full cart state (this one contains product names, images, etc.)
+          this.fullCart = responseData.fullCart;
+
+          // Update global cart state
+          this.appCart.set(responseData.cart);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          this.fullCartLoading = false;
+        }
+      },
+
+      getAvailableVolumeDiscount: function (index) {
+        const item = this.fullCart[index];
+
+        if (item.variant.volume_discounts) {
+          const volumeDiscounts = item.variant.volume_discounts.sort((a, b) => a.quantity - b.quantity);
+
+          for (const volumeDiscount of volumeDiscounts) {
+            if (item.quantity < parseInt(volumeDiscount.quantity)) {
+              return volumeDiscount;
+            }
+          }
+        }
+
+        return null;
+      },
+
+      getAppliedVolumeDiscount: function (index) {
+        const item = this.fullCart[index];
+
+        if (item.variant.volume_discounts) {
+          const volumeDiscounts = item.variant.volume_discounts.sort((a, b) => b.quantity - a.quantity);
+
+          for (const volumeDiscount of volumeDiscounts) {
+            if (item.quantity >= parseInt(volumeDiscount.quantity)) {
+              return volumeDiscount;
+            }
+          }
+        }
+
+        return null;
+      },
+
+      getMinQuantity: function (index) {
+        const item = this.fullCart[index];
+        
+        const min = item.variant.quantity_min || 1;
+
+        if (item.variant.stock === 0) {
+          return 0;
+        }
+
+        return min;
+      },
+
+      getMaxQuantity: function (index) {
+        const item = this.fullCart[index];
+        
+        const max = item.variant.quantity_max || 10000;
+
+        if (item.variant.stock === 0) {
+          return 0;
+        }
+
+        if (item.product.hide_stock_count) {
+          return max;
+        }
+
+        if (item.variant.stock === -1) {
+          return max;
+        }
+
+        return Math.min(max, item.variant.stock);
+      },
+
+      changeQuantity: function (index, quantity) {
+        const min = this.getMinQuantity(index);
+        const max = this.getMaxQuantity(index);
+        const newQuantity = Math.min(Math.max(min, quantity), max);
+
+        const item = this.fullCart[index];
+
+        this.fullCart[index].quantity = newQuantity;
+        this.appCart.editQuantity(item.variantId, newQuantity);
+      },
+
+      removeItem: function (index) {
+        const item = this.fullCart[index];
+
+        this.fullCart.splice(index, 1);
+
+        this.appCart.remove(item.variant.id);
+      },
+
+      getItemSinglePrice: function (index) {
+        const item = this.fullCart[index];
+
+        const volumeDiscount = this.getAppliedVolumeDiscount(index);
+
+        if (volumeDiscount) {
+          return item.variant.price * (1 - volumeDiscount.percentage / 100);
+        }
+
+        return item.variant.price;
+      },
+
+      get cartCurrency() {
+        return this.fullCart.length > 0 ? this.fullCart[0].product.currency : 'USD';
+      },
+
+      get cartTotalPrice() {
+        return this.fullCart.reduce((acc, item) => {
+          const itemSinglePrice = this.getItemSinglePrice(this.fullCart.indexOf(item));
+          const itemAddonsPrice = item.addons ? item.addons.reduce((sum, addon) => sum + addon.variant.price, 0) : 0;
+
+          return acc + (item.quantity * itemSinglePrice) + itemAddonsPrice;
+        }, 0);
+      },
+
+      addAltchaEventListener: function () {
+        this.$refs.altcha.addEventListener('statechange', (event) => {
+          if (event.detail.state === 'verifying') {
+            this.submitDisabled = true;
+          } else if (event.detail.state === 'verified') {
+            this.submitDisabled = false;
+            this.altchaPayload = event.detail.payload;
+          }
+        });
+      },
+
+      generateRecaptchaToken: async function () {
+        return new Promise((resolve) => {
+          grecaptcha.ready(
+            () =>
+              void (async () => {
+                const token = await grecaptcha.execute(
+                  '{{ shop.recaptcha_key }}',
+                  { action: 'checkout_s{{ shop.id }}' },
+                );
+
+                resolve(token);
+              })(),
+          );
+        });
+      },
+
+      checkout: async function () {
+        if (this.isSubmitting) {
+          return;
+        }
+        try { localStorage.removeItem('zzLastProduct'); } catch (e) {}
+
+        const formData = {
+          cart: this.appCart.items,
+          currency: this.appCurrency.currency,
+          shopId: '{{ shop.id }}',
+        };
+
+        if (window.shopCustomer?.email) {
+          formData.email = window.shopCustomer.email;
+        }
+
+        // Affiliate attribution. The ?a= code is captured to localStorage on
+        // landing, but was only ever sent during customer login — guest
+        // checkouts silently lost the referral. SellAuth's checkout endpoint
+        // accepts a top-level `affiliate` field (see docs: Checkout API and
+        // Checkout Link guide), same name the login flow uses.
+        try {
+          const affiliate = localStorage.getItem('affiliate');
+          if (affiliate) {
+            formData.affiliate = affiliate;
+          }
+        } catch (e) {}
+
+        {% if altcha %}
+          if (this.altchaPayload) {
+            formData.altcha = this.altchaPayload;
+          }
+        {% elif shop.recaptcha_key %}
+          try {
+            formData.recaptchaToken = await this.generateRecaptchaToken();
+          } catch (error) {
+            this.submitError = 'reCAPTCHA cannot be loaded. Please refresh the page and turn off any ad blockers.';
+            this.isSubmitting = false;
+            return;
+          }
+        {% endif %}
+
+        try {
+          this.isSubmitting = true;
+
+          const response = await fetch('{{ '/v1/checkout' | apiInternalUrl }}', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+          });
+
+          const responseData = await response.json();
+
+          if (responseData.url) {
+            localStorage.setItem('cart', JSON.stringify([]));
+            window.location.href = responseData.url;
+          } else {
+            this.isSubmitting = false;
+            this.submitError = responseData?.message || 'Error in the AJAX request.';
+
+            if (responseData?.error == 'captcha_verification_failed') {
+              setTimeout(() => window.location.reload(), 1000);
+            }
+          }
+        } catch (error) {
+          console.error(error);
+          this.isSubmitting = false;
+          this.submitError = 'Unexpected error. Please refresh the page and try again.';
+        }
+      }
+    }));
+  });
+</script>
+
+<script>
+/* Bundle-discount preview in the cart. Reads the same localStorage cart the
+   theme's appCart uses, matches the SellAuth Bundle Offer rules, and shows
+   the discount + adjusted total before checkout. DISPLAY ONLY — SellAuth
+   applies the real discount at checkout; these numbers must mirror the
+   dashboard rules exactly:
+     Lifetime (variant 1259110) + 5x NFA 500-1000 (1277466) -> $12.50
+     Month    (variant 1259108) + 2x NFA 500-1000 (1277466) -> $5.00
+   Lifetime is allocated first (bigger saving); NFA quantities are not
+   double-counted across bundles. Assumes USD display, matching the store.
+   If the Bundle Offers in SellAuth change, change RULES here too. */
+(function(){
+  var RULES={
+    lifetime:{keyVariant:1259110,nfaVariant:1277466,nfaQty:5,off:12.50},
+    month:{keyVariant:1259108,nfaVariant:1277466,nfaQty:2,off:5.00}
+  };
+
+  var rowD=document.getElementById('zz-cartdisc');
+  var rowT=document.getElementById('zz-carttotal');
+  if(!rowD||!rowT) return;
+  var amtEl=rowD.querySelector('[data-zz-disc-amt]');
+  var totEl=rowT.querySelector('[data-zz-disc-total]');
+
+  function readCart(){
+    try{
+      var c=JSON.parse(localStorage.getItem('cart')||'[]');
+      return Array.isArray(c)?c:[];
+    }catch(e){ return []; }
+  }
+  function qtyOf(cart,variantId){
+    var q=0;
+    for(var i=0;i<cart.length;i++){
+      if(cart[i].variantId===variantId) q+=(cart[i].quantity||0);
+    }
+    return q;
+  }
+  function computeDiscount(cart){
+    var nfaLeft=qtyOf(cart,RULES.lifetime.nfaVariant);
+    var off=0;
+    if(qtyOf(cart,RULES.lifetime.keyVariant)>=1 && nfaLeft>=RULES.lifetime.nfaQty){
+      off+=RULES.lifetime.off; nfaLeft-=RULES.lifetime.nfaQty;
+    }
+    if(qtyOf(cart,RULES.month.keyVariant)>=1 && nfaLeft>=RULES.month.nfaQty){
+      off+=RULES.month.off;
+    }
+    return off;
+  }
+  function subtotalFromDom(){
+    // Parse the Alpine-rendered subtotal so we never drift from what the
+    // theme itself displays.
+    var el=rowD.parentElement.querySelector('[x-text*="cartTotalPrice"]');
+    if(!el) return null;
+    var n=parseFloat((el.textContent||'').replace(/[^0-9.]/g,''));
+    return isNaN(n)?null:n;
+  }
+  function refresh(){
+    var off=computeDiscount(readCart());
+    if(off<=0){ rowD.hidden=true; rowT.hidden=true; return; }
+    var sub=subtotalFromDom();
+    amtEl.textContent='-$'+off.toFixed(2);
+    if(sub!==null&&sub-off>=0){
+      totEl.textContent='$'+(sub-off).toFixed(2);
+      rowT.hidden=false;
+    }else{
+      rowT.hidden=true;
+    }
+    rowD.hidden=false;
+  }
+
+  refresh();
+  setInterval(refresh,600);                       // cart edits re-render Alpine
+  window.addEventListener('storage',refresh);     // other-tab changes
+})();
+</script>
+
+<style>
+.zzup{display:flex;align-items:center;gap:14px;margin-top:14px;padding:14px 16px;border-radius:12px;border:1px solid rgba(var(--cl-accent-rgb,191,64,191),.35);background:linear-gradient(150deg,rgba(16,11,34,.85),rgba(26,12,44,.85))}
+.zzup[hidden]{display:none}
+.zzup__icon{font-size:1.5rem;flex-shrink:0;filter:drop-shadow(0 0 8px rgba(var(--cl-accent-rgb,191,64,191),.7))}
+.zzup__body{flex:1;min-width:0}
+.zzup__t{margin:0 0 3px;font-size:.88rem;font-weight:800;color:#fff}
+.zzup__d{margin:0;font-size:.76rem;line-height:1.45;color:rgba(200,215,240,.7)}
+.zzup__d strong{color:#4ade80}
+.zzup__btn{flex-shrink:0;border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:.78rem;color:#fff;padding:10px 15px;border-radius:9px;background:linear-gradient(135deg,var(--cl-accent,#BF40BF),#7C3AED);box-shadow:0 6px 20px -8px rgba(var(--cl-accent-rgb,191,64,191),.9);transition:transform .15s ease,filter .15s ease;white-space:nowrap}
+.zzup__btn:hover{transform:translateY(-1px);filter:brightness(1.12)}
+.zzup__btn.zzup--done{background:linear-gradient(135deg,#22c55e,#16a34a)}
+@media (max-width:560px){.zzup{flex-wrap:wrap}.zzup__btn{width:100%}}
+</style>
+
+<script>
+/* Day/Week key -> NFA upsell.
+   Show when: cheat product (760665) is in the cart with a variant that is
+   NOT month (1259108) or lifetime (1259110) — i.e. a Day or Week key, ids
+   we don't need to know — AND there are no NFAs (766224) in the cart yet.
+   Month/Lifetime carts are excluded on purpose: they already get the free
+   bundle, and a paid pitch under a free one reads badly.
+   One tap adds 1x NFA 500-1000 (1277466) via the theme's own appCart. */
+(function(){
+  var box=document.getElementById('zz-nfa-upsell');
+  if(!box) return;
+  var btn=box.querySelector('[data-zzup-add]');
+  var CHEAT=760665, MONTH=1259108, LIFE=1259110, NFA_P=766224, NFA_V=1277466;
+
+  function readCart(){
+    try{ var c=JSON.parse(localStorage.getItem('cart')||'[]'); return Array.isArray(c)?c:[]; }
+    catch(e){ return []; }
+  }
+  function shouldShow(cart){
+    var hasSmallKey=false, hasNfa=false;
+    for(var i=0;i<cart.length;i++){
+      var it=cart[i];
+      if(it.productId===CHEAT && it.variantId!==MONTH && it.variantId!==LIFE) hasSmallKey=true;
+      if(it.productId===NFA_P) hasNfa=true;
+    }
+    return hasSmallKey && !hasNfa;
+  }
+  function getCart(){
+    try{
+      var root=document.getElementById('app');
+      if(root&&window.Alpine&&typeof Alpine.$data==='function'){
+        var d=Alpine.$data(root);
+        if(d&&d.appCart&&typeof d.appCart.add==='function') return d.appCart;
+      }
+    }catch(e){}
+    return null;
+  }
+  function refresh(){
+    if(btn.classList.contains('zzup--done')) return; // let the ✓ state linger
+    box.hidden=!shouldShow(readCart());
+  }
+
+  btn.addEventListener('click',function(){
+    var cart=getCart();
+    if(cart){ cart.add(NFA_P,NFA_V,1); }
+    else{
+      // storage fallback, same shape appCart.init() reads
+      try{
+        var c=readCart();
+        c.push({productId:NFA_P,variantId:NFA_V,quantity:1,parentVariantId:null});
+        localStorage.setItem('cart',JSON.stringify(c));
+        window.location.reload();
+        return;
+      }catch(e){ return; }
+    }
+    btn.classList.add('zzup--done');
+    btn.textContent='✓ Added';
+    setTimeout(function(){ box.hidden=true; },1400);
+  });
+
+  refresh();
+  setInterval(refresh,600);
+})();
+</script>

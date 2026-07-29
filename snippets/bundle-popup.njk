@@ -1,0 +1,312 @@
+{# =========================================================================
+   v67: BUNDLE-POPUP redesign — loot-drop treatment.
+   First view of the cheat product page only (localStorage 'zzb_popup_seen').
+   Rarity-styled bundle cards (Rare / Legendary), animated gradient frame,
+   single dominant CTA that scrolls to #zz-bundles. Same honest copy: no
+   invented values, no fake urgency, claim-via-ticket stated.
+   ========================================================================= #}
+<div class="zzp" id="zz-bundle-popup" role="dialog" aria-modal="true" aria-labelledby="zzp-title" hidden>
+  <div class="zzp__backdrop" data-zzp-close></div>
+  <div class="zzp__frame">
+    <div class="zzp__panel">
+      <button type="button" class="zzp__x" data-zzp-close aria-label="Close">×</button>
+      <div class="zzp__glow" aria-hidden="true"></div>
+      <div class="zzp__scan" aria-hidden="true"></div>
+
+      <div class="zzp__ribbon"><span class="zzp__gift">🎁</span> FREE LOOT UNLOCKED</div>
+
+      <h2 id="zzp-title" class="zzp__title">Up to <span class="zzp__big">5 FREE</span><br>NFA accounts with your key</h2>
+      <p class="zzp__sub">Up to <strong class="zzp__val">$12.50 of accounts, on us.</strong> Burn the freebies, keep your main clean.</p>
+
+      <div class="zzp__bundles">
+        <div class="zzp__b zzp__b--rare" data-zzp-add="month" role="button" tabindex="0">
+          <div class="zzp__b-rail" aria-hidden="true"></div>
+          <div class="zzp__b-main">
+            <div class="zzp__b-top">
+              <span class="zzp__b-key">MONTH KEY</span>
+              <span class="zzp__tag zzp__tag--rare">RARE DROP</span>
+            </div>
+            <p class="zzp__b-what"><strong>2× NFA accounts</strong> <span class="zzp__chip">500–1000 hrs</span> <span class="zzp__worth"><s>$5.00</s> FREE</span></p>
+            <p class="zzp__b-extra">+ 3 replacements on each — triple the standard warranty</p>
+            <span class="zzp__b-add">+ Add to cart →</span>
+          </div>
+        </div>
+
+        <div class="zzp__b zzp__b--legend" data-zzp-add="lifetime" role="button" tabindex="0">
+          <div class="zzp__b-rail" aria-hidden="true"></div>
+          <div class="zzp__b-main">
+            <div class="zzp__b-top">
+              <span class="zzp__b-key">LIFETIME KEY</span>
+              <span class="zzp__tag zzp__tag--legend">★ LEGENDARY</span>
+            </div>
+            <p class="zzp__b-what"><strong>5× NFA accounts</strong> <span class="zzp__chip zzp__chip--gold">500–1000 hrs each</span> <span class="zzp__worth zzp__worth--gold"><s>$12.50</s> FREE</span></p>
+            <p class="zzp__b-extra">Five accounts to burn through — more than double the Month bundle</p>
+            <span class="zzp__b-add">+ Add to cart →</span>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="zzp__cta" data-zzp-show>
+        <span class="zzp__cta-shine" aria-hidden="true"></span>
+        ADD LIFETIME BUNDLE →
+      </button>
+      <button type="button" class="zzp__ghost" data-zzp-close>Maybe later</button>
+
+      <p class="zzp__note">Add the key + accounts to your cart together — discount applies automatically, delivers instantly.</p>
+    </div>
+  </div>
+</div>
+
+<style>
+.zzp{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:14px}
+.zzp[hidden]{display:none}
+.zzp__backdrop{position:absolute;inset:0;background:rgba(3,5,14,.82);backdrop-filter:blur(5px)}
+
+/* animated gradient frame */
+.zzp__frame{position:relative;width:min(460px,100%);max-height:calc(100dvh - 28px);display:flex;border-radius:18px;padding:1.5px;background:linear-gradient(120deg,var(--cl-accent,#BF40BF),#7C3AED,#facc15,#4ade80,var(--cl-accent,#BF40BF));background-size:320% 320%;animation:zzp-frame 5s ease infinite,zzp-in .38s cubic-bezier(.3,1.45,.45,1)}
+@keyframes zzp-frame{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes zzp-in{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
+.zzp__panel{position:relative;width:100%;border-radius:16.5px;padding:22px 22px 16px;max-height:calc(100dvh - 31px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:linear-gradient(155deg,#100a22 0%,#180b2e 55%,#1d0f36 100%);overflow:hidden}
+.zzp__glow{position:absolute;inset:-40%;background:radial-gradient(circle at 18% 12%,rgba(var(--cl-accent-rgb,191,64,191),.28),transparent 42%),radial-gradient(circle at 88% 92%,rgba(250,204,21,.1),transparent 38%);pointer-events:none}
+.zzp__scan{position:absolute;top:0;left:-70%;width:50%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.05),transparent);transform:skewX(-16deg);animation:zzp-scan 4.5s ease-in-out infinite;pointer-events:none}
+@keyframes zzp-scan{0%,50%{left:-70%}90%,100%{left:140%}}
+.zzp__panel>*:not(.zzp__glow):not(.zzp__scan){position:relative;z-index:1}
+
+.zzp__x{position:absolute;top:10px;right:12px;width:32px;height:32px;border:none;border-radius:8px;background:rgba(255,255,255,.06);color:rgba(220,230,250,.7);font-size:1.15rem;line-height:1;cursor:pointer;z-index:2;transition:background .15s,color .15s}
+.zzp__x:hover{background:rgba(255,255,255,.14);color:#fff}
+
+.zzp__ribbon{display:inline-flex;align-items:center;gap:8px;margin:0 0 12px;font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;font-weight:700;color:#0a0714;padding:6px 12px;border-radius:99px;background:linear-gradient(90deg,#4ade80,#a3e635);box-shadow:0 4px 18px -6px rgba(74,222,128,.8)}
+.zzp__gift{font-size:.9rem;animation:zzp-bounce 2.4s ease-in-out infinite}
+@keyframes zzp-bounce{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-3px) rotate(4deg)}}
+
+.zzp__title{margin:0 0 4px;font-size:1.55rem;line-height:1.15;font-weight:900;color:#fff;letter-spacing:-.015em}
+.zzp__big{font-size:1.9rem;background:linear-gradient(90deg,#4ade80,#facc15);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 14px rgba(74,222,128,.45))}
+.zzp__sub{margin:0 0 16px;font-size:.82rem;color:rgba(200,215,240,.6)}
+
+.zzp__bundles{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.zzp__b{position:relative;display:flex;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.025);transition:transform .18s ease,border-color .18s ease}
+.zzp__b:hover{transform:translateX(3px)}
+.zzp__b-rail{width:4px;flex-shrink:0}
+.zzp__b--rare .zzp__b-rail{background:linear-gradient(180deg,#7C3AED,var(--cl-accent,#BF40BF))}
+.zzp__b--rare:hover{border-color:rgba(124,58,237,.55)}
+.zzp__b--legend{border-color:rgba(250,204,21,.35);background:linear-gradient(160deg,rgba(250,204,21,.05),rgba(var(--cl-accent-rgb,191,64,191),.06))}
+.zzp__b--legend .zzp__b-rail{background:linear-gradient(180deg,#facc15,#f59e0b)}
+.zzp__b--legend:hover{border-color:rgba(250,204,21,.7)}
+.zzp__b-main{padding:11px 14px;flex:1}
+.zzp__b-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}
+.zzp__b-key{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.12em;font-weight:700;color:#fff}
+.zzp__tag{font-family:'JetBrains Mono',monospace;font-size:.54rem;letter-spacing:.1em;font-weight:700;padding:3px 8px;border-radius:99px}
+.zzp__tag--rare{color:#c4b5fd;border:1px solid rgba(124,58,237,.5);background:rgba(124,58,237,.12)}
+.zzp__tag--legend{color:#fde047;border:1px solid rgba(250,204,21,.5);background:rgba(250,204,21,.1);box-shadow:0 0 14px -4px rgba(250,204,21,.6)}
+.zzp__b-what{margin:0 0 3px;font-size:.86rem;color:rgba(235,242,255,.95)}
+.zzp__b-what strong{color:#4ade80;font-weight:800}
+.zzp__b--legend .zzp__b-what strong{color:#fde047}
+.zzp__chip{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.06em;padding:2px 7px;margin-left:4px;border-radius:6px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(220,230,250,.8);vertical-align:1px}
+.zzp__chip--gold{border-color:rgba(250,204,21,.45);background:rgba(250,204,21,.08);color:#fde047}
+.zzp__val{color:#4ade80;font-weight:800}
+.zzp__worth{display:inline-block;margin-left:5px;font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:800;color:#4ade80;vertical-align:1px}
+.zzp__worth s{color:rgba(200,215,240,.45);font-weight:600;margin-right:3px}
+.zzp__worth--gold{color:#fde047}
+.zzp__b-extra{margin:0;font-size:.7rem;line-height:1.45;color:rgba(200,215,240,.55)}
+.zzp__b[data-zzp-add]{cursor:pointer}
+.zzp__b-add{display:inline-block;margin-top:5px;font-size:.68rem;font-weight:800;color:var(--cl-accent,#BF40BF)}
+.zzp__b--legend .zzp__b-add{color:#fde047}
+.zzp__b.zzp--done{border-color:rgba(34,197,94,.6)!important;background:rgba(34,197,94,.08)!important}
+.zzp__b.zzp--done .zzp__b-add{color:#4ade80}
+
+.zzp__cta{position:relative;display:block;width:100%;border:none;cursor:pointer;font-family:inherit;font-weight:900;font-size:.95rem;letter-spacing:.04em;color:#fff;padding:15px 20px;border-radius:11px;background:linear-gradient(135deg,var(--cl-accent,#BF40BF),#7C3AED);box-shadow:0 10px 34px -10px rgba(var(--cl-accent-rgb,191,64,191),.9);overflow:hidden;transition:transform .15s ease,filter .15s ease}
+.zzp__cta:hover{transform:translateY(-2px);filter:brightness(1.12)}
+.zzp__cta-shine{position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.25),transparent);transform:skewX(-18deg);animation:zzp-cta 2.8s ease-in-out infinite}
+@keyframes zzp-cta{0%,55%{left:-60%}100%{left:140%}}
+.zzp__ghost{display:block;margin:8px auto 0;border:none;background:none;cursor:pointer;font-family:inherit;font-size:.74rem;color:rgba(200,215,240,.45);padding:6px}
+.zzp__ghost:hover{color:rgba(220,230,250,.8)}
+.zzp__note{margin:10px 0 0;text-align:center;font-size:.62rem;line-height:1.5;color:rgba(200,215,240,.38)}
+@media (max-width:430px){
+  .zzp{padding:10px}
+  .zzp__panel{padding:16px 15px 12px}
+  .zzp__ribbon{margin-bottom:9px;font-size:.56rem;padding:5px 10px}
+  .zzp__title{font-size:1.22rem;margin-bottom:3px}
+  .zzp__big{font-size:1.5rem}
+  .zzp__sub{margin-bottom:11px;font-size:.76rem}
+  .zzp__bundles{gap:7px;margin-bottom:11px}
+  .zzp__b-main{padding:9px 11px}
+  .zzp__b-what{font-size:.8rem}
+  .zzp__b-extra{font-size:.64rem}
+  .zzp__cta{padding:13px 16px;font-size:.86rem}
+  .zzp__ghost{margin-top:5px;padding:4px}
+  .zzp__note{margin-top:7px;font-size:.56rem}
+}
+@media (max-height:640px){
+  .zzp__panel{padding:14px 15px 11px}
+  .zzp__ribbon{margin-bottom:8px}
+  .zzp__sub{margin-bottom:9px}
+  .zzp__bundles{gap:6px;margin-bottom:9px}
+  .zzp__b-extra{display:none}
+}
+@media (prefers-reduced-motion:reduce){.zzp__frame,.zzp__scan,.zzp__gift,.zzp__cta-shine{animation:none}}
+</style>
+
+<script>
+/* First-visit-only reveal. Flag set on open so refreshes never re-nag; errs
+   toward NOT showing if localStorage is unavailable. */
+(function(){
+  var pop=document.getElementById('zz-bundle-popup');
+  if(!pop) return;
+  var KEY='zzb_popup_seen';
+  var seen;
+  try{ seen=localStorage.getItem(KEY); }catch(e){ return; }
+  if(seen) return;
+
+  function close(){
+    pop.hidden=true;
+    document.removeEventListener('keydown',onKey);
+  }
+  function onKey(e){ if(e.key==='Escape') close(); }
+
+  /* Tiny self-contained confetti (no libraries). ~80 particles, one burst,
+     canvas removed when done. Skipped entirely under prefers-reduced-motion. */
+  function confetti(){
+    try{
+      if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var c=document.createElement('canvas');
+      c.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:10000';
+      var dpr=Math.min(window.devicePixelRatio||1,2);
+      c.width=innerWidth*dpr; c.height=innerHeight*dpr;
+      document.body.appendChild(c);
+      var g=c.getContext('2d'); g.scale(dpr,dpr);
+      var colors=['#BF40BF','#7C3AED','#4ade80','#facc15','#ffffff'];
+      var N=innerWidth<500?55:85, P=[], i;
+      for(i=0;i<N;i++){
+        var a=(-Math.PI/2)+(Math.random()-.5)*1.5;
+        var v=5+Math.random()*7;
+        P.push({x:innerWidth/2,y:innerHeight*0.32,vx:Math.cos(a)*v,vy:Math.sin(a)*v,
+          s:3+Math.random()*4,r:Math.random()*Math.PI,vr:(Math.random()-.5)*.3,
+          col:colors[i%colors.length],life:1});
+      }
+      var t0=performance.now();
+      (function tick(t){
+        var dt=Math.min((t-t0)/16.7,3); t0=t;
+        g.clearRect(0,0,innerWidth,innerHeight);
+        var alive=false;
+        for(i=0;i<P.length;i++){
+          var p=P[i];
+          p.vy+=0.22*dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.r+=p.vr*dt; p.life-=0.008*dt;
+          if(p.life<=0||p.y>innerHeight+20) continue;
+          alive=true;
+          g.save(); g.translate(p.x,p.y); g.rotate(p.r); g.globalAlpha=Math.max(p.life,0);
+          g.fillStyle=p.col; g.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.62); g.restore();
+        }
+        if(alive){ requestAnimationFrame(tick); } else { c.remove(); }
+      })(t0);
+    }catch(e){}
+  }
+
+  setTimeout(function(){
+    try{ localStorage.setItem(KEY,'1'); }catch(e){ return; }
+    pop.hidden=false;
+    confetti();
+    document.addEventListener('keydown',onKey);
+    var x=pop.querySelector('.zzp__x'); if(x) x.focus();
+  },1100);
+
+  Array.prototype.forEach.call(pop.querySelectorAll('[data-zzp-close]'),function(el){
+    el.addEventListener('click',close);
+  });
+
+  /* Bundle -> cart. Mirrors the SellAuth Bundle Offer rules exactly, so the
+     fixed discount fires by itself at checkout.
+       Month    = 1x month key + 2x NFA 500-1000  -> $5.00 off
+       Lifetime = 1x lifetime  + 5x NFA 500-1000  -> $12.50 off
+     appCart lives inside Alpine.data('app') — not on window — so reach it via
+     Alpine.$data(#app). Fallback writes the same localStorage shape that
+     appCart.init() reads, then opens /cart. IDs are pinned; recreating a
+     product in SellAuth changes them. */
+  var IDS={cheat:760665,month:1259108,lifetime:1259110,nfaProduct:766224,nfa500:1277466};
+  var RECIPE={month:{keyVariant:IDS.month,nfaQty:2},lifetime:{keyVariant:IDS.lifetime,nfaQty:5}};
+
+  function getCart(){
+    try{
+      var root=document.getElementById('app');
+      if(root&&window.Alpine&&typeof Alpine.$data==='function'){
+        var d=Alpine.$data(root);
+        if(d&&d.appCart&&typeof d.appCart.add==='function') return d.appCart;
+      }
+    }catch(e){}
+    return null;
+  }
+
+  function addViaStorage(items){
+    try{
+      var cart=[];
+      try{ cart=JSON.parse(localStorage.getItem('cart')||'[]'); if(!Array.isArray(cart)) cart=[]; }catch(e){ cart=[]; }
+      items.forEach(function(it){
+        var found=null;
+        for(var i=0;i<cart.length;i++){
+          if(cart[i].variantId===it.variantId&&!cart[i].parentVariantId){ found=cart[i]; break; }
+        }
+        if(found){ found.quantity+=it.quantity; }
+        else{ cart.push({productId:it.productId,variantId:it.variantId,quantity:it.quantity,parentVariantId:null}); }
+      });
+      localStorage.setItem('cart',JSON.stringify(cart));
+      return true;
+    }catch(e){ return false; }
+  }
+
+  function addBundle(kind,card){
+    var r=RECIPE[kind];
+    if(!r) return false;
+    var items=[
+      {productId:IDS.cheat, variantId:r.keyVariant, quantity:1},
+      {productId:IDS.nfaProduct, variantId:IDS.nfa500, quantity:r.nfaQty}
+    ];
+    function mark(txt){
+      if(!card) return;
+      card.classList.add('zzp--done');
+      var a=card.querySelector('.zzp__b-add');
+      if(a) a.textContent=txt;
+    }
+    var cart=getCart();
+    if(cart){
+      items.forEach(function(it){ cart.add(it.productId,it.variantId,it.quantity); });
+      mark('✓ Added — opening cart…');
+      return 'live';
+    }
+    if(addViaStorage(items)){
+      mark('✓ Added — opening cart…');
+      return 'storage';
+    }
+    return false;
+  }
+
+  function toBlock(){
+    close();
+    var target=document.getElementById('zz-bundles');
+    if(target) target.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+
+  function handle(kind,card){
+    var res=addBundle(kind,card);
+    if(res==='live'||res==='storage'){
+      // Send them to the cart: seeing the items with the discount applied IS
+      // the confirmation. A brief ✓ beat first so the click feels received.
+      setTimeout(function(){ window.location.href='/cart'; },550);
+    }else{
+      toBlock();
+    }
+  }
+
+  Array.prototype.forEach.call(pop.querySelectorAll('[data-zzp-add]'),function(card){
+    function go(e){
+      e.preventDefault();
+      handle(card.getAttribute('data-zzp-add'),card);
+    }
+    card.addEventListener('click',go);
+    card.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' ') go(e); });
+  });
+
+  var show=pop.querySelector('[data-zzp-show]');
+  if(show) show.addEventListener('click',function(){
+    handle('lifetime',pop.querySelector('[data-zzp-add="lifetime"]'));
+  });
+})();
+</script>

@@ -1,0 +1,762 @@
+{# =============================================================================
+   ZAZA CHEATS — SCRATCH CARD DISCOUNT POPUP
+   Hard-coded, theme-matched, no Nunjucks dynamic data (static HTML + vanilla JS).
+   -----------------------------------------------------------------------------
+   HOW THE DISCOUNT BECOMES REAL:
+   The card reveals a COUPON CODE. That code only gives money off if a matching
+   coupon exists in your SellAuth dashboard. Create 4 coupons (Dashboard →
+   Coupons), one per tier, with the exact codes below, then the discount works
+   at checkout. Edit ZZ_SC_PRIZES below to change codes / percentages / odds.
+   ============================================================================= #}
+
+<div class="zz-sc" id="zz-sc-root" aria-hidden="true">
+  <div class="zz-sc__backdrop" data-zzsc-close></div>
+
+  <div class="zz-sc__modal" role="dialog" aria-modal="true" aria-labelledby="zz-sc-title">
+    <div class="zz-sc__glow" aria-hidden="true"></div>
+
+    <button class="zz-sc__x" type="button" aria-label="Close" data-zzsc-close>&times;</button>
+
+    <div class="zz-sc__urgency" data-zzsc-urgency hidden>
+      <span class="zz-sc__urgency-dot" aria-hidden="true"></span>
+      <span class="zz-sc__urgency-txt">LIMITED DROP &middot; ENDS <b>12 JULY</b></span>
+      <span class="zz-sc__urgency-count" data-zzsc-mini>&mdash;</span>
+    </div>
+
+    <p class="zz-sc__eyebrow">EXCLUSIVE • ZAZA CHEATS</p>
+    <h2 class="zz-sc__title" id="zz-sc-title">Scratch &amp; <span class="zz-sc__grad">Win a Discount</span></h2>
+    <p class="zz-sc__sub" data-zzsc-sub>Scratch to reveal your one-time code &mdash; this drop ends <b>12 July, 23:59 UK</b>.</p>
+
+    <div class="zz-sc__ticket" data-zzsc-ticket>
+      <div class="zz-sc__cardwrap">
+        <div class="zz-sc__card">
+          {# Prize layer (sits underneath the scratch foil) #}
+          <div class="zz-sc__prize" data-zzsc-prize>
+            <span class="zz-sc__prize-glow" aria-hidden="true"></span>
+            <span class="zz-sc__prize-tag">YOU UNLOCKED</span>
+            <span class="zz-sc__prize-amt" data-zzsc-amt>—</span>
+            <span class="zz-sc__prize-lbl">OFF ANY PLAN</span>
+            <span class="zz-sc__prize-exp">VALID UNTIL 12&middot;07&middot;26</span>
+            <span class="zz-sc__prize-shine" aria-hidden="true"></span>
+          </div>
+          {# Scratch foil #}
+          <canvas class="zz-sc__canvas" data-zzsc-canvas tabindex="0" role="button" aria-label="Scratch card. Press Enter to reveal your code."></canvas>
+          <span class="zz-sc__hint" data-zzsc-hint>
+            <i class="fa-solid fa-hand-pointer"></i> Scratch here
+          </span>
+        </div>
+      </div>
+
+      {# Reveal panel (hidden until scratched) — the ticket "stub" #}
+      <div class="zz-sc__claim" data-zzsc-claim hidden>
+        <div class="zz-sc__perf" aria-hidden="true"></div>
+        <div class="zz-sc__stub">
+          <p class="zz-sc__claim-lead">Your one-time code is ready</p>
+          <div class="zz-sc__code" data-zzsc-code-wrap>
+            <span class="zz-sc__code-val" data-zzsc-code>CODE</span>
+            <button class="zz-sc__copy" type="button" data-zzsc-copy aria-label="Copy code">
+              <i class="fa-regular fa-copy"></i><span>Copy</span>
+            </button>
+          </div>
+          <div class="zz-sc__timer" data-zzsc-deadline hidden>
+            <p class="zz-sc__timer-lead"><i class="fa-solid fa-bolt"></i> <span data-zzsc-timer-lead>Offer ends in</span></p>
+            <div class="zz-sc__timer-tiles" data-zzsc-tiles>
+              <div class="zz-sc__tile"><span class="zz-sc__tile-num" data-zzsc-d>00</span><span class="zz-sc__tile-lbl">DAYS</span></div>
+              <div class="zz-sc__tile"><span class="zz-sc__tile-num" data-zzsc-h>00</span><span class="zz-sc__tile-lbl">HRS</span></div>
+              <div class="zz-sc__tile"><span class="zz-sc__tile-num" data-zzsc-m>00</span><span class="zz-sc__tile-lbl">MIN</span></div>
+              <div class="zz-sc__tile zz-sc__tile--sec"><span class="zz-sc__tile-num" data-zzsc-s>00</span><span class="zz-sc__tile-lbl">SEC</span></div>
+            </div>
+            <p class="zz-sc__timer-note">Your code dies at 23:59 UK on 12 July &mdash; no extensions</p>
+          </div>
+          <a class="zz-sc__cta" href="/product/zaza-rust-private-cheat" data-zzsc-cta>
+            <span class="zz-sc__cta-shine" aria-hidden="true"></span>
+            <span class="zz-sc__cta-txt">Claim my <b data-zzsc-cta-pct>10%</b> off</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+          <div class="zz-sc__trust">
+            <span><i class="fa-solid fa-bolt"></i> Instant delivery</span>
+            <span><i class="fa-solid fa-tag"></i> Applies at checkout</span>
+            <span><i class="fa-solid fa-shield-halved"></i> One-time use</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <canvas class="zz-sc__confetti" data-zzsc-confetti aria-hidden="true"></canvas>
+
+    <button class="zz-sc__decline" type="button" data-zzsc-close>No, I don&rsquo;t want a discount</button>
+  </div>
+</div>
+
+<style>
+.zz-sc{--v:#BF40BF;--b:#7C3AED;--g:#22c55e;--a:#eab308;
+  --panel:#0c0e1c;--void:#06070f;--edge:#1b1f3a;--ink:#e7ecff;--mut:rgba(231,236,255,.6);
+  position:fixed;inset:0;z-index:1090;display:none;align-items:center;justify-content:center;
+  padding:16px;font-family:'Satoshi','Inter',system-ui,sans-serif}
+.zz-sc.is-open{display:flex}
+.zz-sc *{box-sizing:border-box}
+
+.zz-sc__backdrop{position:absolute;inset:0;background:rgba(3,4,10,.72);
+  backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);opacity:0;transition:opacity .35s ease}
+.zz-sc.is-open .zz-sc__backdrop{opacity:1}
+
+.zz-sc__modal{position:relative;width:100%;max-width:430px;border:1px solid transparent;border-radius:24px;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(191,64,191,.16), transparent 60%),
+    linear-gradient(180deg,#0e1226,#070912) padding-box,
+    linear-gradient(135deg, rgba(191,64,191,.55), rgba(124,58,237,.35) 42%, rgba(27,31,58,.6)) border-box;
+  padding:30px 26px 26px;text-align:center;overflow:hidden;
+  box-shadow:0 50px 130px -30px rgba(0,0,0,.92), 0 0 70px -22px rgba(191,64,191,.35);
+  transform:translateY(22px) scale(.94);opacity:0;
+  transition:transform .5s cubic-bezier(.16,1,.3,1),opacity .4s ease}
+.zz-sc__modal::before{content:"";position:absolute;inset:-45% -15% auto -15%;height:75%;pointer-events:none;z-index:0;
+  background:conic-gradient(from 0deg at 50% 50%, rgba(191,64,191,0), rgba(191,64,191,.28), rgba(124,58,237,.22), rgba(191,64,191,0));
+  filter:blur(46px);opacity:.7;animation:zzscAurora 9s linear infinite}
+@keyframes zzscAurora{to{transform:rotate(360deg)}}
+.zz-sc.is-open .zz-sc__modal{transform:none;opacity:1}
+
+.zz-sc__glow{position:absolute;top:-140px;left:50%;width:30rem;height:18rem;
+  transform:translateX(-50%);pointer-events:none;
+  background:radial-gradient(circle,rgba(191,64,191,.28),transparent 70%);
+  filter:blur(50px);animation:zzscGlow 6s ease-in-out infinite}
+@keyframes zzscGlow{0%,100%{opacity:.7}50%{opacity:1}}
+
+.zz-sc__x{position:absolute;top:12px;right:14px;z-index:3;width:34px;height:34px;
+  border:1px solid var(--edge);background:rgba(255,255,255,.03);color:var(--mut);
+  border-radius:10px;font-size:20px;line-height:1;cursor:pointer;transition:.2s}
+.zz-sc__x:hover{color:#fff;border-color:rgba(191,64,191,.4);background:rgba(191,64,191,.12)}
+
+.zz-sc__eyebrow{position:relative;font-family:'JetBrains Mono',ui-monospace,monospace;
+  color:var(--v);font-size:.66rem;letter-spacing:.22em;margin:0 0 .5rem}
+.zz-sc__title{position:relative;font-size:1.7rem;font-weight:800;letter-spacing:-.02em;
+  line-height:1.1;margin:0;color:var(--ink)}
+.zz-sc__grad{background:linear-gradient(90deg,var(--v),var(--b));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.zz-sc__sub{position:relative;color:var(--mut);font-size:.86rem;line-height:1.5;
+  margin:.55rem auto 1.25rem;max-width:20rem}
+
+/* ===== coupon ticket ===== */
+.zz-sc__ticket{position:relative;width:min(320px,100%);margin:0 auto;border-radius:20px;
+  background:linear-gradient(180deg,#15193a,#0a0d20);
+  border:1px solid rgba(191,64,191,.30);overflow:hidden;
+  box-shadow:0 24px 60px -22px rgba(191,64,191,.55),0 0 0 1px rgba(255,255,255,.03) inset}
+
+.zz-sc__cardwrap{position:relative;display:block}
+.zz-sc__card{position:relative;width:100%;height:172px;overflow:hidden}
+.zz-sc__prize{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;
+  background:radial-gradient(120% 90% at 50% 25%,#241a52 0%,#120f2c 55%,#0a0b1a 100%);
+  transform:scale(.9);opacity:0;
+  transition:transform .55s cubic-bezier(.16,1,.3,1),opacity .45s}
+.zz-sc__card.is-revealed .zz-sc__prize{transform:scale(1);opacity:1}
+
+.zz-sc__prize-glow{position:absolute;top:42%;left:50%;width:230px;height:230px;
+  transform:translate(-50%,-50%);pointer-events:none;
+  background:radial-gradient(circle,rgba(191,64,191,.45),transparent 62%);
+  filter:blur(14px);opacity:0;transition:opacity .6s ease .15s}
+.zz-sc__card.is-revealed .zz-sc__prize-glow{opacity:1}
+
+.zz-sc__prize-tag{position:relative;font-family:'JetBrains Mono',monospace;font-size:.6rem;
+  letter-spacing:.26em;color:rgba(231,236,255,.65)}
+.zz-sc__prize-amt{position:relative;font-size:4.1rem;font-weight:900;line-height:.95;letter-spacing:-.04em;
+  background:linear-gradient(180deg,#ffffff,#f0c8ff 55%,var(--v));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 4px 22px rgba(191,64,191,.55))}
+.zz-sc__prize-lbl{position:relative;font-family:'JetBrains Mono',monospace;font-size:.62rem;
+  letter-spacing:.3em;color:rgba(231,236,255,.7)}
+
+/* one-time diagonal light sweep on reveal */
+.zz-sc__prize-shine{position:absolute;top:0;left:-75%;width:55%;height:100%;pointer-events:none;
+  background:linear-gradient(115deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-18deg)}
+.zz-sc__card.is-revealed .zz-sc__prize-shine{animation:zzscSweep 1.1s ease-out .25s 1}
+@keyframes zzscSweep{0%{left:-75%}100%{left:130%}}
+
+.zz-sc__canvas{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:none;z-index:2}
+.zz-sc__canvas:active{cursor:grabbing}
+.zz-sc__card.is-revealed .zz-sc__canvas{opacity:0;transition:opacity .5s ease;pointer-events:none}
+.zz-sc__hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:3;
+  display:inline-flex;align-items:center;gap:6px;pointer-events:none;
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.1em;
+  color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.6);animation:zzscHint 1.8s ease-in-out infinite}
+.zz-sc__card.is-revealed .zz-sc__hint{display:none}
+@keyframes zzscHint{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-4px)}}
+
+/* ===== stub (revealed) ===== */
+.zz-sc__claim{position:relative;animation:zzscClaim .5s cubic-bezier(.16,1,.3,1) both}
+@keyframes zzscClaim{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.zz-sc__perf{position:relative;height:0;border-top:2px dashed rgba(191,64,191,.4)}
+.zz-sc__perf::before,.zz-sc__perf::after{content:"";position:absolute;top:50%;width:20px;height:20px;
+  border-radius:50%;background:#0a0c1a;transform:translateY(-50%)}
+.zz-sc__perf::before{left:-11px}.zz-sc__perf::after{right:-11px}
+.zz-sc__stub{padding:18px 20px 20px}
+.zz-sc__claim-lead{margin:0 0 .7rem;font-size:.8rem;font-weight:600;color:rgba(231,236,255,.8)}
+
+.zz-sc__code{display:flex;align-items:center;justify-content:space-between;gap:0;
+  border:1.5px dashed rgba(191,64,191,.55);border-radius:12px;overflow:hidden;
+  background:rgba(191,64,191,.08);max-width:280px;margin:0 auto;
+  animation:zzscCodePulse 2.4s ease-in-out infinite}
+@keyframes zzscCodePulse{0%,100%{box-shadow:0 0 0 0 rgba(191,64,191,0)}50%{box-shadow:0 0 18px 1px rgba(191,64,191,.3)}}
+.zz-sc__code-val{flex:1;padding:.8rem 1rem;font-family:'JetBrains Mono',monospace;
+  font-size:1.15rem;font-weight:800;letter-spacing:.14em;color:#fff;white-space:nowrap;text-align:left}
+.zz-sc__copy{display:inline-flex;align-items:center;gap:6px;padding:.8rem 1rem;border:0;
+  border-left:1.5px dashed rgba(191,64,191,.55);background:rgba(191,64,191,.18);color:#fff;
+  font-family:'JetBrains Mono',monospace;font-size:.74rem;font-weight:700;cursor:pointer;transition:.2s}
+.zz-sc__copy:hover{background:rgba(191,64,191,.32)}
+.zz-sc__copy.is-done{color:var(--g);background:rgba(34,197,94,.18)}
+
+.zz-sc__cta{position:relative;display:flex;align-items:center;justify-content:center;gap:9px;
+  margin:1rem auto 0;max-width:280px;padding:.95rem 1.5rem;overflow:hidden;
+  background:linear-gradient(135deg,var(--v),var(--b));border-radius:13px;color:#fff;
+  font-weight:800;font-size:1rem;text-decoration:none;
+  box-shadow:0 14px 34px -10px rgba(191,64,191,.75);
+  transition:filter .25s,transform .25s,box-shadow .25s}
+.zz-sc__cta:hover{filter:brightness(1.08);transform:translateY(-2px);color:#fff;
+  box-shadow:0 18px 42px -10px rgba(191,64,191,.9)}
+.zz-sc__cta i{transition:transform .25s}
+.zz-sc__cta:hover i{transform:translateX(3px)}
+.zz-sc__cta-txt b{font-weight:900}
+.zz-sc__cta-shine{position:absolute;top:0;left:-80%;width:50%;height:100%;pointer-events:none;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.45),transparent);
+  transform:skewX(-20deg);animation:zzscCtaShine 2.8s ease-in-out infinite}
+@keyframes zzscCtaShine{0%{left:-80%}45%{left:140%}100%{left:140%}}
+
+.zz-sc__trust{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;margin-top:.85rem}
+.zz-sc__trust span{display:inline-flex;align-items:center;gap:5px;
+  font-size:.68rem;color:rgba(231,236,255,.55)}
+.zz-sc__trust i{color:var(--v);font-size:.66rem}
+
+.zz-sc__timer{margin:1rem auto 0;text-align:center}
+.zz-sc__timer-lead{margin:0 0 .5rem;display:flex;align-items:center;justify-content:center;gap:6px;
+  font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#f2c94c}
+.zz-sc__timer-lead i{color:#f2c94c}
+.zz-sc__timer-tiles{display:flex;justify-content:center;gap:7px}
+.zz-sc__tile{display:flex;flex-direction:column;align-items:center;gap:3px;
+  min-width:52px;padding:8px 6px 6px;border-radius:11px;
+  background:linear-gradient(180deg,rgba(234,179,8,.14),rgba(234,179,8,.05));
+  border:1px solid rgba(234,179,8,.28);
+  box-shadow:0 6px 16px -8px rgba(234,179,8,.4),inset 0 1px 0 rgba(255,255,255,.06)}
+.zz-sc__tile-num{font-family:'JetBrains Mono',monospace;font-size:1.45rem;font-weight:800;
+  line-height:1;color:#fff;font-variant-numeric:tabular-nums;
+  text-shadow:0 0 14px rgba(234,179,8,.45)}
+.zz-sc__tile-lbl{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.16em;
+  color:rgba(242,201,76,.85)}
+.zz-sc__tile--sec .zz-sc__tile-num{animation:zzscTick 1s steps(1) infinite}
+@keyframes zzscTick{0%,100%{opacity:1}50%{opacity:.82}}
+
+/* < 24h: tighter amber. < 1h: red + pulse (set via JS classes) */
+.zz-sc__timer--soon .zz-sc__tile{background:linear-gradient(180deg,rgba(234,88,12,.18),rgba(234,88,12,.06));
+  border-color:rgba(234,88,12,.4)}
+.zz-sc__timer--soon .zz-sc__tile-lbl{color:rgba(251,146,60,.9)}
+.zz-sc__timer--soon .zz-sc__timer-lead,.zz-sc__timer--soon .zz-sc__timer-lead i{color:#fb923c}
+.zz-sc__timer--final .zz-sc__tile{background:linear-gradient(180deg,rgba(239,68,68,.2),rgba(239,68,68,.07));
+  border-color:rgba(239,68,68,.45);animation:zzscFinal 1s ease-in-out infinite}
+.zz-sc__timer--final .zz-sc__tile-num{text-shadow:0 0 16px rgba(239,68,68,.6)}
+.zz-sc__timer--final .zz-sc__timer-lead,.zz-sc__timer--final .zz-sc__timer-lead i{color:#ff7676}
+.zz-sc__timer--final .zz-sc__tile-lbl{color:rgba(255,138,138,.9)}
+@keyframes zzscFinal{0%,100%{box-shadow:0 6px 16px -8px rgba(239,68,68,.5)}
+  50%{box-shadow:0 6px 22px -6px rgba(239,68,68,.85)}}
+.zz-sc__timer--ended .zz-sc__timer-tiles{display:none}
+.zz-sc__timer--ended .zz-sc__timer-note{display:none}
+.zz-sc__timer--ended .zz-sc__timer-lead,.zz-sc__timer--ended .zz-sc__timer-lead i{color:#ff7676}
+
+/* ===== pre-scratch urgency bar ===== */
+.zz-sc__urgency{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:10px;
+  margin:-6px auto 14px;padding:7px 14px;max-width:fit-content;border-radius:999px;
+  border:1px solid rgba(234,179,8,.35);background:linear-gradient(90deg,rgba(234,179,8,.12),rgba(234,179,8,.05));
+  font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.66rem;letter-spacing:.1em;color:#fbbf24;
+  animation:zzscUrgIn .5s .15s cubic-bezier(.16,1,.3,1) both}
+@keyframes zzscUrgIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.zz-sc__urgency-dot{width:7px;height:7px;border-radius:50%;background:#fbbf24;flex-shrink:0;
+  box-shadow:0 0 8px rgba(251,191,36,.9);animation:zzscUrgPulse 1.4s ease-in-out infinite}
+@keyframes zzscUrgPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.75)}}
+.zz-sc__urgency-txt b{color:#fff;font-weight:800}
+.zz-sc__urgency-count{padding:2px 8px;border-radius:7px;background:rgba(0,0,0,.35);
+  border:1px solid rgba(234,179,8,.25);color:#fff;font-weight:800;font-variant-numeric:tabular-nums;min-width:88px;text-align:center}
+.zz-sc__urgency--soon{border-color:rgba(234,88,12,.5);color:#fb923c;
+  background:linear-gradient(90deg,rgba(234,88,12,.16),rgba(234,88,12,.06))}
+.zz-sc__urgency--soon .zz-sc__urgency-dot{background:#fb923c;box-shadow:0 0 8px rgba(251,146,60,.9)}
+.zz-sc__urgency--final{border-color:rgba(239,68,68,.55);color:#ff8a8a;
+  background:linear-gradient(90deg,rgba(239,68,68,.18),rgba(239,68,68,.07));
+  animation:zzscUrgShake 3s ease-in-out infinite}
+@keyframes zzscUrgShake{0%,92%,100%{transform:none}94%{transform:translateX(-2px)}96%{transform:translateX(2px)}98%{transform:translateX(-1px)}}
+.zz-sc__urgency--final .zz-sc__urgency-dot{background:#ef4444;box-shadow:0 0 10px rgba(239,68,68,1)}
+
+/* expiry chip printed on the ticket face */
+.zz-sc__prize-exp{margin-top:7px;padding:3px 10px;border-radius:999px;
+  border:1px solid rgba(234,179,8,.35);background:rgba(234,179,8,.1);
+  font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.56rem;letter-spacing:.16em;color:#fbbf24}
+
+/* CTA heartbeat — slow, stronger under 24h */
+.zz-sc__cta{animation:zzscHeart 2.8s ease-in-out infinite}
+@keyframes zzscHeart{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
+.zz-sc--soon .zz-sc__cta{animation-duration:1.6s}
+
+.zz-sc__timer-note{margin:.6rem 0 0;font-size:.66rem;color:rgba(231,236,255,.42);letter-spacing:.01em}
+
+.zz-sc__confetti{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4}
+
+.zz-sc__decline{position:relative;z-index:5;display:block;margin:14px auto 0;padding:4px 8px;
+  background:none;border:0;cursor:pointer;
+  color:rgba(231,236,255,.38);font-size:.74rem;font-family:inherit;
+  text-decoration:underline;text-underline-offset:2px;transition:color .2s}
+.zz-sc__decline:hover{color:rgba(231,236,255,.62)}
+
+@media(max-width:380px){
+  .zz-sc__card{height:150px}
+  .zz-sc__prize-amt{font-size:3.3rem}
+  .zz-sc__title{font-size:1.45rem}
+  .zz-sc__code-val{font-size:1rem;letter-spacing:.1em}
+}
+@media(prefers-reduced-motion:reduce){
+  .zz-sc__glow,.zz-sc__hint,.zz-sc__prize-shine,.zz-sc__cta-shine,.zz-sc__code,
+  .zz-sc__modal::before,.zz-sc__tile--sec .zz-sc__tile-num,.zz-sc__timer--final .zz-sc__tile,
+  .zz-sc__urgency,.zz-sc__urgency-dot,.zz-sc__urgency--final,.zz-sc__cta{animation:none}
+  .zz-sc__modal,.zz-sc__backdrop{transition:opacity .2s ease}
+}
+
+/* ===== LUXURY REVEAL PASS ===== */
+.zz-sc__prize-amt{background:linear-gradient(115deg,#fff8e1 0%,#ffe9a3 22%,#f5c451 46%,#fff3c4 60%,#e8b53a 82%,#fff8e1 100%);
+  background-size:220% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:zzscGold 3.2s linear infinite;text-shadow:0 0 34px rgba(245,196,81,.28)}
+@keyframes zzscGold{to{background-position:220% center}}
+.zz-sc__card.is-revealed .zz-sc__prize-amt{animation:zzscGold 3.2s linear infinite, zzscPop .7s cubic-bezier(.2,1.6,.3,1) both}
+@keyframes zzscPop{0%{transform:scale(.6);filter:blur(4px)}60%{transform:scale(1.12)}100%{transform:scale(1);filter:none}}
+.zz-sc__modal.is-won{animation:zzscWon 1.1s cubic-bezier(.22,1,.36,1) both}
+@keyframes zzscWon{0%{box-shadow:0 50px 130px -30px rgba(0,0,0,.92),0 0 0 0 rgba(245,196,81,.7)}
+  45%{box-shadow:0 50px 130px -30px rgba(0,0,0,.92),0 0 90px -6px rgba(245,196,81,.5)}
+  100%{box-shadow:0 50px 130px -30px rgba(0,0,0,.92),0 0 70px -22px rgba(191,64,191,.35)}}
+.zz-sc__copy.is-done{background:rgba(34,197,94,.16);border-color:rgba(34,197,94,.5);color:#86efac}
+.zz-sc__cta{position:relative;overflow:hidden}
+.zz-sc__cta:hover{transform:translateY(-2px);filter:brightness(1.08);transition:transform .25s cubic-bezier(.22,1,.36,1),filter .25s}
+.zz-sc__tile-num{font-variant-numeric:tabular-nums}
+.zz-sc__tile--sec .zz-sc__tile-num{color:#f5c451}
+</style>
+
+<script>
+(function () {
+  // ===========================================================================
+  // CONFIG — edit prizes, codes and odds here.
+  // `code` MUST match a coupon you create in SellAuth (Dashboard → Coupons).
+  // `weight` = relative odds (higher = more common). They don't need to sum to 100.
+  // ===========================================================================
+  var ZZ_SC_PRIZES = [
+    { pct: 10, code: '10OFF', weight: 1 }
+  ];
+  var COOKIE_PRIZE = 'zz_sc_prize';   // remembers which prize the visitor won
+  var COOKIE_SEEN  = 'zz_sc_seen';    // stops it auto-popping on every page
+  var SEEN_DAYS    = 365;             // once per visitor: don't auto-open again after it's shown
+  var PRIZE_DAYS   = 30;              // how long the won code is remembered
+  var OPEN_DELAY   = 2200;            // ms after page load before it appears
+  var REVEAL_AT    = 0.55;            // % scratched (0-1) before auto-reveal
+
+  // ===========================================================================
+  // OFFER DEADLINE — a single REAL expiry, shown as a live countdown.
+  // It is the SAME instant for every visitor (not a fake resetting timer).
+  // Set it in UTC ('Z'). 22:59:59Z = 23:59:59 UK time during British Summer Time.
+  // IMPORTANT: set the SAME expiry (12 July 2026, 23:59 UK) on the 10OFF coupon
+  // in SellAuth so it's actually enforced — the timer promises the code dies,
+  // so the code must actually die. Set to '' to remove the countdown entirely.
+  // ===========================================================================
+  var ZZ_SC_DEADLINE = '2026-07-12T22:59:59Z';
+
+  var root = document.getElementById('zz-sc-root');
+  if (!root) return;
+  var hasCookies = (typeof Cookies !== 'undefined');
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var el = {
+    modal:   root.querySelector('.zz-sc__modal'),
+    card:    root.querySelector('.zz-sc__card'),
+    canvas:  root.querySelector('[data-zzsc-canvas]'),
+    amt:     root.querySelector('[data-zzsc-amt]'),
+    claim:   root.querySelector('[data-zzsc-claim]'),
+    codeEl:  root.querySelector('[data-zzsc-code]'),
+    copy:    root.querySelector('[data-zzsc-copy]'),
+    cta:     root.querySelector('[data-zzsc-cta]'),
+    ctaPct:  root.querySelector('[data-zzsc-cta-pct]'),
+    sub:     root.querySelector('[data-zzsc-sub]'),
+    hint:    root.querySelector('[data-zzsc-hint]'),
+    confetti:root.querySelector('[data-zzsc-confetti]'),
+    deadline:root.querySelector('[data-zzsc-deadline]'),
+    urgency: root.querySelector('[data-zzsc-urgency]'),
+    mini:    root.querySelector('[data-zzsc-mini]'),
+    dlLead:  root.querySelector('[data-zzsc-timer-lead]'),
+    dlD:     root.querySelector('[data-zzsc-d]'),
+    dlH:     root.querySelector('[data-zzsc-h]'),
+    dlM:     root.querySelector('[data-zzsc-m]'),
+    dlS:     root.querySelector('[data-zzsc-s]')
+  };
+
+  // ---- cookie helpers (fall back to no-op if js-cookie missing) -------------
+  // ---- storage helpers: localStorage first (reliable), cookie fallback ------
+  function getC(k){
+    try {
+      var raw = window.localStorage.getItem(k);
+      if(raw !== null){
+        var o = JSON.parse(raw);
+        if(o && o.exp && Date.now() > o.exp){ window.localStorage.removeItem(k); return null; }
+        return o ? o.v : null;
+      }
+    } catch(e){}
+    if(hasCookies){ var c = Cookies.get(k); return (c == null ? null : c); }
+    return null;
+  }
+  function setC(k,v,d){
+    var exp = Date.now() + d*86400000;
+    try { window.localStorage.setItem(k, JSON.stringify({v:String(v),exp:exp})); return; } catch(e){}
+    if(hasCookies){ Cookies.set(k,v,{expires:d,sameSite:'Lax'}); }
+  }
+
+  // ---- pick a prize (weighted) ----------------------------------------------
+  function rollPrize(){
+    var total = ZZ_SC_PRIZES.reduce(function(s,p){return s+p.weight;},0);
+    var r = Math.random()*total;
+    for (var i=0;i<ZZ_SC_PRIZES.length;i++){ r-=ZZ_SC_PRIZES[i].weight; if(r<=0) return ZZ_SC_PRIZES[i]; }
+    return ZZ_SC_PRIZES[ZZ_SC_PRIZES.length-1];
+  }
+  function findByPct(pct){
+    for (var i=0;i<ZZ_SC_PRIZES.length;i++){ if(ZZ_SC_PRIZES[i].pct===pct) return ZZ_SC_PRIZES[i]; }
+    return null;
+  }
+
+  var prize = null;     // resolved before opening
+  var revealed = false;
+
+  function setPrize(p){
+    prize = p;
+    el.amt.textContent = p.pct + '%';
+    el.codeEl.textContent = p.code;
+    if(el.ctaPct) el.ctaPct.textContent = p.pct + '%';
+  }
+
+  // copy helper (used by Copy button + CTA)
+  function copyCode(){
+    var code = prize ? prize.code : '';
+    if(!code) return;
+    try {
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(code); }
+      else { var t=document.createElement('textarea'); t.value=code; document.body.appendChild(t);
+        t.select(); document.execCommand('copy'); document.body.removeChild(t); }
+    } catch(e){}
+  }
+  // friction reducer: clicking the CTA copies the code, then follows the link
+  if(el.cta){ el.cta.addEventListener('click', function(){ copyCode(); }); }
+
+  // ---- scratch canvas -------------------------------------------------------
+  // Progress is tracked with a geometric coverage grid (NOT getImageData),
+  // so it can't throw on the live site and reveal can never get stuck.
+  var ctx, dpr, scratching=false, started=false;
+  var cw=300, ch=150, cols=14, rows=7, cells=null, marked=0;
+
+  function cssSize(){
+    var r = el.card.getBoundingClientRect();
+    return { w:(r.width || el.card.clientWidth || 300),
+             h:(r.height || el.card.clientHeight || 150) };
+  }
+  function initCanvas(){
+    try {
+      var s = cssSize(); cw=s.w; ch=s.h;
+      dpr = window.devicePixelRatio || 1;
+      el.canvas.width  = Math.max(1, Math.round(cw*dpr));
+      el.canvas.height = Math.max(1, Math.round(ch*dpr));
+      el.canvas.style.width = cw+'px'; el.canvas.style.height = ch+'px';
+      ctx = el.canvas.getContext('2d');
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      var g = ctx.createLinearGradient(0,0,cw,ch);
+      g.addColorStop(0,'#3a2a55'); g.addColorStop(.45,'#7C3AED');
+      g.addColorStop(.55,'#BF40BF'); g.addColorStop(1,'#3a2a55');
+      ctx.fillStyle = g; ctx.fillRect(0,0,cw,ch);
+      for (var i=0;i<70;i++){
+        ctx.fillStyle='rgba(255,255,255,'+(Math.random()*0.12)+')';
+        ctx.beginPath();
+        ctx.arc(Math.random()*cw,Math.random()*ch,Math.random()*1.6,0,7);
+        ctx.fill();
+      }
+      // branded watermark
+      try {
+        ctx.save();
+        ctx.translate(cw/2,ch/2); ctx.rotate(-0.32);
+        ctx.font='800 20px "JetBrains Mono", ui-monospace, monospace';
+        ctx.fillStyle='rgba(255,255,255,0.05)'; ctx.textAlign='center';
+        for(var ry=-ch; ry<ch; ry+=32){
+          for(var rx=-cw; rx<cw; rx+=128){ ctx.fillText('ZAZA', rx, ry); }
+        }
+        ctx.restore();
+      } catch(e){}
+      // diagonal sheen
+      var sh=ctx.createLinearGradient(0,0,cw,ch);
+      sh.addColorStop(0,'rgba(255,255,255,0)'); sh.addColorStop(.47,'rgba(255,255,255,0.13)');
+      sh.addColorStop(.53,'rgba(255,255,255,0.13)'); sh.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.fillStyle=sh; ctx.fillRect(0,0,cw,ch);
+      ctx.globalCompositeOperation='destination-out';
+    } catch(err){ ctx=null; } // if canvas fails, tap-to-reveal still works
+    cells = new Array(cols*rows); marked=0; started=false;
+  }
+  function ptFromEvent(e){
+    var rect = el.canvas.getBoundingClientRect();
+    var t = (e.touches && e.touches[0]) ? e.touches[0]
+          : (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0] : e;
+    return { x:t.clientX-rect.left, y:t.clientY-rect.top };
+  }
+  function markCell(x,y){
+    if(!cells) return;
+    var cx=Math.floor(x/cw*cols), cy=Math.floor(y/ch*rows), ix, iy, idx;
+    for(ix=cx-1; ix<=cx+1; ix++) for(iy=cy-1; iy<=cy+1; iy++){
+      if(ix>=0&&ix<cols&&iy>=0&&iy<rows){
+        idx=iy*cols+ix; if(!cells[idx]){ cells[idx]=1; marked++; }
+      }
+    }
+  }
+  function coverage(){ return cells ? marked/cells.length : 0; }
+  function scratchAt(p){
+    if(ctx){ ctx.beginPath(); ctx.arc(p.x,p.y,22,0,Math.PI*2); ctx.fill(); }
+    markCell(p.x,p.y);
+    if(!started){ started=true; if(el.hint) el.hint.style.display='none'; }
+  }
+  function onMove(e){ if(!scratching) return; if(e.cancelable) e.preventDefault();
+    scratchAt(ptFromEvent(e)); if(coverage()>REVEAL_AT) reveal(); }
+  function onDown(e){ scratching=true; scratchAt(ptFromEvent(e)); }
+  function onUp(){ if(started && coverage()>0.3) reveal(); scratching=false; }
+
+  el.canvas.addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); reveal(); }
+  });
+  el.canvas.addEventListener('mousedown',onDown);
+  el.canvas.addEventListener('mousemove',onMove);
+  window.addEventListener('mouseup',onUp);
+  el.canvas.addEventListener('touchstart',onDown,{passive:true});
+  el.canvas.addEventListener('touchmove',onMove,{passive:false});
+  el.canvas.addEventListener('touchend',onUp);
+  // tapping also scratches a blob (mobile taps + desktop clicks)
+  el.canvas.addEventListener('click',function(e){
+    scratchAt(ptFromEvent(e)); if(coverage()>0.3) reveal(); });
+  el.canvas.addEventListener('dblclick',reveal);
+
+  // ---- reveal ---------------------------------------------------------------
+  function reveal(){
+    if(revealed) return; revealed=true;
+    clearTimeout(fallbackTimer);
+    if(el.hint){ el.hint.onclick=null; el.hint.style.display='none'; }
+    el.card.classList.add('is-revealed');
+    el.modal.classList.add('is-won');                       /* gold win-flash ring */
+    el.claim.hidden=false;
+    if(el.sub) el.sub.textContent='Here\u2019s your code \u2014 enjoy the discount.';
+    setC(COOKIE_PRIZE, String(prize.pct), PRIZE_DAYS);
+    /* persist the claimed code for the cart-page reminder — expiry capped at
+       the REAL drop deadline, so the reminder dies the moment the code does */
+    (function(){
+      var days = PRIZE_DAYS;
+      if(dlMs){ days = Math.min(days, Math.max(0, (dlMs - Date.now()) / 86400000)); }
+      if(days > 0){ setC('zz_sc_claim', JSON.stringify({code: prize.code, pct: prize.pct}), days); }
+    })();
+    startDeadline();
+    try{ if(navigator.vibrate) navigator.vibrate([16,50,60]); }catch(e){}
+    /* hand them the code: auto-copy so checkout is zero-effort */
+    copyCode();
+    var lead=root.querySelector('.zz-sc__claim-lead');
+    if(lead) lead.innerHTML='<i class="fa-solid fa-circle-check" style="color:#4ade80"></i> Code copied \u2014 it\u2019s yours';
+    if(el.copy){ el.copy.classList.add('is-done'); var cs=el.copy.querySelector('span'); if(cs) cs.textContent='Copied'; }
+    if(!reduceMotion){ burstConfetti(); setTimeout(burstConfetti, 520); }
+  }
+
+  // ---- deadline countdown ---------------------------------------------------
+  var dlTimer=null, dlMs=0;
+  (function(){ var t = ZZ_SC_DEADLINE ? new Date(ZZ_SC_DEADLINE).getTime() : 0;
+    dlMs = (t && !isNaN(t)) ? t : 0; })();
+  function isExpired(){ return dlMs>0 && Date.now() > dlMs; }
+  function pad(n){ return (n<10?'0':'')+n; }
+  function renderDeadline(){
+    var diff = dlMs ? (dlMs - Date.now()) : -1;
+    // --- pre-scratch urgency bar (visible from open) ---
+    if(el.urgency){
+      if(diff<=0){ el.urgency.hidden=true; }
+      else {
+        var hl = diff/3600000, s0=Math.floor(diff/1000);
+        var d0=Math.floor(s0/86400), h0=Math.floor((s0%86400)/3600), m0=Math.floor((s0%3600)/60), sec0=s0%60;
+        if(el.mini) el.mini.textContent = d0>0 ? (d0+'d '+pad(h0)+'h '+pad(m0)+'m') : (pad(h0)+':'+pad(m0)+':'+pad(sec0));
+        el.urgency.classList.toggle('zz-sc__urgency--soon', hl<24 && hl>=1);
+        el.urgency.classList.toggle('zz-sc__urgency--final', hl<1);
+        root.classList.toggle('zz-sc--soon', hl<24);
+      }
+    }
+    // --- post-reveal stub timer ---
+    if(!el.deadline) return;
+    if(!dlMs){ el.deadline.hidden=true; return; }       // no deadline configured
+    diff = dlMs - Date.now();
+    if(diff<=0){
+      el.deadline.classList.remove('zz-sc__timer--soon','zz-sc__timer--final');
+      el.deadline.classList.add('zz-sc__timer--ended');
+      if(el.dlLead) el.dlLead.textContent='This offer has ended';
+      clearInterval(dlTimer); dlTimer=null; return;
+    }
+    var s=Math.floor(diff/1000), d=Math.floor(s/86400);
+    var h=Math.floor((s%86400)/3600), m=Math.floor((s%3600)/60), sec=s%60;
+    if(el.dlD) el.dlD.textContent=pad(d);
+    if(el.dlH) el.dlH.textContent=pad(h);
+    if(el.dlM) el.dlM.textContent=pad(m);
+    if(el.dlS) el.dlS.textContent=pad(sec);
+    // honest urgency escalation based on real time left
+    var hoursLeft = diff/3600000;
+    el.deadline.classList.toggle('zz-sc__timer--soon', hoursLeft<24 && hoursLeft>=1);
+    el.deadline.classList.toggle('zz-sc__timer--final', hoursLeft<1);
+    if(el.dlLead){
+      el.dlLead.textContent = hoursLeft<1 ? 'Last chance — ends in'
+                            : hoursLeft<24 ? 'Hurry, ends today in' : 'Offer ends in';
+    }
+  }
+  function startDeadline(){
+    if(!el.deadline || !dlMs) return;
+    el.deadline.hidden=false;
+    renderDeadline();
+    clearInterval(dlTimer);
+    dlTimer=setInterval(renderDeadline,1000);
+  }
+  function stopDeadline(){ clearInterval(dlTimer); dlTimer=null; }
+
+  // ---- copy -----------------------------------------------------------------
+  el.copy.addEventListener('click',function(){
+    var code=prize.code;
+    var done=function(){
+      el.copy.classList.add('is-done');
+      el.copy.querySelector('span').textContent='Copied';
+      setTimeout(function(){ el.copy.classList.remove('is-done');
+        el.copy.querySelector('span').textContent='Copy'; },1800);
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(code).then(done).catch(done);
+    } else {
+      var t=document.createElement('textarea'); t.value=code; document.body.appendChild(t);
+      t.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(t); done();
+    }
+  });
+
+  // ---- confetti (lightweight, self-contained) -------------------------------
+  function burstConfetti(){
+    var c=el.confetti, x=c.getContext('2d');
+    var rect=el.modal.getBoundingClientRect();
+    c.width=rect.width; c.height=rect.height;
+    var colors=['#BF40BF','#7C3AED','#eab308','#22c55e','#ffffff'];
+    var parts=[];
+    for(var i=0;i<140;i++){
+      parts.push({x:c.width/2,y:c.height*0.42,
+        vx:(Math.random()-0.5)*9,vy:(Math.random()*-9)-3,
+        g:0.22+Math.random()*0.12,s:4+Math.random()*5,
+        rot:Math.random()*6,vr:(Math.random()-0.5)*0.3,
+        col:colors[(Math.random()*colors.length)|0],life:0});
+    }
+    var t0=performance.now();
+    (function frame(now){
+      var dt=Math.min(2,(now-t0)/16); t0=now;
+      x.clearRect(0,0,c.width,c.height);
+      var alive=false;
+      for(var i=0;i<parts.length;i++){
+        var p=parts[i]; p.life+=dt;
+        p.vy+=p.g*dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.rot+=p.vr*dt;
+        if(p.y<c.height+20 && p.life<160){
+          alive=true;
+          x.save(); x.translate(p.x,p.y); x.rotate(p.rot);
+          x.globalAlpha=Math.max(0,1-p.life/160); x.fillStyle=p.col;
+          x.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6); x.restore();
+        }
+      }
+      if(alive) requestAnimationFrame(frame); else x.clearRect(0,0,c.width,c.height);
+    })(t0);
+  }
+
+  // ---- open / close ---------------------------------------------------------
+  var fallbackTimer=null;
+  function armFallback(){
+    clearTimeout(fallbackTimer);
+    fallbackTimer = setTimeout(function(){
+      if(revealed || !el.hint) return;
+      el.hint.innerHTML = '<i class="fa-solid fa-hand-pointer"></i> Tap to reveal';
+      el.hint.style.display = '';
+      el.hint.style.pointerEvents = 'auto';
+      el.hint.style.cursor = 'pointer';
+      el.hint.onclick = reveal;
+    }, 4500);
+  }
+  function open(){
+    setC(COOKIE_SEEN,'1',SEEN_DAYS);   // mark seen on open → only auto-opens once per visitor
+    // returning winner? show their existing prize, already revealed.
+    var saved = getC(COOKIE_PRIZE);
+    var savedPrize = saved ? findByPct(parseInt(saved,10)) : null;
+    if(savedPrize){
+      setPrize(savedPrize);
+      root.classList.add('is-open'); root.setAttribute('aria-hidden','false');
+      requestAnimationFrame(function(){ initCanvas(); reveal(); });
+    } else {
+      setPrize(rollPrize());
+      root.classList.add('is-open'); root.setAttribute('aria-hidden','false');
+      requestAnimationFrame(initCanvas);
+      armFallback();
+    }
+    document.addEventListener('keydown',onKey);
+    // focus management: remember opener, move focus into the dialog
+    lastFocus = document.activeElement;
+    var xBtn = root.querySelector('.zz-sc__x');
+    if(xBtn) xBtn.focus();
+    // fire up the urgency bar + ticker immediately (pre-scratch)
+    if(dlMs && !isExpired()){
+      if(el.urgency) el.urgency.hidden=false;
+      renderDeadline();
+      clearInterval(dlTimer); dlTimer=setInterval(renderDeadline,1000);
+    }
+  }
+  var lastFocus = null;
+  function close(){
+    root.classList.remove('is-open'); root.setAttribute('aria-hidden','true');
+    setC(COOKIE_SEEN,'1',SEEN_DAYS);
+    stopDeadline();
+    document.removeEventListener('keydown',onKey);
+    // return focus to whatever opened the dialog
+    if(lastFocus && lastFocus.focus){ try{ lastFocus.focus(); }catch(e){} lastFocus=null; }
+  }
+  function onKey(e){
+    if(e.key==='Escape'){ close(); return; }
+    // simple focus trap: keep Tab cycling inside the open dialog
+    if(e.key==='Tab' && el.modal){
+      var f = el.modal.querySelectorAll('button,[href],canvas[tabindex],input,select,textarea,[tabindex]:not([tabindex="-1"])');
+      var vis = Array.prototype.filter.call(f, function(n){ return n.offsetParent !== null && !n.disabled; });
+      if(!vis.length) return;
+      var first = vis[0], last = vis[vis.length-1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    }
+  }
+
+  root.querySelectorAll('[data-zzsc-close]').forEach(function(b){
+    b.addEventListener('click',close);
+  });
+
+  // expose a manual trigger (e.g. a "Get my discount" button: onclick="zzScratchOpen()")
+  window.zzScratchOpen = function(){ revealed=false; el.card.classList.remove('is-revealed');
+    el.claim.hidden=true; if(el.hint) el.hint.style.display=''; started=false; open(); };
+  // optional: override the live deadline at runtime (used for previews/testing)
+  window.zzScratchSetDeadline = function(ms){ dlMs = ms; renderDeadline(); };
+
+  // ---- auto-open on first page view -----------------------------------------
+  if(!getC(COOKIE_SEEN) && !isExpired()){
+    setTimeout(open, OPEN_DELAY);
+  }
+
+  // ---- exit-intent second chance (desktop only) ------------------------------
+  // Resurfaces the SAME real offer with the SAME real deadline exactly once,
+  // when the cursor heads for the tab bar. A returning winner sees their
+  // existing code again (a reminder), not a re-roll. Never fires after the
+  // drop expires, never on touch devices, never on instant bounces.
+  var EXIT_KEY = 'zz_sc_exit', pageT0 = Date.now();
+  if(!isExpired() && !getC(EXIT_KEY) &&
+     window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+    document.addEventListener('mouseout', function onExit(e){
+      if(e.clientY > 0 || e.relatedTarget) return;      // only when leaving via the top edge
+      if(Date.now() - pageT0 < 8000) return;            // give the page a fair chance first
+      if(root.classList.contains('is-open')) return;
+      if(isExpired()) return;
+      document.removeEventListener('mouseout', onExit);
+      setC(EXIT_KEY, '1', 14);
+      open();
+    });
+  }
+})();
+</script>

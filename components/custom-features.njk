@@ -1,0 +1,995 @@
+<section class="cf-section">
+  <style>
+    .cf-section {
+      padding: 80px 0;
+      background: var(--primary-background-color, #06091a);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cf-glows {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .cf-glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+    }
+
+    .cf-glow--left {
+      width: 220px;
+      height: 220px;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 0%;
+      background: radial-gradient(circle, rgba(124,58,237,0.2) 0%, transparent 70%);
+    }
+
+    .cf-glow--right {
+      width: 260px;
+      height: 260px;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 0%;
+      background: radial-gradient(circle, rgba(191,64,191,0.18) 0%, transparent 70%);
+    }
+
+    .cf-container {
+      position: relative;
+      z-index: 1;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .cf-badge-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .cf-badge {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 999px;
+      padding: 0.38rem 1.05rem 0.38rem 0.75rem;
+      color: rgba(255,255,255,0.72);
+      font-size: 0.79rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .cf-badge::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 15%; right: 15%;
+      height: 6px;
+      background: linear-gradient(90deg, transparent, rgba(180,210,255,0.18) 40%, rgba(180,210,255,0.18) 60%, transparent);
+      border-radius: 999px;
+      filter: blur(4px);
+      pointer-events: none;
+    }
+
+    .cf-badge::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 15%; right: 15%;
+      height: 6px;
+      background: linear-gradient(90deg, transparent, rgba(180,210,255,0.12) 40%, rgba(180,210,255,0.12) 60%, transparent);
+      border-radius: 999px;
+      filter: blur(4px);
+      pointer-events: none;
+    }
+
+    .cf-badge span {
+      font-size: 0.79rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: rgba(255,255,255,0.72);
+    }
+
+    .cf-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: 300px 340px;
+      gap: 10px;
+    }
+
+    .cf-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: #0a0e22;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: border-color 0.3s cubic-bezier(0.16,1,0.3,1), background 0.3s cubic-bezier(0.16,1,0.3,1), transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .cf-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 20%; right: 20%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(180,210,255,0.2) 50%, transparent);
+      opacity: 0;
+      transition: opacity 0.3s cubic-bezier(0.16,1,0.3,1);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .cf-card::after {
+      content: '';
+      position: absolute;
+      left: 50%; bottom: -40%;
+      width: 140%; height: 80%;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse at center, rgba(191,64,191,0.22) 0%, rgba(124,58,237,0.10) 30%, rgba(191,64,191,0.03) 60%, transparent 75%);
+      opacity: 0;
+      transition: opacity 0.45s cubic-bezier(0.16,1,0.3,1);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .cf-card:hover { background: #0c1128; border-color: rgba(180,210,255,0.18); transform: translateY(-5px); box-shadow: 0 24px 50px -22px rgba(191,64,191,0.5); }
+    .cf-card:hover::before { opacity: 1; }
+    .cf-card:hover::after { opacity: 1; }
+
+    /* premium traveling gradient border on hover */
+    .cf-card__border {
+      position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+      background: conic-gradient(from var(--cf-angle, 0deg), transparent 0deg, rgba(191,64,191,0.0) 60deg, rgba(191,64,191,0.9) 110deg, rgba(191,64,191,0.9) 130deg, transparent 200deg, transparent 360deg);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+      opacity: 0; transition: opacity 0.4s ease; pointer-events: none; z-index: 3;
+    }
+    .cf-card:hover .cf-card__border { opacity: 1; animation: cfBorderSpin 2.6s linear infinite; }
+    @property --cf-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+    @keyframes cfBorderSpin { to { --cf-angle: 360deg; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cf-card:hover .cf-card__border { animation: none; }
+    }
+
+    /* scroll-reveal: only active once JS marks the section ready (cards visible by default otherwise) */
+    .cf-reveal-ready .cf-card { opacity: 0; transform: translateY(26px); }
+    .cf-reveal-ready .cf-card.cf-in { opacity: 1; transform: translateY(0); }
+    .cf-card.cf-in:hover { transform: translateY(-5px); }
+    .cf-card-0.cf-in { transition-delay: 0ms; }
+    .cf-card-1.cf-in { transition-delay: 80ms; }
+    .cf-card-2.cf-in { transition-delay: 160ms; }
+    .cf-card-3.cf-in { transition-delay: 240ms; }
+    .cf-card-4.cf-in { transition-delay: 320ms; }
+    @media (prefers-reduced-motion: reduce) {
+      .cf-reveal-ready .cf-card { opacity: 1 !important; transform: none !important; }
+    }
+
+    .cf-showcase {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      min-height: 0;
+      z-index: 1;
+    }
+
+    .cf-caption {
+      flex-shrink: 0;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      background: rgba(6,9,26,0.82);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      position: relative;
+      z-index: 2;
+    }
+
+    .cf-caption__line {
+      font-size: 0.82rem;
+      margin: 0;
+      color: rgba(210,225,255,0.62);
+      line-height: 1.5;
+    }
+
+    .cf-caption__line strong {
+      font-weight: 700;
+      color: #fff;
+      margin-right: 5px;
+    }
+
+    .cf-card-0 { grid-column: 1 / span 3; grid-row: 1; }
+    .cf-card-1 { grid-column: 4 / span 3; grid-row: 1; }
+    .cf-card-2 { grid-column: 7 / span 4; grid-row: 1; }
+    .cf-card-3 { grid-column: 1 / span 6; grid-row: 2; }
+    .cf-card-4 { grid-column: 7 / span 4; grid-row: 2; }
+
+    .cf-chat {
+      display: flex;
+      flex-direction: column;
+      padding: 22px 18px;
+      gap: 14px;
+      height: 100%;
+      box-sizing: border-box;
+      justify-content: center;
+    }
+
+    .cf-chat__msg { display: flex; align-items: flex-end; gap: 9px; }
+    .cf-chat__msg--user { flex-direction: row-reverse; }
+
+    .cf-chat__avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .cf-chat__avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .cf-chat__avatar--support {
+      background: rgba(191,64,191,0.18);
+      border-color: rgba(191,64,191,0.28);
+      color: #BF40BF;
+      font-size: 0.72rem;
+    }
+
+    .cf-chat__bubble {
+      max-width: 78%;
+      padding: 9px 13px;
+      border-radius: 13px;
+      font-size: 0.77rem;
+      line-height: 1.5;
+    }
+
+    .cf-chat__bubble--user {
+      background: rgba(191,64,191,0.2);
+      border: 1px solid rgba(191,64,191,0.28);
+      color: #d0d5ff;
+      border-bottom-right-radius: 3px;
+    }
+
+    .cf-chat__bubble--support {
+      background: rgba(255,255,255,0.055);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.7);
+      border-bottom-left-radius: 3px;
+    }
+
+    .cf-nofees {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .cf-nofees__corner {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 90%;
+      height: 70%;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px 0 0 0;
+      background: rgba(8,11,28,0.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-sizing: border-box;
+      display: flex;
+      align-items: flex-end;
+      padding: 18px 0 18px 20px;
+      overflow: hidden;
+    }
+
+    .cf-nofees__corner-text {
+      font-size: clamp(2.8rem, 7vw, 4.2rem);
+      font-weight: 900;
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      white-space: nowrap;
+      color: rgba(255,255,255,0.09);
+      position: relative;
+      -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 85%);
+      mask-image: linear-gradient(to right, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 85%);
+    }
+
+    @media (max-width: 900px) {
+      .cf-nofees__corner-text {
+        font-size: clamp(3.5rem, 14vw, 5.5rem);
+      }
+    }
+
+    @media (max-width: 540px) {
+      .cf-nofees__corner-text {
+        font-size: clamp(3.2rem, 18vw, 5rem);
+      }
+    }
+
+    .cf-shield-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      position: relative;
+    }
+
+    .cf-shield__rings {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .cf-shield__ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(191,64,191,0.45);
+      width: 110px; height: 110px;
+      opacity: 0;
+      animation: cf-ring-out 5s ease-out infinite;
+      animation-fill-mode: forwards;
+    }
+
+    .cf-shield__ring:nth-child(1) { animation-delay: 0s; }
+    .cf-shield__ring:nth-child(2) { animation-delay: 1.65s; }
+    .cf-shield__ring:nth-child(3) { animation-delay: 3.3s; }
+
+    @keyframes cf-ring-out {
+      0%   { width: 110px; height: 110px; opacity: 0.5; border-color: rgba(191,64,191,0.45); }
+      100% { width: 360px; height: 360px; opacity: 0; border-color: rgba(191,64,191,0); }
+    }
+
+    .cf-shield__core {
+      width: 110px; height: 110px;
+      background: rgba(191,64,191,0.1);
+      border: 1px solid rgba(191,64,191,0.35);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 0 48px rgba(191,64,191,0.16);
+    }
+
+    .cf-shield__core i { font-size: 2.6rem; color: #BF40BF; }
+
+    .cf-cheat-wrap {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+
+    .cf-cheat {
+      width: 100%;
+      max-width: 500px;
+      background: rgba(6,9,26,0.9);
+      border: 1px solid rgba(191,64,191,0.2);
+      border-radius: 12px 12px 0 0;
+      overflow: hidden;
+      display: flex;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 8px 48px rgba(0,0,0,0.55);
+      height: 85%;
+      position: relative;
+      z-index: 5;
+      pointer-events: auto;
+    }
+    /* guarantee the interactive controls always receive clicks — but ONLY in the
+       active menu, so hidden panels stacked on top can't steal the clicks */
+    .cf-cheat__sidebar, .cf-cheat__panel, .cf-cheat__nav-btn,
+    .cf-cheat__menu.active,
+    .cf-cheat__menu.active .cf-cheat__toggle,
+    .cf-cheat__menu.active .cf-cheat__slider { pointer-events: auto; }
+    .cf-cheat__menu:not(.active),
+    .cf-cheat__menu:not(.active) * { pointer-events: none !important; }
+    .cf-cheat__nav-btn, .cf-cheat__toggle { position: relative; z-index: 6; }
+
+    .cf-cheat__callout {
+      position: absolute;
+      top: 14px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .cf-cheat__callout-text {
+      font-size: 0.78rem;
+      color: rgba(200,220,255,0.55);
+      line-height: 1.35;
+      text-align: right;
+    }
+
+    .cf-cheat__callout-arrow {
+      width: 48px;
+      height: auto;
+      opacity: 0.5;
+      transform: scaleX(-1);
+      margin-right: 30px;
+    }
+
+    .cf-cheat__sidebar {
+      width: 52px;
+      background: rgba(0,0,0,0.28);
+      border-right: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 0;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .cf-cheat__nav-btn {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.28);
+      transition: all 0.16s ease;
+      font-size: 0.9rem;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .cf-cheat__nav-btn:hover { color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.05); }
+    .cf-cheat__nav-btn.active { background: rgba(191,64,191,0.18); border: none; color: #BF40BF; }
+    .cf-cheat__nav-btn:focus { outline: none; }
+    .cf-cheat__nav-btn:focus-visible { outline: none; box-shadow: none; }
+    .cf-cheat__nav-btn:active,
+    .cf-cheat__nav-btn.active:active { background: rgba(191,64,191,0.18); color: #BF40BF; }
+
+    .cf-cheat__panel {
+      flex: 1;
+      padding: 14px 16px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .cf-cheat__menu {
+      position: absolute;
+      inset: 14px 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+    }
+
+    .cf-cheat__menu.active { opacity: 1; pointer-events: all; }
+
+    .cf-cheat__menu-title {
+      font-size: 0.63rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.22);
+      margin-bottom: 10px;
+    }
+
+    .cf-cheat__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 0;
+      gap: 10px;
+    }
+
+    .cf-cheat__row-label { font-size: 0.77rem; color: rgba(255,255,255,0.55); flex-shrink: 0; }
+
+    .cf-cheat__toggle {
+      width: 32px; height: 18px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 9px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      border: none;
+      flex-shrink: 0;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .cf-cheat__toggle:focus { outline: none; }
+    .cf-cheat__toggle:active { opacity: 0.85; }
+
+    .cf-cheat__toggle::after {
+      content: '';
+      position: absolute;
+      width: 13px; height: 13px;
+      background: rgba(255,255,255,0.42);
+      border-radius: 50%;
+      top: 2.5px; left: 2.5px;
+      transition: all 0.2s ease;
+    }
+
+    .cf-cheat__toggle.on { background: rgba(191,64,191,0.65); }
+    .cf-cheat__toggle.on::after { left: 16.5px; background: #fff; }
+
+    .cf-cheat__slider-inline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cf-cheat__slider-val { font-size: 0.68rem; color: #BF40BF; font-weight: 600; flex-shrink: 0; width: 34px; text-align: right; }
+
+    .cf-cheat__slider {
+      -webkit-appearance: none;
+      appearance: none;
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #BF40BF 0%, #7C3AED var(--p, 50%), rgba(255,255,255,0.12) var(--p, 50%), rgba(255,255,255,0.12) 100%);
+      outline: none; cursor: pointer;
+      min-width: 0;
+      touch-action: none;
+    }
+
+    .cf-cheat__slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 15px; height: 15px;
+      border-radius: 50%;
+      background: #fff;
+      cursor: grab;
+      border: 3px solid #BF40BF;
+      box-shadow: 0 0 0 4px rgba(191,64,191,0.18), 0 2px 6px rgba(0,0,0,0.4);
+      transition: box-shadow 0.18s ease, transform 0.12s ease;
+      margin-top: 0;
+    }
+    .cf-cheat__slider::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.15); box-shadow: 0 0 0 6px rgba(191,64,191,0.26), 0 2px 8px rgba(0,0,0,0.5); }
+    .cf-cheat__slider::-moz-range-thumb {
+      width: 15px; height: 15px;
+      border-radius: 50%;
+      background: #fff;
+      cursor: grab;
+      border: 3px solid #BF40BF;
+      box-shadow: 0 0 0 4px rgba(191,64,191,0.18);
+    }
+    .cf-cheat__slider::-moz-range-track { height: 6px; border-radius: 3px; background: transparent; }
+    .cf-cheat__slider:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 6px rgba(191,64,191,0.32); }
+
+    .cf-payments-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+      gap: 10px;
+      overflow: hidden;
+      padding: 20px 0;
+      box-sizing: border-box;
+    }
+
+    .cf-marquee-row { overflow: hidden; width: 100%; }
+
+    .cf-marquee-track {
+      display: flex;
+      gap: 10px;
+      width: max-content;
+      will-change: transform;
+    }
+
+    .cf-marquee-track--rtl { animation: cf-scroll-rtl 22s linear infinite; }
+    .cf-marquee-track--ltr { animation: cf-scroll-ltr 22s linear infinite; }
+
+    @keyframes cf-scroll-rtl { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @keyframes cf-scroll-ltr { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+    .cf-payment-pill {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 11px 18px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+
+    .cf-payment-pill img { height: 28px; width: auto; object-fit: contain; }
+    .cf-payment-pill span { font-size: 0.82rem; color: rgba(200,220,255,0.45); font-weight: 500; }
+
+    @media (max-width: 900px) {
+      .cf-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .cf-card-0 { grid-column: 1; grid-row: auto; min-height: 260px; }
+      .cf-card-1 { grid-column: 2; grid-row: auto; min-height: 320px; }
+      .cf-card-2 { grid-column: 1 / -1; grid-row: auto; min-height: 260px; }
+      .cf-card-3 { grid-column: 1 / -1; grid-row: auto; min-height: 340px; }
+      .cf-card-4 { grid-column: 1 / -1; grid-row: auto; min-height: 260px; }
+    }
+
+    @media (max-width: 540px) {
+      .cf-grid { grid-template-columns: 1fr; }
+      .cf-card-0, .cf-card-1 { grid-column: 1; }
+      .cf-card-1 { min-height: 340px; }
+      .cf-cheat__callout-arrow { display: none; }
+    }
+  </style>
+
+  <div class="cf-glows" aria-hidden="true">
+    <div class="cf-glow cf-glow--left"></div>
+    <div class="cf-glow cf-glow--right"></div>
+  </div>
+  <div class="cf-container">
+
+    <div class="cf-badge-wrap">
+      <div class="cf-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 18 18" style="flex-shrink:0">
+          <path d="M16.786,7.192c-.358,.77-1.133,1.308-2.036,1.308-1.241,0-2.25-1.009-2.25-2.25v-.25h-.25c-1.241,0-2.25-1.009-2.25-2.25,0-1.108,.807-2.027,1.864-2.211-.891-.343-1.854-.539-2.864-.539C4.589,1,1,4.589,1,9s3.589,8,8,8,8-3.589,8-8c0-.623-.079-1.226-.214-1.808Zm-11.786,1.808c0-.552,.448-1,1-1s1,.448,1,1-.448,1-1,1Zm6.884,3.16c-.631,.996-1.709,1.59-2.884,1.59s-2.253-.595-2.884-1.59c-.222-.35-.117-.813,.232-1.035,.349-.221,.813-.118,1.035,.232,.354,.559,.958,.893,1.616,.893s1.262-.334,1.616-.893c.222-.35,.684-.454,1.035-.232,.35,.222,.454,.685,.232,1.035Zm.116-2.16c-.552,0-1-.448-1-1s.448-1,1-1,1,.448,1,1-.448,1-1,1Z" fill="rgba(180,210,255,0.8)"/>
+          <path d="M17.25,3h-1.75V1.25c0-.414-.336-.75-.75-.75s-.75,.336-.75,.75v1.75h-1.75c-.414,0-.75,.336-.75,.75s.336,.75,.75,.75h1.75v1.75c0,.414,.336,.75,.75,.75s.75-.336,.75-.75v-1.75h1.75c.414,0,.75-.336,.75-.75s-.336-.75-.75-.75Z" fill="rgba(180,210,255,0.5)"/>
+        </svg>
+        <span>Why Us</span>
+      </div>
+    </div>
+
+    {% if properties.title %}
+    <div class="section-title">
+      <h2>{{ properties.title | renderString }}</h2>
+    </div>
+    {% endif %}
+    {% if properties.subtitle %}
+    <div class="section-subtitle">
+      <p>{{ properties.subtitle | renderString }}</p>
+    </div>
+    {% endif %}
+
+    <div class="cf-grid">
+
+      <div class="cf-card cf-card-0">
+        <span class="cf-card__border" aria-hidden="true"></span>
+        <div class="cf-showcase">
+          <div class="cf-chat">
+            <div class="cf-chat__msg cf-chat__msg--user">
+              <div class="cf-chat__avatar">
+                <img src="https://cdn.discordapp.com/avatars/731884626741690398/8063b40feffd9d5e6f1ea335063e7c94.png?size=256" alt="" loading="lazy" decoding="async">
+              </div>
+              <div class="cf-chat__bubble cf-chat__bubble--user">Hey, I'm having an issue with my product — it won't activate.</div>
+            </div>
+            <div class="cf-chat__msg">
+              <div class="cf-chat__avatar cf-chat__avatar--support">
+                <i class="fas fa-headphones"></i>
+              </div>
+              <div class="cf-chat__bubble cf-chat__bubble--support">No worries — drop your order ID and we'll have you activated in a couple of minutes. 👍</div>
+            </div>
+          </div>
+        </div>
+        <div class="cf-caption">
+          <p class="cf-caption__line"><strong>Instant Support:</strong> Real people, real fast — not bots, not days.</p>
+        </div>
+      </div>
+
+      <div class="cf-card cf-card-1">
+        <span class="cf-card__border" aria-hidden="true"></span>
+        <div class="cf-showcase">
+          <div class="cf-nofees">
+            <div class="cf-nofees__corner">
+              <div class="cf-nofees__corner-text">NO HIDDEN<br>FEES.</div>
+            </div>
+          </div>
+        </div>
+        <div class="cf-caption">
+          <p class="cf-caption__line"><strong>Transparent Pricing:</strong> The price you see is the price you pay. No hidden fees.</p>
+        </div>
+      </div>
+
+      <div class="cf-card cf-card-2">
+        <span class="cf-card__border" aria-hidden="true"></span>
+        <div class="cf-showcase">
+          <div class="cf-shield-wrap">
+            <div class="cf-shield__rings">
+              <div class="cf-shield__ring"></div>
+              <div class="cf-shield__ring"></div>
+              <div class="cf-shield__ring"></div>
+            </div>
+            <div class="cf-shield__core">
+              <i class="fas fa-shield-halved"></i>
+            </div>
+          </div>
+        </div>
+        <div class="cf-caption">
+          <p class="cf-caption__line"><strong>Secure &amp; Reliable:</strong> Built in-house, updated constantly. Check the live status anytime.</p>
+        </div>
+      </div>
+
+      <div class="cf-card cf-card-3">
+        <span class="cf-card__border" aria-hidden="true"></span>
+        <div class="cf-showcase">
+          <div class="cf-cheat-wrap">
+            <div class="cf-cheat__callout">
+              <span class="cf-cheat__callout-text">Try to interact!</span>
+              <img class="cf-cheat__callout-arrow" src="https://i.postimg.cc/TwmSwbFk/image.png" alt="" loading="lazy" decoding="async">
+            </div>
+            <div class="cf-cheat">
+              <div class="cf-cheat__sidebar">
+                <button class="cf-cheat__nav-btn active" data-menu="esp" title="ESP">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="cf-cheat__nav-btn" data-menu="aimbot" title="Aimbot">
+                  <i class="fas fa-crosshairs"></i>
+                </button>
+                <button class="cf-cheat__nav-btn" data-menu="visuals" title="Visuals">
+                  <i class="fas fa-palette"></i>
+                </button>
+                <button class="cf-cheat__nav-btn" data-menu="settings" title="Settings">
+                  <i class="fas fa-gear"></i>
+                </button>
+              </div>
+              <div class="cf-cheat__panel">
+                <div class="cf-cheat__menu active" data-panel="esp">
+                  <div class="cf-cheat__menu-title">ESP</div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Player ESP</span>
+                    <button class="cf-cheat__toggle on"></button>
+                  </div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Box ESP</span>
+                    <button class="cf-cheat__toggle on"></button>
+                  </div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Health Bar</span>
+                    <button class="cf-cheat__toggle on"></button>
+                  </div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Name Tags</span>
+                    <button class="cf-cheat__toggle on"></button>
+                  </div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Distance</span>
+                    <div class="cf-cheat__slider-inline">
+                      <input type="range" class="cf-cheat__slider" id="cf-esp-dist" min="50" max="500" value="250">
+                      <span class="cf-cheat__slider-val" id="cf-esp-dist-val">250m</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="cf-cheat__menu" data-panel="aimbot">
+                  <div class="cf-cheat__menu-title">Aimbot</div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Aimbot</span>
+                    <button class="cf-cheat__toggle on"></button>
+                  </div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Silent Aim</span>
+                    <button class="cf-cheat__toggle"></button>
+                  </div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Visible Only</span>
+                    <button class="cf-cheat__toggle on"></button>
+                  </div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">FOV</span>
+                    <div class="cf-cheat__slider-inline">
+                      <input type="range" class="cf-cheat__slider" id="cf-aim-fov" min="10" max="180" value="85">
+                      <span class="cf-cheat__slider-val" id="cf-aim-fov-val">85°</span>
+                    </div>
+                  </div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Smoothness</span>
+                    <div class="cf-cheat__slider-inline">
+                      <input type="range" class="cf-cheat__slider" id="cf-aim-smooth" min="1" max="10" value="4">
+                      <span class="cf-cheat__slider-val" id="cf-aim-smooth-val">4</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="cf-cheat__menu" data-panel="visuals">
+                  <div class="cf-cheat__menu-title">Visuals</div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Chams</span>
+                    <button class="cf-cheat__toggle on"></button>
+                  </div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Crosshair</span>
+                    <button class="cf-cheat__toggle on"></button>
+                  </div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Radar</span>
+                    <button class="cf-cheat__toggle"></button>
+                  </div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">FOV Ring</span>
+                    <button class="cf-cheat__toggle on"></button>
+                  </div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Opacity</span>
+                    <div class="cf-cheat__slider-inline">
+                      <input type="range" class="cf-cheat__slider" id="cf-vis-opacity" min="10" max="100" value="80">
+                      <span class="cf-cheat__slider-val" id="cf-vis-opacity-val">80%</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="cf-cheat__menu" data-panel="settings">
+                  <div class="cf-cheat__menu-title">Settings</div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Anti-Detection</span>
+                    <button class="cf-cheat__toggle on"></button>
+                  </div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Stream Proof</span>
+                    <button class="cf-cheat__toggle on"></button>
+                  </div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Auto-Update</span>
+                    <button class="cf-cheat__toggle on"></button>
+                  </div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">Spoofer</span>
+                    <button class="cf-cheat__toggle on"></button>
+                  </div>
+                  <div class="cf-cheat__row">
+                    <span class="cf-cheat__row-label">FPS Cap</span>
+                    <div class="cf-cheat__slider-inline">
+                      <input type="range" class="cf-cheat__slider" id="cf-fps-cap" min="60" max="240" value="144">
+                      <span class="cf-cheat__slider-val" id="cf-fps-cap-val">144</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cf-caption">
+          <p class="cf-caption__line"><strong>Easy to Use:</strong> Download, enter your key, load in under a minute. Guide included.</p>
+        </div>
+      </div>
+
+      <div class="cf-card cf-card-4">
+        <span class="cf-card__border" aria-hidden="true"></span>
+        <div class="cf-showcase">
+          <div class="cf-payments-wrap">
+            <div class="cf-marquee-row">
+              <div class="cf-marquee-track cf-marquee-track--rtl">
+                {% if properties.show_visa != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/XJngwvXN/image.png" alt="Visa" loading="lazy" decoding="async" width="20" height="20"><span>Visa</span></div>{% endif %}
+                {% if properties.show_mastercard != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/KY272YPD/image.png" alt="Mastercard" loading="lazy" decoding="async" width="20" height="20"><span>Mastercard</span></div>{% endif %}
+                {% if properties.show_applepay != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/kMpx5sNC/image.png" alt="Apple Pay" loading="lazy" decoding="async" width="20" height="20"><span>Apple Pay</span></div>{% endif %}
+                {% if properties.show_paypal != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/zG36g06z/image.png" alt="PayPal" loading="lazy" decoding="async" width="20" height="20"><span>PayPal</span></div>{% endif %}
+                {% if properties.show_stripe != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/y6PbpMzF/image.png" alt="Stripe" loading="lazy" decoding="async" width="20" height="20"><span>Stripe</span></div>{% endif %}
+                {% if properties.show_litecoin != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/G2vZptNX/image.png" alt="Litecoin" loading="lazy" decoding="async" width="20" height="20"><span>Litecoin</span></div>{% endif %}
+                {% if properties.show_bitcoin != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/yxPtF57f/image.png" alt="Bitcoin" loading="lazy" decoding="async" width="20" height="20"><span>Bitcoin</span></div>{% endif %}
+                {% if properties.show_visa != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/XJngwvXN/image.png" alt="Visa" loading="lazy" decoding="async" width="20" height="20"><span>Visa</span></div>{% endif %}
+                {% if properties.show_mastercard != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/KY272YPD/image.png" alt="Mastercard" loading="lazy" decoding="async" width="20" height="20"><span>Mastercard</span></div>{% endif %}
+                {% if properties.show_applepay != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/kMpx5sNC/image.png" alt="Apple Pay" loading="lazy" decoding="async" width="20" height="20"><span>Apple Pay</span></div>{% endif %}
+                {% if properties.show_paypal != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/zG36g06z/image.png" alt="PayPal" loading="lazy" decoding="async" width="20" height="20"><span>PayPal</span></div>{% endif %}
+                {% if properties.show_stripe != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/y6PbpMzF/image.png" alt="Stripe" loading="lazy" decoding="async" width="20" height="20"><span>Stripe</span></div>{% endif %}
+                {% if properties.show_litecoin != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/G2vZptNX/image.png" alt="Litecoin" loading="lazy" decoding="async" width="20" height="20"><span>Litecoin</span></div>{% endif %}
+                {% if properties.show_bitcoin != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/yxPtF57f/image.png" alt="Bitcoin" loading="lazy" decoding="async" width="20" height="20"><span>Bitcoin</span></div>{% endif %}
+              </div>
+            </div>
+            <div class="cf-marquee-row">
+              <div class="cf-marquee-track cf-marquee-track--ltr">
+                {% if properties.show_bitcoin != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/yxPtF57f/image.png" alt="Bitcoin" loading="lazy" decoding="async" width="20" height="20"><span>Bitcoin</span></div>{% endif %}
+                {% if properties.show_litecoin != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/G2vZptNX/image.png" alt="Litecoin" loading="lazy" decoding="async" width="20" height="20"><span>Litecoin</span></div>{% endif %}
+                {% if properties.show_stripe != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/y6PbpMzF/image.png" alt="Stripe" loading="lazy" decoding="async" width="20" height="20"><span>Stripe</span></div>{% endif %}
+                {% if properties.show_paypal != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/zG36g06z/image.png" alt="PayPal" loading="lazy" decoding="async" width="20" height="20"><span>PayPal</span></div>{% endif %}
+                {% if properties.show_applepay != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/kMpx5sNC/image.png" alt="Apple Pay" loading="lazy" decoding="async" width="20" height="20"><span>Apple Pay</span></div>{% endif %}
+                {% if properties.show_mastercard != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/KY272YPD/image.png" alt="Mastercard" loading="lazy" decoding="async" width="20" height="20"><span>Mastercard</span></div>{% endif %}
+                {% if properties.show_visa != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/XJngwvXN/image.png" alt="Visa" loading="lazy" decoding="async" width="20" height="20"><span>Visa</span></div>{% endif %}
+                {% if properties.show_bitcoin != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/yxPtF57f/image.png" alt="Bitcoin" loading="lazy" decoding="async" width="20" height="20"><span>Bitcoin</span></div>{% endif %}
+                {% if properties.show_litecoin != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/G2vZptNX/image.png" alt="Litecoin" loading="lazy" decoding="async" width="20" height="20"><span>Litecoin</span></div>{% endif %}
+                {% if properties.show_stripe != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/y6PbpMzF/image.png" alt="Stripe" loading="lazy" decoding="async" width="20" height="20"><span>Stripe</span></div>{% endif %}
+                {% if properties.show_paypal != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/zG36g06z/image.png" alt="PayPal" loading="lazy" decoding="async" width="20" height="20"><span>PayPal</span></div>{% endif %}
+                {% if properties.show_applepay != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/kMpx5sNC/image.png" alt="Apple Pay" loading="lazy" decoding="async" width="20" height="20"><span>Apple Pay</span></div>{% endif %}
+                {% if properties.show_mastercard != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/KY272YPD/image.png" alt="Mastercard" loading="lazy" decoding="async" width="20" height="20"><span>Mastercard</span></div>{% endif %}
+                {% if properties.show_visa != false %}<div class="cf-payment-pill"><img src="https://i.postimg.cc/XJngwvXN/image.png" alt="Visa" loading="lazy" decoding="async" width="20" height="20"><span>Visa</span></div>{% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cf-caption">
+          <p class="cf-caption__line"><strong>Safe Payments:</strong> Card or crypto via trusted, encrypted providers. Your details never touch our servers.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var navBtns = document.querySelectorAll('.cf-cheat__nav-btn');
+      var panels = document.querySelectorAll('.cf-cheat__menu');
+
+      navBtns.forEach(function(btn) {
+        btn.addEventListener('mousedown', function(e) { e.preventDefault(); });
+        btn.addEventListener('click', function() {
+          var target = btn.getAttribute('data-menu');
+          navBtns.forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          panels.forEach(function(p) {
+            p.classList.remove('active');
+            if (p.getAttribute('data-panel') === target) p.classList.add('active');
+          });
+        });
+      });
+
+      document.querySelectorAll('.cf-cheat__toggle').forEach(function(tog) {
+        tog.addEventListener('mousedown', function(e) { e.preventDefault(); });
+        tog.addEventListener('click', function() { tog.classList.toggle('on'); });
+      });
+
+      var sliders = [
+        { id: 'cf-esp-dist', valId: 'cf-esp-dist-val', suffix: 'm' },
+        { id: 'cf-aim-fov', valId: 'cf-aim-fov-val', suffix: '°' },
+        { id: 'cf-aim-smooth', valId: 'cf-aim-smooth-val', suffix: '' },
+        { id: 'cf-vis-opacity', valId: 'cf-vis-opacity-val', suffix: '%' },
+        { id: 'cf-fps-cap', valId: 'cf-fps-cap-val', suffix: '' }
+      ];
+
+      sliders.forEach(function(s) {
+        var el = document.getElementById(s.id);
+        var val = document.getElementById(s.valId);
+        if (el && val) {
+          var paint = function() {
+            val.textContent = el.value + s.suffix;
+            var min = parseFloat(el.min) || 0, max = parseFloat(el.max) || 100;
+            var pct = ((parseFloat(el.value) - min) / (max - min)) * 100;
+            el.style.setProperty('--p', pct + '%');
+          };
+          el.addEventListener('input', paint);
+          paint(); // initialise fill on load
+        }
+      });
+
+      function fillMarqueeTrack(track) {
+        var origItems = Array.from(track.children);
+        if (!origItems.length) return;
+        var containerWidth = track.parentElement.offsetWidth || window.innerWidth;
+        var minWidth = containerWidth * 2.5;
+        var iterations = 0;
+        while (track.scrollWidth < minWidth && iterations < 20) {
+          origItems.forEach(function(item) {
+            track.appendChild(item.cloneNode(true));
+          });
+          iterations++;
+        }
+      }
+
+      document.querySelectorAll('.cf-marquee-track').forEach(function(track) {
+        fillMarqueeTrack(track);
+      });
+    })();
+
+    /* scroll-reveal for the feature cards */
+    (function () {
+      var section = document.querySelector('.cf-section');
+      var cards = section ? section.querySelectorAll('.cf-card') : [];
+      if (!cards.length) return;
+
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) return; // cards stay visible, no animation
+
+      section.classList.add('cf-reveal-ready');
+
+      if (!('IntersectionObserver' in window)) {
+        cards.forEach(function (c) { c.classList.add('cf-in'); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('cf-in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+      cards.forEach(function (c) { io.observe(c); });
+    })();
+  </script>
+</section>

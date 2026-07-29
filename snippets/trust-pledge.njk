@@ -1,0 +1,173 @@
+{#
+  trust-pledge.njk — "How we operate" trust section for the homepage.
+  Rendered after the reviews section (see templates/shop.njk).
+
+  SellAuth Nunjucks constraint: static HTML only — no {% set %} arrays,
+  no {% for %} over synthetic data.
+
+  HOUSE RULE: every line in here is either a process commitment Zaza
+  actually operates (delivery, downtime cover, dated status page,
+  support channels) or a link the buyer can verify themselves. No
+  invented numbers, no fake live counters, no fabricated activity.
+  The middle card works BECAUSE the rest of the site never makes the
+  claims it strikes out — keep it that way.
+#}
+
+<section class="ztp" aria-label="How we operate">
+  <div class="ztp__head">
+    <p class="ztp__eyebrow">// HOW WE OPERATE</p>
+    <h2 class="ztp__title">Don't trust us. <span class="ztp__grad">Check us.</span></h2>
+    <p class="ztp__sub">Anyone can type "trusted" on a homepage. Here's what we actually put on the record &mdash; and where you can verify every word before spending a penny.</p>
+  </div>
+
+  <div class="ztp__grid">
+
+    {# ---- Card 1: process commitments the store actually operates ---- #}
+    <div class="ztp__card">
+      <p class="ztp__card-tag">ON THE RECORD</p>
+      <ul class="ztp__list">
+        <li class="ztp__li">
+          <span class="ztp__mark ztp__mark--ok" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3.2L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span>Loader + key issued automatically the second payment clears &mdash; no human in the loop, nothing to "wait for".</span>
+        </li>
+        <li class="ztp__li">
+          <span class="ztp__mark ztp__mark--ok" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3.2L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span>Build down for 24 hours or more during your key? That time is added back or the key is replaced. Short update windows aren't compensated.</span>
+        </li>
+        <li class="ztp__li">
+          <span class="ztp__mark ztp__mark--ok" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3.2L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span>The status page is updated and dated with every release &mdash; so you see the state of the build before you buy, not after.</span>
+        </li>
+        <li class="ztp__li">
+          <span class="ztp__mark ztp__mark--ok" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3.2L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span>Real people answer on Discord and email &mdash; pre-sale questions get the same energy as paying customers.</span>
+        </li>
+      </ul>
+    </div>
+
+    {# ---- Card 2 (signature): the claims this store refuses to make ---- #}
+    <div class="ztp__card ztp__card--refuse">
+      <p class="ztp__card-tag ztp__card-tag--refuse">CLAIMS WE REFUSE TO MAKE</p>
+      <ul class="ztp__list">
+        <li class="ztp__li">
+          <span class="ztp__mark ztp__mark--no" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <span class="ztp__struck">"100% undetected, forever"</span>
+        </li>
+        <li class="ztp__li">
+          <span class="ztp__mark ztp__mark--no" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <span class="ztp__struck">"0% ban rate"</span>
+        </li>
+        <li class="ztp__li">
+          <span class="ztp__mark ztp__mark--no" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <span class="ztp__struck">"Completely risk-free"</span>
+        </li>
+      </ul>
+      <p class="ztp__refuse-note">Nobody can honestly promise you these &mdash; and in this market, whoever does is lying to you. What we do instead: publish the real, dated state of every build so you decide with the same information we have.</p>
+    </div>
+
+    {# ---- Card 3: where to verify it all ---- #}
+    <div class="ztp__card">
+      <p class="ztp__card-tag">VERIFY EVERY WORD</p>
+      <div class="ztp__verify">
+        <a href="{{ '/status' | shopUrl }}" class="ztp__vlink">
+          <span class="ztp__vlink-t">Live build status</span>
+          <span class="ztp__vlink-d">Updated &amp; dated per release</span>
+          <svg class="ztp__vlink-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="{{ '/feedback' | shopUrl }}" class="ztp__vlink">
+          <span class="ztp__vlink-t"><span data-zz-rc>78</span> customer reviews</span>
+          <span class="ztp__vlink-d">Word-for-word, stars and all</span>
+          <svg class="ztp__vlink-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener" class="ztp__vlink">
+          <span class="ztp__vlink-t">Ask us anything first</span>
+          <span class="ztp__vlink-d">Discord &mdash; costs you nothing</span>
+          <svg class="ztp__vlink-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="ztp__vlink">
+          <span class="ztp__vlink-t">Still unsure? Test cheap</span>
+          <span class="ztp__vlink-d">Shortest key = lowest-risk trial</span>
+          <svg class="ztp__vlink-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="ztp__foot">Pre-sale questions cost nothing: <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener">discord.gg/zazacheats</a> <span aria-hidden="true">&middot;</span> <a href="mailto:zkrtyy3@gmail.com">zkrtyy3@gmail.com</a></p>
+</section>
+
+<style>
+.ztp{max-width:1080px;margin:72px auto 8px;padding:0 16px;
+  font-family:'Satoshi','Inter',system-ui,sans-serif}
+
+.ztp__head{text-align:center;max-width:640px;margin:0 auto 34px}
+.ztp__eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;
+  letter-spacing:.16em;color:#BF40BF;margin:0 0 12px}
+.ztp__title{margin:0 0 12px;font-size:clamp(1.7rem,3.6vw,2.4rem);font-weight:900;
+  letter-spacing:-.02em;color:#fff;line-height:1.12}
+.ztp__grad{background:linear-gradient(90deg,#BF40BF,#c084fc);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.ztp__sub{margin:0;font-size:.92rem;line-height:1.6;color:rgba(200,215,240,.6)}
+
+.ztp__grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;align-items:stretch}
+@media (max-width:940px){.ztp__grid{grid-template-columns:1fr}}
+
+.ztp__card{display:flex;flex-direction:column;padding:22px 20px;border-radius:18px;
+  border:1px solid rgba(191,64,191,.14);background:rgba(255,255,255,.015)}
+.ztp__card--refuse{border-color:rgba(239,68,68,.22);
+  background:linear-gradient(180deg,rgba(239,68,68,.05),rgba(255,255,255,.01))}
+
+.ztp__card-tag{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.64rem;
+  letter-spacing:.15em;color:rgba(200,215,240,.5);margin:0 0 16px}
+.ztp__card-tag--refuse{color:rgba(252,165,165,.8)}
+
+.ztp__list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:13px}
+.ztp__li{display:flex;align-items:flex-start;gap:10px;
+  font-size:.83rem;line-height:1.55;color:rgba(220,230,250,.82)}
+.ztp__mark{flex-shrink:0;display:grid;place-items:center;width:20px;height:20px;
+  border-radius:7px;margin-top:1px}
+.ztp__mark--ok{color:#4ade80;border:1px solid rgba(34,197,94,.3);background:rgba(34,197,94,.08)}
+.ztp__mark--no{color:#f87171;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.08)}
+
+.ztp__struck{font-size:.92rem;font-weight:800;color:rgba(255,255,255,.55);
+  text-decoration:line-through;text-decoration-color:rgba(239,68,68,.75);
+  text-decoration-thickness:2px}
+.ztp__refuse-note{margin:16px 0 0;padding-top:14px;border-top:1px dashed rgba(239,68,68,.2);
+  font-size:.76rem;line-height:1.6;color:rgba(220,230,250,.6)}
+
+.ztp__verify{display:flex;flex-direction:column;gap:8px}
+.ztp__vlink{position:relative;display:flex;flex-direction:column;gap:1px;
+  padding:10px 34px 10px 12px;border-radius:12px;text-decoration:none;
+  border:1px solid rgba(191,64,191,.14);background:rgba(191,64,191,.04);
+  transition:border-color .2s,background .2s,transform .2s}
+.ztp__vlink:hover{border-color:rgba(191,64,191,.45);background:rgba(191,64,191,.09);
+  transform:translateY(-1px)}
+.ztp__vlink-t{font-size:.84rem;font-weight:800;color:#fff;line-height:1.3}
+.ztp__vlink-d{font-size:.71rem;color:rgba(200,215,240,.5)}
+.ztp__vlink-arrow{position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  color:rgba(192,132,252,.7)}
+
+.ztp__foot{margin:22px 0 0;text-align:center;font-size:.76rem;color:rgba(200,215,240,.68)}
+.ztp__foot a{color:rgba(200,215,240,.75);text-decoration:none;
+  border-bottom:1px solid rgba(200,215,240,.25);transition:color .2s,border-color .2s}
+.ztp__foot a:hover{color:#fff;border-color:rgba(191,64,191,.6)}
+
+@media (prefers-reduced-motion:reduce){
+  .ztp__vlink,.ztp__vlink:hover{transform:none;transition:none}
+}
+</style>

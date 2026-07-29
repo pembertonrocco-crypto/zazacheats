@@ -1,0 +1,233 @@
+<div class="fc">
+  <div class="fc__head">
+    <div class="fc__avatar">V</div>
+    <div class="fc__who">
+      <span class="fc__user">Verified buyer</span>
+      <span class="fc__verified">&#10003; Verified buyer</span>
+    </div>
+    <div class="fc__stars">
+      {% for i in range(0, feedback.rating) %}
+      <svg viewBox="0 0 24 24" class="fc__star fc__star--filled" aria-hidden="true"><use href="#zz-fcstar"/></svg>
+      {% endfor %}
+      {% for i in range(0, 5 - feedback.rating) %}
+      <svg viewBox="0 0 24 24" class="fc__star fc__star--empty" aria-hidden="true"><use href="#zz-fcstar"/></svg>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="fc__message">
+    <p>{{ feedback.message }}</p>
+  </div>
+
+  <div class="fc__footer">
+    <span class="fc__date">{{ feedback.created_at | formatDate }}</span>
+    <span class="fc__product-tag">
+      {% if feedback.items|length > 0 %}{{ feedback.items[0].name }}{% else %}Zaza Rust Private Cheat{% endif %}
+    </span>
+  </div>
+</div>
+
+<style>
+/* head block — matches the hardcoded review cards */
+.fc__head{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.fc__avatar{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
+  font-weight:800;font-size:13px;color:#fff;background:linear-gradient(135deg,#BF40BF,#7C3AED)}
+.fc__who{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.fc__user{font-size:14px;font-weight:700;color:#fff;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fc__verified{font-size:10px;font-weight:600;color:rgba(74,222,128,.9);letter-spacing:.02em}
+.fc__product-tag{font-size:10px;font-weight:600;color:rgba(180,210,255,.6);
+  background:rgba(191,64,191,.08);border:1px solid rgba(191,64,191,.14);border-radius:999px;padding:3px 9px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%}
+
+.fc {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 180px;
+  background: #0a0e22;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 16px;
+  font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+  overflow: hidden;
+  transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fc::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(180, 210, 255, 0.22) 50%, transparent);
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.fc::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -40%;
+  width: 140%;
+  height: 80%;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(191,64,191, 0.2) 0%,
+    rgba(124,58,237, 0.1) 30%,
+    rgba(191,64,191, 0.03) 60%,
+    transparent 75%
+  );
+  opacity: 0;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.fc:hover {
+  background: #0c1128;
+  border-color: rgba(180, 210, 255, 0.14);
+}
+
+.fc:hover::before {
+  opacity: 1;
+}
+
+.fc:hover::after {
+  opacity: 1;
+}
+
+.fc__top,
+.fc__message,
+.fc__footer {
+  position: relative;
+  z-index: 1;
+}
+
+.fc__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.fc__meta {
+  min-width: 0;
+  flex: 1;
+}
+
+.fc__product {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.fc__stars {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.fc__star {
+  width: 13px;
+  height: 13px;
+}
+
+.fc__star--filled {
+  fill: rgba(255, 196, 70, 0.9);
+}
+
+.fc__star--empty {
+  fill: none;
+  stroke: rgba(255, 196, 70, 0.28);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.fc__message {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.fc__message p {
+  font-size: 0.855rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.62);
+  line-height: 1.7;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fc__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.fc__date {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1;
+}
+
+.fc__rating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 196, 70, 0.07);
+  border: 1px solid rgba(255, 196, 70, 0.14);
+  border-radius: 999px;
+  padding: 4px 8px;
+  line-height: 1;
+}
+
+.fc__rating-badge span {
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255, 196, 70, 0.85);
+  letter-spacing: 0.02em;
+}
+
+.fc__rating-star {
+  width: 10px;
+  height: 10px;
+  fill: rgba(255, 196, 70, 0.85);
+}
+
+@media (max-width: 640px) {
+  .fc {
+    padding: 14px;
+    gap: 10px;
+    height: 170px;
+  }
+
+  .fc__product {
+    font-size: 12px;
+  }
+
+  .fc__message p {
+    font-size: 0.82rem;
+  }
+}
+</style>

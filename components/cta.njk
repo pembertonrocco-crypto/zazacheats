@@ -1,0 +1,242 @@
+<section class="cta-section component" data-component-id="{{ componentId }}">
+  <div class="cta-card">
+
+    <div class="cta-bg" aria-hidden="true">
+      <img src="https://i.postimg.cc/RhQmFrKL/image.png" alt="" class="cta-bg-img" loading="lazy" decoding="async" aria-hidden="true" />
+      <div class="cta-bg-mask"></div>
+    </div>
+
+    <div class="cta-body">
+      <span class="cta-overline">{{ properties.overline or 'Ready to get started' }}</span>
+      <h2 class="cta-title">{{ properties.title | renderString }}</h2>
+      <p class="cta-subtitle">{{ properties.subtitle | renderString }}</p>
+      <div class="cta-actions">
+        <a href="{{ properties.btn_primary_link or '/#products' }}" class="cta-btn cta-btn-primary">{{ properties.btn_primary_text or 'Get Started' }}</a>
+        <a href="{{ properties.btn_secondary_link or shop.discord_url }}" target="_blank" rel="noopener" class="cta-btn cta-btn-secondary">
+          {{ properties.btn_secondary_text or 'Join Discord' }}
+          <svg class="cta-btn-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+.cta-section {
+  padding: 0 24px 80px;
+  background: #06091a;
+  box-sizing: border-box;
+}
+
+.cta-card {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  border: 1px solid rgba(191,64,191, 0.11);
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(6, 9, 26, 0.5);
+}
+
+.cta-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.cta-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.38;
+  filter: brightness(0.55);
+  display: block;
+}
+
+.cta-bg-mask {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 50%, rgba(6, 9, 26, 0.1) 0%, rgba(6, 9, 26, 0.55) 55%, rgba(6, 9, 26, 0.92) 80%, rgba(6, 9, 26, 1) 100%),
+    linear-gradient(to bottom, rgba(6, 9, 26, 0.4) 0%, transparent 28%, transparent 68%, rgba(6, 9, 26, 0.65) 100%),
+    linear-gradient(to right, rgba(6, 9, 26, 0.6) 0%, transparent 20%, transparent 80%, rgba(6, 9, 26, 0.6) 100%);
+}
+
+.cta-body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 44px 64px 52px;
+}
+
+.cta-overline {
+  display: block;
+  font-family: 'Satoshi', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(191,64,191, 0.85);
+  margin: 0 0 18px;
+}
+
+.cta-title {
+  font-family: 'Satoshi', sans-serif;
+  font-size: clamp(1.75rem, 4vw, 2.9rem);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.04em;
+  margin: 0 0 16px;
+  padding-bottom: 0.12em;
+  max-width: 720px;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #ffffff 60%,
+    #dae6ff 82%,
+    #a8c4ff 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cta-subtitle {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.75;
+  color: rgba(200, 215, 240, 0.58);
+  margin: 0 0 32px;
+  max-width: 460px;
+}
+
+.cta-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cta-btn {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: 6px;
+  padding: 12px 24px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background 0.18s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.18s ease, color 0.18s ease;
+}
+
+.cta-btn-primary {
+  color: #ffffff;
+  background: linear-gradient(135deg, #BF40BF 0%, #7C3AED 100%);
+  border: none;
+}
+
+.cta-btn-primary:hover {
+  background: linear-gradient(135deg, #6e80f7 0%, #52a0f7 100%);
+}
+
+.cta-btn-secondary {
+  color: rgba(220, 230, 255, 0.9);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.cta-btn-secondary:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.cta-btn-arrow {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.cta-btn-secondary:hover .cta-btn-arrow {
+  transform: translate(2px, -2px);
+}
+
+@media (max-width: 768px) {
+  .cta-section {
+    padding: 0 16px 56px;
+  }
+
+  .cta-body {
+    padding: 36px 32px 44px;
+  }
+
+  .cta-title {
+    font-size: clamp(1.6rem, 6vw, 2.2rem);
+  }
+
+  .cta-subtitle {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .cta-section {
+    padding: 0 12px 48px;
+  }
+
+  .cta-body {
+    padding: 32px 20px 40px;
+  }
+
+  .cta-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .cta-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ===== flashy upgrades ===== */
+.cta-btn-primary{position:relative;overflow:hidden;isolation:isolate}
+.cta-btn-primary::after{content:'';position:absolute;top:0;bottom:0;left:-60%;width:45%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);
+  transform:skewX(-18deg);animation:ctaShine 3.2s ease-in-out infinite;z-index:1}
+@keyframes ctaShine{0%{left:-60%}55%{left:150%}100%{left:150%}}
+.cta-card{opacity:0;transform:scale(.965) translateY(24px);
+  transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.cta-card.cta-in{opacity:1;transform:scale(1) translateY(0)}
+@media (prefers-reduced-motion: reduce){
+  .cta-btn-primary::after{animation:none!important}
+  .cta-card{opacity:1!important;transform:none!important}
+}
+</style>
+<script>
+(function(){
+  var section=document.querySelector('[data-component-id="{{ componentId }}"]');
+  if(!section) return;
+  var card=section.querySelector('.cta-card');
+  if(!card) return;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){card.classList.add('cta-in');return;}
+  if(!('IntersectionObserver' in window)){card.classList.add('cta-in');return;}
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('cta-in');io.unobserve(e.target);}});},{threshold:0.2});
+  io.observe(card);
+})();
+</script>

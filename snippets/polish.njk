@@ -1,0 +1,845 @@
+{#
+  polish.njk — sitewide experience layer for Zaza Cheats.
+  Static HTML/CSS/JS only (SellAuth rule: never reference variables the
+  platform might not supply). Everything is progressive enhancement:
+  · No JS → page looks and works exactly as before (nothing hidden by default)
+  · prefers-reduced-motion → all effects disabled
+#}
+
+<style>
+/* ===== global feel: selection, scrollbar, focus, smoothness ===== */
+::selection{background:rgba(191,64,191,.4);color:#fff}
+html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track{background:#0a0c1a}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(191,64,191,.55),rgba(124,58,237,.45));
+  border-radius:8px;border:2px solid #0a0c1a}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,rgba(191,64,191,.8),rgba(124,58,237,.7))}
+
+/* keyboard users get a real focus ring; mouse users don't get outline spam */
+:focus{outline:none}
+:focus-visible{outline:2px solid rgba(191,64,191,.9);outline-offset:3px;border-radius:6px}
+
+/* skip link — invisible until focused, first tab stop on every page */
+.zz-skip{position:fixed;top:-60px;left:16px;z-index:2000;padding:10px 18px;border-radius:10px;
+  background:#BF40BF;color:#fff;font-weight:800;font-size:.85rem;text-decoration:none;
+  transition:top .25s ease;box-shadow:0 12px 30px -8px rgba(0,0,0,.8)}
+.zz-skip:focus-visible{top:14px}
+
+/* ===== page entrance: gentle fade so navigation feels intentional ===== */
+@media (prefers-reduced-motion: no-preference){
+  html.zz-ready body{animation:zzPageIn .45s ease-out both}
+  @keyframes zzPageIn{from{opacity:.35}to{opacity:1}}
+}
+
+/* ===== scroll reveal: opt-out design — elements are ONLY hidden after JS
+   confirms it's running AND observing, so no-JS/crawler sees everything ===== */
+@media (prefers-reduced-motion: no-preference){
+  html.zz-ready .zz-reveal{opacity:0;transform:translateY(16px);
+    transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+  html.zz-ready .zz-reveal.zz-in{opacity:1;transform:none}
+}
+
+/* ===== interaction polish: every button/link that already looks clickable
+   gets consistent tactile feedback ===== */
+@media (prefers-reduced-motion: no-preference){
+  a[class*="btn"],button[class*="btn"],a[class*="cta"],button[class*="cta"],
+  a[class*="__go"],.pf-discord,.scs-discord,.scs-status,a[class*="link"]{
+    transition-property:transform,box-shadow,background,border-color,color,opacity;
+    transition-duration:.22s;transition-timing-function:cubic-bezier(.16,1,.3,1)}
+  a[class*="btn"]:active,button[class*="btn"]:active,
+  a[class*="cta"]:active,button[class*="cta"]:active{transform:scale(.97)}
+}
+
+/* ===== image polish: soft fade-in as images finish loading ===== */
+@media (prefers-reduced-motion: no-preference){
+  html.zz-ready img.zz-imgload{opacity:0;transition:opacity .5s ease}
+  html.zz-ready img.zz-imgload.zz-imgdone{opacity:1}
+}
+</style>
+
+<script>
+(function(){
+  'use strict';
+  var doc=document.documentElement;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // skip link → first main-ish landmark
+  try{
+    var main=document.querySelector('main,.components,#app,body>div');
+    if(main && !document.querySelector('.zz-skip')){
+      if(!main.id) main.id='zz-main';
+      var a=document.createElement('a');
+      a.className='zz-skip'; a.href='#'+main.id; a.textContent='Skip to content';
+      document.body.insertBefore(a,document.body.firstChild);
+    }
+  }catch(e){}
+
+  if(reduce) return;                 // motion-sensitive users: stop here
+  doc.classList.add('zz-ready');     // gates ALL animation CSS above
+
+  // ---- scroll reveal --------------------------------------------------------
+  try{
+    if('IntersectionObserver' in window){
+      // top-level blocks inside each component: sections, big divs with a class
+      var targets=[];
+      document.querySelectorAll('.components > * section, .components > section, .component > div, section[class]').forEach(function(n){
+        var r=n.getBoundingClientRect();
+        // only animate things below the fold and of meaningful size
+        if(r.top>window.innerHeight*0.9 && r.height>80 && targets.length<40) targets.push(n);
+      });
+      if(targets.length){
+        var io=new IntersectionObserver(function(entries){
+          entries.forEach(function(en){
+            if(en.isIntersecting){ en.target.classList.add('zz-in'); io.unobserve(en.target); }
+          });
+        },{rootMargin:'0px 0px -8% 0px',threshold:0.05});
+        targets.forEach(function(n){ n.classList.add('zz-reveal'); io.observe(n); });
+        // safety net: if anything is still hidden after 6s (observer edge cases,
+        // anchors, printing), force everything visible.
+        setTimeout(function(){
+          document.querySelectorAll('.zz-reveal:not(.zz-in)').forEach(function(n){ n.classList.add('zz-in'); });
+        },6000);
+      }
+    }
+  }catch(e){ doc.classList.remove('zz-ready'); }
+
+  // ---- image fade-in --------------------------------------------------------
+  try{
+    document.querySelectorAll('img[loading="lazy"]').forEach(function(img){
+      if(img.complete){ return; }
+      img.classList.add('zz-imgload');
+      var done=function(){ img.classList.add('zz-imgdone'); };
+      img.addEventListener('load',done,{once:true});
+      img.addEventListener('error',done,{once:true});
+      // safety: never leave an image invisible
+      setTimeout(done,4000);
+    });
+  }catch(e){}
+})();
+</script>
+
+{# ===== v50 upgrade layer — glass refinement + spotlight + magnetic CTAs.
+   Static HTML/CSS/JS only. Progressive enhancement: no JS → nothing changes
+   visually except the refined glass surfaces; reduced motion → JS bails. #}
+<style>
+/* ---- refined glass surfaces (modals, dropdowns, selects) ---- */
+.modal-content{
+  background:rgba(10,13,30,.78)!important;
+  border:1px solid rgba(255,255,255,.09)!important;
+  border-radius:20px!important;
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+  box-shadow:0 40px 90px -30px rgba(0,0,0,.85),0 0 44px -20px rgba(191,64,191,.4);
+}
+.modal-header,.modal-footer{border-color:rgba(255,255,255,.07)!important}
+.dropdown-menu,.dropdown-menu-dark{
+  background:rgba(10,13,30,.86)!important;
+  border:1px solid rgba(255,255,255,.08)!important;
+  border-radius:14px!important;
+  backdrop-filter:blur(14px) saturate(130%);
+  -webkit-backdrop-filter:blur(14px) saturate(130%);
+  box-shadow:0 20px 50px -20px rgba(0,0,0,.8);
+  overflow:hidden;
+}
+.dropdown-item{border-radius:9px;transition:background-color .18s ease,color .18s ease}
+.choices__list--dropdown,.choices[data-type*="select-one"] .choices__list--dropdown{
+  background:rgba(10,13,30,.9)!important;
+  border:1px solid rgba(255,255,255,.09)!important;
+  border-radius:14px!important;
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+
+/* ---- magnetic CTAs: transform is driven inline by JS below; this just
+   guarantees a smooth spring-back when the inline transform is cleared ---- */
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion: no-preference){
+  .zz-mag{transition:transform .35s cubic-bezier(.22,1,.36,1)!important;will-change:transform}
+  .zz-mag--live{transition:transform .12s cubic-bezier(.22,1,.36,1)!important}
+}
+</style>
+
+<script>
+(function(){
+  'use strict';
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if(!(window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches)) return;
+
+  // ---- product-card spotlight: feed cursor coords to .pc__spot ----
+  document.addEventListener('pointermove', function(e){
+    var c = e.target.closest ? e.target.closest('.pc') : null;
+    if(!c) return;
+    var r = c.getBoundingClientRect();
+    c.style.setProperty('--pcx', (e.clientX - r.left) + 'px');
+    c.style.setProperty('--pcy', (e.clientY - r.top) + 'px');
+  }, {passive:true});
+
+  // ---- magnetic pull on buy / checkout CTAs ----
+  var MAG = '.pc__buy,.hero-btn-primary,.pf-btn--primary,.zzbb__cta,.zz-cta__btn,' +
+            'a.btn-primary,button.btn-primary,.products-view-all__btn';
+  var MAX = 5;        // px of pull toward the cursor
+  var current = null;
+
+  function release(el){
+    if(!el) return;
+    el.classList.remove('zz-mag--live');
+    el.style.transform = '';           // CSS transition springs it home
+  }
+
+  document.addEventListener('pointermove', function(e){
+    var t = e.target.closest ? e.target.closest(MAG) : null;
+    if(t !== current){ release(current); current = t; }
+    if(!t) return;
+    if(!t.classList.contains('zz-mag')) t.classList.add('zz-mag');
+    t.classList.add('zz-mag--live');
+    var r = t.getBoundingClientRect();
+    var dx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
+    var dy = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
+    dx = Math.max(-1, Math.min(1, dx)) * MAX;
+    dy = Math.max(-1, Math.min(1, dy)) * MAX * 0.7;
+    t.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + (dy - 2).toFixed(1) + 'px) scale(1.02)';
+  }, {passive:true});
+
+  document.addEventListener('pointerdown', function(e){
+    var t = e.target.closest ? e.target.closest(MAG) : null;
+    if(t) t.style.transform = 'scale(.97)';
+  }, {passive:true});
+
+  document.addEventListener('pointerup', function(){ release(current); current = null; }, {passive:true});
+  document.addEventListener('scroll', function(){ release(current); current = null; }, {passive:true});
+})();
+</script>
+
+{# ===== hitmarker: FPS-style ✕ flash at the click point, sitewide ===== #}
+<style>
+.zz-hit{position:fixed;z-index:3000;width:22px;height:22px;pointer-events:none;
+  transform:translate(-50%,-50%)}
+.zz-hit span{position:absolute;width:8px;height:2px;border-radius:1px;background:#fff;
+  box-shadow:0 0 6px rgba(191,64,191,.9)}
+.zz-hit span:nth-child(1){top:2px;left:2px;transform:rotate(45deg)}
+.zz-hit span:nth-child(2){top:2px;right:2px;transform:rotate(-45deg)}
+.zz-hit span:nth-child(3){bottom:2px;left:2px;transform:rotate(-45deg)}
+.zz-hit span:nth-child(4){bottom:2px;right:2px;transform:rotate(45deg)}
+@media (prefers-reduced-motion: no-preference){
+  .zz-hit{animation:zzHit .35s cubic-bezier(.16,1,.3,1) both}
+  @keyframes zzHit{
+    0%{opacity:0;transform:translate(-50%,-50%) scale(1.6)}
+    25%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+    100%{opacity:0;transform:translate(-50%,-50%) scale(.7)}
+  }
+}
+</style>
+<script>
+(function(){
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var last = 0;
+  document.addEventListener('pointerdown', function(e){
+    /* skip text inputs so it never distracts while typing/selecting */
+    var tag = e.target.tagName;
+    if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+    var now = performance.now();
+    if(now - last < 90) return; /* rate-limit rapid clicks */
+    last = now;
+    var m = document.createElement('div');
+    m.className = 'zz-hit';
+    m.setAttribute('aria-hidden','true');
+    m.innerHTML = '<span></span><span></span><span></span><span></span>';
+    m.style.left = e.clientX + 'px';
+    m.style.top = e.clientY + 'px';
+    document.body.appendChild(m);
+    setTimeout(function(){ m.remove(); }, 400);
+  }, {passive:true});
+})();
+</script>
+
+{# ===== ATMOSPHERE ENGINE v2 — sitewide living background =====
+   One canvas, one rAF loop, four layers drawn back-to-front:
+     1. aurora orbs   — huge soft violet light fields drifting along the
+                        viewport edges (kept off the reading column)
+     2. tactical grid — perspective wireframe floor at the bottom of the
+                        viewport; advance speed reacts to scroll velocity
+     3. embers        — the original slow purple particles (ported, dt-based)
+     4. tracers+sweep — rare bullet streaks and an occasional ESP scan line
+   Screen-blended on top of the page (established theme pattern), pointer
+   events none, pauses when hidden, degrades itself if frames run slow,
+   goes embers-only on Save-Data / low-memory devices, and is skipped
+   entirely for prefers-reduced-motion. Pure static HTML/CSS/JS. ===== #}
+<style>
+#zz-atmo{position:fixed;inset:0;z-index:9996;pointer-events:none;mix-blend-mode:screen}
+@media print { #zz-atmo{display:none} }
+</style>
+<script>
+(function(){
+  'use strict';
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var lite = false;
+  try{
+    var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if((conn && conn.saveData) || (navigator.deviceMemory && navigator.deviceMemory <= 2)) lite = true;
+  }catch(e){}
+
+  var c = document.createElement('canvas');
+  c.id = 'zz-atmo';
+  c.setAttribute('aria-hidden','true');
+  document.body.prepend(c);
+  var ctx = c.getContext('2d');
+  if(!ctx){ c.remove(); return; }
+
+  var W, H, DPR, mob, quality = 1;
+  var orbs = [], lats = [], embers = [], tracers = [];
+  var running = true, t = 0, last = performance.now(), ema = 16;
+  var prevSY = window.scrollY || 0, sVel = 0;
+  var sweepY = -1, sweepTimer = R(10, 22);
+  var traceTimer = R(4, 9);
+  var pulseZ = -1, pulseTimer = R(3, 7);
+  var VX, VY;                    /* grid vanishing point */
+  var LONGN, LATN;
+
+  function R(a, b){ return a + Math.random() * (b - a); }
+  function clamp(v, a, b){ return v < a ? a : (v > b ? b : v); }
+
+  function size(){
+    DPR = Math.min(window.devicePixelRatio || 1, mob ? 1.5 : 1.75);
+    W = window.innerWidth; H = window.innerHeight;
+    c.width = W * DPR; c.height = H * DPR;
+    c.style.width = W + 'px'; c.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    VX = W * 0.5; VY = H * 0.64;
+  }
+
+  function build(){
+    mob = window.innerWidth < 640;
+    size();
+
+    /* aurora orbs — anchored to edges/corners, slow Lissajous drift */
+    var oc = lite ? 0 : Math.max(2, Math.round((mob ? 2 : 3) * quality));
+    var cols = [[191,64,191],[124,58,237],[76,29,149]];
+    var anchors = [[0.10,0.22],[0.92,0.55],[0.30,1.02]];
+    orbs = [];
+    for(var i = 0; i < oc; i++){
+      orbs.push({
+        cx: anchors[i][0], cy: anchors[i][1],
+        ax: R(0.05, 0.11), ay: R(0.05, 0.10),
+        sx: R(0.05, 0.10), sy: R(0.04, 0.09),
+        r: R(0.45, 0.62), p: R(0, 6.28),
+        col: cols[i % cols.length],
+        a: (mob ? 0.05 : 0.065) * R(0.85, 1.15)
+      });
+    }
+
+    /* tactical grid */
+    LONGN = lite ? 0 : Math.max(6, Math.round((mob ? 8 : 12) * quality));
+    LATN  = lite ? 0 : Math.max(5, Math.round((mob ? 7 : 11) * quality));
+    lats = [];
+    for(var j = 0; j < LATN; j++) lats.push(j / LATN);
+
+    /* embers (original behaviour, dt-based) */
+    var n = Math.round((mob ? 14 : 30) * (lite ? 0.7 : quality));
+    embers = [];
+    for(var k = 0; k < n; k++){
+      embers.push({
+        x: Math.random() * W, y: Math.random() * H,
+        r: 0.6 + Math.random() * 1.8,
+        vy: -(5 + Math.random() * 13),          /* px per second */
+        vx: (Math.random() - 0.5) * 7,
+        a: 0.08 + Math.random() * 0.22,
+        tw: Math.random() * Math.PI * 2
+      });
+    }
+    tracers = [];
+  }
+
+  /* ---------- layer 1: aurora orbs ---------- */
+  function drawOrbs(gA){
+    for(var i = 0; i < orbs.length; i++){
+      var o = orbs[i];
+      var x = (o.cx + o.ax * Math.sin(t * o.sx + o.p)) * W;
+      var y = (o.cy + o.ay * Math.cos(t * o.sy + o.p)) * H;
+      var r = o.r * Math.min(W, H) * (1 + 0.06 * Math.sin(t * 0.3 + o.p));
+      var a = o.a * (0.72 + 0.28 * Math.sin(t * 0.22 + o.p * 2)) * gA;
+      var g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, 'rgba(' + o.col[0] + ',' + o.col[1] + ',' + o.col[2] + ',' + a.toFixed(3) + ')');
+      g.addColorStop(1, 'rgba(' + o.col[0] + ',' + o.col[1] + ',' + o.col[2] + ',0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(x - r, y - r, r * 2, r * 2);
+    }
+  }
+
+  /* ---------- layer 2: tactical grid floor ---------- */
+  function gridX(edge, s){ return VX + (edge - VX) * s; }
+  function drawGrid(dt, gA){
+    if(!LATN) return;
+    var xa = -0.55 * W, xb = 1.55 * W;
+
+    /* horizon glow band */
+    var hg = ctx.createLinearGradient(0, VY - 44, 0, VY + 44);
+    hg.addColorStop(0, 'rgba(124,58,237,0)');
+    hg.addColorStop(0.5, 'rgba(124,58,237,' + (0.05 * gA).toFixed(3) + ')');
+    hg.addColorStop(1, 'rgba(124,58,237,0)');
+    ctx.fillStyle = hg;
+    ctx.fillRect(0, VY - 44, W, 88);
+
+    /* longitudinal fan */
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(191,64,191,' + (0.03 * gA).toFixed(3) + ')';
+    ctx.beginPath();
+    for(var i = 0; i < LONGN; i++){
+      var xe = xa + (xb - xa) * i / (LONGN - 1);
+      /* start 10% down the ray so the horizon doesn't clutter */
+      ctx.moveTo(VX + (xe - VX) * 0.1, VY + (H - VY) * 0.1);
+      ctx.lineTo(xe, H);
+    }
+    ctx.stroke();
+
+    /* latitude lines advancing toward the viewer; scroll adds pace */
+    var dz = 0.14 + clamp(sVel * 0.00028, -0.08, 0.9);
+    for(var j = 0; j < lats.length; j++){
+      var z = lats[j] + dz * dt;
+      if(z >= 1) z -= 1; else if(z < 0) z += 1;
+      lats[j] = z;
+      var s = z * z;
+      var y = VY + (H - VY) * s;
+      var a = (0.012 + 0.05 * z) * gA;
+      ctx.strokeStyle = 'rgba(191,64,191,' + a.toFixed(3) + ')';
+      ctx.beginPath();
+      ctx.moveTo(gridX(xa, s), y);
+      ctx.lineTo(gridX(xb, s), y);
+      ctx.stroke();
+    }
+
+    /* pulse line — one hot scanline rides the floor now and then */
+    if(pulseZ >= 0){
+      pulseZ += dz * 2.1 * dt;
+      if(pulseZ >= 1){ pulseZ = -1; pulseTimer = R(3.5, 8); }
+      else{
+        var ps = pulseZ * pulseZ;
+        var py = VY + (H - VY) * ps;
+        var pa = (0.05 + 0.13 * pulseZ) * gA;
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = 'rgba(124,58,237,' + (pa * 0.35).toFixed(3) + ')';
+        ctx.beginPath(); ctx.moveTo(gridX(xa, ps), py); ctx.lineTo(gridX(xb, ps), py); ctx.stroke();
+        ctx.lineWidth = 1.4;
+        ctx.strokeStyle = 'rgba(236,221,255,' + pa.toFixed(3) + ')';
+        ctx.beginPath(); ctx.moveTo(gridX(xa, ps), py); ctx.lineTo(gridX(xb, ps), py); ctx.stroke();
+        ctx.lineWidth = 1;
+      }
+    }else{
+      pulseTimer -= dt;
+      if(pulseTimer <= 0) pulseZ = 0;
+    }
+  }
+
+  /* ---------- layer 3: embers ---------- */
+  function drawEmbers(dt, dy, gA){
+    for(var i = 0; i < embers.length; i++){
+      var p = embers[i];
+      p.x += p.vx * dt;
+      p.y += p.vy * dt - dy * 0.05;          /* slight scroll parallax */
+      if(p.y < -6){ p.y = H + 6; p.x = Math.random() * W; }
+      else if(p.y > H + 8){ p.y = -6; p.x = Math.random() * W; }
+      if(p.x < -6) p.x = W + 6; else if(p.x > W + 6) p.x = -6;
+      var a = p.a * (0.6 + 0.4 * Math.sin(t * 1.4 + p.tw)) * gA;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(191,64,191,' + a.toFixed(3) + ')';
+      ctx.fill();
+    }
+  }
+
+  /* ---------- layer 4a: bullet tracers ---------- */
+  function spawnTracer(){
+    var fromLeft = Math.random() < 0.5;
+    var y0 = R(0.06, 0.5) * H;
+    var ang = R(-0.2, 0.16);
+    var sp = R(1200, 1700);
+    tracers.push({
+      x: fromLeft ? -30 : W + 30, y: y0,
+      vx: Math.cos(ang) * sp * (fromLeft ? 1 : -1),
+      vy: Math.sin(ang) * sp,
+      len: R(110, 160), life: 0, flash: 0.12
+    });
+  }
+  function drawTracers(dt, gA){
+    for(var i = tracers.length - 1; i >= 0; i--){
+      var tr = tracers[i];
+      tr.life += dt;
+      var px = tr.x, py = tr.y;
+      tr.x += tr.vx * dt; tr.y += tr.vy * dt;
+      if(tr.x < -260 || tr.x > W + 260 || tr.y < -260 || tr.y > H + 260){ tracers.splice(i, 1); continue; }
+      var m = Math.sqrt(tr.vx * tr.vx + tr.vy * tr.vy);
+      var ux = tr.vx / m, uy = tr.vy / m;
+      var tx = tr.x - ux * tr.len, ty = tr.y - uy * tr.len;
+      /* violet tail */
+      var g = ctx.createLinearGradient(tx, ty, tr.x, tr.y);
+      g.addColorStop(0, 'rgba(191,64,191,0)');
+      g.addColorStop(0.8, 'rgba(191,64,191,' + (0.4 * gA).toFixed(3) + ')');
+      g.addColorStop(1, 'rgba(216,140,255,' + (0.55 * gA).toFixed(3) + ')');
+      ctx.strokeStyle = g;
+      ctx.lineWidth = 2.2;
+      ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(tr.x, tr.y); ctx.stroke();
+      /* white-hot core near the head */
+      if(quality > 0.7){ ctx.shadowColor = 'rgba(191,64,191,0.9)'; ctx.shadowBlur = 6; }
+      ctx.strokeStyle = 'rgba(255,255,255,' + (0.8 * gA).toFixed(3) + ')';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(tr.x - ux * tr.len * 0.3, tr.y - uy * tr.len * 0.3);
+      ctx.lineTo(tr.x, tr.y);
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+      /* muzzle flash ring at spawn */
+      if(tr.flash > 0){
+        tr.flash -= dt;
+        var fp = 1 - tr.flash / 0.12;
+        ctx.strokeStyle = 'rgba(236,221,255,' + ((1 - fp) * 0.45 * gA).toFixed(3) + ')';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(px - tr.vx * dt, py - tr.vy * dt, 2 + fp * 12, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.lineWidth = 1;
+    }
+  }
+
+  /* ---------- layer 4b: ESP scan sweep ---------- */
+  function drawSweep(dt, gA){
+    if(sweepY < 0){
+      sweepTimer -= dt;
+      if(sweepTimer <= 0) sweepY = -80;
+      return;
+    }
+    sweepY += (H + 200) / 1.5 * dt;
+    if(sweepY > H + 90){ sweepY = -1; sweepTimer = R(19, 32); return; }
+    var g = ctx.createLinearGradient(0, sweepY - 55, 0, sweepY + 55);
+    g.addColorStop(0, 'rgba(191,64,191,0)');
+    g.addColorStop(0.5, 'rgba(191,64,191,' + (0.05 * gA).toFixed(3) + ')');
+    g.addColorStop(1, 'rgba(191,64,191,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, sweepY - 55, W, 110);
+    ctx.fillStyle = 'rgba(236,221,255,' + (0.09 * gA).toFixed(3) + ')';
+    ctx.fillRect(0, sweepY, W, 1);
+  }
+
+  function frame(now){
+    requestAnimationFrame(frame);
+    if(!running) { last = now; return; }
+    var dt = clamp((now - last) / 1000, 0.001, 0.05);
+    last = now;
+    t += dt;
+
+    /* self-degrade if frames run slow for a while */
+    ema += (dt * 1000 - ema) * 0.04;
+    if(ema > 36 && quality > 0.6){ quality = 0.6; build(); ema = 16; }
+
+    /* scroll velocity (px/s, smoothed) */
+    var sy = window.scrollY || 0;
+    var dy = sy - prevSY;
+    prevSY = sy;
+    sVel += (dy / dt - sVel) * 0.12;
+    if(!isFinite(sVel)) sVel = 0;
+
+    var gA = Math.min(t / 1.2, 1);            /* engine fades in on load */
+
+    ctx.clearRect(0, 0, W, H);
+    drawOrbs(gA);
+    drawGrid(dt, gA);
+    drawEmbers(dt, dy, gA);
+    if(!lite){
+      traceTimer -= dt;
+      if(traceTimer <= 0 && tracers.length < 2){
+        spawnTracer();
+        traceTimer = mob ? R(11, 18) : R(5.5, 10.5);
+      }
+      drawTracers(dt, gA);
+      drawSweep(dt, gA);
+    }
+  }
+
+  var rsz;
+  window.addEventListener('resize', function(){
+    clearTimeout(rsz);
+    rsz = setTimeout(build, 150);
+  }, {passive:true});
+  document.addEventListener('visibilitychange', function(){ running = !document.hidden; });
+
+  build();
+  requestAnimationFrame(frame);
+})();
+</script>
+
+{# ===== DECRYPT HEADLINES — section titles resolve out of cipher text =====
+   When a section heading first scrolls into view, its characters flicker
+   through glyphs and settle left-to-right (cheat-menu boot vibe). Text nodes
+   are scrambled in place so nested markup (gradient spans etc.) survives;
+   the original string is restored exactly, an aria-label preserves the real
+   name for screen readers during the effect, and min-height is locked so
+   nothing reflows. Runs once per heading, capped, skipped for
+   prefers-reduced-motion and inside the hero (it has its own choreography). #}
+<script>
+(function(){
+  'use strict';
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if(!('IntersectionObserver' in window)) return;
+
+  var GLYPHS = '!<>-_\\/=+*^?;:|01';
+  var SEL = 'main h2, .zz-h2, .fbq__title, .rev-title, .af-title, .dl-title, .zs-title, .af-h2';
+
+  function textNodes(el){
+    var out = [], w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+    var n;
+    while((n = w.nextNode())){ if(n.nodeValue && n.nodeValue.trim()) out.push(n); }
+    return out;
+  }
+
+  function run(el){
+    if(el.__zzdec) return;
+    el.__zzdec = 1;
+    var tns = textNodes(el);
+    var parts = [], total = 0;
+    for(var i = 0; i < tns.length; i++){
+      var s = tns[i].nodeValue;
+      parts.push({ n: tns[i], s: s });
+      total += s.length;
+    }
+    if(!total || total > 90) return;
+
+    var label = (el.textContent || '').replace(/\s+/g, ' ').trim();
+    if(label) el.setAttribute('aria-label', label);
+    var mh = el.style.minHeight;
+    el.style.minHeight = el.offsetHeight + 'px';
+
+    var D = Math.min(340 + total * 26, 1100);
+    var st = performance.now();
+
+    function fr(now){
+      var p = Math.min((now - st) / D, 1);
+      var reveal = Math.floor(p * total);
+      var g = 0;
+      for(var i = 0; i < parts.length; i++){
+        var src = parts[i].s, out = '';
+        for(var j = 0; j < src.length; j++, g++){
+          var ch = src.charAt(j);
+          if(ch === ' ' || ch === '\n' || g < reveal) out += ch;
+          else out += GLYPHS.charAt((Math.random() * GLYPHS.length) | 0);
+        }
+        parts[i].n.nodeValue = out;
+      }
+      if(p < 1){ requestAnimationFrame(fr); }
+      else{
+        for(var k = 0; k < parts.length; k++) parts[k].n.nodeValue = parts[k].s;
+        el.removeAttribute('aria-label');
+        el.style.minHeight = mh;
+      }
+    }
+    requestAnimationFrame(fr);
+  }
+
+  function boot(){
+    var els = [], seen = [];
+    document.querySelectorAll(SEL).forEach(function(el){
+      if(seen.indexOf(el) !== -1) return;
+      if(el.closest('.hero') || el.closest('.modal') || el.closest('[class*="marquee"]')) return;
+      seen.push(el);
+      if(els.length < 30) els.push(el);
+    });
+    if(!els.length) return;
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(!en.isIntersecting) return;
+        io.unobserve(en.target);
+        setTimeout(function(){ run(en.target); }, 140);
+      });
+    }, { threshold: 0.35, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function(el){ io.observe(el); });
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+
+{# ---- LIVE REVIEW COUNT SYNC ----
+   Every [data-zz-rc] (count), [data-zz-ravg] (average), [data-zz-rstars]
+   (stars) and the Product aggregateRating in meta-tags.njk are driven from ONE
+   number: the zz-review-total meta tag that /feedback computes server-side.
+   The numbers written into the markup are first-paint seeds only — nothing here
+   needs hand-editing when reviews come in.
+
+   WHY AN IFRAME AND NOT fetch(): the storefront sits behind SellAuth's bot
+   challenge, which answers any NON-navigation request to /feedback with the
+   "Please wait... <3" interstitial (HTTP 503). fetch() therefore failed for
+   every visitor and the seeds silently went stale (that's how the site sat on
+   "61" while /feedback said 78). An iframe load *is* a navigation, so it
+   clears the challenge and hands us the real document, same-origin.
+
+   Cost: /feedback seeds the cache for free whenever someone visits it, the
+   result is cached 12h, and the frame is stopped and torn down the instant the
+   meta tag is readable (~0.3s, before that page's deferred scripts run — and
+   master.njk drops them anyway inside a frame named zz-rc-sync). ---- #}
+<script>
+(function(){
+  var KEY='zzRev8', TTL=43200000; /* 12h */
+
+  function store(t,a){
+    var v=JSON.stringify({t:t,a:a,at:Date.now()});
+    try{localStorage.setItem(KEY,v);return;}catch(e){}
+    try{sessionStorage.setItem(KEY,v);}catch(e){}
+  }
+  function recall(){
+    try{return JSON.parse(localStorage.getItem(KEY)||sessionStorage.getItem(KEY)||'null');}catch(e){return null;}
+  }
+
+  /* total: authoritative, straight off /feedback's meta tag.
+     average: every review card actually rendered there. */
+  function totalOf(doc){
+    var m=doc.querySelector('meta[name="zz-review-total"]');
+    return (m&&parseInt(m.content,10))||0;
+  }
+  function avgOf(doc){
+    var cards=doc.querySelectorAll('[data-stars]'),sum=0,n=0;
+    for(var i=0;i<cards.length;i++){
+      var v=parseInt(cards[i].getAttribute('data-stars'),10);
+      if(v>=1&&v<=5){sum+=v;n++;}
+    }
+    return n?sum/n:0;
+  }
+
+  /* Keeps every rich-result rating in step with the visible numbers.
+     Walks the whole document because there are two sources of aggregateRating
+     on a product page: ours in meta-tags.njk, and SellAuth's own ProductGroup
+     block (nested in an array, and it only counts that product's SellAuth
+     feedbacks — 12 where the page says 78). Both get rewritten so Google never
+     sees two different review counts on one URL. */
+  function walk(node,t,a){
+    if(!node||typeof node!=='object')return;
+    if(Array.isArray(node)){for(var i=0;i<node.length;i++)walk(node[i],t,a);return;}
+    var ag=node.aggregateRating;
+    if(ag&&typeof ag==='object'){
+      if(t)ag.reviewCount=String(t);
+      if(a)ag.ratingValue=a.toFixed(1);
+    }
+    for(var k in node)if(k!=='aggregateRating'&&Object.prototype.hasOwnProperty.call(node,k))walk(node[k],t,a);
+  }
+  function schema(t,a){
+    document.querySelectorAll('script[type="application/ld+json"]').forEach(function(s){
+      if(s.textContent.indexOf('aggregateRating')===-1)return;
+      try{
+        var d=JSON.parse(s.textContent);
+        walk(d,t,a);
+        s.textContent=JSON.stringify(d);
+      }catch(e){}
+    });
+  }
+
+  function apply(t,a){
+    if(t)document.querySelectorAll('[data-zz-rc]').forEach(function(el){el.textContent=t;});
+    schema(t,a);
+    if(!a)return;
+    document.querySelectorAll('[data-zz-ravg]').forEach(function(el){el.textContent=a.toFixed(2);});
+
+    (function zzStars(a){
+    var pctFull=Math.max(0,Math.min(100,(a/5)*100));
+    document.querySelectorAll('[data-zz-rstars]').forEach(function(el){
+      if(!el.dataset.zzInit){
+        el.dataset.zzInit='1';
+        el.style.position='relative';
+        el.style.display='inline-block';
+        el.style.whiteSpace='nowrap';
+        var base=document.createElement('span');
+        base.textContent='\u2605\u2605\u2605\u2605\u2605';
+        base.style.opacity='0.22';
+        var fill=document.createElement('span');
+        fill.className='zz-star-fill';
+        fill.textContent='\u2605\u2605\u2605\u2605\u2605';
+        fill.style.cssText='position:absolute;left:0;top:0;overflow:hidden;white-space:nowrap;color:inherit';
+        el.textContent='';
+        el.appendChild(base);
+        el.appendChild(fill);
+      }
+      var f=el.querySelector('.zz-star-fill');
+      if(f)f.style.width=pctFull+'%';
+    });
+    document.querySelectorAll('[data-zz-rstars-svg]').forEach(function(el){
+      var stars=el.querySelectorAll('svg');
+      var exact=(a/5)*stars.length;
+      for(var i=0;i<stars.length;i++){
+        var fillAmt=Math.max(0,Math.min(1,exact-i));
+        stars[i].style.opacity=(0.22+0.78*fillAmt).toFixed(3);
+      }
+    });
+    })(a);
+  }
+
+  /* ---- on /feedback we ARE the source: publish for every other page ---- */
+  if(document.querySelector('meta[name="zz-review-total"]')){
+    var st=totalOf(document),sa=avgOf(document);
+    if(st){store(st,sa);schema(st,sa);}   /* its own counts are rendered server-side */
+    return;
+  }
+
+  /* nothing on this page depends on the number */
+  var hasUi=!!document.querySelector('[data-zz-rc],[data-zz-ravg],[data-zz-rstars],[data-zz-rstars-svg]');
+  var hasSchema=false;
+  document.querySelectorAll('script[type="application/ld+json"]').forEach(function(s){
+    if(s.textContent.indexOf('aggregateRating')>-1)hasSchema=true;
+  });
+  if(!hasUi&&!hasSchema)return;
+
+  /* The server-rendered seed is a FLOOR. feedback-page.njk warns that SellAuth
+     sometimes hands /feedback a data-starved render, which would compute a
+     total well below the truth — and a 12h sitewide cache would then spread it
+     everywhere. Review totals only grow, so anything under the seed is a bad
+     render: ignore it and keep what the page already says. */
+  var seed=0;
+  document.querySelectorAll('[data-zz-rc]').forEach(function(el){
+    var v=parseInt((el.textContent||'').replace(/\D/g,''),10);
+    if(v>seed)seed=v;
+  });
+  function trust(t){ return t&&t>=seed; }
+
+  /* paint the cache first (no flash for anyone who's been here in the last
+     12h), then revalidate only once it's actually stale */
+  var c=recall();
+  if(c&&trust(c.t)){
+    apply(c.t,c.a||0);
+    if((Date.now()-c.at)<TTL)return;
+  }
+
+  function refresh(){
+    var f=document.createElement('iframe'),done=false;
+    f.name='zz-rc-sync';                  /* master.njk strips deferred scripts on this */
+    f.title='review count sync';
+    f.setAttribute('aria-hidden','true');
+    f.tabIndex=-1;
+    f.setAttribute('referrerpolicy','same-origin');
+    f.style.cssText='position:absolute;left:-9999px;top:0;width:1px;height:1px;border:0;opacity:0;pointer-events:none';
+    function finish(){
+      if(done)return;done=true;
+      clearInterval(iv);clearTimeout(to);
+      try{f.contentWindow&&f.contentWindow.stop();}catch(e){}
+      try{f.remove();}catch(e){}
+    }
+    var iv=setInterval(function(){
+      var d;
+      try{d=f.contentDocument;}catch(e){finish();return;}   /* navigated off-origin */
+      if(!d)return;
+      var t=totalOf(d);
+      if(!t)return;                                         /* still the challenge page */
+      if(!trust(t)){finish();return;}                       /* starved render — keep the seed */
+      var a=avgOf(d);
+      apply(t,a);store(t,a);finish();
+    },120);
+    var to=setTimeout(finish,20000);      /* never cleared — the seeds just stay */
+    f.src='{{ "/feedback" | shopUrl }}';
+    document.body.appendChild(f);
+  }
+
+  /* never compete with the page the visitor actually asked for.
+     (Deliberately a plain timer, not requestIdleCallback — measured on the live
+     product page, rIC sat on the callback for 18s behind the marquee/canvas
+     rAF loops even with a 4s timeout. A fixed delay after load is predictable.) */
+  function later(){ setTimeout(refresh,1200); }
+  if(document.readyState==='complete')later();
+  else window.addEventListener('load',later);
+})();
+</script>

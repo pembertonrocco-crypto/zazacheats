@@ -1,0 +1,388 @@
+<section class="comparison component" data-component-id="{{ componentId }}">
+  <div class="comparison__glows" aria-hidden="true">
+    <div class="comparison__glow comparison__glow--left"></div>
+    <div class="comparison__glow comparison__glow--right"></div>
+  </div>
+  <div class="comparison__inner">
+    <div class="comparison-badge-wrap">
+      <div class="comparison-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 512 512" style="flex-shrink:0">
+          <path fill="rgba(180,210,255,0.8)" d="M288 448H64V224h64v-64H64c-35.3 0-64 28.7-64 64v224c0 35.3 28.7 64 64 64h224c35.3 0 64-28.7 64-64v-64h-64v64zm-64-96h224c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H224c-35.3 0-64 28.7-64 64v224c0 35.3 28.7 64 64 64z"/>
+        </svg>
+        <span>See the Difference</span>
+      </div>
+    </div>
+    {% if properties.title %}
+    <div class="section-title">
+      <h2>{{ properties.title | renderString }}</h2>
+    </div>
+    {% endif %}
+    {% if properties.subtitle %}
+    <div class="section-subtitle">
+      <p>{{ properties.subtitle | renderString }}</p>
+    </div>
+    {% endif %}
+    <div class="comparison__labels">
+      <span class="comparison__label">Before</span>
+      <span class="comparison__label">After</span>
+    </div>
+    <div class="comparison__card">
+      <div class="comparison__stage" id="comparisonStage-{{ componentId }}">
+        <div class="comparison__after-img">
+          <img src="{{ properties.after_image }}" alt="After" draggable="false" loading="lazy" decoding="async">
+        </div>
+        <div class="comparison__before-img" id="comparisonBefore-{{ componentId }}">
+          <img src="{{ properties.before_image }}" alt="Before" draggable="false" loading="lazy" decoding="async">
+        </div>
+        <div class="comparison__handle" id="comparisonHandle-{{ componentId }}">
+          <div class="comparison__line"></div>
+          <canvas class="comparison__canvas" id="comparisonCanvas-{{ componentId }}"></canvas>
+          <div class="comparison__grip">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="zznx">
+      <p class="zznx__line">Drag the slider, then decide for yourself.</p>
+      <div class="zznx__row">
+        <a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="zznx__btn">Play the right side</a>
+        <a href="{{ '/feedback' | shopUrl }}" class="zznx__btn zznx__btn--ghost">Read customer reviews</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.comparison {
+  padding: 8rem 0;
+  background: var(--primary-background-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.comparison__glows {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.comparison__glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+}
+
+.comparison__glow--left {
+  width: 220px;
+  height: 220px;
+  top: 62%;
+  transform: translateY(-50%);
+  left: 5%;
+  background: radial-gradient(circle, rgba(124,58,237,0.2) 0%, transparent 70%);
+}
+
+.comparison__glow--right {
+  width: 260px;
+  height: 260px;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 5%;
+  background: radial-gradient(circle, rgba(191,64,191,0.18) 0%, transparent 70%);
+}
+
+.comparison__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.comparison-badge-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.comparison-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 999px;
+  padding: 0.38rem 1.05rem 0.38rem 0.75rem;
+  color: rgba(255,255,255,0.72);
+  font-size: 0.79rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+
+.comparison-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15%; right: 15%;
+  height: 6px;
+  background: linear-gradient(90deg, transparent, rgba(180,210,255,0.18) 40%, rgba(180,210,255,0.18) 60%, transparent);
+  border-radius: 999px;
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.comparison-badge::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 15%; right: 15%;
+  height: 6px;
+  background: linear-gradient(90deg, transparent, rgba(180,210,255,0.12) 40%, rgba(180,210,255,0.12) 60%, transparent);
+  border-radius: 999px;
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.comparison-badge span {
+  font-size: 0.79rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(255,255,255,0.72);
+}
+
+.comparison__labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.55rem;
+}
+
+.comparison__label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  width: 50%;
+  text-align: center;
+}
+
+.comparison__card {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 10px;
+  background: rgba(255,255,255,0.03);
+}
+
+.comparison__stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  border-radius: 6px;
+  user-select: none;
+}
+
+.comparison__after-img,
+.comparison__before-img {
+  position: absolute;
+  inset: 0;
+}
+
+.comparison__after-img img,
+.comparison__before-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+.comparison__before-img {
+  clip-path: inset(0 50% 0 0);
+}
+
+.comparison__handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.comparison__line {
+  position: absolute;
+  inset: 0;
+  width: 1px;
+  background: #fff;
+}
+
+.comparison__canvas {
+  position: absolute;
+  top: 50%;
+  left: 1px;
+  transform: translateY(-50%);
+  width: 80px;
+  height: 220px;
+  pointer-events: none;
+}
+
+.comparison__grip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.comparison__grip svg {
+  width: 11px;
+  height: 11px;
+  color: #111;
+  flex-shrink: 0;
+}
+
+/* ===== flashy upgrades ===== */
+.comparison__glow{animation:cmpGlow 10s ease-in-out infinite}
+.comparison__glow--right{animation-delay:-5s}
+@keyframes cmpGlow{0%,100%{transform:translate(0,0) scale(1);opacity:.6}50%{transform:translate(-14px,12px) scale(1.12);opacity:.95}}
+.comparison__card{opacity:0;transform:translateY(28px) scale(.98);
+  transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.comparison__card.cmp-in{opacity:1;transform:translateY(0) scale(1)}
+@media (prefers-reduced-motion: reduce){
+  .comparison__glow{animation:none!important}
+  .comparison__card{opacity:1!important;transform:none!important}
+}
+</style>
+<script>
+(function(){
+  var section=document.querySelector('[data-component-id="{{ componentId }}"]');
+  if(!section) return;
+  var card=section.querySelector('.comparison__card');
+  if(!card) return;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce||!('IntersectionObserver' in window)){card.classList.add('cmp-in');return;}
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('cmp-in');io.unobserve(e.target);}});},{threshold:0.2});
+  io.observe(card);
+})();
+</script>
+
+<script>
+(function() {
+  var stage = document.getElementById('comparisonStage-{{ componentId }}');
+  var beforeEl = document.getElementById('comparisonBefore-{{ componentId }}');
+  var handle = document.getElementById('comparisonHandle-{{ componentId }}');
+  var canvas = document.getElementById('comparisonCanvas-{{ componentId }}');
+  if (!stage || !beforeEl || !handle || !canvas) return;
+
+  var CW = 80;
+  var CH = 220;
+  canvas.width = CW;
+  canvas.height = CH;
+  var ctx = canvas.getContext('2d');
+
+  var CY = CH / 2;
+  var particles = [];
+
+  for (var i = 0; i < 55; i++) {
+    particles.push({
+      x: Math.random() * 65 + 2,
+      y: CY + (Math.random() - 0.5) * 180,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      r: Math.random() * 0.9 + 0.4,
+      alpha: Math.random() * 0.5 + 0.4,
+      aDir: Math.random() > 0.5 ? 1 : -1,
+      aSpeed: Math.random() * 0.018 + 0.008
+    });
+  }
+
+  function drawParticles() {
+    ctx.clearRect(0, 0, CW, CH);
+
+    var glow = ctx.createRadialGradient(0, CY, 0, 0, CY, 55);
+    glow.addColorStop(0,    'rgba(180,200,255,1)');
+    glow.addColorStop(0.15, 'rgba(150,175,255,0.85)');
+    glow.addColorStop(0.4,  'rgba(191,64,191,0.35)');
+    glow.addColorStop(0.75, 'rgba(191,64,191,0.08)');
+    glow.addColorStop(1,    'rgba(191,64,191,0)');
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(0, 0, CW, CH);
+    ctx.clip();
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, CY - 55, 55, 110);
+    ctx.restore();
+
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 1) p.vx += 0.03;
+      if (p.x > 70) p.vx -= 0.03;
+      if (p.y < CY - 185) p.vy += 0.02;
+      if (p.y > CY + 185) p.vy -= 0.02;
+      p.alpha += p.aDir * p.aSpeed;
+      if (p.alpha > 0.92 || p.alpha < 0.2) p.aDir *= -1;
+
+      var dx = p.x / 70;
+      var dy = (p.y - CY) / 185;
+      var fade = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy));
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(210,222,255,' + (p.alpha * fade) + ')';
+      ctx.fill();
+    }
+
+    requestAnimationFrame(drawParticles);
+  }
+  drawParticles();
+
+  var dragging = false;
+
+  function setPos(clientX) {
+    var rect = stage.getBoundingClientRect();
+    var raw = (clientX - rect.left) / rect.width;
+    var clamped = Math.min(Math.max(raw, 0.01), 0.99);
+    beforeEl.style.clipPath = 'inset(0 ' + ((1 - clamped) * 100) + '% 0 0)';
+    handle.style.left = (clamped * 100) + '%';
+  }
+
+  stage.addEventListener('mousedown', function(e) {
+    dragging = true;
+    setPos(e.clientX);
+  });
+  stage.addEventListener('mousemove', function(e) {
+    setPos(e.clientX);
+  });
+  window.addEventListener('mouseup', function() { dragging = false; });
+
+  stage.addEventListener('touchstart', function(e) {
+    dragging = true;
+    setPos(e.touches[0].clientX);
+  }, { passive: true });
+  window.addEventListener('touchmove', function(e) {
+    if (dragging) setPos(e.touches[0].clientX);
+  }, { passive: true });
+  window.addEventListener('touchend', function() { dragging = false; });
+})();
+</script>

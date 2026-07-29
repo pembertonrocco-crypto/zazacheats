@@ -1,0 +1,279 @@
+{# =========================================================================
+   v62: BUNDLE-BLOCK — free NFA bundles on Month / Lifetime keys.
+   Sits under the variant picker on the cheat product page.
+   - Month Key      -> 2× NFA (500–1000 hrs) free + 3 replacements each
+                       (standard 6h claim window per replacement)
+   - Lifetime Key   -> 5× NFA (500–1000 hrs) free
+     Both are SellAuth "Bundle Offers": cart-triggered fixed discounts that
+     zero out the NFA cost. Month = $5.00 off (2 × $2.50). Lifetime = $12.50
+     off (5 × $2.50). The customer MUST have the key + the NFAs in the cart
+     for the discount to fire — hence the add-to-cart wiring.
+     NOTE: these discounts are fixed amounts. Repricing NFAs makes them stale,
+     and buyers would pay for something advertised as free. Update both.
+     -----------------------------------------------------------------------
+     IDS (must match SellAuth — update here if products are ever recreated):
+       cheat product      760665
+       variant month      1259108
+       variant lifetime   1259110
+       NFA product        766224
+       variant 500-1000   1277466
+   -------------------------------------------------------------------------
+   Clicking a bundle card selects that variant (delegates the click to the
+   real .pf-variant button so Alpine state stays the source of truth).
+   Static HTML + progressive-enhancement JS; no template vars used, so this
+   renders safely under strict mode. Cart adds degrade to variant-select if
+   appCart is unavailable. Delivery is instant via the bundle discount.
+   ========================================================================= #}
+<div class="zzb" id="zz-bundles">
+  <div class="zzb__border" aria-hidden="true"></div>
+  <div class="zzb__headrow">
+    <span class="zzb__gift" aria-hidden="true">🎁</span>
+    <p class="zzb__eyebrow"><span class="zzb__dot"></span>FREE NFA BUNDLES — REAL VALUE, ZERO COST</p>
+    <span class="zzb__ends" data-zzb-ends="" hidden></span>
+  </div>
+  <p class="zzb__sub">Month and Lifetime keys come with free NFA accounts to burn — so you're never cheating on your main.</p>
+
+  <div class="zzb__grid">
+
+    <button type="button" class="zzb__card" data-zzb-variant="month">
+      <div class="zzb__head">
+        <span class="zzb__key">1 MONTH KEY</span>
+        <span class="zzb__free">$5.00 FREE</span>
+      </div>
+      <ul class="zzb__list">
+        <li><strong>2× NFA accounts</strong> — 500–1000 hrs each</li>
+        <li><strong>3× warranty</strong> — up to 3 replacements per account, each within the usual 6-hour window (standard is 1)</li>
+        <li>Free when you add both to your cart with the key — discount applies automatically</li>
+      </ul>
+      <span class="zzb__cta" data-zzb-cta>Select Month Key →</span>
+      <span class="zzb__add" data-zzb-add="month" role="button" tabindex="0">+ Add bundle to cart</span>
+    </button>
+
+    <button type="button" class="zzb__card zzb__card--top" data-zzb-variant="lifetime">
+      <div class="zzb__head">
+        <span class="zzb__key">LIFETIME KEY</span>
+        <span class="zzb__free zzb__free--top">$12.50 FREE</span>
+      </div>
+      <ul class="zzb__list">
+        <li><strong>5× NFA accounts</strong> — 500–1000 hrs each</li>
+        <li>Free when you add all 5 to your cart with the key — discount applies automatically</li>
+      </ul>
+      <span class="zzb__cta" data-zzb-cta>Select Lifetime Key →</span>
+      <span class="zzb__add zzb__add--top" data-zzb-add="lifetime" role="button" tabindex="0">+ Add bundle to cart</span>
+    </button>
+
+  </div>
+
+  <p class="zzb__note">Add the key and the NFA accounts to your cart together — the bundle discount applies automatically at checkout and the accounts come out free. Everything delivers instantly, no ticket needed.</p>
+</div>
+
+<style>
+.zzb{position:relative;margin:18px 0 6px;border-radius:14px;background:rgba(8,11,28,.72);padding:18px;overflow:hidden;isolation:isolate}
+.zzb__border{position:absolute;inset:0;border-radius:14px;padding:1.5px;background:linear-gradient(120deg,rgba(var(--cl-accent-rgb,191,64,191),.85),rgba(124,58,237,.5),rgba(34,197,94,.55),rgba(var(--cl-accent-rgb,191,64,191),.85));background-size:300% 300%;animation:zzb-border 6s ease infinite;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:0}
+@keyframes zzb-border{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.zzb>*:not(.zzb__border){position:relative;z-index:1}
+.zzb__headrow{display:flex;align-items:center;gap:10px;margin:0 0 6px}
+.zzb__gift{font-size:1.15rem;filter:drop-shadow(0 0 8px rgba(var(--cl-accent-rgb,191,64,191),.8));animation:zzb-bounce 2.6s ease-in-out infinite}
+@keyframes zzb-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.zzb__eyebrow{display:flex;align-items:center;gap:8px;margin:0;font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.16em;font-weight:700;color:#4ade80;text-shadow:0 0 12px rgba(34,197,94,.5)}
+.zzb__dot{width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 10px #4ade80;animation:zzb-pulse 2.2s ease-in-out infinite}
+@keyframes zzb-pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.zzb__sub{margin:0 0 12px;font-size:.78rem;line-height:1.5;color:rgba(200,215,240,.65)}
+.zzb__grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.zzb__card{display:flex;flex-direction:column;gap:8px;text-align:left;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);cursor:pointer;font-family:inherit;color:inherit;transition:border-color .18s ease,background .18s ease,transform .18s ease,opacity .18s ease}
+.zzb__card:hover{border-color:rgba(var(--cl-accent-rgb,191,64,191),.5);transform:translateY(-1px)}
+.zzb__card.zzb--active{border-color:rgba(var(--cl-accent-rgb,191,64,191),.65);background:rgba(var(--cl-accent-rgb,191,64,191),.08);box-shadow:0 0 24px -10px rgba(var(--cl-accent-rgb,191,64,191),.8)}
+.zzb__card--top{border-color:rgba(var(--cl-accent-rgb,191,64,191),.4);background:linear-gradient(160deg,rgba(var(--cl-accent-rgb,191,64,191),.06),rgba(124,58,237,.05))}
+.zzb__card.zzb--dim{opacity:.55}
+.zzb__card.zzb--dim:hover{opacity:1}
+.zzb__head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.zzb__key{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.1em;color:#fff;font-weight:700}
+.zzb-vbadge{display:block;margin-top:4px;font-family:'JetBrains Mono',monospace;font-size:.54rem;letter-spacing:.08em;font-weight:800;color:#0a0714;background:linear-gradient(90deg,#4ade80,#a3e635);padding:2px 7px;border-radius:99px;width:max-content;box-shadow:0 0 12px -3px rgba(74,222,128,.8)}
+.zzb__free{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.1em;padding:3px 7px;border-radius:99px;border:1px solid rgba(34,197,94,.45);background:rgba(34,197,94,.1);color:#4ade80}
+.zzb__free--top{border-color:rgba(var(--cl-accent-rgb,191,64,191),.5);background:rgba(var(--cl-accent-rgb,191,64,191),.12);color:var(--cl-accent,#BF40BF)}
+.zzb__list{margin:0;padding:0 0 0 16px;display:flex;flex-direction:column;gap:4px}
+.zzb__list li{font-size:.76rem;line-height:1.45;color:rgba(220,230,250,.8)}
+.zzb__list strong{color:#fff}
+.zzb__cta{margin-top:auto;font-size:.72rem;font-weight:700;color:rgba(var(--cl-accent-rgb,191,64,191),.95)}
+.zzb__card.zzb--active .zzb__cta{color:#4ade80}
+.zzb__add{display:block;margin-top:8px;text-align:center;font-size:.74rem;font-weight:800;padding:9px 12px;border-radius:8px;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--cl-accent,#BF40BF),#7C3AED);box-shadow:0 6px 20px -8px rgba(var(--cl-accent-rgb,191,64,191),.9);transition:transform .15s ease,filter .15s ease}
+.zzb__add:hover{transform:translateY(-1px);filter:brightness(1.12)}
+.zzb__add.zzb--busy{opacity:.6;pointer-events:none}
+.zzb__add.zzb--done{background:linear-gradient(135deg,#22c55e,#16a34a);box-shadow:0 6px 20px -8px rgba(34,197,94,.9)}
+.zzb__note{margin:11px 0 0;font-size:.68rem;line-height:1.5;color:rgba(200,215,240,.5)}
+@media (max-width:560px){.zzb__grid{grid-template-columns:1fr}}
+.zzb__ends{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.12em;font-weight:700;padding:4px 9px;border-radius:99px;border:1px solid rgba(250,204,21,.5);background:rgba(250,204,21,.1);color:#fde047;box-shadow:0 0 14px -4px rgba(250,204,21,.6)}
+@media (prefers-reduced-motion:reduce){.zzb__border,.zzb__gift,.zzb__dot{animation:none}}
+</style>
+
+<script>
+/* Honest urgency. Set data-zzb-ends to a real end date (YYYY-MM-DD) and the
+   badge shows "ENDS 31 JUL" until that date, then hides itself — it can never
+   claim a deadline that has passed. Leave it empty and no urgency is shown.
+   Vague "limited time only" with no date is deliberately not supported: if
+   there's no real deadline, there's no badge. */
+(function(){
+  var el=document.querySelector('[data-zzb-ends]');
+  if(!el) return;
+  var raw=(el.getAttribute('data-zzb-ends')||'').trim();
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(raw)) return;
+  var end=new Date(raw+'T23:59:59');
+  if(isNaN(end)||end<new Date()) return;
+  var months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  el.textContent='ENDS '+end.getDate()+' '+months[end.getMonth()];
+  el.hidden=false;
+})();
+</script>
+
+<script>
+/* Bundle cards <-> variant picker sync. Clicking a card clicks the matching
+   real variant button (Alpine stays the source of truth); selecting a variant
+   highlights the matching card. Name matching is substring-based and
+   case-insensitive so "1 Month Key" / "Month Key" / "Lifetime Key" all work. */
+(function(){
+  function init(){
+    var root=document.getElementById('zz-bundles');
+    if(!root) return;
+    var cards=root.querySelectorAll('[data-zzb-variant]');
+    var buttons=Array.prototype.slice.call(document.querySelectorAll('.pf-variant'));
+    if(!buttons.length){ return; }
+
+    function nameOf(btn){
+      var n=btn.querySelector('.pf-variant__name');
+      return (n?n.textContent:btn.textContent||'').toLowerCase();
+    }
+    function findBtn(kind){
+      for(var i=0;i<buttons.length;i++){
+        if(nameOf(buttons[i]).indexOf(kind)!==-1) return buttons[i];
+      }
+      return null;
+    }
+
+    // wire card -> variant
+    Array.prototype.forEach.call(cards,function(card){
+      var kind=card.getAttribute('data-zzb-variant');
+      var btn=findBtn(kind);
+      if(!btn){ card.style.display='none'; return; }
+      card.addEventListener('click',function(){
+        btn.click();
+        btn.scrollIntoView({behavior:'smooth',block:'center'});
+      });
+    });
+
+    // reflect variant -> card highlight
+    function refresh(){
+      var active=null;
+      for(var i=0;i<buttons.length;i++){
+        if(buttons[i].classList.contains('pf-variant--active')){ active=nameOf(buttons[i]); break; }
+      }
+      Array.prototype.forEach.call(cards,function(card){
+        var kind=card.getAttribute('data-zzb-variant');
+        var isActive=!!active&&active.indexOf(kind)!==-1;
+        card.classList.toggle('zzb--active',isActive);
+        card.classList.toggle('zzb--dim',!!active&&!isActive);
+        var cta=card.querySelector('[data-zzb-cta]');
+        if(cta) cta.textContent=isActive?'✓ Included with your key':('Select '+(kind==='month'?'Month':'Lifetime')+' Key →');
+      });
+    }
+    buttons.forEach(function(b){ b.addEventListener('click',function(){ setTimeout(refresh,0); }); });
+    refresh();
+
+    /* Badge the variant picker itself — the one element every buyer reads.
+       Real values: month bundle $5.00, lifetime $12.50 (NFAs at $2.50). */
+    [['month','+$5 FREE NFAs'],['lifetime','+$12.50 FREE NFAs']].forEach(function(pair){
+      var btn=findBtn(pair[0]);
+      if(!btn||btn.querySelector('.zzb-vbadge')) return;
+      var tag=document.createElement('span');
+      tag.className='zzb-vbadge';
+      tag.textContent=pair[1];
+      btn.appendChild(tag);
+    });
+
+    /* ---- one-click bundle -> cart -------------------------------------
+         Month    = 1x month key   + 2x NFA 500-1000  -> $5.00 off
+         Lifetime = 1x lifetime    + 5x NFA 500-1000  -> $12.50 off        */
+    var IDS={cheat:760665,month:1259108,lifetime:1259110,nfaProduct:766224,nfa500:1277466};
+    var RECIPE={
+      month:{ keyVariant:IDS.month, nfaQty:2 },
+      lifetime:{ keyVariant:IDS.lifetime, nfaQty:5 }
+    };
+
+  /* Cart adds. appCart lives INSIDE Alpine.data('app'), not on window, so we
+     reach it via Alpine.$data(#app). If Alpine isn't ready we write the same
+     localStorage shape appCart.init() reads and send them to /cart, which
+     rehydrates identically. Either path ends with the exact cart the SellAuth
+     Bundle Offer expects, so the discount fires by itself. */
+  function getCart(){
+    try{
+      var root=document.getElementById('app');
+      if(root&&window.Alpine&&typeof Alpine.$data==='function'){
+        var d=Alpine.$data(root);
+        if(d&&d.appCart&&typeof d.appCart.add==='function') return d.appCart;
+      }
+    }catch(e){}
+    return null;
+  }
+
+  function addViaStorage(items){
+    try{
+      var cart=[];
+      try{ cart=JSON.parse(localStorage.getItem('cart')||'[]'); if(!Array.isArray(cart)) cart=[]; }catch(e){ cart=[]; }
+      items.forEach(function(it){
+        var found=null;
+        for(var i=0;i<cart.length;i++){
+          if(cart[i].variantId===it.variantId&&!cart[i].parentVariantId){ found=cart[i]; break; }
+        }
+        if(found){ found.quantity+=it.quantity; }
+        else{ cart.push({productId:it.productId,variantId:it.variantId,quantity:it.quantity,parentVariantId:null}); }
+      });
+      localStorage.setItem('cart',JSON.stringify(cart));
+      return true;
+    }catch(e){ return false; }
+  }
+
+  function addBundleItems(kind){
+    var r=RECIPE[kind];
+    if(!r) return false;
+    var items=[
+      {productId:IDS.cheat, variantId:r.keyVariant, quantity:1},
+      {productId:IDS.nfaProduct, variantId:IDS.nfa500, quantity:r.nfaQty}
+    ];
+    var cart=getCart();
+    if(cart){
+      items.forEach(function(it){ cart.add(it.productId,it.variantId,it.quantity); });
+      return 'live';
+    }
+    if(addViaStorage(items)) return 'storage';
+    return false;
+  }
+
+    Array.prototype.forEach.call(root.querySelectorAll('[data-zzb-add]'),function(btn){
+      function go(e){
+        e.preventDefault();
+        e.stopPropagation();
+        if(btn.classList.contains('zzb--busy')) return;
+        var kind=btn.getAttribute('data-zzb-add');
+        btn.classList.add('zzb--busy');
+        btn.textContent='Adding…';
+        var res=addBundleItems(kind);
+        if(res==='live'){
+          btn.classList.remove('zzb--busy');
+          btn.classList.add('zzb--done');
+          btn.textContent='✓ Added — discount applies at checkout';
+        }else if(res==='storage'){
+          btn.textContent='✓ Added — opening cart…';
+          window.location.href='/cart';
+        }else{
+          btn.classList.remove('zzb--busy');
+          btn.textContent='+ Add bundle to cart';
+          var fb=findBtn(kind); if(fb){ fb.click(); fb.scrollIntoView({behavior:'smooth',block:'center'}); }
+        }
+      }
+      btn.addEventListener('click',go);
+      btn.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' ') go(e); });
+    });
+  }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',init); }
+  else { init(); }
+})();
+</script>

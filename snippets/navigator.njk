@@ -1,0 +1,280 @@
+{#
+  navigator.njk — sitewide navigation & motion layer for Zaza Cheats.
+  ---------------------------------------------------------------------------
+  Adds six things the theme didn't have yet:
+
+   1. SMART NAVBAR    — the floating pill slides away when scrolling down and
+                        returns the instant the visitor scrolls up, so content
+                        gets the full screen but navigation is never more than
+                        one flick away.
+   2. SCROLL PROGRESS — a 2px brand-gradient hairline across the very top of
+                        the viewport showing how far down the page you are.
+   3. INSTANT PAGES   — internal links are prefetched on hover / touch-start,
+                        so by the time the click lands the next page is
+                        already in cache. Biggest honest conversion lever
+                        there is: speed.
+   4. VIEW TRANSITIONS— cross-document fade+rise between pages (pure CSS,
+                        Chromium; other browsers simply ignore it).
+   5. CARD TILT       — product cards get a subtle pointer-driven 3D tilt with
+                        a light glare that follows the cursor. Fine-pointer
+                        devices only.
+   6. BACK TO TOP     — appears after ~1.5 screens of scrolling, desktop only
+                        (mobile bottom edge belongs to the buy bars).
+
+  House rules honoured:
+   · Static HTML/CSS/JS only — no platform variables, no {% set %} arrays.
+   · Progressive enhancement — no JS, no problem; page behaves exactly as before.
+   · prefers-reduced-motion → progress bar stays (orientation, not motion),
+     everything else is disabled.
+   · Save-Data / slow connections → prefetching disabled automatically.
+#}
+
+{# ---- scroll progress hairline ---- #}
+<div class="zznv-progress" id="zznv-progress" aria-hidden="true"><span class="zznv-progress__bar" id="zznv-progress-bar"></span></div>
+
+{# ---- back to top ---- #}
+<button type="button" class="zznv-top" id="zznv-top" aria-label="Back to top" hidden>
+  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 13V3M8 3L3.5 7.5M8 3l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<style>
+  /* ============ 1. smart navbar ============ */
+  .nb-wrapper{transition:transform .38s cubic-bezier(.22,1,.36,1),opacity .3s ease}
+  html.zznv-navhide .nb-wrapper{transform:translateY(calc(-100% - 1.5rem));opacity:0;pointer-events:none!important}
+  html.zznv-navhide .nb-wrapper *{pointer-events:none!important}
+  /* compact pill once you're into the page — quieter, more content room */
+  .nb-pill{transition:padding .3s cubic-bezier(.22,1,.36,1),background .3s ease,box-shadow .3s ease,border-color .3s ease}
+  html.zznv-scrolled .nb-pill{padding-top:.5rem;padding-bottom:.5rem;
+    background:rgba(6,9,22,.86);border-color:rgba(191,64,191,.22);
+    box-shadow:0 0 0 1px rgba(255,255,255,.04) inset,0 10px 44px rgba(0,0,0,.65),0 0 24px -8px rgba(191,64,191,.35)}
+  @media (prefers-reduced-motion:reduce){
+    .nb-wrapper,.nb-pill{transition:none}
+    html.zznv-navhide .nb-wrapper{transform:none;opacity:1;pointer-events:auto!important}
+    html.zznv-navhide .nb-wrapper *{pointer-events:auto!important}
+  }
+
+  /* ============ 2. scroll progress ============ */
+  .zznv-progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:1200;pointer-events:none;background:transparent}
+  .zznv-progress__bar{display:block;height:100%;width:100%;transform-origin:0 50%;transform:scaleX(0);
+    background:linear-gradient(90deg,#BF40BF,#7C3AED 60%,#38bdf8);
+    box-shadow:0 0 8px rgba(191,64,191,.55)}
+  @media (prefers-reduced-motion:no-preference){
+    .zznv-progress__bar{transition:transform .08s linear}
+  }
+
+  /* ============ 4. view transitions (cross-document, Chromium) ============ */
+  @media (prefers-reduced-motion:no-preference){
+    @view-transition{navigation:auto}
+    @keyframes zznvVtOut{to{opacity:0;transform:translateY(-8px)}}
+    @keyframes zznvVtIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+    ::view-transition-old(root){animation:zznvVtOut .18s ease both}
+    ::view-transition-new(root){animation:zznvVtIn .26s cubic-bezier(.22,1,.36,1) both}
+  }
+
+  /* ============ 5. card tilt ============ */
+  @media (pointer:fine) and (prefers-reduced-motion:no-preference){
+    .pc{transform-style:preserve-3d}
+    .pc.zznv-tilting{transition:border-color .3s ease,background .3s ease,box-shadow .3s ease}/* transform handled inline */
+    .zznv-glare{position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:inherit;opacity:0;
+      background:radial-gradient(420px circle at var(--zznv-gx,50%) var(--zznv-gy,50%),rgba(255,255,255,.10),transparent 55%);
+      transition:opacity .25s ease}
+    .pc.zznv-tilting .zznv-glare{opacity:1}
+  }
+
+  /* ============ 6. back to top ============ */
+  .zznv-top{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:940;display:none;align-items:center;justify-content:center;
+    width:42px;height:42px;border-radius:12px;cursor:pointer;
+    color:#e8ddff;background:rgba(10,13,30,.88);border:1px solid rgba(191,64,191,.35);
+    box-shadow:0 10px 30px -10px rgba(0,0,0,.7),0 0 18px -6px rgba(191,64,191,.4);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    opacity:0;transform:translateY(10px)}
+  @media (min-width:769px){ .zznv-top{display:inline-flex} }
+  .zznv-top.zznv-top--show{opacity:1;transform:none}
+  .zznv-top:hover{border-color:rgba(191,64,191,.7);color:#fff;
+    box-shadow:0 14px 34px -10px rgba(0,0,0,.75),0 0 26px -6px rgba(191,64,191,.6)}
+  @media (prefers-reduced-motion:no-preference){
+    .zznv-top{transition:opacity .3s ease,transform .3s cubic-bezier(.22,1,.36,1),border-color .25s ease,box-shadow .25s ease,color .2s ease}
+  }
+
+  /* ============ 7. desktop jump-to-checkout (product page only) ============ */
+  .zznv-buy{position:fixed;right:20px;bottom:calc(72px + env(safe-area-inset-bottom,0px));z-index:940;display:none;align-items:center;gap:8px;
+    padding:10px 15px;border-radius:12px;cursor:pointer;text-decoration:none;
+    font-family:'Satoshi','Inter',system-ui,sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.01em;
+    color:#fff;background:linear-gradient(135deg,rgba(191,64,191,.92),rgba(124,58,237,.92));
+    border:1px solid rgba(255,255,255,.18);
+    box-shadow:0 14px 34px -12px rgba(191,64,191,.65),0 8px 22px -10px rgba(0,0,0,.7);
+    opacity:0;transform:translateY(10px);pointer-events:none}
+  @media (min-width:769px){ .zznv-buy{display:inline-flex} }
+  .zznv-buy.zznv-buy--show{opacity:1;transform:none;pointer-events:auto}
+  .zznv-buy:hover{color:#fff;filter:brightness(1.08);
+    box-shadow:0 18px 40px -12px rgba(191,64,191,.85),0 10px 24px -10px rgba(0,0,0,.75)}
+  @media (prefers-reduced-motion:no-preference){
+    .zznv-buy{transition:opacity .3s ease,transform .3s cubic-bezier(.22,1,.36,1),filter .2s ease,box-shadow .25s ease}
+  }
+</style>
+
+<script>
+(function(){
+  'use strict';
+  var doc=document.documentElement;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- 2. scroll progress (kept on for reduced motion — it's orientation) */
+  try{
+    var bar=document.getElementById('zznv-progress-bar');
+    var ticking=false;
+    function paint(){
+      ticking=false;
+      var max=(doc.scrollHeight-window.innerHeight)||1;
+      var p=Math.min(1,Math.max(0,(window.scrollY||doc.scrollTop)/max));
+      if(bar) bar.style.transform='scaleX('+p.toFixed(4)+')';
+    }
+    function onScrollP(){ if(!ticking){ ticking=true; requestAnimationFrame(paint); } }
+    window.addEventListener('scroll',onScrollP,{passive:true});
+    window.addEventListener('resize',onScrollP,{passive:true});
+    paint();
+  }catch(e){}
+
+  /* ---------- 1. smart navbar ---------- */
+  try{
+    var lastY=window.scrollY||0, downAccum=0;
+    function menuOpen(){
+      /* never hide the nav while the mobile menu / any dropdown is open */
+      return !!document.querySelector('.nb-wrapper .show, .nb-wrapper [aria-expanded="true"]');
+    }
+    function onScrollNav(){
+      var y=window.scrollY||doc.scrollTop||0;
+      var dy=y-lastY; lastY=y;
+      doc.classList.toggle('zznv-scrolled', y>24);
+      if(reduce) return;
+      if(menuOpen()){ doc.classList.remove('zznv-navhide'); downAccum=0; return; }
+      if(dy>0 && y>180){
+        downAccum+=dy;
+        if(downAccum>28) doc.classList.add('zznv-navhide');
+      }else if(dy<0 || y<=180){
+        downAccum=0;
+        doc.classList.remove('zznv-navhide');
+      }
+    }
+    window.addEventListener('scroll',function(){ requestAnimationFrame(onScrollNav); },{passive:true});
+    /* reveal nav when keyboard focus moves into it (tab navigation) */
+    document.addEventListener('focusin',function(ev){
+      if(ev.target.closest && ev.target.closest('.nb-wrapper')) doc.classList.remove('zznv-navhide');
+    });
+  }catch(e){}
+
+  /* ---------- 6. back to top ---------- */
+  try{
+    var topBtn=document.getElementById('zznv-top');
+    if(topBtn){
+      topBtn.hidden=false;
+      var shown=false;
+      window.addEventListener('scroll',function(){
+        var past=(window.scrollY||0)>window.innerHeight*1.5;
+        if(past!==shown){ shown=past; topBtn.classList.toggle('zznv-top--show',past); }
+      },{passive:true});
+      topBtn.addEventListener('click',function(){
+        if(window.locomotiveScroll && window.locomotiveScroll.scrollTo){
+          try{ window.locomotiveScroll.scrollTo(0); return; }catch(_){}
+        }
+        window.scrollTo({top:0,behavior:reduce?'auto':'smooth'});
+      });
+    }
+  }catch(e){}
+
+  /* ---------- 7. desktop jump-to-checkout on product pages ---------- */
+  try{
+    var buybox=document.getElementById('zz-buybox');
+    if(buybox && window.matchMedia&&window.matchMedia('(min-width:769px)').matches){
+      var jump=document.createElement('a');
+      jump.className='zznv-buy'; jump.href='#zz-buybox';
+      jump.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 7a4 4 0 1 1-3.2 6.4L7 17.2V20H4v-3l6.6-6.6A4 4 0 0 1 14 7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="15.5" cy="9.5" r="1" fill="currentColor"/></svg><span>Back to checkout</span>';
+      jump.addEventListener('click',function(ev){
+        ev.preventDefault();
+        buybox.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});
+      });
+      document.body.appendChild(jump);
+      if('IntersectionObserver' in window){
+        new IntersectionObserver(function(entries){
+          entries.forEach(function(en){
+            jump.classList.toggle('zznv-buy--show', !en.isIntersecting && (window.scrollY||0)>300);
+          });
+        },{threshold:0}).observe(buybox);
+      }
+    }
+  }catch(e){}
+
+  /* ---------- 3. instant pages: hover / touch prefetch ---------- */
+  try{
+    var conn=navigator.connection||{};
+    var slow=conn.saveData||/(^|-)2g/.test(conn.effectiveType||'');
+    if(!slow && 'querySelector' in document){
+      var done=Object.create(null), count=0, MAX=24, timer=null;
+      function eligible(a){
+        if(!a || !a.href) return false;
+        if(a.origin!==location.origin) return false;
+        if(a.hash && a.pathname===location.pathname) return false;   /* same-page anchors */
+        var p=a.pathname;
+        if(p===location.pathname) return false;
+        if(/^\/(cart|checkout|customer|invoice|api)/i.test(p)) return false; /* stateful pages */
+        if(a.hasAttribute('download')||a.target==='_blank') return false;
+        return true;
+      }
+      function prefetch(a){
+        var key=a.pathname+a.search;
+        if(done[key]||count>=MAX) return;
+        done[key]=1; count++;
+        var l=document.createElement('link');
+        l.rel='prefetch'; l.href=a.href; l.as='document';
+        document.head.appendChild(l);
+      }
+      document.addEventListener('pointerenter',function(ev){
+        var a=ev.target.closest&&ev.target.closest('a');
+        if(!eligible(a)) return;
+        clearTimeout(timer);
+        timer=setTimeout(function(){ prefetch(a); },65);  /* hover intent */
+      },true);
+      document.addEventListener('pointerleave',function(){ clearTimeout(timer); },true);
+      document.addEventListener('touchstart',function(ev){
+        var a=ev.target.closest&&ev.target.closest('a');
+        if(eligible(a)) prefetch(a);
+      },{passive:true,capture:true});
+    }
+  }catch(e){}
+
+  /* ---------- 5. product card tilt + glare ---------- */
+  try{
+    if(!reduce && window.matchMedia&&window.matchMedia('(pointer:fine)').matches){
+      var MAXDEG=4.5;
+      document.querySelectorAll('.pc').forEach(function(card){
+        var glare=document.createElement('span');
+        glare.className='zznv-glare'; glare.setAttribute('aria-hidden','true');
+        card.appendChild(glare);
+        var raf=null, px=0, py=0;
+        function apply(){
+          raf=null;
+          var rx=((py-0.5)*-2*MAXDEG).toFixed(2);
+          var ry=((px-0.5)* 2*MAXDEG).toFixed(2);
+          card.style.transform='perspective(900px) translateY(-4px) rotateX('+rx+'deg) rotateY('+ry+'deg)';
+          card.style.setProperty('--zznv-gx',(px*100).toFixed(1)+'%');
+          card.style.setProperty('--zznv-gy',(py*100).toFixed(1)+'%');
+        }
+        card.addEventListener('pointerenter',function(){ card.classList.add('zznv-tilting'); });
+        card.addEventListener('pointermove',function(ev){
+          var r=card.getBoundingClientRect();
+          px=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width));
+          py=Math.min(1,Math.max(0,(ev.clientY-r.top)/r.height));
+          if(!raf) raf=requestAnimationFrame(apply);
+        });
+        card.addEventListener('pointerleave',function(){
+          if(raf){ cancelAnimationFrame(raf); raf=null; }
+          card.classList.remove('zznv-tilting');
+          card.style.transform='';   /* hand back to the stylesheet */
+          card.style.removeProperty('--zznv-gx');
+          card.style.removeProperty('--zznv-gy');
+        });
+      });
+    }
+  }catch(e){}
+})();
+</script>

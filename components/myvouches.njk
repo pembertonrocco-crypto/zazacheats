@@ -1,0 +1,22 @@
+{# MyVouches embed — renders ONLY when a username is configured.
+   Without this guard, an unconfigured instance ships a broken iframe
+   pointing at https://myvouch.es/api/None/vouches/embed. #}
+{% if properties.username %}
+<section class="py-20 text-block alignment-{{ properties.alignment }} bg-block-{{ properties.background }} component" data-component-id="{{ componentId }}">
+  <div class="container">
+    {% if properties.title %}
+    <div class="section-title">
+      <h2>{{ properties.title | renderString }}</h2>
+    </div>
+    {% endif %}
+    {% if properties.subtitle %}
+    <div class="section-subtitle">
+      <p>{{ properties.subtitle | renderString }}</p>
+    </div>
+    {% endif %}
+    <div class="row">
+      <iframe src="https://myvouch.es/api/{{ properties.username }}/vouches/embed" loading="lazy" style="width: 100%; height: 300px;" frameborder="0" scrolling="no" title="MyVouches reviews"></iframe>
+    </div>
+  </div>
+</section>
+{% endif %}

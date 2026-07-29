@@ -1,0 +1,477 @@
+{# =========================================================================
+   ESP DEMO — 1:1 replica of the Zaza Private menu driving a live viewport.
+   Left: full menu recreation (sidebar, top bar, tabs, both panels) matching
+   the real UI. Right: game screenshot with SVG overlays; the Player ESP
+   checkboxes, Skeleton Thickness slider and Active Crosshair genuinely
+   drive the overlays. Everything else is faithful cosmetic detail.
+   Pure static HTML/CSS/JS — no {% set %} object arrays, no synthetic loops.
+   Overlay anchors tuned to assets/esp-demo-player.jpg (1058x671).
+   ========================================================================= #}
+<section class="zed" aria-label="Interactive ESP demo">
+  <div class="zed__inner">
+
+    <div class="zed__head">
+      <p class="zed__eyebrow">// TRY IT YOURSELF</p>
+      <h2 class="zed__title">The real menu. <span class="zed__grad">Live on a target.</span></h2>
+      <p class="zed__sub">This is the actual menu layout — flip the Player ESP toggles and watch the viewport react.</p>
+    </div>
+
+    <div class="zed__grid">
+
+      {# ================= MENU (1:1 replica) ================= #}
+      <div class="zed__menu" id="zed-menu">
+
+        {# --- left sidebar --- #}
+        <div class="zed__side">
+          <div class="zed__side-logo">
+            <span class="zed__side-bolt">⚡</span>
+            <span class="zed__side-name">ZAZA<br>PRIVATE</span>
+            <span class="zed__side-ver">V2.4 · BUILD 614</span>
+          </div>
+          <div class="zed__side-item">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
+            A1MBOT
+          </div>
+          <div class="zed__side-item zed__side-item--active">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="2.6"/></svg>
+            V1SUAL
+          </div>
+          <div class="zed__side-item">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v16M4 12h16"/></svg>
+            WORLD
+          </div>
+          <div class="zed__side-item">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/></svg>
+            M1SC
+          </div>
+          <div class="zed__side-item">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h10M18 7h2M4 12h4M12 12h8M4 17h12M20 17h0"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="17" r="2"/></svg>
+            CONF1G
+          </div>
+          <div class="zed__side-item">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.5c2.8.3 5 2.7 5 5.5"/></svg>
+            FR1ENDS
+          </div>
+          <div class="zed__side-foot"><span class="zed__side-bolt zed__side-bolt--sm">⚡</span></div>
+        </div>
+
+        {# --- main column --- #}
+        <div class="zed__main">
+          <div class="zed__topline" aria-hidden="true"></div>
+
+          <div class="zed__topbar">
+            <span class="zed__topbar-seg"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg><span class="zed__topbar-dim">AIM</span> <span class="zed__topbar-hot">Silent</span></span>
+            <span class="zed__topbar-seg"><span class="zed__topbar-dim">CFG</span> Config 1</span>
+            <span class="zed__topbar-seg"><span class="zed__topbar-dim">FPS</span> <span class="zed__topbar-hot" id="zed-fps">163</span></span>
+            <span class="zed__search"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="6.5"/><path d="M15 15l5 5"/></svg>Search...</span>
+          </div>
+
+          <div class="zed__tabs">
+            <span class="zed__tab zed__tab--active">PLAYER ESP</span>
+            <span class="zed__tab">CHAMS</span>
+            <span class="zed__tab">MODELS</span>
+            <span class="zed__tab">SKY</span>
+          </div>
+
+          <div class="zed__panels">
+
+            {# ---- left panel: Player ESP ---- #}
+            <div class="zed__panel">
+              <p class="zed__panel-title">Player ESP</p>
+
+              <label class="zed__opt">
+                <input type="checkbox" data-zed="box">
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Box ESP</span><span class="zed__opt-q">(?)</span>
+              </label>
+              <label class="zed__opt">
+                <input type="checkbox" data-zed="cornerbox" checked>
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Corner Box ESP</span><span class="zed__opt-q">(?)</span>
+              </label>
+              <label class="zed__opt">
+                <input type="checkbox" data-zed="name" checked>
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Name ESP</span><span class="zed__opt-q">(?)</span>
+              </label>
+              <label class="zed__opt">
+                <input type="checkbox" data-zed="weapon" checked>
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Weapon ESP</span><span class="zed__opt-q">(?)</span>
+              </label>
+              <label class="zed__opt">
+                <input type="checkbox" data-zed="distance" checked>
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Distance ESP</span><span class="zed__opt-q">(?)</span>
+              </label>
+              <label class="zed__opt">
+                <input type="checkbox" data-zed="skeleton" checked>
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Skeleton ESP</span><span class="zed__opt-q">(?)</span>
+              </label>
+
+              <div class="zed__sliderrow">
+                <span class="zed__slabel">Skeleton Thickness <span class="zed__sval" id="zed-thick-val">1.5</span></span>
+                <div class="zed__slider" id="zed-thick"><div class="zed__slider-fill"></div><div class="zed__slider-thumb"></div></div>
+              </div>
+
+              <label class="zed__opt">
+                <input type="checkbox">
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Show Sleepers</span><span class="zed__opt-q">(?)</span>
+              </label>
+              <label class="zed__opt">
+                <input type="checkbox">
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Show Scient1st</span><span class="zed__opt-q">(?)</span>
+              </label>
+
+              <p class="zed__sublabel">Visual Flags</p>
+              <span class="zed__select">Wounded Flag, Ducki...<svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+
+              <label class="zed__opt">
+                <input type="checkbox">
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Inside/Outside Check</span><span class="zed__opt-q">(?)</span>
+              </label>
+
+              <p class="zed__section">RADAR FEATURES</p>
+              <label class="zed__opt">
+                <input type="checkbox" checked>
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Legacy Radar</span><span class="zed__opt-q">(?)</span>
+              </label>
+              <label class="zed__opt">
+                <input type="checkbox">
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Real Map Radar</span><span class="zed__opt-q zed__opt-q--err">(!)</span>
+              </label>
+            </div>
+
+            {# ---- right panel: Other & Crosshair ---- #}
+            <div class="zed__panel">
+              <p class="zed__panel-title">Other &amp; Crosshair</p>
+
+              <p class="zed__section zed__section--first">OTHER FEATURES</p>
+              <label class="zed__opt">
+                <input type="checkbox" checked>
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Active Screen Arrows</span><span class="zed__opt-q">(?)</span>
+              </label>
+              <label class="zed__opt">
+                <input type="checkbox" checked>
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Active Belt Items</span><span class="zed__opt-q">(?)</span>
+              </label>
+              <label class="zed__opt">
+                <input type="checkbox">
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Active Cloth Items</span><span class="zed__opt-q">(?)</span>
+              </label>
+              <label class="zed__opt">
+                <input type="checkbox">
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Enemy Looking Alert</span><span class="zed__opt-q">(?)</span>
+              </label>
+
+              <div class="zed__sliderrow">
+                <span class="zed__slabel">ESP Distance <span class="zed__sval" id="zed-dist-val">330.0</span></span>
+                <div class="zed__slider" id="zed-dist"><div class="zed__slider-fill"></div><div class="zed__slider-thumb"></div></div>
+              </div>
+
+              <p class="zed__section">CROSSHAIR &amp; WEAPON</p>
+              <label class="zed__opt">
+                <input type="checkbox" data-zed="crosshair" checked>
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Active Crosshair</span><span class="zed__opt-q">(?)</span>
+              </label>
+              <label class="zed__opt">
+                <input type="checkbox">
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Bullet Tracer</span><span class="zed__opt-q">(?)</span>
+              </label>
+              <label class="zed__opt">
+                <input type="checkbox">
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Custom Bullet (FX)</span><span class="zed__opt-q">(?)</span>
+              </label>
+              <label class="zed__opt">
+                <input type="checkbox">
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Local Trail (FX)</span><span class="zed__opt-q">(?)</span>
+              </label>
+              <label class="zed__opt">
+                <input type="checkbox">
+                <span class="zed__check" aria-hidden="true"></span>
+                <span class="zed__opt-label">Active Weapon Chams</span><span class="zed__opt-q">(?)</span>
+              </label>
+
+              <p class="zed__sublabel">Weapon Type</p>
+              <span class="zed__select">Flat<svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+
+              <p class="zed__sublabel">Hand Chams</p>
+              <span class="zed__select">Flat<svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {# ================= VIEWPORT ================= #}
+      <div class="zed__view">
+        <img src="{{ 'esp-demo-player.jpg' | assetUrl }}" alt="Rust player in the desert with ESP overlays" class="zed__img" width="1058" height="671" loading="lazy" decoding="async">
+
+        <svg class="zed__ov" viewBox="0 0 1058 671" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <g id="zed-ov-box" class="zed__layer" style="display:none">
+            <rect x="466" y="280" width="82" height="198" fill="none" stroke="#e91ee9" stroke-width="2"/>
+          </g>
+          <g id="zed-ov-cornerbox" class="zed__layer" stroke="#e91ee9" stroke-width="2.5" fill="none">
+            <path d="M466 302 V280 H488"/><path d="M526 280 H548 V302"/>
+            <path d="M548 456 V478 H526"/><path d="M488 478 H466 V456"/>
+          </g>
+          <g id="zed-ov-name" class="zed__layer">
+            <rect x="472" y="252" width="70" height="20" rx="4" fill="rgba(8,6,14,.82)" stroke="rgba(233,30,233,.55)" stroke-width="1"/>
+            <text x="507" y="266" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#f5c6f5">Player</text>
+          </g>
+          <g id="zed-ov-weapon" class="zed__layer">
+            <text x="507" y="497" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#c084fc">AK-47</text>
+          </g>
+          <g id="zed-ov-distance" class="zed__layer">
+            <text x="558" y="292" font-family="'JetBrains Mono',monospace" font-size="12" fill="#e9a7e9">37m</text>
+          </g>
+          <g id="zed-ov-skeleton" class="zed__layer" stroke="#ff4df0" stroke-width="1.5" stroke-linecap="round" fill="none">
+            <circle cx="507" cy="296" r="9"/>
+            <path d="M507 305 L507 372"/>
+            <path d="M507 318 L490 322 L481 352 L475 382"/>
+            <path d="M507 318 L524 322 L533 354 L537 384"/>
+            <path d="M507 372 L497 376 L495 428 L497 470"/>
+            <path d="M507 372 L514 376 L513 428 L511 468"/>
+          </g>
+          <g id="zed-ov-crosshair" class="zed__layer" stroke="#ffffff" stroke-width="2" stroke-linecap="round">
+            <path d="M487 335 h-10"/><path d="M527 335 h10"/>
+            <path d="M507 315 v-10"/><path d="M507 355 v10"/>
+            <circle cx="507" cy="335" r="1.6" fill="#fff" stroke="none"/>
+          </g>
+        </svg>
+
+        <span class="zed__vtag" aria-hidden="true"><span class="zed__vtag-dot"></span>LIVE DEMO</span>
+        <span class="zed__corner zed__corner--tl" aria-hidden="true"></span>
+        <span class="zed__corner zed__corner--tr" aria-hidden="true"></span>
+        <span class="zed__corner zed__corner--bl" aria-hidden="true"></span>
+        <span class="zed__corner zed__corner--br" aria-hidden="true"></span>
+      </div>
+
+    </div>
+
+    <div class="zznx" id="zed-next">
+      <p class="zznx__line">That's the <strong>exact menu</strong> your key unlocks — this demo just can't shoot back.</p>
+      <div class="zznx__row">
+        <a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="zznx__btn">Unlock the full menu</a>
+        <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener" class="zznx__btn zznx__btn--ghost">Questions? Ask on Discord</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  /* After the visitor genuinely plays with the demo (2+ control changes),
+     give the CTA a gentle pulse. No counters, no fake urgency. */
+  var zed=document.querySelector('.zed'); var next=document.getElementById('zed-next');
+  if(!zed||!next) return;
+  var n=0;
+  zed.addEventListener('change',function(e){
+    if(e.target && (e.target.type==='checkbox'||e.target.type==='range'||e.target.type==='radio')){
+      if(++n>=2) next.classList.add('zznx--charged');
+    }
+  },true);
+})();
+</script>
+
+<style>
+.zed{position:relative;padding:90px 24px;font-family:'Satoshi','Inter',system-ui,sans-serif}
+.zed__inner{max-width:1360px;margin:0 auto}
+.zed__head{text-align:center;margin-bottom:40px}
+.zed__eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;letter-spacing:.16em;color:#e97ae9;margin:0 0 12px}
+.zed__title{margin:0 0 12px;font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:800;color:#fff;line-height:1.12}
+.zed__grad{background:linear-gradient(90deg,#e91ee9,#8b5cf6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.zed__sub{margin:0 auto;font-size:.95rem;line-height:1.6;color:rgba(205,218,242,.68);max-width:56ch}
+
+.zed__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:22px;align-items:start}
+
+/* ================= MENU replica ================= */
+.zed__menu{display:flex;border-radius:12px;overflow:hidden;
+  border:1px solid rgba(233,30,233,.3);
+  background:#0d0912;
+  box-shadow:0 30px 70px -25px rgba(0,0,0,.85),0 0 60px -25px rgba(233,30,233,.4);
+  font-family:'JetBrains Mono',ui-monospace,monospace;user-select:none}
+
+/* --- sidebar --- */
+.zed__side{width:118px;flex-shrink:0;background:#0a0710;border-right:1px solid rgba(233,30,233,.14);
+  display:flex;flex-direction:column;padding-bottom:10px}
+.zed__side-logo{position:relative;padding:14px 12px 16px;border-bottom:1px solid rgba(233,30,233,.14);margin-bottom:8px}
+.zed__side-bolt{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;
+  background:linear-gradient(135deg,#e91ee9,#a21caf);color:#fff;font-size:.8rem;margin-bottom:7px;
+  box-shadow:0 0 14px rgba(233,30,233,.6)}
+.zed__side-name{display:block;font-size:.72rem;font-weight:800;letter-spacing:.06em;line-height:1.25;color:#fff}
+.zed__side-ver{display:block;margin-top:4px;font-size:.46rem;letter-spacing:.1em;color:rgba(233,150,233,.45)}
+.zed__side-item{display:flex;align-items:center;gap:9px;padding:11px 12px;font-size:.6rem;font-weight:700;
+  letter-spacing:.1em;color:rgba(205,190,215,.5);border-left:2px solid transparent;cursor:default;
+  transition:color .15s,background .15s}
+.zed__side-item svg{flex-shrink:0;opacity:.75}
+.zed__side-item:hover{color:rgba(230,215,240,.85);background:rgba(233,30,233,.05)}
+.zed__side-item--active{color:#fff;background:rgba(233,30,233,.12);border-left-color:#e91ee9}
+.zed__side-item--active svg{color:#e91ee9;opacity:1}
+.zed__side-foot{margin-top:auto;padding:10px 12px 4px}
+.zed__side-bolt--sm{width:22px;height:22px;font-size:.68rem;margin:0}
+
+/* --- main column --- */
+.zed__main{flex:1;min-width:0;display:flex;flex-direction:column}
+.zed__topline{height:3px;background:linear-gradient(90deg,#e91ee9,#a855f7);
+  box-shadow:0 0 14px rgba(233,30,233,.7)}
+.zed__topbar{display:flex;align-items:center;gap:16px;padding:10px 14px;
+  border-bottom:1px solid rgba(233,30,233,.12);font-size:.62rem}
+.zed__topbar-seg{display:inline-flex;align-items:center;gap:6px;color:rgba(210,195,220,.6)}
+.zed__topbar-seg svg{color:#e91ee9}
+.zed__topbar-dim{color:rgba(200,180,210,.4)}
+.zed__topbar-hot{color:#f068f0}
+.zed__search{margin-left:auto;display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:7px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);color:rgba(200,185,210,.4);font-size:.6rem;min-width:120px}
+
+.zed__tabs{display:flex;gap:4px;padding:12px 14px 0}
+.zed__tab{padding:8px 16px;font-size:.62rem;font-weight:800;letter-spacing:.12em;color:rgba(210,190,220,.45);
+  border-bottom:2px solid transparent;cursor:default;transition:color .15s}
+.zed__tab:hover{color:rgba(230,215,240,.8)}
+.zed__tab--active{color:#fff;border-bottom-color:#e91ee9;background:rgba(233,30,233,.1);border-radius:6px 6px 0 0}
+
+.zed__panels{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px}
+.zed__panel{border:1px solid rgba(233,30,233,.28);border-radius:8px;padding:14px 13px 16px;
+  background:rgba(10,7,15,.6);display:flex;flex-direction:column;gap:1px}
+.zed__panel-title{margin:0 0 10px;padding-bottom:8px;font-size:.74rem;font-weight:700;color:#fff;
+  border-bottom:1px solid rgba(255,255,255,.09)}
+.zed__section{margin:14px 0 7px;font-size:.6rem;font-weight:800;letter-spacing:.1em;color:#e91ee9;
+  border-bottom:1px solid rgba(233,30,233,.45);padding-bottom:5px}
+.zed__section--first{margin-top:2px}
+.zed__sublabel{margin:8px 0 6px;font-size:.64rem;color:rgba(200,185,215,.5)}
+
+.zed__opt{display:flex;align-items:center;gap:10px;padding:5px 4px;border-radius:6px;cursor:pointer;transition:background .15s}
+.zed__opt:hover{background:rgba(233,30,233,.06)}
+.zed__opt input{position:absolute;opacity:0;pointer-events:none}
+.zed__check{width:14px;height:14px;border-radius:4px;border:1px solid rgba(233,120,233,.35);background:rgba(255,255,255,.04);
+  flex-shrink:0;position:relative;transition:background .15s,border-color .15s,box-shadow .15s}
+.zed__opt input:checked + .zed__check{background:#c026d3;border-color:#e91ee9;box-shadow:0 0 10px rgba(233,30,233,.55)}
+.zed__opt input:focus-visible + .zed__check{outline:2px solid rgba(233,30,233,.9);outline-offset:2px}
+.zed__opt-label{font-size:.66rem;color:rgba(190,175,205,.45);transition:color .15s}
+.zed__opt input:checked ~ .zed__opt-label{color:rgba(235,222,245,.92)}
+.zed__opt-q{margin-left:auto;font-size:.58rem;color:rgba(200,180,210,.28)}
+.zed__opt-q--err{color:#ef4444}
+
+.zed__sliderrow{padding:7px 4px 9px}
+.zed__slabel{display:block;font-size:.62rem;color:rgba(200,185,215,.5);margin-bottom:8px}
+.zed__sval{color:#f068f0;margin-left:6px}
+.zed__slider{position:relative;height:5px;border-radius:999px;background:rgba(255,255,255,.09);cursor:pointer}
+.zed__slider-fill{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:linear-gradient(90deg,#e91ee9,#a855f7)}
+.zed__slider-thumb{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background:#fff;
+  transform:translate(-50%,-50%);box-shadow:0 0 10px rgba(233,30,233,.85)}
+
+.zed__select{display:inline-flex;align-items:center;justify-content:space-between;gap:8px;width:100%;
+  padding:7px 10px;border-radius:6px;border:1px solid rgba(233,120,233,.25);background:rgba(255,255,255,.04);
+  font-size:.62rem;color:rgba(225,210,235,.8);cursor:default}
+.zed__select svg{color:#e91ee9;flex-shrink:0}
+
+/* ================= viewport ================= */
+.zed__view{position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(233,30,233,.3);
+  box-shadow:0 30px 70px -25px rgba(0,0,0,.85);aspect-ratio:1058/671;position:sticky;top:90px}
+.zed__img{width:100%;height:100%;object-fit:cover;display:block}
+.zed__ov{position:absolute;inset:0;width:100%;height:100%}
+.zed__layer{transition:opacity .25s}
+.zed__vtag{position:absolute;top:12px;left:12px;display:inline-flex;align-items:center;gap:7px;
+  padding:5px 10px;border-radius:7px;background:rgba(8,6,14,.7);backdrop-filter:blur(6px);
+  font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.58rem;letter-spacing:.16em;color:rgba(240,220,245,.8)}
+.zed__vtag-dot{width:6px;height:6px;border-radius:50%;background:#e91ee9;box-shadow:0 0 8px rgba(233,30,233,.9);
+  animation:zedPulse 1.8s infinite}
+@keyframes zedPulse{0%,100%{opacity:1}50%{opacity:.4}}
+.zed__corner{position:absolute;width:16px;height:16px;border-color:rgba(233,30,233,.75);border-style:solid;border-width:0;z-index:2}
+.zed__corner--tl{top:6px;left:6px;border-top-width:2px;border-left-width:2px}
+.zed__corner--tr{top:6px;right:6px;border-top-width:2px;border-right-width:2px}
+.zed__corner--bl{bottom:6px;left:6px;border-bottom-width:2px;border-left-width:2px}
+.zed__corner--br{bottom:6px;right:6px;border-bottom-width:2px;border-right-width:2px}
+
+@media (max-width: 1080px){
+  .zed__grid{grid-template-columns:1fr}
+  .zed__view{position:relative;top:0;order:-1}
+}
+@media (max-width: 640px){
+  .zed{padding:64px 16px}
+  .zed__side{width:96px}
+  .zed__panels{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion: reduce){
+  .zed__vtag-dot{animation:none}
+  .zed__layer{transition:none}
+}
+</style>
+
+<script>
+(function(){
+  var menu = document.getElementById('zed-menu');
+  if(!menu) return;
+
+  /* checkbox → overlay layer */
+  menu.querySelectorAll('input[data-zed]').forEach(function(input){
+    var layer = document.getElementById('zed-ov-' + input.getAttribute('data-zed'));
+    if(!layer) return;
+    function apply(){ layer.style.display = input.checked ? '' : 'none'; }
+    input.addEventListener('change', apply);
+    apply();
+  });
+
+  /* generic cosmetic slider builder */
+  function makeSlider(id, valId, initialPct, format){
+    var slider = document.getElementById(id);
+    if(!slider) return null;
+    var fill = slider.querySelector('.zed__slider-fill');
+    var thumb = slider.querySelector('.zed__slider-thumb');
+    var valEl = valId ? document.getElementById(valId) : null;
+    var onSet = null;
+    function set(pct){
+      pct = Math.max(0, Math.min(100, pct));
+      fill.style.width = pct + '%';
+      thumb.style.left = pct + '%';
+      if(valEl && format) valEl.textContent = format(pct);
+      if(onSet) onSet(pct);
+    }
+    var dragging = false;
+    function fromEvent(e){
+      var r = slider.getBoundingClientRect();
+      var x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+      set(x / r.width * 100);
+    }
+    slider.addEventListener('pointerdown', function(e){ dragging = true; slider.setPointerCapture(e.pointerId); fromEvent(e); });
+    slider.addEventListener('pointermove', function(e){ if(dragging) fromEvent(e); });
+    slider.addEventListener('pointerup', function(){ dragging = false; });
+    set(initialPct);
+    return { set: set, bind: function(fn){ onSet = fn; set(initialPct); } };
+  }
+
+  /* skeleton thickness: 0.5 – 4.0, default 1.5 — drives stroke width */
+  var skel = document.getElementById('zed-ov-skeleton');
+  var thick = makeSlider('zed-thick', 'zed-thick-val', ((1.5 - 0.5) / 3.5) * 100,
+    function(pct){ return (0.5 + (pct / 100) * 3.5).toFixed(1); });
+  if(thick && skel){
+    thick.bind(function(pct){
+      skel.setAttribute('stroke-width', (0.5 + (pct / 100) * 3.5).toFixed(1));
+    });
+  }
+
+  /* ESP distance: 0 – 500, default 330 — cosmetic like the real menu at this range */
+  makeSlider('zed-dist', 'zed-dist-val', (330 / 500) * 100,
+    function(pct){ return (pct / 100 * 500).toFixed(1); });
+
+  /* FPS readout jitters like a real one */
+  var fpsEl = document.getElementById('zed-fps');
+  if(fpsEl && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+    setInterval(function(){ fpsEl.textContent = 158 + Math.floor(Math.random() * 12); }, 900);
+  }
+})();
+</script>

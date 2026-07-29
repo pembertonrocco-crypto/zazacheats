@@ -1,0 +1,866 @@
+{% set title_to_use = properties.default_title %}
+{% if category and properties.category_title %}
+  {% set title_to_use = properties.category_title %}
+{% endif %}
+
+{# Count real (non-grouped) sellable items so we can switch layouts. #}
+{% set realItemCount = 0 %}
+{% for item in items %}
+  {% if item.type == 'group' or not item.group_id %}
+    {% set realItemCount = realItemCount + 1 %}
+  {% endif %}
+{% endfor %}
+
+{% if realItemCount == 1 and not filters.keyword and not filters.price.from and not filters.price.to %}
+{# ============================================================
+   SINGLE-PRODUCT STOREFRONT
+   One focused hero card instead of a filter sidebar + grid.
+   ============================================================ #}
+<div class="sp-page component" data-component-id="{{ componentId }}">
+  <div class="sp-bg" aria-hidden="true">
+    <div class="sp-bg__grid"></div>
+    <div class="sp-bg__beam sp-bg__beam--a"></div>
+    <div class="sp-bg__beam sp-bg__beam--b"></div>
+  </div>
+
+  <div class="sp-wrap">
+    <header class="sp-head">
+      <p class="sp-eyebrow">// THE PRODUCT</p>
+      <h1 class="sp-title">{{ title_to_use | renderString if title_to_use else 'Our Product' }}</h1>
+      <p class="sp-subtitle">One private build. Built to dominate, maintained to last.</p>
+    </header>
+
+    {% for item in items %}
+      {% if item.type == 'group' or not item.group_id %}
+      <a class="sp-card" href="{{ ('/product/' + item.path) | shopUrl }}">
+        <div class="sp-card__glow" aria-hidden="true"></div>
+
+        <div class="sp-card__media">
+          {% if item.image_urls|length > 0 %}
+            <img src="{{ item.image_urls[0] }}" alt="{{ item.name }}" class="sp-card__img" loading="lazy" />
+          {% elif item.image_url %}
+            <img src="{{ item.image_url }}" alt="{{ item.name }}" class="sp-card__img" loading="lazy" />
+          {% else %}
+            <div class="sp-card__img sp-card__img--empty">
+              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 256 256" fill="currentColor"><path d="m222.72 67.91l-88-48.18a13.9 13.9 0 0 0-13.44 0l-88 48.18A14 14 0 0 0 26 80.18v95.64a14 14 0 0 0 7.28 12.27l88 48.18a13.92 13.92 0 0 0 13.44 0l88-48.18a14 14 0 0 0 7.28-12.27V80.18a14 14 0 0 0-7.28-12.27ZM127 30.25a2 2 0 0 1 1.92 0L212.51 76l-33.94 18.57l-84.52-46.26ZM122 223l-83-45.43a2 2 0 0 1-1-1.75V86.66l84 46Z"/></svg>
+            </div>
+          {% endif %}
+
+          {% if item.product_badges.card|length > 0 %}
+          <div class="sp-card__badges">
+            {% for b in item.product_badges.card %}
+            <span class="sp-badge" style="background-color: {{ b.color }};">
+              {% if b.icon %}<i class="{{ b.icon }} fa-fw"></i>{% endif %}{{ b.label }}
+            </span>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="sp-card__body">
+          <div class="sp-card__chips">
+            <span class="sp-chip sp-chip--g"><span class="sp-dot"></span>Status tracked live</span>
+            <span class="sp-chip">Instant delivery</span>
+            <span class="sp-chip">24h+ downtime covered</span>
+          </div>
+
+          <h2 class="sp-card__name">{{ item.name }}</h2>
+
+          <div class="sp-card__stock">
+            {% if item.type == 'group' %}
+              <span class="sp-stock sp-stock--in">{{ item.products | length }} options</span>
+            {% elif item.stock === 0 %}
+              <span class="sp-stock sp-stock--out">Out of stock</span>
+            {% elif item.stock === -1 or item.hide_stock_count %}
+              <span class="sp-stock sp-stock--in">In stock</span>
+            {% elif item.stock < 5 %}
+              <span class="sp-stock sp-stock--low">{{ item.stock }} left</span>
+            {% else %}
+              <span class="sp-stock sp-stock--in">In stock</span>
+            {% endif %}
+          </div>
+
+          <div class="sp-card__pricing">
+            <span class="sp-price__label">From</span>
+            <span class="sp-price">
+              {% if item.min_price %}
+                <span x-text="appCurrency.format({{ item.min_price }}, '{{ item.currency }}')">{{ formatPrice(item.min_price, item.currency) }}</span>
+              {% else %}—{% endif %}
+              {% if item.min_price_slash %}
+                <s class="sp-price__slash"><span x-text="appCurrency.format({{ item.min_price_slash }}, '{{ item.currency }}')">{{ formatPrice(item.min_price_slash, item.currency) }}</span></s>
+              {% endif %}
+            </span>
+          </div>
+
+          <span class="sp-cta">
+            View &amp; Buy
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+
+          <div class="sp-card__trust">
+            <span>🛡️ 24h+ downtime covered</span><span>⚡ Instant key</span><span>💬 Support</span><span>🔄 Updated</span>
+          </div>
+        </div>
+      </a>
+      {% endif %}
+    {% endfor %}
+
+    {% render_snippet "store-conversion-strip.njk" %}
+  </div>
+</div>
+
+<style>
+.sp-page{--g:#22c55e;--a:#eab308;--r:#ef4444;--v:#BF40BF;--b:#7C3AED;
+  --ink:#eaf0ff;--mut:rgba(200,215,240,.6);--edge:rgba(191,64,191,.14);--void:#06070f;
+  position:relative;width:100%;min-height:100vh;overflow:hidden;
+  background:radial-gradient(120% 80% at 50% -10%,#0d1130 0%,#06070f 55%);
+  font-family:'Satoshi','Inter',system-ui,sans-serif;color:var(--ink)}
+.sp-page *{box-sizing:border-box}
+.sp-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.sp-bg__grid{position:absolute;inset:-2px;
+  background-image:linear-gradient(rgba(191,64,191,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(191,64,191,.06) 1px,transparent 1px);
+  background-size:44px 44px;-webkit-mask-image:radial-gradient(100% 70% at 50% 0%,#000 30%,transparent 80%);mask-image:radial-gradient(100% 70% at 50% 0%,#000 30%,transparent 80%)}
+.sp-bg__beam{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;animation:spFloat 14s ease-in-out infinite}
+.sp-bg__beam--a{width:34rem;height:34rem;top:-12rem;left:-8rem;background:radial-gradient(circle,rgba(191,64,191,.5),transparent 65%)}
+.sp-bg__beam--b{width:30rem;height:30rem;top:-6rem;right:-8rem;background:radial-gradient(circle,rgba(124,58,237,.4),transparent 65%);animation-delay:-7s}
+@keyframes spFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+
+.sp-wrap{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:130px 20px 90px}
+.sp-head{text-align:center;animation:spUp .7s ease both}
+.sp-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--v);font-size:.74rem;letter-spacing:.22em;margin:0}
+.sp-title{font-size:clamp(2.4rem,7vw,3.8rem);font-weight:800;letter-spacing:-.03em;margin:.5rem 0 0;
+  background:linear-gradient(135deg,#fff 28%,#e0c2ff 72%,#BF40BF);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.sp-subtitle{color:var(--mut);font-size:1.05rem;margin:.6rem 0 0}
+
+.sp-card{position:relative;display:grid;grid-template-columns:1.05fr 1fr;gap:0;overflow:hidden;margin-top:44px;
+  text-decoration:none;color:inherit;border:1px solid var(--edge);border-radius:24px;
+  background:linear-gradient(135deg,rgba(191,64,191,.08),rgba(124,58,237,.03));
+  transition:transform .4s cubic-bezier(.16,1,.3,1),border-color .4s,box-shadow .4s;animation:spUp .7s ease .1s both}
+.sp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;z-index:2;background:linear-gradient(90deg,transparent,rgba(191,64,191,.55),transparent)}
+.sp-card:hover{transform:translateY(-6px);border-color:rgba(191,64,191,.4);box-shadow:0 32px 70px -28px rgba(191,64,191,.55)}
+.sp-card__glow{position:absolute;top:-50%;right:-20%;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(191,64,191,.2),transparent 70%);opacity:0;transition:opacity .45s}
+.sp-card:hover .sp-card__glow{opacity:1}
+
+.sp-card__media{position:relative;background:#06091a;min-height:100%}
+.sp-card__img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.sp-card:hover .sp-card__img{transform:scale(1.05)}
+.sp-card__img--empty{display:flex;align-items:center;justify-content:center;color:rgba(200,220,255,.15);min-height:320px}
+.sp-card__badges{position:absolute;top:14px;left:14px;display:flex;flex-wrap:wrap;gap:5px;z-index:2}
+.sp-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#fff;padding:5px 10px;border-radius:999px;line-height:1;backdrop-filter:blur(8px)}
+
+.sp-card__body{position:relative;z-index:1;padding:38px 36px;display:flex;flex-direction:column;gap:16px}
+.sp-card__chips{display:flex;flex-wrap:wrap;gap:8px}
+.sp-chip{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--mut);border:1px solid var(--edge);background:var(--void);border-radius:999px;padding:5px 11px}
+.sp-chip--g{color:var(--g);border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.08)}
+.sp-dot{width:6px;height:6px;border-radius:50%;background:var(--g);animation:spPulse 1.8s ease-in-out infinite}
+@keyframes spPulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+.sp-card__name{font-size:clamp(1.6rem,3vw,2.1rem);font-weight:800;letter-spacing:-.02em;margin:.2rem 0 0;line-height:1.1}
+.sp-card__stock .sp-stock{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px}
+.sp-stock--in{background:rgba(34,197,94,.1);color:rgba(74,222,128,.9);border:1px solid rgba(34,197,94,.18)}
+.sp-stock--low{background:rgba(234,179,8,.1);color:rgba(250,204,21,.95);border:1px solid rgba(234,179,8,.2)}
+.sp-stock--out{background:rgba(200,220,255,.04);color:rgba(200,220,255,.3);border:1px solid rgba(200,220,255,.07)}
+
+.sp-card__pricing{display:flex;flex-direction:column;gap:3px;margin-top:4px}
+.sp-price__label{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(200,220,255,.4)}
+.sp-price{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:800;letter-spacing:-.02em;display:flex;align-items:baseline;gap:8px}
+.sp-price__slash{font-size:1rem;font-weight:500;color:rgba(200,220,255,.3);text-decoration:line-through}
+
+.sp-cta{display:inline-flex;align-items:center;justify-content:center;gap:9px;margin-top:8px;padding:14px 22px;
+  background:linear-gradient(135deg,var(--v),var(--b));border-radius:12px;font-weight:700;color:#fff;
+  box-shadow:0 10px 30px -10px rgba(191,64,191,.7);transition:filter .25s,transform .25s,gap .25s}
+.sp-card:hover .sp-cta{filter:brightness(1.1);gap:13px}
+
+.sp-card__trust{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:6px;
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--mut)}
+.sp-card__trust span{border:1px solid var(--edge);background:rgba(12,15,30,.5);border-radius:8px;padding:7px 10px;text-align:center}
+
+@keyframes spUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+@media (max-width:760px){
+  .sp-wrap{padding:104px 16px 64px}
+  .sp-card{grid-template-columns:1fr}
+  .sp-card__img{aspect-ratio:16/10}
+  .sp-card__img--empty{min-height:200px}
+  .sp-card__body{padding:28px 24px}
+}
+@media (prefers-reduced-motion:reduce){.sp-page *{animation:none!important}}
+</style>
+
+{% elif (items | length) == 2 and not filters.keyword and not filters.price.from and not filters.price.to %}
+{# ============================================================
+   TWO-PRODUCT LOADOUT — decision layout, not a grid.
+   Cards get roles: 01/THE CHEAT (non-nfa path) renders first,
+   02/THE ACCOUNT ('nfa' in path) second, via two passes over the
+   real platform items (no synthetic data). Spec lines reuse only
+   claims already established on the product pages.
+   ============================================================ #}
+<div class="sp-page component" data-component-id="{{ componentId }}">
+  <div class="sp-bg" aria-hidden="true">
+    <div class="sp-bg__grid"></div>
+    <div class="sp-bg__beam sp-bg__beam--a"></div>
+    <div class="sp-bg__beam sp-bg__beam--b"></div>
+  </div>
+
+  <div class="tp-wrap">
+    <header class="sp-head">
+      <p class="sp-eyebrow">// BUILD YOUR LOADOUT</p>
+      <h1 class="sp-title">{{ title_to_use | renderString if title_to_use else 'Our Products' }}</h1>
+      <p class="sp-subtitle">Two pieces: the cheat, and the account you run it on. Most customers grab both.</p>
+      <div class="sp-trust">
+        <span><i class="fa-solid fa-bolt"></i> Instant delivery</span>
+        <span><i class="fa-solid fa-headset"></i> Active support</span>
+        <span><i class="fa-solid fa-arrows-rotate"></i> Frequent updates</span>
+      </div>
+    </header>
+
+    <div class="tp-grid">
+      <span class="tp-plus" aria-hidden="true">+</span>
+
+      {# ---- pass 1: the cheat (any real item whose path doesn't contain 'nfa') ---- #}
+      {% for item in items %}
+        {% if (item.type == 'group' or not item.group_id) and not ('nfa' in (item.path | lower)) %}
+        <a class="tp-card tp-card--cheat" style="--i:0" href="{{ ('/product/' + item.path) | shopUrl }}" data-tilt>
+          <span class="zz-neon" aria-hidden="true"></span>
+          <span class="tp-card__spot" aria-hidden="true"></span>
+          <span class="tp-card__shine" aria-hidden="true"></span>
+          <span class="tp-card__glow" aria-hidden="true"></span>
+
+          <div class="tp-card__media">
+            {% if item.image_urls|length > 0 %}
+              <img src="{{ item.image_urls[0] }}" alt="{{ item.name }}" class="tp-card__img" loading="lazy" />
+            {% elif item.image_url %}
+              <img src="{{ item.image_url }}" alt="{{ item.name }}" class="tp-card__img" loading="lazy" />
+            {% else %}
+              <div class="tp-card__img tp-card__img--empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 256 256" fill="currentColor"><path d="m222.72 67.91l-88-48.18a13.9 13.9 0 0 0-13.44 0l-88 48.18A14 14 0 0 0 26 80.18v95.64a14 14 0 0 0 7.28 12.27l88 48.18a13.92 13.92 0 0 0 13.44 0l88-48.18a14 14 0 0 0 7.28-12.27V80.18a14 14 0 0 0-7.28-12.27ZM127 30.25a2 2 0 0 1 1.92 0L212.51 76l-33.94 18.57l-84.52-46.26ZM122 223l-83-45.43a2 2 0 0 1-1-1.75V86.66l84 46Z"/></svg>
+              </div>
+            {% endif %}
+            <span class="tp-card__shade" aria-hidden="true"></span>
+
+            <div class="tp-tl">
+              {% render_snippet "status-badge.njk", pname=item.name, pid=item.id %}
+              {% if item.product_badges.card|length > 0 %}
+              {% for b in item.product_badges.card %}
+              <span class="sp-badge" style="background-color: {{ b.color }};">
+                {% if b.icon %}<i class="{{ b.icon }} fa-fw"></i>{% endif %}{{ b.label }}
+              </span>
+              {% endfor %}
+              {% endif %}
+            </div>
+
+            <div class="tp-stock">
+              {% if item.type == 'group' %}
+                <span class="sp-stock sp-stock--in">{{ item.products | length }} options</span>
+              {% elif item.stock === 0 %}
+                <span class="sp-stock sp-stock--out">Out of stock</span>
+              {% elif item.stock === -1 or item.hide_stock_count %}
+                <span class="sp-stock sp-stock--in">In stock</span>
+              {% elif item.stock < 10 %}
+                <span class="sp-stock sp-stock--low">{{ item.stock }} left</span>
+              {% else %}
+                <span class="sp-stock sp-stock--in">In stock</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="tp-card__body">
+            <p class="tp-role"><span class="tp-role__num">01</span><span class="tp-role__sep">/</span>The Cheat</p>
+            <h2 class="tp-card__name">{{ item.name }}</h2>
+            <p class="tp-desc">Aim, ESP and configs &mdash; the private build itself. Keys by duration, delivered the moment payment clears.</p>
+
+            <div class="tp-specs">
+              <span class="tp-spec">Aimbot</span>
+              <span class="tp-spec">ESP</span>
+              <span class="tp-spec">Configs</span>
+              <span class="tp-spec">Key by duration</span>
+            </div>
+
+            <div class="tp-card__foot">
+              <div class="tp-pricing">
+                <span class="sp-price__label">From</span>
+                <span class="tp-price">
+                  {% if item.min_price %}
+                    <span x-text="appCurrency.format({{ item.min_price }}, '{{ item.currency }}')">{{ formatPrice(item.min_price, item.currency) }}</span>
+                  {% else %}&mdash;{% endif %}
+                  {% if item.min_price_slash %}
+                    <s class="sp-price__slash"><span x-text="appCurrency.format({{ item.min_price_slash }}, '{{ item.currency }}')">{{ formatPrice(item.min_price_slash, item.currency) }}</span></s>
+                  {% endif %}
+                </span>
+              </div>
+              <span class="tp-cta">
+                View &amp; Buy
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+          </div>
+        </a>
+        {% endif %}
+      {% endfor %}
+
+      {# ---- pass 2: the account ('nfa' in path) ---- #}
+      {% for item in items %}
+        {% if (item.type == 'group' or not item.group_id) and ('nfa' in (item.path | lower)) %}
+        <a class="tp-card tp-card--nfa" style="--i:1" href="{{ ('/product/' + item.path) | shopUrl }}" data-tilt>
+          <span class="zz-neon" aria-hidden="true"></span>
+          <span class="tp-card__spot" aria-hidden="true"></span>
+          <span class="tp-card__shine" aria-hidden="true"></span>
+          <span class="tp-card__glow" aria-hidden="true"></span>
+
+          <div class="tp-card__media">
+            {% if item.image_urls|length > 0 %}
+              <img src="{{ item.image_urls[0] }}" alt="{{ item.name }}" class="tp-card__img" loading="lazy" />
+            {% elif item.image_url %}
+              <img src="{{ item.image_url }}" alt="{{ item.name }}" class="tp-card__img" loading="lazy" />
+            {% else %}
+              <div class="tp-card__img tp-card__img--empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 256 256" fill="currentColor"><path d="m222.72 67.91l-88-48.18a13.9 13.9 0 0 0-13.44 0l-88 48.18A14 14 0 0 0 26 80.18v95.64a14 14 0 0 0 7.28 12.27l88 48.18a13.92 13.92 0 0 0 13.44 0l88-48.18a14 14 0 0 0 7.28-12.27V80.18a14 14 0 0 0-7.28-12.27ZM127 30.25a2 2 0 0 1 1.92 0L212.51 76l-33.94 18.57l-84.52-46.26ZM122 223l-83-45.43a2 2 0 0 1-1-1.75V86.66l84 46Z"/></svg>
+              </div>
+            {% endif %}
+            <span class="tp-card__shade" aria-hidden="true"></span>
+
+            <div class="tp-tl">
+              {% render_snippet "status-badge.njk", pname=item.name, pid=item.id %}
+              {% if item.product_badges.card|length > 0 %}
+              {% for b in item.product_badges.card %}
+              <span class="sp-badge" style="background-color: {{ b.color }};">
+                {% if b.icon %}<i class="{{ b.icon }} fa-fw"></i>{% endif %}{{ b.label }}
+              </span>
+              {% endfor %}
+              {% endif %}
+            </div>
+
+            <div class="tp-stock">
+              {% if item.type == 'group' %}
+                <span class="sp-stock sp-stock--in">{{ item.products | length }} options</span>
+              {% elif item.stock === 0 %}
+                <span class="sp-stock sp-stock--out">Out of stock</span>
+              {% elif item.stock === -1 or item.hide_stock_count %}
+                <span class="sp-stock sp-stock--in">In stock</span>
+              {% elif item.stock < 10 %}
+                <span class="sp-stock sp-stock--low">{{ item.stock }} left</span>
+              {% else %}
+                <span class="sp-stock sp-stock--in">In stock</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="tp-card__body">
+            <p class="tp-role"><span class="tp-role__num">02</span><span class="tp-role__sep">/</span>The Account</p>
+            <h2 class="tp-card__name">{{ item.name }}</h2>
+            <p class="tp-desc">An aged Non-Full-Access Rust account to run it on. Bans land here &mdash; never on your main.</p>
+
+            <div class="tp-specs">
+              <span class="tp-spec">Aged playtime</span>
+              <span class="tp-spec">6h warranty</span>
+              <span class="tp-spec">One user per key</span>
+            </div>
+
+            <div class="tp-card__foot">
+              <div class="tp-pricing">
+                <span class="sp-price__label">From</span>
+                <span class="tp-price">
+                  {% if item.min_price %}
+                    <span x-text="appCurrency.format({{ item.min_price }}, '{{ item.currency }}')">{{ formatPrice(item.min_price, item.currency) }}</span>
+                  {% else %}&mdash;{% endif %}
+                  {% if item.min_price_slash %}
+                    <s class="sp-price__slash"><span x-text="appCurrency.format({{ item.min_price_slash }}, '{{ item.currency }}')">{{ formatPrice(item.min_price_slash, item.currency) }}</span></s>
+                  {% endif %}
+                </span>
+              </div>
+              <span class="tp-cta">
+                View &amp; Buy
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+          </div>
+        </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {# ---- loadout advice strip ---- #}
+    <aside class="tpl">
+      <div class="tpl__text">
+        <p class="tpl__eyebrow">// THE FULL LOADOUT</p>
+        <p class="tpl__line">One cheat key + one NFA account = a complete setup. Most customers grab both and pick the NFA tier that suits their wipe &mdash; the cheat needs an account you're willing to risk, and your main isn't it.</p>
+      </div>
+      <a class="tpl__link" href="{{ '/status' | shopUrl }}">
+        <span class="tpl__pulse" aria-hidden="true"></span>
+        Check both lights first
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </aside>
+
+    {% render_snippet "store-conversion-strip.njk" %}
+  </div>
+</div>
+
+<style>
+.sp-page{--g:#22c55e;--a:#eab308;--r:#ef4444;--v:#BF40BF;--b:#7C3AED;
+  --ink:#eaf0ff;--mut:rgba(200,215,240,.6);--edge:rgba(191,64,191,.14);--void:#06070f;
+  position:relative;width:100%;min-height:100vh;overflow:hidden;
+  background:radial-gradient(120% 80% at 50% -10%,#0d1130 0%,#06070f 55%);
+  font-family:'Satoshi','Inter',system-ui,sans-serif;color:var(--ink)}
+.sp-page *{box-sizing:border-box}
+.sp-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.sp-bg__grid{position:absolute;inset:-2px;
+  background-image:linear-gradient(rgba(191,64,191,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(191,64,191,.06) 1px,transparent 1px);
+  background-size:44px 44px;-webkit-mask-image:radial-gradient(100% 70% at 50% 0%,#000 30%,transparent 80%);mask-image:radial-gradient(100% 70% at 50% 0%,#000 30%,transparent 80%)}
+.sp-bg__beam{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;animation:spFloat 14s ease-in-out infinite}
+.sp-bg__beam--a{width:34rem;height:34rem;top:-12rem;left:-8rem;background:radial-gradient(circle,rgba(191,64,191,.5),transparent 65%)}
+.sp-bg__beam--b{width:30rem;height:30rem;top:-6rem;right:-8rem;background:radial-gradient(circle,rgba(124,58,237,.4),transparent 65%);animation-delay:-7s}
+@keyframes spFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+
+.tp-wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:130px 24px 90px}
+.sp-head{text-align:center;animation:spUp .7s ease both}
+.sp-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--v);font-size:.74rem;letter-spacing:.22em;margin:0}
+.sp-title{font-size:clamp(2.4rem,7vw,3.8rem);font-weight:800;letter-spacing:-.03em;margin:.5rem 0 0;
+  background:linear-gradient(135deg,#fff 28%,#e0c2ff 72%,#BF40BF);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.sp-subtitle{color:var(--mut);font-size:1.05rem;margin:.6rem 0 0}
+.sp-trust{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 20px;margin:1.1rem 0 0;animation:spUp .7s ease .08s both}
+.sp-trust span{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--mut)}
+.sp-trust i{color:var(--v)}
+
+.tp-grid{position:relative;display:grid;grid-template-columns:repeat(2,1fr);gap:26px;margin-top:48px;perspective:1500px}
+.tp-plus{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;
+  width:44px;height:44px;display:grid;place-items:center;border-radius:50%;
+  font-family:'JetBrains Mono',ui-monospace,monospace;font-size:1.25rem;font-weight:700;color:#e0c2ff;
+  background:rgba(12,15,30,.92);border:1px solid rgba(191,64,191,.4);
+  box-shadow:0 0 0 6px rgba(6,7,15,.85),0 0 24px -4px rgba(191,64,191,.55);pointer-events:none;
+  animation:spUp .7s ease .35s both}
+.tp-card{position:relative;display:flex;flex-direction:column;overflow:hidden;text-decoration:none;color:inherit;
+  border:1px solid var(--edge);border-radius:22px;background:linear-gradient(180deg,rgba(191,64,191,.06),rgba(124,58,237,.02));
+  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0)) scale(var(--sc,1));
+  transition:transform .5s cubic-bezier(.16,1,.3,1),border-color .4s,box-shadow .4s;
+  opacity:0;animation:tpFade .6s ease forwards;animation-delay:calc(var(--i,0)*.12s + .12s);will-change:transform}
+.tp-card--nfa{--v:#7C3AED;--edge:rgba(124,58,237,.16)}
+.tp-card::after{content:'';position:absolute;inset:0;border-radius:22px;padding:1px;z-index:5;pointer-events:none;
+  background:linear-gradient(135deg,rgba(191,64,191,.6),transparent 42%,transparent 58%,rgba(124,58,237,.55));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:.35;transition:opacity .4s}
+.tp-card--nfa::after{background:linear-gradient(135deg,rgba(124,58,237,.6),transparent 42%,transparent 58%,rgba(191,64,191,.4))}
+.tp-grid .tp-card--cheat{box-shadow:0 0 0 1px rgba(191,64,191,.16),0 24px 60px -34px rgba(191,64,191,.4)}
+.tp-card:hover{--ty:-9px;--sc:1.022;border-color:rgba(191,64,191,.4);box-shadow:0 40px 90px -34px rgba(191,64,191,.65)}
+.tp-card--nfa:hover{border-color:rgba(124,58,237,.45);box-shadow:0 40px 90px -34px rgba(124,58,237,.65)}
+.tp-card:hover::after{opacity:1}
+.tp-card__spot{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .35s;mix-blend-mode:screen;
+  background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),rgba(191,64,191,.26),transparent 60%)}
+.tp-card--nfa .tp-card__spot{background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),rgba(124,58,237,.28),transparent 60%)}
+.tp-card:hover .tp-card__spot{opacity:1}
+.tp-card__glow{position:absolute;top:-26%;left:50%;transform:translateX(-50%);width:360px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(191,64,191,.22),transparent 70%);opacity:0;transition:opacity .45s;pointer-events:none;z-index:0}
+.tp-card--nfa .tp-card__glow{background:radial-gradient(circle,rgba(124,58,237,.24),transparent 70%)}
+.tp-card:hover .tp-card__glow{opacity:1}
+.tp-card__shine{position:absolute;top:0;left:-120%;width:55%;height:100%;z-index:4;pointer-events:none;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.13),transparent);transform:skewX(-20deg)}
+.tp-card:hover .tp-card__shine{animation:tpShine .9s ease-out}
+@keyframes tpShine{from{left:-120%}to{left:170%}}
+
+.tp-card__media{position:relative;aspect-ratio:16/10;overflow:hidden;background:#06091a;
+  margin:16px 16px 0;border-radius:16px;
+  box-shadow:0 20px 38px -16px rgba(0,0,0,.72),0 0 0 1px rgba(255,255,255,.06),0 0 26px -6px rgba(191,64,191,.22);
+  will-change:transform;animation:tpFloat 7s ease-in-out infinite}
+.tp-card:hover .tp-card__media{box-shadow:0 30px 50px -16px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.09),0 0 36px -4px rgba(191,64,191,.4)}
+@keyframes tpFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.tp-card__img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .65s cubic-bezier(.16,1,.3,1)}
+.tp-card:hover .tp-card__img{transform:scale(1.06)}
+.tp-js .tp-card__media img.tp-card__img{opacity:0;transition:transform .65s cubic-bezier(.16,1,.3,1),opacity .7s ease}
+.tp-js .tp-card__media img.tp-card__img.is-ready{opacity:1}
+.tp-card__img--empty{display:flex;align-items:center;justify-content:center;color:rgba(200,220,255,.15)}
+.tp-card__shade{position:absolute;inset:0;pointer-events:none;border-radius:16px;background:linear-gradient(180deg,transparent 48%,rgba(6,7,15,.82))}
+@media (prefers-reduced-motion:reduce){.tp-card__media{animation:none}}
+.tp-badges{position:absolute;top:12px;left:12px;display:flex;flex-wrap:wrap;gap:5px;z-index:3}
+.tp-stock{position:absolute;top:12px;right:12px;z-index:3}
+.tp-tl{position:absolute;top:12px;left:12px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;z-index:3}
+
+.sp-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#fff;padding:5px 10px;border-radius:999px;line-height:1;backdrop-filter:blur(8px)}
+.sp-stock{font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px}
+.sp-stock--in{background:rgba(34,197,94,.14);color:rgba(74,222,128,.95);border:1px solid rgba(34,197,94,.25);backdrop-filter:blur(8px)}
+.sp-stock--low{background:rgba(234,179,8,.16);color:rgba(250,204,21,.98);border:1px solid rgba(234,179,8,.3);backdrop-filter:blur(8px)}
+.sp-stock--out{background:rgba(10,12,24,.6);color:rgba(200,220,255,.45);border:1px solid rgba(200,220,255,.12);backdrop-filter:blur(8px)}
+
+.tp-card__body{position:relative;z-index:3;padding:20px 22px 22px;display:flex;flex-direction:column;gap:12px;flex:1;
+  background:linear-gradient(180deg,rgba(16,19,42,.55),rgba(9,11,24,.78));
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.tp-role{display:flex;align-items:center;gap:7px;margin:0;
+  font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:rgba(224,194,255,.85)}
+.tp-card--nfa .tp-role{color:rgba(196,181,253,.85)}
+.tp-role__num{color:var(--v);font-size:.72rem}
+.tp-role__sep{color:rgba(200,220,255,.25)}
+.tp-card__name{font-size:clamp(1.3rem,2.2vw,1.65rem);font-weight:800;letter-spacing:-.02em;line-height:1.15;margin:0}
+.tp-desc{margin:0;font-size:.84rem;line-height:1.6;color:rgba(200,215,240,.6)}
+.tp-specs{display:flex;flex-wrap:wrap;gap:6px}
+.tp-spec{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.64rem;letter-spacing:.05em;text-transform:uppercase;
+  color:rgba(215,228,250,.75);padding:5px 10px;border-radius:999px;
+  border:1px solid rgba(191,64,191,.22);background:rgba(191,64,191,.07)}
+.tp-card--nfa .tp-spec{border-color:rgba(124,58,237,.26);background:rgba(124,58,237,.08)}
+.tp-card__foot{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-top:auto}
+.tp-pricing{display:flex;flex-direction:column;gap:2px}
+.sp-price__label{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(200,220,255,.4)}
+.tp-price{font-family:'JetBrains Mono',monospace;font-size:1.75rem;font-weight:800;letter-spacing:-.02em;display:flex;align-items:baseline;gap:8px;color:#fff}
+.sp-price__slash{font-size:.95rem;font-weight:500;color:rgba(200,220,255,.3);text-decoration:line-through}
+.tp-cta{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:12px;font-weight:700;color:#fff;white-space:nowrap;
+  background:linear-gradient(135deg,var(--v),var(--b));box-shadow:0 12px 28px -10px rgba(191,64,191,.75);
+  transition:filter .25s,gap .25s,box-shadow .25s}
+.tp-card:hover .tp-cta{filter:brightness(1.1);gap:11px;box-shadow:0 16px 34px -10px rgba(191,64,191,.9)}
+
+/* loadout advice strip */
+.tpl{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:26px;
+  padding:20px 24px;border-radius:18px;border:1px solid var(--edge);
+  background:linear-gradient(135deg,rgba(191,64,191,.06),rgba(12,15,30,.6));
+  animation:spUp .7s ease .3s both}
+.tpl__eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--v);font-size:.66rem;letter-spacing:.2em;margin:0 0 6px}
+.tpl__line{margin:0;font-size:.88rem;line-height:1.65;color:rgba(205,220,245,.72);max-width:60ch}
+.tpl__link{flex-shrink:0;display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:10px;
+  text-decoration:none;font-size:.8rem;font-weight:700;color:rgba(205,235,215,.85);
+  background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.22);
+  transition:border-color .25s,background .25s,gap .25s}
+.tpl__link:hover{border-color:rgba(34,197,94,.45);background:rgba(34,197,94,.1);gap:11px}
+.tpl__pulse{position:relative;width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.9)}
+.tpl__pulse::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(34,197,94,.55);animation:tplPulse 2.2s ease-out infinite}
+@keyframes tplPulse{0%{transform:scale(.5);opacity:1}70%,100%{transform:scale(1.6);opacity:0}}
+
+@keyframes tpFade{from{opacity:0}to{opacity:1}}
+@keyframes spUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+@media (max-width:900px){
+  .tp-plus{display:none}
+}
+@media (max-width:760px){
+  .tp-wrap{padding:104px 16px 64px}
+  .tp-grid{grid-template-columns:1fr;gap:18px}
+  .tpl{flex-direction:column;align-items:flex-start}
+}
+@media (prefers-reduced-motion:reduce){.sp-page *{animation:none!important;opacity:1!important}}
+</style>
+
+<script>
+(function(){
+  var cards = document.querySelectorAll('.tp-card[data-tilt]');
+  if(!cards.length) return;
+  var page = document.querySelector('.sp-page');
+  if(page) page.classList.add('tp-js');
+  // smooth image-load reveal (runs on every device; gated by .tp-js so no-JS stays visible)
+  Array.prototype.forEach.call(document.querySelectorAll('.tp-card__media img.tp-card__img'), function(img){
+    if(img.complete && img.naturalWidth>0){ img.classList.add('is-ready'); }
+    else { img.addEventListener('load', function(){ img.classList.add('is-ready'); });
+           img.addEventListener('error', function(){ img.classList.add('is-ready'); }); }
+  });
+  var fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  var reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(!fine || reduce) return;            // tilt only on real pointers, never if reduced-motion
+  var MAX = 8;                           // max tilt in degrees
+  cards.forEach(function(card){
+    var raf=null, rect=null;
+    card.addEventListener('pointerenter', function(){
+      rect = card.getBoundingClientRect();
+      card.style.transition = 'transform .08s linear, border-color .4s, box-shadow .4s';
+    });
+    card.addEventListener('pointermove', function(e){
+      if(!rect) rect = card.getBoundingClientRect();
+      var px=(e.clientX-rect.left)/rect.width, py=(e.clientY-rect.top)/rect.height;
+      if(raf) return;
+      raf = requestAnimationFrame(function(){
+        raf=null;
+        card.style.setProperty('--ry', ((px-0.5)*2*MAX).toFixed(2)+'deg');
+        card.style.setProperty('--rx', (-(py-0.5)*2*MAX).toFixed(2)+'deg');
+        card.style.setProperty('--mx', (px*100).toFixed(1)+'%');
+        card.style.setProperty('--my', (py*100).toFixed(1)+'%');
+      });
+    });
+    card.addEventListener('pointerleave', function(){
+      rect=null;
+      card.style.transition = 'transform .5s cubic-bezier(.16,1,.3,1), border-color .4s, box-shadow .4s';
+      card.style.setProperty('--ry','0deg');
+      card.style.setProperty('--rx','0deg');
+    });
+  });
+})();
+</script>
+
+{% else %}
+{# ============================================================
+   MULTI-PRODUCT CATALOG (original layout) — used automatically
+   if you ever add more products or when filters are active.
+   ============================================================ #}
+<div class="container component" data-component-id="{{ componentId }}">
+  <section
+    class="py-5-nav"
+    x-data="{
+      submitForm() {
+        const form = event.target;
+        const inputs = form.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+          if (!input.value) {
+            input.disabled = true;
+          }
+        });
+        form.submit();
+      }
+    }"
+  >
+    {% if title_to_use %}
+      <div class="section-title">
+        <h1>{{ title_to_use | renderString }}</h1>
+      </div>
+    {% endif %}
+
+    <div class="d-lg-none mb-4">
+      <button
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#filters-modal"
+        class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
+      >
+        <span>Filters</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24"><path fill="currentColor" d="M11 20q-.425 0-.712-.288T10 19v-6L4.2 5.6q-.375-.5-.112-1.05T5 4h14q.65 0 .913.55T19.8 5.6L14 13v6q0 .425-.288.713T13 20z"/></svg>
+      </button>
+    </div>
+
+    <div class="row">
+      <aside class="col-lg-3 d-none d-lg-block mb-4">
+        <div class="bg-gray rounded p-4">
+          <form x-on:submit.prevent="submitForm">
+            <div class="mb-4">
+              <label class="form-label fw-bold">Categories</label>
+              <div class="d-flex flex-column gap-1">
+                <a
+                  href="{{ '/products' | shopUrl }}"
+                  class="btn btn-sm text-start {% if not category %}btn-primary{% else %}btn-outline{% endif %}"
+                >
+                  All Categories
+                </a>
+                {% for cat in category_links %}
+                  <a
+                    href="{{ cat.url }}"
+                    class="btn btn-sm text-start {% if category and category.id == cat.id %}btn-primary{% else %}btn-outline{% endif %}"
+                    style="padding-left: {{ (cat.depth * 12 + 12) }}px"
+                  >
+                    {{ cat.name }}
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="filters[keyword]" class="form-label fw-bold">Keyword</label>
+              <input
+                type="text"
+                name="filters[keyword]"
+                id="filters[keyword]"
+                value="{{ filters.keyword }}"
+                placeholder="Search..."
+                class="form-control"
+              />
+            </div>
+            <div class="mb-4">
+              <label class="form-label fw-bold">Price Range</label>
+              <input type="hidden" name="filters[price][currency]" :value="appCurrency.currency" />
+              <div class="row g-2">
+                <div class="col-6">
+                  <div class="position-relative">
+                    <input
+                      type="number"
+                      name="filters[price][from]"
+                      min="0"
+                      value="{{ filters.price.from }}"
+                      placeholder="Min"
+                      class="form-control pe-5"
+                    />
+                    <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted small">
+                      <span x-text="window.currencySymbols[appCurrency.currency.toLowerCase()]"></span>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="position-relative">
+                    <input
+                      type="number"
+                      name="filters[price][to]"
+                      min="0"
+                      value="{{ filters.price.to }}"
+                      placeholder="Max"
+                      class="form-control pe-5"
+                    />
+                    <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted small">
+                      <span x-text="window.currencySymbols[appCurrency.currency.toLowerCase()]"></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-column gap-2">
+              <button
+                type="submit"
+                class="w-100 btn btn-primary"
+              >
+                <span>Apply</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24"><path fill="currentColor" d="M16.15 13H5q-.425 0-.712-.288T4 12t.288-.712T5 11h11.15L13.3 8.15q-.3-.3-.288-.7t.288-.7q.3-.3.713-.312t.712.287L19.3 11.3q.15.15.213.325t.062.375t-.062.375t-.213.325l-4.575 4.575q-.3.3-.712.288t-.713-.313q-.275-.3-.288-.7t.288-.7z"/></svg>
+              </button>
+              <a
+                href="{{ '/products' | shopUrl }}"
+                class="w-100 btn btn-outline-primary"
+              >
+                <span>Reset</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24"><path fill="currentColor" d="M12 22q-1.875 0-3.512-.712t-2.85-1.925t-1.925-2.85T3 13h2q0 2.925 2.038 4.963T12 20t4.963-2.037T19 13t-2.037-4.962T12 6h-.15l1.55 1.55L12 9L8 5l4-4l1.4 1.45L11.85 4H12q1.875 0 3.513.713t2.85 1.925t1.925 2.85T21 13t-.712 3.513t-1.925 2.85t-2.85 1.925T12 22"/></svg>
+              </a>
+            </div>
+          </form>
+        </div>
+      </aside>
+      <div class="col-lg-9">
+        {% if items.length > 0 %}
+          <div class="row products">
+            {% for item in items %}
+              {% if item.type == 'group' or not item.group_id %}
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                  {% render_snippet "product-card.njk", product=item %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="text-center py-5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-3 text-muted" width="96" height="96" viewBox="0 0 24 24"><path fill="currentColor" d="M11 18q-.425 0-.712-.288T10 17t.288-.712T11 16h2q.425 0 .713.288T14 17t-.288.713T13 18zm-4-5q-.425 0-.712-.288T6 12t.288-.712T7 11h10q.425 0 .713.288T18 12t-.288.713T17 13zM4 8q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"/></svg>
+            <p class="text-muted fs-5">
+              No products found matching your criteria.
+            </p>
+          </div>
+        {% endif %}
+
+        {% if items_paginator.last_page > 1 %}
+          <div class="mt-4">
+            {% render_snippet "pagination.njk", paginator=items_paginator %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <div class="modal fade" id="filters-modal" tabindex="-1" aria-labelledby="filters-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Filters</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form x-on:submit.prevent="submitForm">
+            <div class="mb-4">
+              <label class="form-label fw-bold">Categories</label>
+              <div class="d-flex flex-column gap-1">
+                <a
+                  href="{{ '/products' | shopUrl }}"
+                  class="btn btn-sm text-start {% if not category %}btn-primary{% else %}btn-outline{% endif %}"
+                >
+                  All Categories
+                </a>
+                {% for cat in category_links %}
+                  <a
+                    href="{{ cat.url }}"
+                    class="btn btn-sm text-start {% if category and category.id == cat.id %}btn-primary{% else %}btn-outline{% endif %}"
+                    style="padding-left: {{ (cat.depth * 12 + 12) }}px"
+                  >
+                    {{ cat.name }}
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="filters-mobile[keyword]" class="form-label fw-bold">Keyword</label>
+              <input
+                type="text"
+                name="filters[keyword]"
+                id="filters-mobile[keyword]"
+                value="{{ filters.keyword }}"
+                placeholder="Search..."
+                class="form-control"
+              />
+            </div>
+            <div class="mb-4">
+              <label class="form-label fw-bold">Price Range</label>
+              <input type="hidden" name="filters[price][currency]" :value="appCurrency.currency" />
+              <div class="row g-2">
+                <div class="col-6">
+                  <div class="position-relative">
+                    <input
+                      type="number"
+                      name="filters[price][from]"
+                      min="0"
+                      value="{{ filters.price.from }}"
+                      placeholder="Min"
+                      class="form-control pe-5"
+                    />
+                    <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted small">
+                      <span x-text="window.currencySymbols[appCurrency.currency.toLowerCase()]"></span>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="position-relative">
+                    <input
+                      type="number"
+                      name="filters[price][to]"
+                      min="0"
+                      value="{{ filters.price.to }}"
+                      placeholder="Max"
+                      class="form-control pe-5"
+                    />
+                    <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted small">
+                      <span x-text="window.currencySymbols[appCurrency.currency.toLowerCase()]"></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-column gap-2">
+              <button
+                type="submit"
+                class="w-100 btn btn-primary"
+              >
+                <span>Apply</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24"><path fill="currentColor" d="M16.15 13H5q-.425 0-.712-.288T4 12t.288-.712T5 11h11.15L13.3 8.15q-.3-.3-.288-.7t.288-.7q.3-.3.713-.312t.712.287L19.3 11.3q.15.15.213.325t.062.375t-.062.375t-.213.325l-4.575 4.575q-.3.3-.712.288t-.713-.313q-.275-.3-.288-.7t.288-.7z"/></svg>
+              </button>
+              <a
+                href="{{ '/products' | shopUrl }}"
+                class="w-100 btn btn-outline-primary"
+              >
+                <span>Reset</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24"><path fill="currentColor" d="M12 22q-1.875 0-3.512-.712t-2.85-1.925t-1.925-2.85T3 13h2q0 2.925 2.038 4.963T12 20t4.963-2.037T19 13t-2.037-4.962T12 6h-.15l1.55 1.55L12 9L8 5l4-4l1.4 1.45L11.85 4H12q1.875 0 3.513.713t2.85 1.925t1.925 2.85T21 13t-.712 3.513t-1.925 2.85t-2.85 1.925T12 22"/></svg>
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% for item in items %}
+    {% if item.type == 'group' %}
+      <div class="modal fade" id="group-modal-{{ item.id }}" tabindex="-1" aria-labelledby="group-modal-{{ item.id }}-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="group-modal-{{ item.id }}-label">
+                {{ item.name }} Products
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="products row">
+                {% for product in item.products %}
+                  <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4">
+                    {% render_snippet "product-card.njk", product=product %}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}

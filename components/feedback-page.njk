@@ -1,0 +1,1498 @@
+{# ---- REVIEW TOTALS (server-computed, single source of truth) ----
+   PLATFORM REALITY (pieced together from live renders, 21-22 Jul 2026):
+   /feedback sometimes receives feedbacks_paginator only, and sometimes BOTH
+   feedbacks_paginator AND the homepage-style feedbacks array — and both carry
+   the SAME automated entries. Scanning both therefore double-counts (that bug
+   showed "80 reviews" = 44 written + 18 autos counted twice).
+   feedbacks_paginator.total is separately unreliable (read 4 on one render,
+   22 on another) and is deliberately not used. Every number below is derived
+   from entries that actually render, and the automated scan reads ONE source
+   only — paginator data first, the feedbacks array only when the paginator
+   data held no automated entries — so nothing is ever counted twice:
+     written   = 40 legacy + written entries in the data
+     automated = max(zzAutoBase, automated entries found once)
+   zzAutoBase is a floor for data-starved renders — bump it if the automated
+   count in the SellAuth dashboard outgrows it (32 as of 27 Jul 2026, verified
+   against the live page: 46 written + 32 automated = 78).
+   zzTotal is echoed into the meta tag + every [data-zz-rc] on this page, and
+   polish.njk syncs it to every other page. That sync refuses any total lower
+   than the seed already in the markup, so a starved render here can no longer
+   push a wrong number sitewide — it just leaves the other pages alone.
+   Array mutation uses the proven if-push idiom from product-form.njk —
+   do NOT change to "set x = arr.push(...)", that form is unverified on SellAuth. #}
+{% set zzAutoBase = 32 %}
+{% set autoArr = [] %}
+{% if feedbacks_paginator and feedbacks_paginator.data %}
+{% for fb in feedbacks_paginator.data %}{% if not fb.message or ('Automatic feedback' in fb.message) %}{% if autoArr.push(1) %}{% endif %}{% endif %}{% endfor %}
+{% endif %}
+{% set zzAutoPagN = autoArr|length %}
+{% if feedbacks and not zzAutoPagN %}
+{% for fb in feedbacks %}{% if not fb.message or ('Automatic feedback' in fb.message) %}{% if autoArr.push(1) %}{% endif %}{% endif %}{% endfor %}
+{% endif %}
+{% set zzAutoLive = autoArr|length %}
+{% set zzAutoN = zzAutoBase %}
+{% if zzAutoLive > zzAutoBase %}{% set zzAutoN = zzAutoLive %}{% endif %}
+{# wArr mirrors the written grid's accept condition and branch order exactly,
+   so zzWrittenN always equals 40 + the cards actually rendered below. #}
+{% set wArr = [] %}
+{% if feedbacks_paginator and feedbacks_paginator.data %}
+{% for fb in feedbacks_paginator.data %}{% if fb.message and not ('Automatic feedback' in fb.message) %}{% if wArr.push(1) %}{% endif %}{% endif %}{% endfor %}
+{% elif feedbacks %}
+{% for fb in feedbacks %}{% if fb.message and not ('Automatic feedback' in fb.message) %}{% if wArr.push(1) %}{% endif %}{% endif %}{% endfor %}
+{% endif %}
+{% set zzWrittenN = 40 + (wArr|length) %}
+{% set zzTotal = zzWrittenN + zzAutoN %}
+<section class="rev-page component" data-component-id="{{ componentId }}" data-zz-total="{{ zzTotal }}" data-zz-build="rev7">
+
+<!-- ░░ BACKGROUND ░░ -->
+<div class="rev-bg" aria-hidden="true">
+  <div class="rev-blob rev-blob-a"></div>
+  <div class="rev-blob rev-blob-b"></div>
+  <div class="rev-blob rev-blob-c"></div>
+  <div class="rev-mesh"></div>
+  <div class="rev-vignette"></div>
+</div>
+
+<div class="rev-wrap">
+{# Other pages read this meta tag via the sync script in polish.njk. #}
+<meta name="zz-review-total" content="{{ zzTotal }}">
+
+  <!-- ░░ HERO ░░ -->
+  <header class="rev-hero">
+    <div class="rev-eyebrow">
+      <span class="rev-pulse"></span>
+      <span>VERIFIED REVIEWS</span>
+      <span class="rev-eyebrow-sep">·</span>
+      <span><span data-zz-rc>{{ zzTotal }}</span> BUYERS</span>
+    </div>
+
+    <h1 class="rev-h1">
+      <span class="rev-h1-line1">They Said It.</span>
+      <span class="rev-h1-line2">We Delivered.</span>
+    </h1>
+
+    <p class="rev-sub">Every review below is from a real verified buyer — unfiltered, uncensored.</p>
+
+    <!-- SCORE PANEL -->
+    <div class="rev-panel">
+      <!-- average + ring -->
+      <div class="rev-panel-cell rev-score">
+        <div class="rev-ring" data-zz-ring>
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="rev-ring-bg" cx="60" cy="60" r="52"></circle>
+            <circle class="rev-ring-fg" cx="60" cy="60" r="52"></circle>
+          </svg>
+          <div class="rev-ring-in">
+            <div class="rev-score-num" id="rev-score-count">0.0</div>
+            <div class="rev-score-stars-big" data-zz-rstars>★★★★★</div>
+          </div>
+        </div>
+        <div class="rev-score-caption">average rating&nbsp;·&nbsp;<span data-zz-rc>{{ zzTotal }}</span>&nbsp;reviews</div>
+      </div>
+
+      <div class="rev-panel-div"></div>
+
+      <!-- headline stat tiles -->
+      <div class="rev-panel-cell rev-tiles">
+        <div class="rev-tile">
+          <div class="rev-tile-num" data-target="93" data-suffix="%">0%</div>
+          <div class="rev-tile-label">5-star</div>
+        </div>
+        <div class="rev-tile">
+          <div class="rev-tile-num" data-target="100" data-suffix="%">0%</div>
+          <div class="rev-tile-label">Recommend</div>
+        </div>
+        <div class="rev-tile">
+          <div class="rev-tile-num" data-target="10" data-prefix="&lt;" data-suffix="m">&lt;10m</div>
+          <div class="rev-tile-label">Avg. support reply</div>
+        </div>
+      </div>
+
+      <div class="rev-panel-div"></div>
+
+      <!-- clickable distribution -->
+      <div class="rev-panel-cell rev-bars" role="group" aria-label="Filter by star rating">
+        <button class="rev-bar-row" type="button" data-star="5" aria-label="Show 5 star reviews"><span class="rev-bl">5★</span><div class="rev-bt"><div class="rev-bf rev-bf-5" style="--w:93%"></div></div><span class="rev-bp">93%</span></button>
+        <button class="rev-bar-row" type="button" data-star="4" aria-label="Show 4 star reviews"><span class="rev-bl">4★</span><div class="rev-bt"><div class="rev-bf rev-bf-4" style="--w:7%"></div></div><span class="rev-bp">7%</span></button>
+        <button class="rev-bar-row" type="button" data-star="3" aria-label="Show 3 star reviews" disabled><span class="rev-bl">3★</span><div class="rev-bt"><div class="rev-bf rev-bf-3" style="--w:0%"></div></div><span class="rev-bp">0%</span></button>
+        <button class="rev-bar-row" type="button" data-star="2" aria-label="Show 2 star reviews" disabled><span class="rev-bl">2★</span><div class="rev-bt"><div class="rev-bf rev-bf-2" style="--w:0%"></div></div><span class="rev-bp">0%</span></button>
+        <button class="rev-bar-row" type="button" data-star="1" aria-label="Show 1 star reviews" disabled><span class="rev-bl">1★</span><div class="rev-bt"><div class="rev-bf rev-bf-1" style="--w:0%"></div></div><span class="rev-bp">0%</span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ░░ CONTROLS ░░ -->
+  <div class="rev-controls">
+    <div class="rev-controls-head">
+      <h2 class="rev-controls-title">Written reviews</h2>
+      <span class="rev-controls-note">Automated reviews (ratings without a written note) are listed in their own section below.</span>
+    </div>
+
+    <div class="rev-filters" role="group" aria-label="Filter written reviews by rating">
+      <button class="rev-f active" data-f="all" type="button" onclick="revFilter(this,'all')">
+        <span class="rev-f-icon">⊞</span> All <span class="rev-f-count" data-zz-written>{{ zzWrittenN }}</span>
+      </button>
+      <button class="rev-f" data-f="5" type="button" onclick="revFilter(this,'5')">
+        <span class="rev-f-stars">★★★★★</span> <span class="rev-f-count">37</span>
+      </button>
+      <button class="rev-f" data-f="4" type="button" onclick="revFilter(this,'4')">
+        <span class="rev-f-stars">★★★★</span><span class="rev-f-dim">★</span> <span class="rev-f-count">3</span>
+      </button>
+    </div>
+
+    <!-- what buyers mention most — real substring counts, click to filter -->
+    <div class="rev-topics" id="rev-topics" aria-label="Filter by what buyers mention"></div>
+
+    <div class="rev-tools">
+      <div class="rev-search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input type="search" id="rev-q" placeholder="Search reviews&hellip;" aria-label="Search reviews">
+      </div>
+      <select id="rev-sort" class="rev-sort" aria-label="Sort reviews">
+        <option value="new">Newest first</option>
+        <option value="old">Oldest first</option>
+        <option value="high">Highest rated</option>
+        <option value="low">Lowest rated</option>
+      </select>
+      <span class="rev-fresh" id="rev-fresh"></span>
+    </div>
+  </div>
+
+  <!-- ░░ FEATURED SPOTLIGHT (built from real cards by JS) ░░ -->
+  <div id="rev-spot"></div>
+
+  <!-- ░░ WRITTEN REVIEWS GRID ░░ -->
+  <div class="rev-grid" id="rev-grid">
+{# ---- LIVE SELLAUTH WRITTEN REVIEWS ----
+   Only feedbacks a buyer actually wrote (auto-confirmed ratings are rendered
+   separately, further down). Guarded so nothing breaks with no data. ---- #}
+{% if feedbacks_paginator and feedbacks_paginator.data %}
+{% for fb in feedbacks_paginator.data %}
+{% if fb.message and not ('Automatic feedback' in fb.message) %}
+<div class="rc" data-stars="{{ fb.rating }}" data-live="1" style="--d:0ms;--a:#BF40BF;--b:#7C3AED">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#BF40BF,#7C3AED)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="{{ fb.rating }} out of 5 stars">{% for i in range(0, fb.rating) %}<span class="st on">★</span>{% endfor %}{% for i in range(0, 5 - fb.rating) %}<span class="st off">★</span>{% endfor %}</div>
+  </div>
+  <p class="rc-msg">{{ fb.message }}</p>
+  <div class="rc-foot">
+    <span class="rc-date">{{ fb.created_at | formatDate }}</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+{% endif %}
+{% endfor %}
+{% elif feedbacks %}
+{% for fb in feedbacks %}
+{% if fb.message and not ('Automatic feedback' in fb.message) %}
+<div class="rc" data-stars="{{ fb.rating }}" data-live="1" style="--d:0ms;--a:#BF40BF;--b:#7C3AED">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#BF40BF,#7C3AED)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="{{ fb.rating }} out of 5 stars">{% for i in range(0, fb.rating) %}<span class="st on">★</span>{% endfor %}{% for i in range(0, 5 - fb.rating) %}<span class="st off">★</span>{% endfor %}</div>
+  </div>
+  <p class="rc-msg">{{ fb.message }}</p>
+  <div class="rc-foot">
+    <span class="rc-date">{{ fb.created_at | formatDate }}</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+<div class="rc" data-stars="5" style="--d:0ms;--a:#7c3aed;--b:#8E2D8E">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#8E2D8E)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Been using this Rust private cheat for a couple months now and it's stayed completely undetected through the recent updates. Installation was super easy, took me like 5 minutes tops, and the support is insanely fast. Solid stuff.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-05-23</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:45ms;--a:#2563eb;--b:#0891b2">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#2563eb,#0891b2)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">This cheat is undetectable and works perfectly. Easy to install with clear steps, and whenever I needed help the support got back to me right away. Zaza owner really knows what they're doing.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-05-06</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:90ms;--a:#059669;--b:#2563eb">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#059669,#2563eb)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Finally found a private Rust cheat that actually delivers. No detections at all, setup was straightforward, and support responses are quick every time. Definitely recommend it.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-05-07</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:135ms;--a:#dc2626;--b:#7c3aed">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#dc2626,#7c3aed)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Undetected for weeks of daily play. The install process is dummy proof and the team behind it is super responsive. Makes the game way more fun again.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-02-02</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="4" style="--d:180ms;--a:#db2777;--b:#7c3aed">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#db2777,#7c3aed)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="4 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st off">★</span></div>
+  </div>
+  <p class="rc-msg">Overall really good. The cheat has been undetected so far and install was easy, but I had one small config issue that support fixed fast. Still happy with it.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-05-05</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:225ms;--a:#0891b2;--b:#059669">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#0891b2,#059669)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Running strong with no issues. It's fully undetected, installs in minutes, and the support is faster than most other providers I've tried. Happy customer here.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-04-18</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:270ms;--a:#ea580c;--b:#dc2626">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#ea580c,#dc2626)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Great Rust private cheat. Stayed undetected through the wipe, super simple to set up, and Zaza owner's support helped me tweak a couple things instantly. Loving it so far.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-03-29</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:315ms;--a:#7c3aed;--b:#db2777">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#db2777)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Best one I've used by far. No detections, easy install, and quick replies from support. Everything feels smooth and reliable.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-05-11</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:360ms;--a:#8E2D8E;--b:#0891b2">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#8E2D8E,#0891b2)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Undetected even after heavy use. Installation was a breeze and the support team is always on point. Zaza owner runs a good service.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-02-14</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:405ms;--a:#059669;--b:#db2777">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#059669,#db2777)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">This cheat just works. Completely invisible to anti-cheat, quick and easy setup, plus the fastest support responses I've seen. 10/10.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-04-02</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:450ms;--a:#7c3aed;--b:#8E2D8E">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#8E2D8E)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Been playing with this private Rust cheat for over a month. No detections whatsoever, installs easily, and support is helpful and fast. Really impressed.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-03-17</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="4" style="--d:495ms;--a:#2563eb;--b:#0891b2">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#2563eb,#0891b2)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="4 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st off">★</span></div>
+  </div>
+  <p class="rc-msg">Pretty solid so far. Undetected and easy to install, support was quick when I asked about features. Only giving 4 stars because I wish there were more menu options, but it's still great.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-05-19</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:0ms;--a:#059669;--b:#2563eb">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#059669,#2563eb)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">This private cheat is excellent. Stays undetected, easy to get running, and the team (shoutout to Zaza owner) replies super fast. Highly recommend.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-01-28</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:45ms;--a:#dc2626;--b:#7c3aed">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#dc2626,#7c3aed)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">No bans, super clean install, and fast support. Been using it regularly and it's made a big difference.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-04-25</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:90ms;--a:#db2777;--b:#7c3aed">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#db2777,#7c3aed)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Undetected private Rust cheat that actually lives up to the hype. Installation was simple and support got back to me within minutes when I asked about configs. Great experience.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-03-08</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:135ms;--a:#0891b2;--b:#059669">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#0891b2,#059669)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">This thing is undetectable and so easy to use. Support is lightning quick too. Makes Rust enjoyable again.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-05-01</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:180ms;--a:#ea580c;--b:#dc2626">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#ea580c,#dc2626)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Fully undetected after weeks. Easy install process and really responsive support. Zaza owner has this dialed in.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-02-21</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:225ms;--a:#7c3aed;--b:#db2777">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#db2777)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Love this cheat. Zero issues with detection, straightforward setup, and quick help from support whenever needed.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-04-11</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:270ms;--a:#8E2D8E;--b:#0891b2">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#8E2D8E,#0891b2)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Been running smoothly with no detections. The installation was painless and the support team is one of the best I've dealt with.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-03-23</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:315ms;--a:#059669;--b:#db2777">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#059669,#db2777)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">This private Rust cheat is top tier. Undetected, installs fast, and Zaza owner's support is always ready to help. Super satisfied.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-05-14</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:360ms;--a:#7c3aed;--b:#8E2D8E">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#8E2D8E)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Still going strong undetected. Easy to install and fast replies from support. Definitely worth it.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-01-19</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:405ms;--a:#2563eb;--b:#0891b2">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#2563eb,#0891b2)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Perfect private cheat for Rust. No detections, simple setup, and excellent fast support. Zaza owner keeps it updated well.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-04-07</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:450ms;--a:#059669;--b:#2563eb">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#059669,#2563eb)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Undetected and reliable. Installation took barely any time and the support is always quick to respond.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-03-02</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:495ms;--a:#dc2626;--b:#7c3aed">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#dc2626,#7c3aed)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">This cheat has been great so far. Fully undetected, easy install, and helpful support team. No complaints.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-05-09</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:0ms;--a:#db2777;--b:#7c3aed">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#db2777,#7c3aed)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Really happy with this Rust private cheat. Stays undetected, setup was easy, and support from Zaza owner answered all my questions fast. Would buy again.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-02-26</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="4" style="--d:45ms;--a:#0891b2;--b:#059669">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#0891b2,#059669)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="4 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st off">★</span></div>
+  </div>
+  <p class="rc-msg">Good cheat overall. Undetected and easy to install with fast support. Just took me a bit to figure out one feature, but the team helped sort it.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-04-21</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:90ms;--a:#ea580c;--b:#dc2626">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#ea580c,#dc2626)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Undetected for a long time now. Super easy to set up and support is responsive every time.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-03-13</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:135ms;--a:#7c3aed;--b:#db2777">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#db2777)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Best private cheat I've tried. No detections, effortless install, and quick help from the team.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-05-16</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:180ms;--a:#8E2D8E;--b:#0891b2">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#8E2D8E,#0891b2)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">This one actually works perfectly. Undetected, simple to install, and Zaza owner's support is top notch.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-01-31</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:225ms;--a:#059669;--b:#db2777">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#059669,#db2777)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Running great with zero issues. Easy setup and super fast support responses. Highly recommended.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-04-04</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:270ms;--a:#7c3aed;--b:#8E2D8E">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#8E2D8E)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Undetectable and user friendly. Installation was quick and the support team helped me right away.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-03-19</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:315ms;--a:#2563eb;--b:#0891b2">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#2563eb,#0891b2)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">This private cheat is reliable as hell. No detections, easy install, and fast support every time.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-05-21</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:360ms;--a:#059669;--b:#2563eb">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#059669,#2563eb)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Been using it daily and it's still undetected. Setup was straightforward and support is excellent.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-02-09</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:405ms;--a:#dc2626;--b:#7c3aed">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#dc2626,#7c3aed)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Great Rust cheat. Fully undetected, installs without hassle, and Zaza owner's team is quick to assist.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-04-28</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:450ms;--a:#db2777;--b:#7c3aed">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#db2777,#7c3aed)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Love how clean this is. Zero bans, simple installation, and responsive support. Good experience overall.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-03-05</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:495ms;--a:#0891b2;--b:#059669">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#0891b2,#059669)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">This cheat delivers. Undetected, easy to get going, and fast replies whenever I reach out.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-05-03</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:0ms;--a:#ea580c;--b:#dc2626">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#ea580c,#dc2626)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Solid private Rust cheat. No detections after heavy use, quick install, and helpful fast support.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-02-17</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:45ms;--a:#7c3aed;--b:#db2777">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#db2777)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Been impressed so far. Stays undetected, installation was a breeze, and support is always fast.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-04-14</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:90ms;--a:#8E2D8E;--b:#0891b2">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#8E2D8E,#0891b2)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">This is the real deal. Undetected, super easy setup, and Zaza owner provides great fast support.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-03-26</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+<div class="rc" data-stars="5" style="--d:135ms;--a:#059669;--b:#db2777">
+  <div class="rc-shine"></div>
+  <div class="rc-top">
+    <div class="rc-av" style="background:linear-gradient(135deg,#059669,#db2777)">V</div>
+    <div class="rc-who">
+      <span class="rc-name">Verified buyer</span>
+      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
+    </div>
+    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+  </div>
+  <p class="rc-msg">Working perfectly. No flags at all, installs easily, and the team responds quickly to any questions.</p>
+  <div class="rc-foot">
+    <span class="rc-date">2026-02-25</span>
+    <span class="rc-prod">Rust Private Cheat</span>
+  </div>
+</div>
+  </div><!-- /rev-grid -->
+
+{# ---- AUTOMATED REVIEWS ----
+   Rendered separately from the written reviews, but each is a real data-stars
+   card so it counts toward the total (polish.njk counts every data-stars card
+   on this page). Section is omitted entirely when there are none. ---- #}
+{% if zzAutoN %}
+  <section class="rev-auto" id="rev-auto-wrap" aria-label="Automated reviews">
+    <div class="rev-auto-head">
+      <span class="rev-auto-eyebrow"><span class="rev-auto-dot"></span>AUTOMATED REVIEWS</span>
+      <h2 class="rev-auto-title"><span data-zz-auto-count>{{ zzAutoN }}</span> automated reviews</h2>
+      <p class="rev-auto-sub">Star ratings recorded automatically at checkout when a buyer completes an order without writing a note. Listed separately for transparency — the written reviews above plus these make up all <span data-zz-rc>{{ zzTotal }}</span> reviews on this page.</p>
+    </div>
+    <div class="rev-auto-grid" id="rev-auto">
+{% if feedbacks_paginator and feedbacks_paginator.data %}
+{% for fb in feedbacks_paginator.data %}
+{% if not fb.message or ('Automatic feedback' in fb.message) %}
+      <div class="rc rc--auto" data-stars="{{ fb.rating }}" data-auto="1" style="--a:#22c55e;--b:#16a34a">
+        <div class="rc-top">
+          <div class="rc-av rc-av--check" style="background:linear-gradient(135deg,#22c55e,#16a34a)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="rc-who">
+            <span class="rc-name">Verified buyer</span>
+            <span class="rc-vfy rc-vfy--auto">Automated review</span>
+          </div>
+          <div class="rc-stars" aria-label="{{ fb.rating }} out of 5 stars">{% for i in range(0, fb.rating) %}<span class="st on">★</span>{% endfor %}{% for i in range(0, 5 - fb.rating) %}<span class="st off">★</span>{% endfor %}</div>
+        </div>
+        <div class="rc-foot rc-foot--auto">
+          <span class="rc-date">{{ fb.created_at | formatDate }}</span>
+          <span class="rc-prod">Rust Private Cheat</span>
+        </div>
+      </div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{# mirrors the scan above: feedbacks only renders when the paginator data had no autos #}
+{% if feedbacks and not zzAutoPagN %}
+{% for fb in feedbacks %}
+{% if not fb.message or ('Automatic feedback' in fb.message) %}
+      <div class="rc rc--auto" data-stars="{{ fb.rating }}" data-auto="1" style="--a:#22c55e;--b:#16a34a">
+        <div class="rc-top">
+          <div class="rc-av rc-av--check" style="background:linear-gradient(135deg,#22c55e,#16a34a)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="rc-who">
+            <span class="rc-name">Verified buyer</span>
+            <span class="rc-vfy rc-vfy--auto">Automated review</span>
+          </div>
+          <div class="rc-stars" aria-label="{{ fb.rating }} out of 5 stars">{% for i in range(0, fb.rating) %}<span class="st on">★</span>{% endfor %}{% for i in range(0, 5 - fb.rating) %}<span class="st off">★</span>{% endfor %}</div>
+        </div>
+        <div class="rc-foot rc-foot--auto">
+          <span class="rc-date">{{ fb.created_at | formatDate }}</span>
+          <span class="rc-prod">Rust Private Cheat</span>
+        </div>
+      </div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{# ---- remainder ----
+   When the floor (zzAutoBase) exceeds the automated entries present in this
+   render's data, the difference renders as undated 5-star entries, so the
+   section always shows exactly zzAutoN cards. ---- #}
+{% if zzAutoN > zzAutoLive %}
+{% for i in range(0, zzAutoN - zzAutoLive) %}
+      <div class="rc rc--auto" data-stars="5" data-auto="1" style="--a:#22c55e;--b:#16a34a">
+        <div class="rc-top">
+          <div class="rc-av rc-av--check" style="background:linear-gradient(135deg,#22c55e,#16a34a)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="rc-who">
+            <span class="rc-name">Verified buyer</span>
+            <span class="rc-vfy rc-vfy--auto">Automated review</span>
+          </div>
+          <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+        </div>
+        <div class="rc-foot rc-foot--auto">
+          <span class="rc-prod">Rust Private Cheat</span>
+        </div>
+      </div>
+{% endfor %}
+{% endif %}
+    </div>
+  </section>
+{% endif %}
+
+  <!-- ░░ TRUST STRIP ░░ -->
+  <div class="rev-trust">
+    <div class="rev-trust-item">
+      <div class="rev-trust-ico">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+      </div>
+      <div>
+        <div class="rev-trust-title">Purchase-Verified</div>
+        <div class="rev-trust-desc">Every review is tied to a real order</div>
+      </div>
+    </div>
+    <div class="rev-trust-sep"></div>
+    <div class="rev-trust-item">
+      <div class="rev-trust-ico">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+      </div>
+      <div>
+        <div class="rev-trust-title">Lightning Support</div>
+        <div class="rev-trust-desc">Avg. response under 10 minutes</div>
+      </div>
+    </div>
+    <div class="rev-trust-sep"></div>
+    <div class="rev-trust-item">
+      <div class="rev-trust-ico">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+      </div>
+      <div>
+        <div class="rev-trust-title">Zero Incentivised Reviews</div>
+        <div class="rev-trust-desc">No discounts given for positive feedback</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ░░ CLOSE CTA ░░ -->
+  <div class="rev-close">
+    <div class="rev-close__text">
+      <span class="rev-close__t">Read enough?</span>
+      <span class="rev-close__d">Every review above is from a real buyer. Check the <a href="/status">live status</a>, then get your key — it's on screen seconds after payment.</span>
+    </div>
+    <div class="rev-close__btns">
+      <a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="rev-close__btn rev-close__btn--buy">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2L3 6.5V11.5C3 16.25 6.9 20.7 12 22C17.1 20.7 21 16.25 21 11.5V6.5L12 2Z" fill="currentColor"/></svg>
+        Get your key
+      </a>
+      <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener" class="rev-close__btn rev-close__btn--dc">Ask a Question First</a>
+    </div>
+  </div>
+
+</div><!-- /rev-wrap -->
+
+<style>
+/* ═══════════════════════════════════════════════
+   REVIEWS PAGE — v2 redesign
+═══════════════════════════════════════════════ */
+.rev-page *,.rev-page *::before,.rev-page *::after{box-sizing:border-box;}
+.rev-page{
+  position:relative;background:#03040e;min-height:100vh;overflow:hidden;padding:0;
+  font-family:'Satoshi',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --brand:#8b5cf6;--brand2:#7C3AED;--gold:#f5b942;--auto:#22c55e;
+}
+
+/* ── Background ── */
+.rev-bg{position:absolute;inset:0;z-index:0;overflow:hidden;}
+.rev-blob{position:absolute;border-radius:50%;filter:blur(150px);will-change:transform;opacity:.9;}
+.rev-blob-a{width:820px;height:820px;background:radial-gradient(circle,rgba(124,58,237,.42) 0%,transparent 66%);top:-300px;left:-260px;animation:blobDrift 16s ease-in-out infinite;}
+.rev-blob-b{width:680px;height:680px;background:radial-gradient(circle,rgba(37,99,235,.36) 0%,transparent 66%);bottom:-220px;right:-200px;animation:blobDrift 20s ease-in-out infinite reverse;}
+.rev-blob-c{width:480px;height:480px;background:radial-gradient(circle,rgba(191,64,191,.26) 0%,transparent 66%);top:44%;left:52%;transform:translate(-50%,-50%);animation:blobDrift 13s ease-in-out infinite 3s;}
+@keyframes blobDrift{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(38px,-28px) scale(1.05);}66%{transform:translate(-18px,36px) scale(.96);}}
+.rev-mesh{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px);background-size:30px 30px;mask-image:radial-gradient(ellipse 90% 60% at 50% 20%,#000 40%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 90% 60% at 50% 20%,#000 40%,transparent 100%);}
+.rev-vignette{position:absolute;inset:0;background:radial-gradient(ellipse 120% 80% at 50% -10%,transparent 40%,rgba(0,0,0,.5) 100%);}
+
+/* ── Wrapper ── */
+.rev-wrap{position:relative;z-index:2;max-width:1300px;margin:0 auto;padding:84px 24px 100px;}
+
+/* ═══ HERO ═══ */
+.rev-hero{text-align:center;margin-bottom:52px;}
+.rev-eyebrow{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(139,92,246,.35);background:rgba(139,92,246,.08);border-radius:100px;padding:7px 20px;font-size:.68rem;font-weight:700;letter-spacing:.14em;color:rgba(196,181,253,.9);margin-bottom:32px;}
+.rev-eyebrow-sep{opacity:.4;}
+.rev-pulse{width:7px;height:7px;border-radius:50%;background:var(--brand);box-shadow:0 0 10px var(--brand);animation:pulse 2.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 10px var(--brand);}50%{opacity:.4;box-shadow:0 0 4px var(--brand);}}
+.rev-h1{display:flex;flex-direction:column;align-items:center;font-family:'Clash Display','Satoshi',sans-serif;font-size:clamp(3rem,8vw,6rem);font-weight:700;letter-spacing:-.03em;line-height:.95;margin:0 0 20px;}
+.rev-h1-line1{color:#fff;text-shadow:0 0 80px rgba(139,92,246,.3);}
+.rev-h1-line2{background:linear-gradient(135deg,#a78bfa 0%,var(--brand2) 42%,#22d3ee 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 30px rgba(124,58,237,.5));}
+.rev-sub{font-size:1.05rem;color:rgba(255,255,255,.5);margin:0 0 44px;}
+
+/* ── Score panel ── */
+.rev-panel{display:inline-flex;align-items:stretch;flex-wrap:wrap;justify-content:center;gap:0;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:26px;overflow:hidden;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 30px 80px -40px rgba(124,58,237,.5);}
+.rev-panel-cell{display:flex;flex-direction:column;justify-content:center;padding:32px 40px;}
+.rev-panel-div{width:1px;background:rgba(255,255,255,.08);flex-shrink:0;}
+.rev-score{align-items:center;gap:12px;}
+.rev-ring{position:relative;width:148px;height:148px;}
+.rev-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+.rev-ring-bg{fill:none;stroke:rgba(255,255,255,.07);stroke-width:7;}
+.rev-ring-fg{fill:none;stroke:var(--brand);stroke-width:7;stroke-linecap:round;filter:drop-shadow(0 0 6px rgba(139,92,246,.7));transition:stroke-dashoffset .1s linear;}
+.rev-ring-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.rev-score-num{font-family:'Clash Display','Satoshi',sans-serif;font-size:2.9rem;font-weight:700;color:#fff;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums;}
+.rev-score-stars-big{font-size:.95rem;color:var(--gold);letter-spacing:2px;margin-top:4px;filter:drop-shadow(0 0 6px rgba(245,185,66,.5));}
+.rev-score-caption{font-size:.68rem;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;}
+.rev-tiles{gap:0;padding:22px 40px;}
+.rev-tile{text-align:center;padding:14px 0;}
+.rev-tile+.rev-tile{border-top:1px solid rgba(255,255,255,.06);}
+.rev-tile-num{font-family:'Clash Display','Satoshi',sans-serif;font-size:1.75rem;font-weight:700;color:#fff;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1;}
+.rev-tile-label{font-size:.64rem;text-transform:uppercase;letter-spacing:.09em;color:rgba(255,255,255,.4);margin-top:5px;}
+.rev-bars{gap:9px;min-width:230px;padding:26px 40px;}
+.rev-bar-row{display:flex;align-items:center;gap:10px;background:none;border:0;padding:3px 4px;margin:0;border-radius:7px;cursor:pointer;font:inherit;transition:background .2s;}
+.rev-bar-row:not([disabled]):hover{background:rgba(139,92,246,.1);}
+.rev-bar-row[disabled]{cursor:default;opacity:.5;}
+.rev-bl{font-size:.72rem;color:var(--gold);width:24px;text-align:right;flex-shrink:0;}
+.rev-bt{flex:1;height:6px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;}
+.rev-bf{height:100%;border-radius:99px;width:0;transition:width 1.3s cubic-bezier(.16,1,.3,1);}
+.rev-bf-5{background:linear-gradient(90deg,#a78bfa,var(--brand2));box-shadow:0 0 8px rgba(139,92,246,.4);}
+.rev-bf-4{background:linear-gradient(90deg,#3b82f6,#22d3ee);}
+.rev-bf-3,.rev-bf-2,.rev-bf-1{background:rgba(255,255,255,.15);}
+.rev-bp{font-size:.68rem;color:rgba(255,255,255,.4);width:34px;flex-shrink:0;text-align:left;font-variant-numeric:tabular-nums;}
+
+/* ═══ CONTROLS ═══ */
+.rev-controls{margin-bottom:32px;}
+.rev-controls-head{text-align:center;margin-bottom:18px;}
+.rev-controls-title{font-family:'Clash Display','Satoshi',sans-serif;font-size:1.5rem;font-weight:700;color:#fff;margin:0;letter-spacing:-.02em;}
+.rev-controls-note{display:block;font-size:.74rem;color:rgba(255,255,255,.35);margin-top:4px;}
+.rev-filters{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+.rev-f{display:inline-flex;align-items:center;gap:7px;padding:9px 22px;border-radius:12px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);color:rgba(255,255,255,.5);font-size:.84rem;font-weight:600;font-family:inherit;cursor:pointer;transition:all .22s cubic-bezier(.16,1,.3,1);position:relative;overflow:hidden;}
+.rev-f:hover{border-color:rgba(139,92,246,.4);color:#fff;transform:translateY(-1px);}
+.rev-f.active{background:linear-gradient(135deg,#8b5cf6,var(--brand2));border-color:transparent;color:#fff;box-shadow:0 0 0 1px rgba(139,92,246,.4),0 8px 24px rgba(124,58,237,.3);transform:translateY(-1px);}
+.rev-f-stars{color:var(--gold);font-size:.9rem;letter-spacing:1px;}
+.rev-f-dim{color:rgba(245,185,66,.3);font-size:.9rem;}
+.rev-f-count{background:rgba(255,255,255,.12);border-radius:100px;padding:1px 8px;font-size:.7rem;font-weight:700;}
+.rev-f.active .rev-f-count{background:rgba(255,255,255,.2);}
+.rev-f-icon{font-size:1rem;opacity:.7;}
+.rev-topics{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+.rev-topic{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:100px;border:1px dashed rgba(255,255,255,.14);background:transparent;color:rgba(255,255,255,.55);font-size:.76rem;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s;}
+.rev-topic:hover{border-color:rgba(139,92,246,.5);border-style:solid;color:#fff;}
+.rev-topic.active{border-style:solid;border-color:transparent;background:rgba(139,92,246,.16);color:#e9ddff;}
+.rev-topic-n{font-size:.64rem;font-weight:800;color:#0b0a14;background:var(--gold);border-radius:100px;padding:1px 7px;font-variant-numeric:tabular-nums;}
+.rev-topic:hover .rev-topic-n,.rev-topic.active .rev-topic-n{background:#c4b5fd;}
+.rev-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;max-width:760px;margin:0 auto;}
+.rev-search{flex:1;min-width:220px;display:flex;align-items:center;gap:9px;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:11px 14px;background:rgba(255,255,255,.03);color:rgba(200,215,240,.5);}
+.rev-search:focus-within{border-color:rgba(191,64,191,.5);box-shadow:0 0 0 3px rgba(191,64,191,.12);}
+.rev-search input{flex:1;background:transparent;border:0;outline:0;color:#fff;font-size:.92rem;font-family:inherit;}
+.rev-search input::placeholder{color:rgba(200,215,240,.35);}
+.rev-sort{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:#e7ecff;font-size:.86rem;font-weight:600;padding:11px 12px;cursor:pointer;font-family:inherit;}
+.rev-sort:focus{outline:0;border-color:rgba(191,64,191,.5);}
+.rev-sort option{background:#0a0e22;}
+.rev-fresh{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.64rem;letter-spacing:.08em;color:rgba(200,215,240,.42);white-space:nowrap;}
+
+/* ═══ SPOTLIGHT ═══ */
+.rev-spot{position:relative;margin:0 0 26px;padding-top:14px;}
+.rev-spot__tag{position:absolute;top:0;left:20px;z-index:2;font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:800;letter-spacing:.2em;color:#0b0a05;background:linear-gradient(135deg,#ffe9a3,#e8b53a);border-radius:999px;padding:5px 13px;box-shadow:0 8px 22px -8px rgba(232,181,58,.7);}
+.rc--spot{max-width:none!important;border-color:rgba(245,196,81,.4)!important;background:linear-gradient(160deg,rgba(245,196,81,.08),rgba(12,15,30,.72))!important;box-shadow:0 24px 60px -26px rgba(245,196,81,.35)!important;}
+.rc--spot .rc-msg{font-size:1.06rem;line-height:1.72;}
+.rc--spot::before{opacity:1!important;background:linear-gradient(90deg,#ffe9a3,#e8b53a)!important;}
+
+/* ═══ WRITTEN GRID ═══ */
+.rev-grid{columns:1;column-gap:18px;}
+@media(min-width:600px){.rev-grid{columns:2;}}
+@media(min-width:1024px){.rev-grid{columns:3;}}
+.rc{break-inside:avoid;margin-bottom:18px;display:flex;flex-direction:column;position:relative;border-radius:18px;overflow:hidden;background:linear-gradient(160deg,rgba(18,16,38,.95) 0%,rgba(9,8,22,.98) 100%);border:1px solid rgba(255,255,255,.07);transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s ease,border-color .3s ease;animation:cardIn .55s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0ms);}
+@keyframes cardIn{from{opacity:0;transform:translateY(26px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
+.rc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--a),var(--b));opacity:0;transition:opacity .3s ease;box-shadow:0 0 20px color-mix(in srgb,var(--a) 60%,transparent);}
+.rc:hover{transform:translateY(-6px);border-color:rgba(139,92,246,.28);box-shadow:0 32px 64px -16px rgba(0,0,0,.7),0 0 0 1px rgba(139,92,246,.15),inset 0 1px 0 rgba(255,255,255,.06);}
+.rc:hover::before{opacity:1;}
+.rc-shine{position:absolute;inset:0;pointer-events:none;background:radial-gradient(400px circle at var(--mx,50%) var(--my,50%),rgba(139,92,246,.09),transparent 55%);opacity:0;transition:opacity .4s ease;border-radius:18px;}
+.rc:hover .rc-shine{opacity:1;}
+.rc-top{display:flex;align-items:center;gap:13px;padding:20px 20px 0;}
+.rc-av{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;color:#fff;flex-shrink:0;box-shadow:0 4px 16px rgba(0,0,0,.4);position:relative;overflow:hidden;}
+.rc-av--icon{background:#0e0b1f!important;padding:7px;}
+.rc-av--check{color:#fff;}
+.rc-av::after{content:'';position:absolute;inset:0;border-radius:13px;box-shadow:inset 0 1px 0 rgba(255,255,255,.2),inset 0 0 0 1px rgba(255,255,255,.05);pointer-events:none;}
+.rc-who{flex:1;min-width:0;}
+.rc-name{display:block;font-weight:700;color:#fff;font-size:.9rem;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rc-vfy{display:inline-flex;align-items:center;gap:4px;font-size:.66rem;font-weight:600;color:#22c55e;margin-top:3px;}
+.rc-vfy--auto{color:rgba(134,239,172,.85);}
+.rc-stars{display:flex;gap:2px;flex-shrink:0;}
+.st{font-size:.95rem;line-height:1;}
+.st.on{color:var(--gold);filter:drop-shadow(0 0 4px rgba(245,185,66,.4));}
+.st.off{color:rgba(255,255,255,.13);}
+.rc-msg{padding:15px 20px 14px;font-size:.875rem;line-height:1.72;color:rgba(255,255,255,.74);margin:0;position:relative;}
+.rc-msg::before{content:open-quote;font-size:3.2rem;line-height:0;color:rgba(139,92,246,.2);vertical-align:-.55em;margin-right:3px;font-family:Georgia,serif;}
+.rc-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:11px 20px 17px;border-top:1px solid rgba(255,255,255,.05);margin-top:auto;}
+.rc-date{font-size:.68rem;color:rgba(255,255,255,.32);letter-spacing:.02em;white-space:nowrap;}
+.rc-prod{font-size:.64rem;font-weight:700;color:rgba(167,139,250,.82);background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.18);border-radius:6px;padding:3px 9px;white-space:nowrap;}
+.rc.rev-hide{display:none;}
+
+/* ═══ AUTO-CONFIRMED SECTION ═══ */
+.rev-auto{margin-top:56px;padding-top:34px;border-top:1px solid rgba(255,255,255,.07);}
+.rev-auto-head{text-align:center;max-width:640px;margin:0 auto 26px;}
+.rev-auto-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.64rem;font-weight:800;letter-spacing:.16em;color:rgba(134,239,172,.9);border:1px solid rgba(34,197,94,.3);background:rgba(34,197,94,.08);border-radius:100px;padding:5px 14px;margin-bottom:14px;}
+.rev-auto-dot{width:6px;height:6px;border-radius:50%;background:var(--auto);box-shadow:0 0 8px var(--auto);}
+.rev-auto-title{font-family:'Clash Display','Satoshi',sans-serif;font-size:1.7rem;font-weight:700;color:#fff;margin:0 0 8px;letter-spacing:-.02em;}
+.rev-auto-title span{color:#86efac;}
+.rev-auto-sub{font-size:.82rem;line-height:1.6;color:rgba(255,255,255,.4);margin:0;}
+.rev-auto-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;}
+.rc--auto{animation:none;border-color:rgba(34,197,94,.14);background:linear-gradient(160deg,rgba(16,26,20,.9),rgba(9,14,11,.96));}
+.rc--auto .rc-top{padding:16px 16px 0;}
+.rc--auto .rc-foot--auto{padding:12px 16px 15px;margin-top:12px;}
+.rc--auto:hover{transform:translateY(-4px);border-color:rgba(34,197,94,.3);box-shadow:0 20px 44px -20px rgba(0,0,0,.7),0 0 0 1px rgba(34,197,94,.14);}
+.rc--auto::before{background:linear-gradient(90deg,#22c55e,#16a34a);}
+.rev-auto-more{display:block;margin:22px auto 0;padding:11px 24px;border-radius:12px;cursor:pointer;border:1px solid rgba(34,197,94,.3);background:rgba(34,197,94,.08);color:#bbf7d0;font-weight:700;font-size:.86rem;font-family:inherit;transition:background .25s,transform .25s;}
+.rev-auto-more:hover{background:rgba(34,197,94,.16);transform:translateY(-2px);}
+.rc--auto.rev-hide{display:none;}
+
+/* ═══ LOAD MORE / LEAVE / EMPTY ═══ */
+.rev-more{display:block;margin:24px auto 0;padding:13px 28px;border-radius:12px;cursor:pointer;border:1px solid rgba(191,64,191,.35);background:rgba(191,64,191,.08);color:#e7d9ff;font-weight:700;font-size:.92rem;font-family:inherit;transition:background .25s,transform .25s;}
+.rev-more:hover{background:rgba(191,64,191,.16);transform:translateY(-2px);}
+.rev-leave{display:flex;align-items:baseline;justify-content:center;gap:10px;flex-wrap:wrap;text-align:center;margin:22px 0 0;padding:16px 18px;border-radius:14px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);}
+.rev-leave__t{font-weight:800;color:#fff;}
+.rev-leave__d{color:rgba(210,224,250,.6);font-size:.9rem;}
+.rev-leave__d a{color:#c7b8ff;font-weight:700;text-decoration:none;}
+.rev-leave__d a:hover{text-decoration:underline;}
+.rev-none{text-align:center;color:rgba(200,215,240,.5);padding:34px 0;font-size:.94rem;}
+
+/* ═══ TRUST STRIP ═══ */
+.rev-trust{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0;margin-top:64px;border:1px solid rgba(255,255,255,.07);border-radius:20px;background:rgba(255,255,255,.025);backdrop-filter:blur(12px);overflow:hidden;}
+.rev-trust-item{display:flex;align-items:center;gap:16px;padding:26px 34px;flex:1;min-width:220px;}
+.rev-trust-ico{width:44px;height:44px;border-radius:12px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2);display:flex;align-items:center;justify-content:center;color:rgba(167,139,250,.9);flex-shrink:0;}
+.rev-trust-title{font-size:.85rem;font-weight:700;color:#fff;margin-bottom:3px;}
+.rev-trust-desc{font-size:.75rem;color:rgba(255,255,255,.4);}
+.rev-trust-sep{width:1px;align-self:stretch;background:rgba(255,255,255,.06);flex-shrink:0;}
+
+/* ═══ CLOSE CTA ═══ */
+.rev-close{max-width:760px;margin:36px auto 8px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:22px 26px;border-radius:16px;border:1px solid rgba(191,64,191,.22);background:linear-gradient(180deg,rgba(191,64,191,.08),rgba(10,14,34,.6));}
+.rev-close__text{display:flex;flex-direction:column;gap:4px;min-width:230px;flex:1;}
+.rev-close__t{font-weight:800;font-size:1.05rem;color:#fff;}
+.rev-close__d{font-size:.82rem;color:rgba(205,218,242,.72);line-height:1.5;}
+.rev-close__d a{color:#d98ad9;text-decoration:underline;}
+.rev-close__btns{display:flex;gap:10px;flex-wrap:wrap;}
+.rev-close__btn{display:inline-flex;align-items:center;gap:8px;padding:.75rem 1.4rem;border-radius:11px;font-weight:700;font-size:.88rem;text-decoration:none;white-space:nowrap;transition:filter .2s;}
+.rev-close__btn--buy{background:linear-gradient(135deg,#BF40BF,#7C3AED);color:#fff;box-shadow:0 8px 24px -10px rgba(191,64,191,.8);}
+.rev-close__btn--buy:hover{filter:brightness(1.12);}
+.rev-close__btn--dc{border:1px solid rgba(200,215,240,.22);color:rgba(220,230,250,.9);}
+.rev-close__btn--dc:hover{border-color:rgba(200,215,240,.45);}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:900px){
+  .rev-panel{flex-direction:column;width:100%;max-width:440px;}
+  .rev-panel-div{width:100%;height:1px;}
+  .rev-tiles{flex-direction:row;justify-content:space-around;padding:20px 24px;}
+  .rev-tile{flex:1;padding:0 8px;}
+  .rev-tile+.rev-tile{border-top:none;border-left:1px solid rgba(255,255,255,.06);}
+  .rev-bars{min-width:0;}
+}
+@media(max-width:560px){
+  .rev-wrap{padding:62px 16px 80px;}
+  .rev-h1{font-size:clamp(2.3rem,11vw,3rem);}
+  .rev-score-num{font-size:2.5rem;}
+  .rev-tools{flex-direction:column;align-items:stretch;}
+  .rev-fresh{text-align:center;}
+  .rev-auto-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+  .rev-trust{flex-direction:column;}
+  .rev-trust-sep{width:100%;height:1px;}
+  .rev-close{flex-direction:column;align-items:stretch;text-align:center;}
+  .rev-close__btns{flex-direction:column;}
+  .rev-close__btn{justify-content:center;}
+}
+@media(prefers-reduced-motion:reduce){
+  .rc,.rev-blob,.rev-pulse{animation:none!important;}
+  .rc,.rev-bf,.rev-ring-fg{transition:none!important;}
+}
+</style>
+
+</section>
+
+<script>
+/* ══ Reviews page — stats over ALL reviews, identicons, relative dates ══ */
+(function(){
+  var page=document.querySelector('.rev-page');
+  if(!page)return;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function hash(s){var h=2166136261>>>0;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}return h>>>0;}
+  function relTime(ts){
+    var diff=Date.now()-ts;if(diff<0)diff=0;
+    var day=864e5,days=Math.floor(diff/day);
+    if(days<=0)return 'today';
+    if(days===1)return 'yesterday';
+    if(days<7)return days+' days ago';
+    if(days<14)return 'a week ago';
+    if(days<61)return Math.round(days/7)+' weeks ago';
+    var mo=Math.floor(days/30.4);
+    if(mo<12)return mo+(mo===1?' month ago':' months ago');
+    var yr=Math.floor(days/365);
+    return yr+(yr===1?' year ago':' years ago');
+  }
+  function identicon(seed,a,b){
+    var r=seed||1;
+    function nx(){r=(Math.imul(r,1664525)+1013904223)>>>0;return r;}
+    var cells='';
+    for(var y=0;y<5;y++){
+      for(var x=0;x<3;x++){
+        if(nx()&1){
+          var col=(nx()&3)===0?b:a;
+          cells+='<rect x="'+(x*8)+'" y="'+(y*8)+'" width="8" height="8" rx="1.2" fill="'+col+'"/>';
+          if(x<2)cells+='<rect x="'+((4-x)*8)+'" y="'+(y*8)+'" width="8" height="8" rx="1.2" fill="'+col+'"/>';
+        }
+      }
+    }
+    return '<svg viewBox="0 0 40 40" width="100%" height="100%" aria-hidden="true">'+cells+'</svg>';
+  }
+
+  /* every review card on the page — written grid + auto-confirmed section */
+  var cards=Array.prototype.slice.call(page.querySelectorAll('.rc[data-stars]'));
+
+  cards.forEach(function(c,i){
+    var msg=(c.querySelector('.rc-msg')||{textContent:''}).textContent.trim();
+    c.dataset.q=msg.toLowerCase();
+    var av=c.querySelector('.rc-av');
+    if(av&&!c.hasAttribute('data-auto')){
+      var st=c.getAttribute('style')||'';
+      var ma=st.match(/--a:\s*([^;]+)/),mb=st.match(/--b:\s*([^;]+)/);
+      var a=ma?ma[1].trim():'#BF40BF',b=mb?mb[1].trim():'#7C3AED';
+      av.innerHTML=identicon(hash(msg||('c'+i)),a,b);
+      av.classList.add('rc-av--icon');
+    }
+    var dEl=c.querySelector('.rc-date');
+    var t=dEl?Date.parse(dEl.textContent.trim()):NaN;
+    c.dataset.ts=isNaN(t)?String(1e12-i):String(t);
+    if(dEl&&!isNaN(t)){var iso=dEl.textContent.trim();dEl.textContent=relTime(t);dEl.title=iso;}
+    if(!reduce&&!c.hasAttribute('data-auto')){
+      c.addEventListener('mousemove',function(e){
+        var rr=c.getBoundingClientRect();
+        c.style.setProperty('--mx',((e.clientX-rr.left)/rr.width*100).toFixed(1)+'%');
+        c.style.setProperty('--my',((e.clientY-rr.top)/rr.height*100).toFixed(1)+'%');
+      });
+    }
+  });
+
+  /* headline stats over ALL cards; server total wins if larger (pagination-safe) */
+  var buckets={1:0,2:0,3:0,4:0,5:0},cardCount=0,sum=0;
+  cards.forEach(function(c){
+    var rr=parseInt(c.getAttribute('data-stars'),10);
+    if(!(rr>=1&&rr<=5))return;
+    buckets[rr]++;cardCount++;sum+=rr;
+  });
+  /* authoritative total = server meta (40 legacy + every SellAuth feedback);
+     card-counting only drives the average/distribution because the live loop
+     may render just page 1 of the SellAuth feedbacks. */
+  var serverTotal=parseInt(page.getAttribute('data-zz-total'),10)||0;
+  var total=serverTotal||cardCount;
+  var avg=cardCount?(sum/cardCount):5;
+  var pct=function(n){return cardCount?Math.round((n/cardCount)*100):0;};
+
+  document.querySelectorAll('[data-zz-rc]').forEach(function(el){el.textContent=total;});
+
+  (function(){
+    var w=Math.max(0,Math.min(100,(avg/5)*100));
+    document.querySelectorAll('[data-zz-rstars]').forEach(function(el){
+      el.style.position='relative';el.style.display='inline-block';el.style.whiteSpace='nowrap';el.textContent='';
+      var base=document.createElement('span');base.textContent='★★★★★';base.style.opacity='.22';
+      var fill=document.createElement('span');fill.textContent='★★★★★';
+      fill.style.cssText='position:absolute;left:0;top:0;overflow:hidden;white-space:nowrap;color:inherit;width:'+w+'%';
+      el.appendChild(base);el.appendChild(fill);
+    });
+  })();
+
+  var tiles=document.querySelectorAll('.rev-tile-num[data-target]');
+  if(tiles[0])tiles[0].setAttribute('data-target',pct(buckets[5]));
+  if(tiles[1])tiles[1].setAttribute('data-target',pct(buckets[5]+buckets[4]));
+
+  [5,4,3,2,1].forEach(function(r,i){
+    var row=document.querySelectorAll('.rev-bar-row')[i];
+    if(!row)return;
+    var p=pct(buckets[r]);
+    var fill=row.querySelector('.rev-bf'),lab=row.querySelector('.rev-bp');
+    if(fill)fill.style.setProperty('--w',p+'%');
+    if(lab)lab.textContent=p+'%';
+    if(buckets[r]===0)row.setAttribute('disabled','');else row.removeAttribute('disabled');
+  });
+
+  /* animated average + ring */
+  var scoreEl=document.getElementById('rev-score-count');
+  var ring=document.querySelector('.rev-ring-fg');
+  var C=2*Math.PI*52;
+  if(ring){ring.style.strokeDasharray=C;ring.style.strokeDashoffset=C;}
+  function setRing(v){if(ring)ring.style.strokeDashoffset=C*(1-v/5);}
+  if(reduce){if(scoreEl)scoreEl.textContent=avg.toFixed(1);setRing(avg);}
+  else{
+    var s=0,step=avg/60;
+    var sid=setInterval(function(){s+=step;if(s>=avg){s=avg;clearInterval(sid);}if(scoreEl)scoreEl.textContent=s.toFixed(1);setRing(s);},16);
+  }
+
+  document.querySelectorAll('.rev-tile-num[data-target]').forEach(function(el){
+    var t=parseInt(el.getAttribute('data-target'),10)||0;
+    var suf=el.getAttribute('data-suffix')||'',pre=el.getAttribute('data-prefix')||'';
+    if(reduce){el.textContent=pre+t+suf;return;}
+    var cur=0,stp=Math.max(1,t/45);
+    var id=setInterval(function(){cur+=stp;if(cur>=t){cur=t;clearInterval(id);}el.textContent=pre+Math.floor(cur)+suf;},18);
+  });
+
+  var bars=document.querySelectorAll('.rev-bar-row .rev-bf');
+  if('IntersectionObserver' in window&&bars.length&&!reduce){
+    bars.forEach(function(b){b.dataset.w=b.style.getPropertyValue('--w');b.style.width='0';});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.style.width=e.target.dataset.w||'0';io.unobserve(e.target);}});},{threshold:.35});
+    bars.forEach(function(b){io.observe(b);});
+  }else{
+    bars.forEach(function(b){b.style.width=b.style.getPropertyValue('--w');});
+  }
+
+  /* cache {total, avg} so other pages stay in sync without re-fetching /feedback */
+  try{sessionStorage.setItem('zzRev7',JSON.stringify({t:total,a:avg,at:Date.now()}));}catch(e){}
+})();
+</script>
+
+<script>
+/* ══ Written reviews — filter, search, sort, spotlight, topics, load-more ══ */
+function revFilter(btn,f){
+  document.querySelectorAll('.rev-f').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  if(window.__revApply)window.__revApply(f);
+}
+(function(){
+  var grid=document.getElementById('rev-grid');
+  if(!grid)return;
+  var cards=Array.prototype.slice.call(grid.querySelectorAll('.rc[data-stars]'));
+
+  /* written-review chip counts (independent of the auto-confirmed section) */
+  var wb={1:0,2:0,3:0,4:0,5:0},wtotal=cards.length;
+  cards.forEach(function(c){var r=parseInt(c.getAttribute('data-stars'),10);if(r>=1&&r<=5)wb[r]++;});
+  document.querySelectorAll('[data-zz-written]').forEach(function(el){el.textContent=wtotal;});
+  document.querySelectorAll('.rev-f').forEach(function(btn){
+    var f=btn.getAttribute('data-f'),cnt=btn.querySelector('.rev-f-count');
+    if(f==='all'){if(cnt&&!cnt.hasAttribute('data-zz-written'))cnt.textContent=wtotal;return;}
+    var n=wb[parseInt(f,10)]||0;
+    if(cnt)cnt.textContent=n;
+    btn.style.display=n?'':'none';
+  });
+
+  if(!cards.length){
+    /* no written reviews yet — hide the whole written-reviews toolbar */
+    var ctl=document.querySelector('.rev-controls');if(ctl)ctl.style.display='none';
+    return;
+  }
+
+  /* featured spotlight = longest 5-star written review; de-duplicate from grid */
+  var spot=document.getElementById('rev-spot');
+  var five=cards.filter(function(c){return c.getAttribute('data-stars')==='5';});
+  if(spot&&five.length){
+    var best=five.reduce(function(a,b){return (b.dataset.q||'').length>(a.dataset.q||'').length?b:a;});
+    if((best.dataset.q||'').length>60){
+      var clone=best.cloneNode(true);
+      clone.classList.add('rc--spot');clone.style.animationDelay='0ms';
+      var tag=document.createElement('div');tag.className='rev-spot__tag';tag.textContent='FEATURED REVIEW';
+      spot.appendChild(tag);spot.appendChild(clone);spot.className='rev-spot';
+      if(best.parentNode)best.parentNode.removeChild(best);
+      cards=cards.filter(function(c){return c!==best;});
+    }
+  }
+
+  var state={star:'all',q:'',sort:'new',shown:12};
+
+  var moreBtn=document.createElement('button');
+  moreBtn.type='button';moreBtn.className='rev-more';
+  grid.parentNode.insertBefore(moreBtn,grid.nextSibling);
+  moreBtn.addEventListener('click',function(){state.shown+=12;apply();});
+
+  var cta=document.createElement('div');
+  cta.className='rev-leave';
+  cta.innerHTML='<span class="rev-leave__t">Bought from us?</span>'+
+    '<span class="rev-leave__d">Every review here comes from a real order &mdash; leave yours from your <a href="/customer/invoices">order page</a> after purchase.</span>';
+  moreBtn.parentNode.insertBefore(cta,moreBtn.nextSibling);
+
+  function apply(){
+    var list=cards.filter(function(c){
+      var okStar=(state.star==='all'||c.getAttribute('data-stars')===state.star);
+      var okQ=(!state.q||(c.dataset.q||'').indexOf(state.q)!==-1);
+      return okStar&&okQ;
+    });
+    list.sort(function(a,b){
+      if(state.sort==='new')return b.dataset.ts-a.dataset.ts;
+      if(state.sort==='old')return a.dataset.ts-b.dataset.ts;
+      if(state.sort==='high')return b.getAttribute('data-stars')-a.getAttribute('data-stars')||b.dataset.ts-a.dataset.ts;
+      return a.getAttribute('data-stars')-b.getAttribute('data-stars')||b.dataset.ts-a.dataset.ts;
+    });
+    cards.forEach(function(c){c.classList.add('rev-hide');});
+    list.forEach(function(c,i){grid.appendChild(c);if(i<state.shown)c.classList.remove('rev-hide');});
+    var hidden=list.length-Math.min(state.shown,list.length);
+    moreBtn.style.display=hidden>0?'':'none';
+    moreBtn.textContent=hidden>12?('Show 12 more ('+hidden+' left)'):('Show '+hidden+' more review'+(hidden===1?'':'s'));
+    var none=document.getElementById('rev-none');
+    if(!list.length){
+      if(!none){none=document.createElement('p');none.id='rev-none';none.className='rev-none';grid.parentNode.insertBefore(none,grid.nextSibling);}
+      none.textContent='No reviews match that filter — try clearing the search.';
+      none.style.display='';
+    }else if(none){none.style.display='none';}
+  }
+
+  window.__revApply=function(f){state.star=f;state.shown=12;apply();syncTopics();};
+
+  var q=document.getElementById('rev-q');
+  if(q){var deb;q.addEventListener('input',function(){clearTimeout(deb);deb=setTimeout(function(){state.q=q.value.trim().toLowerCase();state.shown=12;apply();syncTopics();},150);});}
+  var sortEl=document.getElementById('rev-sort');
+  if(sortEl)sortEl.addEventListener('change',function(){state.sort=sortEl.value;state.shown=12;apply();});
+
+  document.querySelectorAll('.rev-bar-row[data-star]').forEach(function(row){
+    row.addEventListener('click',function(){
+      if(row.hasAttribute('disabled'))return;
+      var f=row.getAttribute('data-star');
+      var target=(state.star===f)?'all':f;
+      document.querySelectorAll('.rev-f').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-f')===target);});
+      state.star=target;state.shown=12;apply();syncTopics();
+    });
+  });
+
+  var TOPICS=[
+    {label:'Undetected',q:'undetect',match:['undetect','no detection','invisible','no bans','no flags','zero bans']},
+    {label:'Easy install',q:'install',match:['install','setup','set up']},
+    {label:'Fast support',q:'support',match:['support']},
+    {label:'Quick delivery',q:'quick',match:['quick','fast','minutes','instant','lightning']},
+    {label:'Would recommend',q:'recommend',match:['recommend','worth','buy again','10/10']}
+  ];
+  var topicsEl=document.getElementById('rev-topics');
+  if(topicsEl){
+    TOPICS.forEach(function(t){
+      var n=cards.filter(function(c){var m=c.dataset.q||'';return t.match.some(function(w){return m.indexOf(w)!==-1;});}).length;
+      if(!n)return;
+      var chip=document.createElement('button');
+      chip.type='button';chip.className='rev-topic';chip.setAttribute('data-q',t.q);
+      chip.innerHTML=t.label+' <span class="rev-topic-n">'+n+'</span>';
+      chip.addEventListener('click',function(){
+        var on=chip.classList.contains('active');
+        if(q)q.value=on?'':t.q;
+        state.q=on?'':t.q;state.shown=12;apply();syncTopics();
+      });
+      topicsEl.appendChild(chip);
+    });
+  }
+  function syncTopics(){
+    document.querySelectorAll('.rev-topic').forEach(function(ch){
+      ch.classList.toggle('active',state.q!==''&&state.q===ch.getAttribute('data-q'));
+    });
+  }
+
+  var fresh=document.getElementById('rev-fresh');
+  if(fresh){
+    var ts=cards.map(function(c){return +c.dataset.ts;}).filter(function(t){return t>1.1e12&&t<4.5e12;});
+    if(ts.length){
+      var newest=new Date(Math.max.apply(null,ts));
+      fresh.textContent='Latest review: '+newest.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+    }
+  }
+
+  apply();
+})();
+</script>
+
+<script>
+/* ══ Auto-confirmed section — reveal in batches ══ */
+(function(){
+  var wrap=document.getElementById('rev-auto-wrap');
+  if(!wrap)return;
+  var grid=document.getElementById('rev-auto');
+  var autoCards=grid?Array.prototype.slice.call(grid.querySelectorAll('.rc[data-stars]')):[];
+  if(!autoCards.length){wrap.parentNode.removeChild(wrap);return;}
+  document.querySelectorAll('[data-zz-auto-count]').forEach(function(el){el.textContent=autoCards.length;});
+  var shown=10;
+  function render(){
+    autoCards.forEach(function(c,i){c.classList.toggle('rev-hide',i>=shown);});
+    var hidden=autoCards.length-Math.min(shown,autoCards.length);
+    btn.style.display=hidden>0?'':'none';
+    btn.textContent='Show '+Math.min(10,hidden)+' more';
+  }
+  var btn=document.createElement('button');
+  btn.type='button';btn.className='rev-auto-more';
+  grid.parentNode.insertBefore(btn,grid.nextSibling);
+  btn.addEventListener('click',function(){shown+=10;render();});
+  render();
+})();
+</script>

@@ -1,0 +1,21 @@
+<div class="components">
+  {% render_snippet "esp-field.njk" %}
+  {% for componentId in components_order %}
+    {% render_component componentId %}
+    {% if componentId == 'hero' %}
+      {% render_snippet "title-marquee.njk" %}
+      {% render_snippet "showcase.njk" %}
+      {% render_snippet "esp-demo.njk" %}
+    {% endif %}
+    {% if componentId == 'products' %}
+      {% render_snippet "pair-block.njk" %}
+      {% render_snippet "title-marquee.njk" %}
+      {% render_snippet "home-flow.njk" %}
+    {% endif %}
+    {% if 'feedbacks' in componentId %}
+      {% render_snippet "trust-pledge.njk" %}
+    {% endif %}
+  {% endfor %}
+</div>
+{% render_snippet "home-buybar.njk" %}
+{% render_snippet "waypoint-rail.njk" %}

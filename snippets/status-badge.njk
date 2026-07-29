@@ -1,0 +1,35 @@
+{# ════════════════════════════════════════════════════════════════════════
+   SHARED PRODUCT STATUS BADGE — single source of truth for the animated
+   status badge shown on product cards (homepage + products page).
+
+   EDIT THE TWO LINES BELOW to change a product's status:
+     'undetected' | 'updating' | 'detected'
+   Keep them identical to the two lines at the top of components/status-page.njk
+   so the cards and the status page can never disagree.
+
+   Usage:  {% render_snippet "status-badge.njk", pname=product.name, pid=product.id %}
+   Only known products get a badge; anything else renders nothing.
+   Styles live once in layouts/master.njk (#zz-status).
+   ════════════════════════════════════════════════════════════════════════ #}
+{% set zazaStatus = 'undetected' %}
+{% set rustNfaStatus = 'undetected' %}
+
+{% set _st = '' %}
+{% if pname == 'Rust NFA' or pid == 766224 %}{% set _st = rustNfaStatus %}
+{% elif pname == 'Zaza Rust Private Cheat' %}{% set _st = zazaStatus %}{% endif %}
+{% if _st %}
+  {% set _c = 'u' %}{% set _l = 'Undetected' %}
+  {% if _st == 'detected' %}{% set _c = 'd' %}{% set _l = 'Detected' %}
+  {% elif _st == 'updating' %}{% set _c = 'p' %}{% set _l = 'Updating' %}{% endif %}
+  <span class="zzstatus zzstatus--{{ _c }}">
+    <span class="zzstatus__ring" aria-hidden="true"></span>
+    <span class="zzstatus__chip">
+      <svg class="zzstatus__icon" viewBox="0 0 24 24" fill="none" width="13" height="13">
+        <path d="M12 2.5l7 3v5.2c0 4.3-2.9 7.9-7 9.3-4.1-1.4-7-5-7-9.3V5.5l7-3z" stroke-width="1.6"/>
+        <path d="M8.5 12.2l2.4 2.4 4.6-4.8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="zzstatus__label">{{ _l }}</span>
+      <span class="zzstatus__sweep" aria-hidden="true"></span>
+    </span>
+  </span>
+{% endif %}

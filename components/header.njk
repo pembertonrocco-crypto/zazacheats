@@ -1,0 +1,180 @@
+<header class="component" data-component-id="header">
+  <div class="bg-card border border-white/5 rounded-lg">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-stretch">
+      <div class="flex-1 flex flex-col md:flex-row md:items-stretch">
+        {% if global.components.header.show_logo or global.components.header.show_shop_name %}
+          <a href="{{ '/' | shopUrl }}" class="flex items-center justify-center gap-4 p-4 md:justify-start md:p-6">
+            {% if global.components.header.show_logo and shop.image_url %}
+              <img
+                src="{{ shop.image_url }}"
+                alt="{{ shop.name }}"
+                class="max-h-10 rounded-lg"
+              />
+            {% endif %}
+            {% if global.components.header.show_shop_name %}
+              <h1 class="text-2xl font-bold text-t-primary">{{ shop.name }}</h1>
+            {% endif %}
+          </a>
+        {% endif %}
+        {% if global.components.header.show_description and shop.description|length > 0 %}
+          <div class="flex-1 flex items-center border-t border-white/5 p-4 md:border-l md:border-t-0 md:p-6">
+            <p class="text-xs text-t-primary/90 md:text-sm">{{ shop.description }}</p>
+          </div>
+        {% endif %}
+      </div>
+
+      {% if global.components.header.show_stats %}
+        <div class="grid grid-cols-3 items-center gap-6 py-4 px-4 border-t border-white/5 md:gap-10 md:py-0 md:px-8 md:border-t-0 md:border-l">
+          <div class="text-center">
+            <p class="mb-1 text-t-primary/90 text-xl font-bold tracking-tight md:text-3xl">
+              {{ helpers.numbers.formatCompact(shop.products_sold) }}
+            </p>
+            <p class="text-t-primary/80 text-xs tracking-widest uppercase md:text-sm">
+              Sales
+            </p>
+          </div>
+          <div class="text-center">
+            <p class="mb-1 text-t-primary/90 text-xl font-bold tracking-tight md:text-3xl">
+              {{ helpers.numbers.formatCompact(shop.total_customers) }}
+            </p>
+            <p class="text-t-primary/80 text-xs tracking-widest uppercase md:text-sm">
+              Buyers
+            </p>
+          </div>
+          <div class="text-center">
+            <p class="mb-1 text-t-primary/90 text-xl font-bold tracking-tight md:text-3xl">
+              {{ helpers.numbers.formatDecimal(shop.average_rating) }}
+            </p>
+            <p class="text-t-primary/80 text-xs tracking-widest uppercase md:text-sm">
+              Rating
+            </p>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <nav>
+    <div class="flex items-center justify-between gap-4 relative">
+      <div class="flex items-center gap-4 py-4 md:hidden">
+        {% if templateName == 'cart' %}
+        {% set cartClass = 'bg-accent-500/10 text-accent-500' %}
+        {% else %}
+        {% set cartClass = 'text-t-primary/80 bg-card hover:bg-accent-500/10' %}
+        {% endif %}
+
+        {% if not global.components.header.hide_cart %}
+          <a href="{{ '/cart' | shopUrl }}" class="px-4 py-2 relative whitespace-nowrap rounded-lg border border-white/5 text-sm font-medium {{ cartClass }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="currentColor" viewBox="0 0 256 256"><path d="M230.14,58.87A8,8,0,0,0,224,56H62.68L56.6,22.57A8,8,0,0,0,48.73,16H24a8,8,0,0,0,0,16h18L67.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,160,204a28,28,0,1,0,28-28H91.17a8,8,0,0,1-7.87-6.57L80.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,230.14,58.87ZM104,204a12,12,0,1,1-12-12A12,12,0,0,1,104,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,200,204Zm4-74.57A8,8,0,0,1,196.1,136H77.22L65.59,72H214.41Z"></path></svg>
+            <template x-if="appCart.countWithQuantities > 0">
+              <span class="absolute -top-3 -right-3 inline-flex items-center justify-center size-[1.125rem] bg-accent-500 text-t-primary text-[0.625rem] rounded-full">
+                <span x-text="appCart.countWithQuantities > 9 ? '9+' : appCart.countWithQuantities"></span>
+              </span>
+            </template>
+          </a>
+        {% endif %}
+
+        {% if not global.components.header.hide_currency_selector %}
+          {% if currency_rates_usd | length > 1 %}
+            <div class="currency-selector md:hidden">
+              <select class="bg-card border border-white/5 rounded-lg text-transparent font-semibold" style="width: 80px; height: 38px;">
+                {% for code, rate in currency_rates_usd %}
+                  <option value="{{ code }}">
+                    <span class="flex items-center justify-between">
+                      <span>
+                        <span class="inline-block w-10 bg-white/5 rounded text-t-primary text-center px-1 py-px mr-1 symbol">{{ currency_symbols[code] }}</span>
+                        <span class="text-t-primary code">{{ code.toUpperCase() }}</span>
+                      </span>
+                      {% if code.toUpperCase() == currency %}
+                        <span class="text-t-primary/75 text-xs default">Default</span>
+                      {% endif %}
+                    </span>
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      <div class="flex items-center gap-4 hide-scrollbar overflow-x-scroll overflow-y-clip py-4 md:overflow-x-visible md:pb-0">
+        {% for link in global.components.header.links %}
+        {% set lActive = false %}
+        {% if (link.link == '/' and templateName == 'shop') or (link.link == '/cart' and templateName == 'cart') or (link.link == '/products' and templateName == 'products') or (link.link == '/terms-of-service' and templateName == 'terms') or (link.link == '/privacy-policy' and templateName == 'privacy-policy') or (link.link == '/refund-policy' and templateName == 'refund-policy') or (link.link == '/feedback' and templateName == 'feedback') or (link.link == '/status' and templateName == 'status') or (link.link == '/faq' and templateName == 'faq') or (link.link == '/blog' and templateName == 'blog') or (link.link == '/why-us' and custom_page and custom_page.path == 'why-us') %}
+        {% set lActive = true %}
+        {% endif %}
+
+        {% if lActive %}
+        {% set lClass = 'bg-accent-500/10 text-accent-500' %}
+        {% else %}
+        {% set lClass = 'text-t-primary/80 bg-card hover:bg-accent-500/10' %}
+        {% endif %}
+
+        <a
+          href="{{ link.link | shopUrl }}"
+          target="{{ '_blank' if link.new_tab }}"
+          class="px-4 py-2 whitespace-nowrap rounded-lg border border-white/5 text-sm font-medium {{ lClass }}"
+        >
+          {{ link.text }}
+        </a>
+        {% endfor %}
+
+        {% if not global.components.header.hide_customer_dashboard %}
+          {% if shop_customer %}
+            <a
+              href="{{ '/customer/dashboard' | shopUrl }}"
+              class="px-4 py-2 whitespace-nowrap rounded-lg border border-white/5 text-sm font-medium  {{ 'bg-accent-500/10 text-accent-500' if 'customer-' in templateName else 'text-t-primary/80 bg-card hover:bg-accent-500/10' }}"
+            >
+              My Account
+            </a>
+          {% else %}
+            <button
+              type="button"
+              @click="appCustomer.loginOrRedirect()"
+              class="px-4 py-2 whitespace-nowrap rounded-lg border border-white/5 text-sm font-medium  {{ 'bg-accent-500/10 text-accent-500' if 'customer-' in templateName else 'text-t-primary/80 bg-card hover:bg-accent-500/10' }}"
+            >
+              Login
+            </button>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      <div class="hidden gap-4 pt-4 md:flex">
+        {% if not global.components.header.hide_currency_selector %}
+          {% if currency_rates_usd | length > 1 %}
+            <div class="currency-selector">
+              <select class="bg-card border border-white/5 rounded-lg text-transparent font-semibold" style="width: 80px; height: 38px;">
+                {% for code, rate in currency_rates_usd %}
+                  <option value="{{ code }}">
+                    <span class="flex items-center justify-between">
+                      <span>
+                        <span class="inline-block w-10 bg-white/5 rounded text-t-primary text-center px-1 py-px mr-1 symbol">{{ currency_symbols[code] }}</span>
+                        <span class="text-t-primary code">{{ code.toUpperCase() }}</span>
+                      </span>
+                      {% if code.toUpperCase() == currency %}
+                        <span class="text-t-primary/75 text-xs default">Default</span>
+                      {% endif %}
+                    </span>
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          {% endif %}
+        {% endif %}
+
+        {% if not global.components.header.hide_cart %}
+          <a href="{{ '/cart' | shopUrl }}" class="p-2 relative whitespace-nowrap rounded-lg border border-white/5 text-sm font-medium {{ cartClass }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="currentColor" viewBox="0 0 256 256"><path d="M230.14,58.87A8,8,0,0,0,224,56H62.68L56.6,22.57A8,8,0,0,0,48.73,16H24a8,8,0,0,0,0,16h18L67.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,160,204a28,28,0,1,0,28-28H91.17a8,8,0,0,1-7.87-6.57L80.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,230.14,58.87ZM104,204a12,12,0,1,1-12-12A12,12,0,0,1,104,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,200,204Zm4-74.57A8,8,0,0,1,196.1,136H77.22L65.59,72H214.41Z"></path></svg>
+            <template x-if="appCart.countWithQuantities > 0">
+              <span class="absolute -top-3 -right-3 inline-flex items-center justify-center size-[1.125rem] bg-accent-500 text-t-primary text-[0.625rem] rounded-full">
+                <span x-text="appCart.countWithQuantities > 9 ? '9+' : appCart.countWithQuantities"></span>
+              </span>
+            </template>
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="absolute inset-y-0 right-0 md:hidden bg-gradient-to-r from-transparent to-background w-4 h-full"></div>
+    </div>
+  </nav>
+</header>

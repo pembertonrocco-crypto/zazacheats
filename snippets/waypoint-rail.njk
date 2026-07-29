@@ -1,0 +1,223 @@
+{# =========================================================================
+   WAYPOINT RAIL — homepage-only scroll-spy navigator styled as ESP
+   waypoints, pinned to the right edge on desktop (≥1200px). Each waypoint
+   shows a label + live "distance" readout (page distance rendered in
+   metres, ESP-style). Clicking warps to the section.
+
+   Also registers the [B] BUY hotkey: pressing B anywhere on the homepage
+   (outside form fields) jumps straight to the product page, with a small
+   HUD hint chip bottom-left.
+
+   Fully static HTML/CSS/JS — no {% set %} object arrays, no synthetic
+   loops (SellAuth Nunjucks rule). Progressive enhancement: both features
+   start [hidden] and are only revealed by JS; no-JS visitors never see
+   them. Reduced-motion: no pulse/transition animation.
+   ========================================================================= #}
+
+<nav class="zwr" id="zz-waypoint-rail" aria-label="Page sections" hidden>
+  <span class="zwr__line" aria-hidden="true"></span>
+
+  <a href="#" class="zwr__wp" data-zwr-target=".hero" data-zwr-label="TOP">
+    <span class="zwr__diamond" aria-hidden="true"></span>
+    <span class="zwr__tag"><span class="zwr__label">TOP</span><span class="zwr__dist" aria-hidden="true">0m</span></span>
+  </a>
+
+  <a href="#" class="zwr__wp" data-zwr-target=".zed" data-zwr-label="TRY THE MENU">
+    <span class="zwr__diamond" aria-hidden="true"></span>
+    <span class="zwr__tag"><span class="zwr__label">TRY THE MENU</span><span class="zwr__dist" aria-hidden="true">0m</span></span>
+  </a>
+
+  <a href="#" class="zwr__wp" data-zwr-target="#products" data-zwr-label="PRICING">
+    <span class="zwr__diamond" aria-hidden="true"></span>
+    <span class="zwr__tag"><span class="zwr__label">PRICING</span><span class="zwr__dist" aria-hidden="true">0m</span></span>
+  </a>
+
+  <a href="#" class="zwr__wp" data-zwr-target=".fbq" data-zwr-label="REVIEWS">
+    <span class="zwr__diamond" aria-hidden="true"></span>
+    <span class="zwr__tag"><span class="zwr__label">REVIEWS</span><span class="zwr__dist" aria-hidden="true">0m</span></span>
+  </a>
+
+  <a href="#" class="zwr__wp" data-zwr-target=".faq-section" data-zwr-label="FAQ">
+    <span class="zwr__diamond" aria-hidden="true"></span>
+    <span class="zwr__tag"><span class="zwr__label">FAQ</span><span class="zwr__dist" aria-hidden="true">0m</span></span>
+  </a>
+</nav>
+
+<a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="zwr-hotkey" id="zz-buy-hotkey" hidden>
+  <kbd class="zwr-hotkey__key">B</kbd>
+  <span class="zwr-hotkey__txt">BUY</span>
+</a>
+
+<style>
+  /* ---------- rail ---------- */
+  .zwr{
+    position:fixed; right:18px; top:50%; transform:translateY(-50%);
+    z-index:880; /* under navbar (1000) and buybar (990) */
+    display:none; flex-direction:column; gap:26px; align-items:flex-end;
+    padding:14px 4px;
+  }
+  @media (min-width:1200px){ .zwr:not([hidden]){ display:flex } }
+
+  .zwr__line{
+    position:absolute; top:8px; bottom:8px; right:9px; width:1px;
+    background:linear-gradient(180deg,
+      transparent,
+      rgba(var(--cl-accent-rgb,191,64,191),.28) 18%,
+      rgba(var(--cl-accent-rgb,191,64,191),.28) 82%,
+      transparent);
+    pointer-events:none;
+  }
+
+  .zwr__wp{
+    position:relative; display:flex; align-items:center; gap:10px;
+    text-decoration:none; outline-offset:4px;
+  }
+
+  .zwr__diamond{
+    width:9px; height:9px; flex-shrink:0; order:2;
+    border:1.5px solid rgba(var(--cl-accent-rgb,191,64,191),.55);
+    background:rgba(6,9,26,.9);
+    transform:rotate(45deg);
+    transition:background .18s ease, border-color .18s ease, box-shadow .18s ease;
+  }
+
+  .zwr__tag{
+    order:1; display:flex; align-items:center; gap:8px;
+    padding:4px 9px;
+    border:1px solid rgba(var(--cl-accent-rgb,191,64,191),.22);
+    border-radius:5px;
+    background:rgba(8,11,28,.82);
+    -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+    opacity:0; transform:translateX(6px);
+    transition:opacity .18s ease, transform .18s ease;
+    pointer-events:none;
+    white-space:nowrap;
+  }
+
+  .zwr__label{
+    font-family:'JetBrains Mono','Satoshi',monospace;
+    font-size:10px; font-weight:700; letter-spacing:.14em;
+    color:rgba(235,238,255,.85);
+  }
+  .zwr__dist{
+    font-family:'JetBrains Mono',monospace;
+    font-size:9px; letter-spacing:.06em;
+    color:rgba(var(--cl-accent-rgb,191,64,191),.9);
+    min-width:34px; text-align:right;
+    font-variant-numeric:tabular-nums;
+  }
+
+  .zwr:hover .zwr__tag,
+  .zwr__wp:focus-visible .zwr__tag{ opacity:1; transform:none }
+
+  .zwr__wp:hover .zwr__diamond{
+    background:rgba(var(--cl-accent-rgb,191,64,191),.35);
+    border-color:var(--cl-accent,#BF40BF);
+  }
+
+  .zwr__wp.zwr--active .zwr__diamond{
+    background:var(--cl-accent,#BF40BF);
+    border-color:var(--cl-accent,#BF40BF);
+    box-shadow:0 0 10px rgba(var(--cl-accent-rgb,191,64,191),.65);
+  }
+  .zwr__wp.zwr--active .zwr__label{ color:#fff }
+
+  /* ---------- [B] BUY hotkey chip ---------- */
+  .zwr-hotkey{
+    position:fixed; left:18px; bottom:18px; z-index:880;
+    display:none; align-items:center; gap:8px;
+    padding:7px 11px 7px 8px;
+    border:1px solid rgba(var(--cl-accent-rgb,191,64,191),.28);
+    border-radius:7px;
+    background:rgba(8,11,28,.82);
+    -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+    text-decoration:none;
+    transition:border-color .18s ease, transform .12s ease;
+  }
+  @media (min-width:1200px){ .zwr-hotkey:not([hidden]){ display:flex } }
+  .zwr-hotkey:hover{ border-color:rgba(var(--cl-accent-rgb,191,64,191),.6) }
+
+  .zwr-hotkey__key{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:20px; height:20px; padding:0 5px;
+    border:1px solid rgba(var(--cl-accent-rgb,191,64,191),.55);
+    border-bottom-width:2.5px; border-radius:4px;
+    background:rgba(var(--cl-accent-rgb,191,64,191),.14);
+    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:800;
+    color:var(--cl-accent,#BF40BF);
+  }
+  .zwr-hotkey__txt{
+    font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
+    letter-spacing:.16em; color:rgba(235,238,255,.72);
+  }
+  .zwr-hotkey.zwr-hotkey--pressed{ transform:scale(.94) }
+  .zwr-hotkey.zwr-hotkey--pressed .zwr-hotkey__key{
+    background:var(--cl-accent,#BF40BF); color:#fff;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .zwr__tag, .zwr__diamond, .zwr-hotkey{ transition:none }
+  }
+</style>
+
+<script>
+(function(){
+  'use strict';
+  var rail = document.getElementById('zz-waypoint-rail');
+  var hotkey = document.getElementById('zz-buy-hotkey');
+  if(!rail) return;
+
+  // Resolve waypoint targets; drop any waypoint whose section isn't on the page.
+  var wps = [];
+  rail.querySelectorAll('.zwr__wp').forEach(function(a){
+    var el = document.querySelector(a.getAttribute('data-zwr-target'));
+    if(el){ wps.push({ a:a, el:el, dist:a.querySelector('.zwr__dist') }); }
+    else { a.remove(); }
+  });
+  if(wps.length < 2) return; // nothing worth navigating
+  rail.hidden = false;
+  if(hotkey) hotkey.hidden = false;
+
+  // Click → smooth warp
+  wps.forEach(function(wp){
+    wp.a.addEventListener('click', function(e){
+      e.preventDefault();
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      wp.el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block:'start' });
+    });
+  });
+
+  // Scroll-spy + ESP-style distance readout (10px ≈ 1m, capped display).
+  var ticking = false;
+  function update(){
+    ticking = false;
+    var mid = window.scrollY + window.innerHeight * 0.4;
+    var active = wps[0];
+    wps.forEach(function(wp){
+      var top = wp.el.getBoundingClientRect().top + window.scrollY;
+      if(top <= mid) active = wp;
+      var m = Math.round(Math.abs(top - window.scrollY) / 10);
+      wp.dist.textContent = (m > 999 ? '999+' : m) + 'm';
+    });
+    wps.forEach(function(wp){ wp.a.classList.toggle('zwr--active', wp === active); });
+  }
+  function onScroll(){
+    if(!ticking){ ticking = true; requestAnimationFrame(update); }
+  }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  window.addEventListener('resize', onScroll, { passive:true });
+  update();
+
+  // [B] to buy — ignored while typing or with modifier keys held.
+  if(hotkey){
+    document.addEventListener('keydown', function(e){
+      if(e.key !== 'b' && e.key !== 'B') return;
+      if(e.metaKey || e.ctrlKey || e.altKey) return;
+      var t = e.target;
+      if(t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+      hotkey.classList.add('zwr-hotkey--pressed');
+      setTimeout(function(){ window.location.href = hotkey.href; }, 120);
+    });
+  }
+})();
+</script>

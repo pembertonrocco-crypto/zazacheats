@@ -1,0 +1,1486 @@
+{#
+  Custom pages render here, keyed by custom_page.path (set in the Visual Editor).
+  The "download" page is styled below. Other custom pages fall through to the default.
+#}
+
+{% if custom_page.path == 'download' %}
+
+<div class="dl-page">
+  <div class="dl-bg" aria-hidden="true">
+    <div class="dl-bg__grid"></div>
+    <div class="dl-bg__beam dl-bg__beam--a"></div>
+    <div class="dl-bg__beam dl-bg__beam--b"></div>
+  </div>
+
+  <div class="dl-wrap">
+    <header class="dl-head dl-rise">
+      <p class="dl-eyebrow">// ZAZA CHEATS — DOWNLOADS</p>
+      <h1 class="dl-title">Download &amp; Setup</h1>
+      <p class="dl-subtitle">Get the loader and follow the guide to load into Rust.</p>
+    </header>
+
+    <!-- DOWNLOAD -->
+    <section class="dl-card dl-card--accent dl-rise" style="--d:.08s">
+      <div class="dl-card__head">
+        <span class="dl-ico">⬇️</span>
+        <div>
+          <h2 class="dl-h2">Loader Download</h2>
+          <p class="dl-muted">Latest build · run as Administrator</p>
+        </div>
+      </div>
+      <a href="https://www.dropbox.com/t/w8uIlKQo8VrAJE35" target="_blank" rel="noopener"  class="dl-btn">
+        Download Loader
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M8 10l-3-3M8 10l3-3M3 13h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <p class="dl-fine">Keep Steam running and make sure Rust is fully closed before opening the loader.</p>
+    </section>
+
+    <!-- BEFORE YOU START -->
+    <section class="dl-card dl-rise" style="--d:.16s">
+      <h2 class="dl-h2"><span class="dl-step">!</span> Before you start</h2>
+      <p class="dl-p">Your download folder includes a setup file with the security configuration steps required before first launch. Follow the included instructions in that folder first, then continue with the loader setup below.</p>
+    </section>
+
+    <!-- LOADER SETUP -->
+    <section class="dl-card dl-rise" style="--d:.24s">
+      <h2 class="dl-h2"><span class="dl-step">1</span> Loader setup</h2>
+      <p class="dl-muted dl-mb">Make sure Rust is completely closed, but Steam <strong>must</strong> be running before opening the loader.</p>
+      <ol class="dl-list">
+        <li><strong>Launch the loader:</strong> run the executable as Administrator.</li>
+        <li><strong>Authenticate:</strong> enter your license key.</li>
+        <li><strong>Download &amp; prepare:</strong> click "Start Process." The first launch downloads files — please be patient.</li>
+        <li><strong>Wait for beeps:</strong> you'll hear 2 beeps when it's ready.</li>
+        <li><strong>Confirm:</strong> a message box appears — click "OK."</li>
+        <li><strong>Launch Rust:</strong> you can open Rust now.</li>
+      </ol>
+      <div class="dl-key">Press <kbd>INS</kbd> (Insert) to show / hide the menu.</div>
+    </section>
+
+    <!-- ERRORS & FIXES -->
+    <section class="dl-card dl-rise" style="--d:.32s">
+      <h2 class="dl-h2"><span class="dl-step">⚙</span> Errors &amp; fixes</h2>
+
+      <div class="dl-err">
+        <h3 class="dl-err__t">"Corrupt file signature"</h3>
+        <p class="dl-p">A common Steam bug. Simply try launching <strong>Rust</strong> again (not the loader).</p>
+      </div>
+
+      <div class="dl-err">
+        <h3 class="dl-err__t">"Signature verification failed (timestamp too old)"</h3>
+        <p class="dl-p">Your system clock is out of sync. Open Time &amp; Date settings, turn on "Set time automatically," click "Sync now," then restart your PC and try again.</p>
+      </div>
+
+      <div class="dl-err">
+        <h3 class="dl-err__t">"Decrypt failed"</h3>
+        <p class="dl-p">Usually caused by network restrictions or ISP blocking. Restart your PC to clear network cache, install Cloudflare WARP from <a href="https://1.1.1.1/" target="_blank" rel="noopener" >1.1.1.1</a>, enable the VPN, then open the loader again with it active.</p>
+      </div>
+    </section>
+
+    <!-- WARNING -->
+    <section class="dl-card dl-card--warn dl-rise" style="--d:.4s">
+      <h2 class="dl-h2"><span class="dl-step dl-step--warn">⚠</span> Warning</h2>
+      <p class="dl-p">For safety, always make sure no debugger tools are running in the background.</p>
+    </section>
+
+    <p class="dl-foot dl-rise" style="--d:.48s">Need help? Open a ticket in our Discord and we'll get you sorted.</p>
+  </div>
+</div>
+
+<style>
+.dl-page{--v:#BF40BF;--b:#7C3AED;--u:#22c55e;--a:#eab308;--ink:#eaf0ff;--mut:rgba(200,215,240,.62);
+  --edge:rgba(191,64,191,.14);--panel:rgba(12,15,30,.62);--void:#06070f;
+  position:relative;width:100%;min-height:100vh;overflow:hidden;
+  background:radial-gradient(130% 90% at 50% -10%,#0d1130 0%,#06070f 58%);
+  font-family:'Satoshi','Inter',system-ui,sans-serif;color:var(--ink)}
+.dl-page *{box-sizing:border-box}
+.dl-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.dl-bg__grid{position:absolute;inset:-2px;
+  background-image:linear-gradient(rgba(191,64,191,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(191,64,191,.05) 1px,transparent 1px);
+  background-size:46px 46px;-webkit-mask-image:radial-gradient(100% 60% at 50% 0%,#000 28%,transparent 78%);mask-image:radial-gradient(100% 60% at 50% 0%,#000 28%,transparent 78%)}
+.dl-bg__beam{position:absolute;border-radius:50%;filter:blur(100px);opacity:.4;animation:dlFloat 16s ease-in-out infinite}
+.dl-bg__beam--a{width:34rem;height:34rem;top:-12rem;left:-9rem;background:radial-gradient(circle,rgba(191,64,191,.5),transparent 65%)}
+.dl-bg__beam--b{width:30rem;height:30rem;top:-6rem;right:-9rem;background:radial-gradient(circle,rgba(124,58,237,.4),transparent 65%);animation-delay:-8s}
+@keyframes dlFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+
+.dl-wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:130px 20px 90px}
+.dl-rise{opacity:0;transform:translateY(20px);animation:dlRise .8s cubic-bezier(.16,1,.3,1) forwards;animation-delay:var(--d,0s)}
+@keyframes dlRise{to{opacity:1;transform:translateY(0)}}
+
+.dl-head{text-align:center;margin-bottom:36px}
+.dl-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--v);font-size:.74rem;letter-spacing:.22em;margin:0}
+.dl-title{font-size:clamp(2.2rem,6vw,3.4rem);font-weight:800;letter-spacing:-.03em;margin:.45rem 0 0;
+  background:linear-gradient(135deg,#fff,#a8c4ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.dl-subtitle{color:var(--mut);font-size:1.02rem;margin:.55rem 0 0}
+
+.dl-card{border:1px solid var(--edge);border-radius:18px;padding:26px 26px;background:var(--panel);
+  backdrop-filter:blur(14px);margin-bottom:16px}
+.dl-card--accent{border-color:rgba(191,64,191,.3);background:linear-gradient(135deg,rgba(191,64,191,.1),rgba(124,58,237,.04))}
+.dl-card--warn{border-color:rgba(234,179,8,.28);background:linear-gradient(135deg,rgba(234,179,8,.07),transparent)}
+.dl-card__head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.dl-ico{font-size:1.6rem}
+.dl-h2{font-size:1.2rem;font-weight:700;letter-spacing:-.01em;margin:0 0 14px;display:flex;align-items:center;gap:10px}
+.dl-card__head .dl-h2{margin:0}
+.dl-step{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;font-size:.85rem;font-weight:800;
+  background:rgba(191,64,191,.16);border:1px solid rgba(191,64,191,.3);color:#c7b8ff;flex-shrink:0}
+.dl-step--warn{background:rgba(234,179,8,.14);border-color:rgba(234,179,8,.3);color:#fbe08a}
+.dl-muted{color:var(--mut);font-size:.9rem;margin:0}
+.dl-mb{margin-bottom:14px}
+.dl-p{color:var(--mut);font-size:.94rem;line-height:1.6;margin:0}
+.dl-p strong,.dl-muted strong{color:#fff}
+
+.dl-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 24px;border-radius:12px;
+  background:linear-gradient(135deg,var(--v),var(--b));color:#fff;font-weight:700;font-size:1rem;text-decoration:none;
+  box-shadow:0 12px 32px -10px rgba(191,64,191,.8);transition:filter .25s,transform .25s,gap .25s}
+.dl-btn:hover{filter:brightness(1.1);transform:translateY(-2px);gap:13px}
+.dl-fine{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:rgba(200,215,240,.5);margin:14px 0 0}
+
+.dl-list{margin:0;padding-left:0;list-style:none;counter-reset:dl}
+.dl-list li{position:relative;padding:10px 0 10px 38px;color:var(--mut);font-size:.94rem;line-height:1.55;
+  border-top:1px solid rgba(255,255,255,.05)}
+.dl-list li:first-child{border-top:none}
+.dl-list li strong{color:#fff}
+.dl-list li::before{counter-increment:dl;content:counter(dl);position:absolute;left:0;top:10px;
+  width:24px;height:24px;display:grid;place-items:center;border-radius:7px;font-size:.78rem;font-weight:800;
+  background:rgba(191,64,191,.16);border:1px solid rgba(191,64,191,.3);color:#c7b8ff}
+.dl-key{margin-top:16px;padding:12px 16px;border-radius:10px;background:rgba(191,64,191,.08);
+  border:1px solid rgba(191,64,191,.18);font-size:.9rem;color:var(--mut)}
+.dl-key kbd{font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  border-radius:5px;padding:2px 7px;color:#fff;font-size:.82rem}
+
+.dl-err{padding:14px 0;border-top:1px solid rgba(255,255,255,.05)}
+.dl-err:first-of-type{border-top:none;padding-top:0}
+.dl-err__t{font-family:'JetBrains Mono',monospace;font-size:.92rem;font-weight:700;color:#fff;margin:0 0 6px}
+.dl-p a{color:#a8c4ff;text-decoration:none}
+.dl-p a:hover{color:#fff;text-decoration:underline}
+
+.dl-foot{text-align:center;color:rgba(200,215,240,.4);font-size:.88rem;margin:32px 0 0}
+
+@media (max-width:680px){
+  .dl-wrap{padding:104px 16px 64px}
+  .dl-card{padding:20px}
+}
+@media (prefers-reduced-motion:reduce){
+  .dl-page *{animation:none!important}
+  .dl-rise{opacity:1!important;transform:none!important}
+}
+</style>
+
+{% elif custom_page.path == 'affiliates' %}
+
+{#  =====================================================================
+    ZAZA CHEATS — AFFILIATES PAGE
+    Create a custom page in the Visual Editor with path "affiliates".
+    All content is STATIC HTML (no set-arrays, no synthetic loops).
+
+    EDIT POINTS (search for "EDIT:"):
+      1. Leaderboard rows — swap the OPEN-slot rows for real affiliates
+         (name/tag + real earned amount) each week/month.
+      2. Season label + reset date in the leaderboard header.
+      3. Payout details in the FAQ if your schedule/method changes.
+    ===================================================================== #}
+
+<div class="af-page">
+
+
+  <div class="af-bg" aria-hidden="true">
+    <div class="af-bg__grid"></div>
+    <div class="af-bg__beam af-bg__beam--a"></div>
+    <div class="af-bg__beam af-bg__beam--b"></div>
+  </div>
+
+  <div class="af-wrap">
+
+    <!-- ============ HERO ============ -->
+    <header class="af-head af-rise">
+      <p class="af-eyebrow">// ZAZA CHEATS — AFFILIATE PROGRAM</p>
+      <h1 class="af-title">Get paid to share Zaza.</h1>
+      <p class="af-subtitle">
+        Start at <strong class="af-green">5%</strong> and rank up to <strong class="af-green">20%</strong> on every Rust cheat key you refer.
+        No stock, no support tickets, no risk — you share your link, we handle
+        the rest, you collect the commission.
+      </p>
+      <div class="af-hero-cta">
+        <a href="{{ '/customer/affiliate' | shopUrl }}" class="af-btn">
+          Become an Affiliate
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#af-rates" class="af-btn af-btn--ghost">See commission rates</a>
+        <script>
+        /* /customer/affiliate is auth-gated. SellAuth bounces logged-out
+           visitors to the homepage with no explanation, so the main call to
+           action on this page is a dead end for anyone not already signed in.
+
+           Delegated click handler rather than rewriting hrefs: it catches
+           every affiliate link on the page no matter where it sits or when it
+           renders, and it re-checks the session at click time instead of at
+           page load. `affiliate` also has to be in the `back` allowlist in
+           script.js, or login succeeds and drops them on the dashboard. */
+        (function(){
+          document.addEventListener('click', function(e){
+            var a = e.target && e.target.closest && e.target.closest('a[href*="/customer/affiliate"]');
+            if (!a) return;
+            if (window.shopCustomer && window.shopCustomer.email) return; // signed in, let it through
+            e.preventDefault();
+            window.location.href = '/?login=1&back=affiliate';
+          }, true);
+        })();
+        </script>
+      </div>
+      <div class="af-hero-chips">
+        <span class="af-chip"><span class="af-dot"></span>TRACKED AUTOMATICALLY</span>
+        <span class="af-chip">NO SIGN-UP FEE</span>
+        <span class="af-chip">PAID PER SALE</span>
+      </div>
+    </header>
+
+    <!-- ============ COMMISSION TIERS ============ -->
+    <section id="af-rates" class="af-section af-rise" style="--d:.08s">
+      <h2 class="af-h2">Commission rates</h2>
+      <p class="af-lead">The more unique customers you refer, the higher your rate — and it backdates to every sale you&rsquo;ve already made.</p>
+
+      <div class="af-tiers">
+        <div class="af-tier">
+          <p class="af-tier__name">Bronze</p>
+          <p class="af-tier__pct">5<span>%</span></p>
+          <p class="af-tier__per">where everyone starts</p>
+          <p class="af-tier__note">0+ referrals</p>
+        </div>
+        <div class="af-tier">
+          <p class="af-tier__name">Silver</p>
+          <p class="af-tier__pct">10<span>%</span></p>
+          <p class="af-tier__per">double your rate</p>
+          <p class="af-tier__note">3+ referrals</p>
+        </div>
+        <div class="af-tier">
+          <p class="af-tier__name">Gold</p>
+          <p class="af-tier__pct">15<span>%</span></p>
+          <p class="af-tier__per">triple your rate</p>
+          <p class="af-tier__note">10+ referrals</p>
+        </div>
+        <div class="af-tier af-tier--hot">
+          <span class="af-tier__badge">TOP RANK</span>
+          <p class="af-tier__name">Diamond</p>
+          <p class="af-tier__pct">20<span>%</span></p>
+          <p class="af-tier__per">4&times; your starting rate</p>
+          <p class="af-tier__note">25+ referrals</p>
+        </div>
+      </div>
+      <p class="af-fine">Referrals are counted as unique customers who actually buy. Rank up and the new rate is backdated to all your previous sales &mdash; the difference is paid into your balance automatically. Commission applies to Rust cheat keys only; NFA products aren&rsquo;t part of the affiliate program.</p>
+    </section>
+
+    <!-- ============ EARNINGS EXAMPLES ============ -->
+    <section class="af-section af-rise" style="--d:.16s">
+      <h2 class="af-h2">What that adds up to</h2>
+      <p class="af-lead">What 25 referrals looks like — the exact number that puts you at Diamond (20%). Your actual earnings depend on your rank and what they buy.</p>
+
+      <div class="af-math">
+        <div class="af-math__row">
+          <span class="af-math__calc">5 lifetime keys <em>×</em> $40.00</span>
+          <span class="af-math__line" aria-hidden="true"></span>
+          <span class="af-math__total">$200.00</span>
+        </div>
+        <div class="af-math__row">
+          <span class="af-math__calc">10 month keys <em>×</em> $10.00</span>
+          <span class="af-math__line" aria-hidden="true"></span>
+          <span class="af-math__total">$100.00</span>
+        </div>
+        <div class="af-math__row">
+          <span class="af-math__calc">10 week keys <em>×</em> $3.00</span>
+          <span class="af-math__line" aria-hidden="true"></span>
+          <span class="af-math__total">$30.00</span>
+        </div>
+        <div class="af-math__row af-math__row--sum">
+          <span class="af-math__calc">25 referrals at Diamond</span>
+          <span class="af-math__line" aria-hidden="true"></span>
+          <span class="af-math__total af-green">$330.00</span>
+        </div>
+      </div>
+      <p class="af-fine">Example only — commission math at top rank, assuming one key per customer. Not guaranteed income. New affiliates start at 5% and rank up.</p>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="af-section af-rise" style="--d:.24s">
+      <h2 class="af-h2">How it works</h2>
+      <div class="af-steps">
+        <div class="af-step">
+          <span class="af-step__num">01</span>
+          <h3 class="af-step__t">Join &amp; get your link</h3>
+          <p class="af-step__p">Apply on your <a href="{{ '/customer/affiliate' | shopUrl }}">affiliate page</a> — pick the code you want and drop your Discord ID. Once we approve it we DM you on Discord, and your link goes live as <code>zazacheats.net/?a=YOURCODE</code>.</p>
+        </div>
+        <div class="af-step">
+          <span class="af-step__num">02</span>
+          <h3 class="af-step__t">Share it anywhere</h3>
+          <p class="af-step__p">Drop it in Discord servers, group chats, comments, videos — anywhere Rust players hang out. Anyone who buys through your link is tracked to you automatically.</p>
+        </div>
+        <div class="af-step">
+          <span class="af-step__num">03</span>
+          <h3 class="af-step__t">Get paid</h3>
+          <p class="af-step__p">Watch your rank, referrals and earnings live in your <a href="{{ '/customer/affiliate' | shopUrl }}">customer dashboard</a>. Cash out through a Discord ticket or spend it as store credit.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LEADERBOARD ============ -->
+    <section class="af-section af-rise" style="--d:.32s">
+      <div class="af-lb-head">
+        <div>
+          <h2 class="af-h2">Affiliate leaderboard</h2>
+          <!-- EDIT: season label + date -->
+          <p class="af-lead">Season 1 — top earners, updated monthly.</p>
+        </div>
+        <span class="af-lb-live"><span class="af-dot"></span>SEASON 1 · SPOTS OPEN</span>
+      </div>
+
+      <!-- =============================================================
+           EDIT: LEADERBOARD DATA
+           Replace the "open slot" markup below with real affiliates as
+           they earn. Example of a filled podium spot:
+
+           <div class="af-podium__spot af-podium__spot--1">
+             <span class="af-podium__rank">1</span>
+             <p class="af-podium__name">Frosty</p>
+             <p class="af-podium__amt">$212.50</p>
+           </div>
+
+           And a filled table row:
+
+           <div class="af-lb-row">
+             <span class="af-lb-row__rank">4</span>
+             <span class="af-lb-row__name">Kexo</span>
+             <span class="af-lb-row__amt">$38.00</span>
+           </div>
+           ============================================================= -->
+
+      <div class="af-podium">
+        <div class="af-podium__spot af-podium__spot--2">
+          <span class="af-podium__rank">2</span>
+          <p class="af-podium__name af-podium__name--open">Open</p>
+          <p class="af-podium__amt af-podium__amt--open">This spot pays</p>
+        </div>
+        <div class="af-podium__spot af-podium__spot--1">
+          <span class="af-podium__rank">1</span>
+          <p class="af-podium__name af-podium__name--open">Open</p>
+          <p class="af-podium__amt af-podium__amt--open">Take the crown</p>
+        </div>
+        <div class="af-podium__spot af-podium__spot--3">
+          <span class="af-podium__rank">3</span>
+          <p class="af-podium__name af-podium__name--open">Open</p>
+          <p class="af-podium__amt af-podium__amt--open">Up for grabs</p>
+        </div>
+      </div>
+
+      <div class="af-lb-table">
+        <div class="af-lb-row af-lb-row--open">
+          <span class="af-lb-row__rank">4</span>
+          <span class="af-lb-row__name">Unclaimed</span>
+          <span class="af-lb-row__amt">—</span>
+        </div>
+        <div class="af-lb-row af-lb-row--open">
+          <span class="af-lb-row__rank">5</span>
+          <span class="af-lb-row__name">Unclaimed</span>
+          <span class="af-lb-row__amt">—</span>
+        </div>
+        <div class="af-lb-row af-lb-row--open">
+          <span class="af-lb-row__rank">6</span>
+          <span class="af-lb-row__name">Unclaimed</span>
+          <span class="af-lb-row__amt">—</span>
+        </div>
+      </div>
+
+      <p class="af-lb-pitch">The board is brand new — the first affiliates to move keys own it. <a href="{{ '/customer/affiliate' | shopUrl }}">Claim a spot →</a></p>
+    </section>
+
+    <!-- ============ RULES / FAQ ============ -->
+    <section class="af-section af-rise" style="--d:.4s">
+      <h2 class="af-h2">Rules &amp; payouts</h2>
+      <div class="af-rules">
+        <div class="af-rule">
+          <h3 class="af-rule__t">When do I get paid?</h3>
+          <!-- EDIT: adjust schedule/method to match how you actually pay -->
+          <p class="af-rule__p">Earnings are credited to your account balance as sales come in. Cash-outs are handled through a Discord ticket, or you can spend your balance as store credit any time.</p>
+        </div>
+        <div class="af-rule">
+          <h3 class="af-rule__t">How is tracking handled?</h3>
+          <p class="af-rule__p">Tracking is built into the store — every Rust cheat key bought through your link is attributed to your account automatically. You can see each referred sale, what was bought, and what you earned in your dashboard.</p>
+        </div>
+        <div class="af-rule">
+          <h3 class="af-rule__t">What's not allowed?</h3>
+          <p class="af-rule__p">No self-referrals, no buying through your own link, no chargeback abuse, and no spamming communities that ban it (that hurts everyone). Breaking these forfeits pending commission and your affiliate spot.</p>
+        </div>
+        <div class="af-rule">
+          <h3 class="af-rule__t">Refunded orders?</h3>
+          <p class="af-rule__p">Commission is only paid on completed sales. If an order is refunded or charged back, the matching commission is removed.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FINAL CTA ============ -->
+    <section class="af-cta af-rise" style="--d:.48s">
+      <h2 class="af-cta__t">Know Rust players? Start earning.</h2>
+      <p class="af-cta__p">Takes about thirty seconds to apply. Everything after that is passive.</p>
+      <a href="{{ '/customer/affiliate' | shopUrl }}" class="af-btn af-btn--big">
+        Join the Affiliate Program
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </section>
+
+  </div>
+</div>
+
+<style>
+.af-page{--v:#BF40BF;--b:#7C3AED;--g:#22c55e;--gold:#eab308;--silver:#94a3b8;--bronze:#d97706;
+  --ink:#eaf0ff;--mut:rgba(200,215,240,.62);--edge:rgba(191,64,191,.14);--panel:rgba(12,15,30,.62);
+  position:relative;width:100%;min-height:100vh;overflow:hidden;
+  background:radial-gradient(130% 90% at 50% -10%,#0d1130 0%,#06070f 58%);
+  font-family:'Satoshi','Inter',system-ui,sans-serif;color:var(--ink)}
+.af-page *{box-sizing:border-box}
+
+
+.af-green{color:var(--g)}
+
+.af-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.af-bg__grid{position:absolute;inset:-2px;
+  background-image:linear-gradient(rgba(191,64,191,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(191,64,191,.05) 1px,transparent 1px);
+  background-size:46px 46px;-webkit-mask-image:radial-gradient(100% 60% at 50% 0%,#000 28%,transparent 78%);mask-image:radial-gradient(100% 60% at 50% 0%,#000 28%,transparent 78%)}
+.af-bg__beam{position:absolute;border-radius:50%;filter:blur(100px);opacity:.4;animation:afFloat 16s ease-in-out infinite}
+.af-bg__beam--a{width:34rem;height:34rem;top:-12rem;left:-9rem;background:radial-gradient(circle,rgba(191,64,191,.5),transparent 65%)}
+.af-bg__beam--b{width:30rem;height:30rem;top:-6rem;right:-9rem;background:radial-gradient(circle,rgba(34,197,94,.28),transparent 65%);animation-delay:-8s}
+@keyframes afFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+
+.af-wrap{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:130px 20px 90px}
+.af-rise{opacity:0;transform:translateY(20px);animation:afRise .8s cubic-bezier(.16,1,.3,1) forwards;animation-delay:var(--d,0s)}
+@keyframes afRise{to{opacity:1;transform:translateY(0)}}
+
+.af-head{text-align:center;margin-bottom:64px}
+.af-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--v);font-size:.74rem;letter-spacing:.22em;margin:0}
+.af-title{font-size:clamp(2.4rem,6.5vw,3.8rem);font-weight:800;letter-spacing:-.03em;margin:.45rem 0 0;
+  background:linear-gradient(135deg,#fff,#a8c4ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.af-subtitle{color:var(--mut);font-size:1.06rem;line-height:1.65;max-width:620px;margin:.8rem auto 0}
+.af-subtitle strong{font-weight:800}
+.af-hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.af-hero-chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.af-chip{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.14em;
+  color:rgba(200,215,240,.7);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:7px 13px;background:rgba(255,255,255,.03)}
+.af-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:afPulse 2s infinite}
+@keyframes afPulse{0%,100%{opacity:1}50%{opacity:.45}}
+
+.af-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border-radius:12px;
+  background:linear-gradient(135deg,var(--v),var(--b));color:#fff;font-weight:700;font-size:1rem;text-decoration:none;
+  box-shadow:0 12px 32px -10px rgba(191,64,191,.8);transition:filter .25s,transform .25s,gap .25s}
+.af-btn:hover{filter:brightness(1.1);transform:translateY(-2px);gap:13px;color:#fff}
+.af-btn--ghost{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);box-shadow:none}
+.af-btn--ghost:hover{background:rgba(255,255,255,.09)}
+.af-btn--big{padding:16px 34px;font-size:1.08rem}
+
+.af-section{margin-bottom:72px}
+.af-h2{font-size:clamp(1.5rem,3.4vw,2rem);font-weight:800;letter-spacing:-.02em;margin:0 0 8px}
+.af-lead{color:var(--mut);font-size:.98rem;margin:0 0 26px}
+
+/* ---- tiers ---- */
+.af-tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.af-tier{position:relative;border:1px solid var(--edge);border-radius:18px;padding:26px 20px;background:var(--panel);
+  backdrop-filter:blur(14px);text-align:center;transition:transform .25s,border-color .25s}
+.af-tier:hover{transform:translateY(-4px);border-color:rgba(191,64,191,.35)}
+.af-tier--hot{border-color:rgba(34,197,94,.4);background:linear-gradient(160deg,rgba(34,197,94,.1),rgba(12,15,30,.62))}
+.af-tier--hot:hover{border-color:rgba(34,197,94,.65)}
+.af-tier__badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);white-space:nowrap;
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.16em;font-weight:800;color:#052e13;
+  background:linear-gradient(135deg,#4ade80,var(--g));border-radius:999px;padding:5px 12px;box-shadow:0 6px 18px -6px rgba(34,197,94,.8)}
+.af-tier__name{font-family:'JetBrains Mono',monospace;font-size:.76rem;letter-spacing:.18em;color:var(--mut);margin:0 0 10px;text-transform:uppercase}
+.af-tier__pct{font-size:2.9rem;font-weight:800;letter-spacing:-.04em;margin:0;line-height:1;color:#fff}
+.af-tier__pct span{font-size:1.4rem;color:var(--mut)}
+.af-tier--hot .af-tier__pct{color:var(--g)}
+.af-tier__per{font-weight:700;font-size:.95rem;color:#fff;margin:12px 0 2px}
+.af-tier__note{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:rgba(200,215,240,.65);margin:0}
+
+/* ---- earnings math ---- */
+.af-math{border:1px solid var(--edge);border-radius:18px;background:var(--panel);backdrop-filter:blur(14px);padding:10px 26px}
+.af-math__row{display:flex;align-items:baseline;gap:16px;padding:16px 0;border-top:1px solid rgba(255,255,255,.05)}
+.af-math__row:first-child{border-top:none}
+.af-math__calc{color:var(--mut);font-size:.96rem;white-space:nowrap}
+.af-math__calc em{font-style:normal;color:var(--v);font-weight:700;padding:0 2px}
+.af-math__line{flex:1;border-bottom:1px dashed rgba(255,255,255,.12);transform:translateY(-4px)}
+.af-math__total{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1.05rem;color:#fff;white-space:nowrap}
+.af-math__row--sum .af-math__calc{color:#fff;font-weight:700}
+.af-math__row--sum .af-math__total{font-size:1.3rem}
+.af-fine{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:rgba(200,215,240,.65);margin:12px 4px 0}
+
+/* ---- steps ---- */
+.af-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.af-step{border:1px solid var(--edge);border-radius:18px;padding:26px 24px;background:var(--panel);backdrop-filter:blur(14px)}
+.af-step__num{font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:800;color:#c7b8ff;
+  display:inline-grid;place-items:center;width:34px;height:34px;border-radius:9px;
+  background:rgba(191,64,191,.16);border:1px solid rgba(191,64,191,.3)}
+.af-step__t{font-size:1.08rem;font-weight:700;margin:14px 0 8px}
+.af-step__p{color:var(--mut);font-size:.92rem;line-height:1.6;margin:0}
+.af-step__p a{color:#a8c4ff;text-decoration:none}
+.af-step__p a:hover{color:#fff;text-decoration:underline}
+.af-step__p code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:2px 6px;color:#fff;word-break:break-all}
+
+/* ---- leaderboard ---- */
+.af-lb-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+.af-lb-head .af-lead{margin-bottom:0}
+.af-lb-live{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:.68rem;
+  letter-spacing:.14em;color:#86efac;border:1px solid rgba(34,197,94,.3);background:rgba(34,197,94,.08);border-radius:999px;padding:8px 14px}
+.af-podium{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:12px;align-items:end;margin-bottom:14px}
+.af-podium__spot{position:relative;border-radius:18px;padding:26px 18px 22px;text-align:center;
+  border:1px solid var(--edge);background:var(--panel);backdrop-filter:blur(14px)}
+.af-podium__spot--1{border-color:rgba(234,179,8,.45);background:linear-gradient(160deg,rgba(234,179,8,.12),rgba(12,15,30,.62));padding-top:38px;padding-bottom:34px}
+.af-podium__spot--2{border-color:rgba(148,163,184,.35);background:linear-gradient(160deg,rgba(148,163,184,.09),rgba(12,15,30,.62))}
+.af-podium__spot--3{border-color:rgba(217,119,6,.35);background:linear-gradient(160deg,rgba(217,119,6,.09),rgba(12,15,30,.62))}
+.af-podium__rank{position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:30px;height:30px;border-radius:50%;
+  display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-weight:800;font-size:.88rem;color:#06070f}
+.af-podium__spot--1 .af-podium__rank{background:linear-gradient(135deg,#fde047,var(--gold));box-shadow:0 6px 18px -4px rgba(234,179,8,.7)}
+.af-podium__spot--2 .af-podium__rank{background:linear-gradient(135deg,#e2e8f0,var(--silver))}
+.af-podium__spot--3 .af-podium__rank{background:linear-gradient(135deg,#fbbf24,var(--bronze))}
+.af-podium__name{font-weight:800;font-size:1.15rem;margin:6px 0 4px;color:#fff}
+.af-podium__spot--1 .af-podium__name{font-size:1.3rem}
+.af-podium__name--open{color:rgba(200,215,240,.4);font-style:italic;font-weight:600}
+.af-podium__amt{font-family:'JetBrains Mono',monospace;font-weight:800;color:var(--g);margin:0;font-size:1.02rem}
+.af-podium__amt--open{color:rgba(200,215,240,.35);font-weight:500;font-size:.82rem}
+.af-lb-table{border:1px solid var(--edge);border-radius:16px;background:var(--panel);backdrop-filter:blur(14px);overflow:hidden}
+.af-lb-row{display:flex;align-items:center;gap:16px;padding:14px 22px;border-top:1px solid rgba(255,255,255,.05)}
+.af-lb-row:first-child{border-top:none}
+.af-lb-row__rank{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:.85rem;color:var(--mut);width:26px}
+.af-lb-row__name{flex:1;font-weight:700;color:#fff}
+.af-lb-row--open .af-lb-row__name{color:rgba(200,215,240,.35);font-weight:500;font-style:italic}
+.af-lb-row__amt{font-family:'JetBrains Mono',monospace;font-weight:800;color:var(--g)}
+.af-lb-row--open .af-lb-row__amt{color:rgba(200,215,240,.3)}
+.af-lb-pitch{text-align:center;color:var(--mut);font-size:.92rem;margin:18px 0 0}
+.af-lb-pitch a{color:#a8c4ff;text-decoration:none;font-weight:700}
+.af-lb-pitch a:hover{color:#fff}
+
+/* ---- rules ---- */
+.af-rules{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.af-rule{border:1px solid var(--edge);border-radius:18px;padding:24px;background:var(--panel);backdrop-filter:blur(14px)}
+.af-rule__t{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700;color:#fff;margin:0 0 8px}
+.af-rule__p{color:var(--mut);font-size:.92rem;line-height:1.6;margin:0}
+
+/* ---- final cta ---- */
+.af-cta{text-align:center;border:1px solid rgba(191,64,191,.3);border-radius:22px;padding:52px 28px;
+  background:linear-gradient(135deg,rgba(191,64,191,.12),rgba(124,58,237,.05));backdrop-filter:blur(14px)}
+.af-cta__t{font-size:clamp(1.5rem,3.6vw,2.1rem);font-weight:800;letter-spacing:-.02em;margin:0 0 8px}
+.af-cta__p{color:var(--mut);margin:0 0 24px}
+
+@media (max-width:860px){
+  .af-tiers{grid-template-columns:1fr 1fr}
+  .af-steps{grid-template-columns:1fr}
+  .af-rules{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .af-wrap{padding:104px 16px 64px}
+  .af-tiers{grid-template-columns:1fr 1fr;gap:10px}
+  .af-tier{padding:22px 12px}
+  .af-tier__pct{font-size:2.3rem}
+  .af-podium{grid-template-columns:1fr;align-items:stretch}
+  .af-podium__spot--1{order:-1}
+  .af-math{padding:6px 16px}
+  .af-math__row{flex-wrap:wrap;gap:8px}
+  .af-math__line{display:none}
+  .af-math__total{margin-left:auto}
+}
+@media (prefers-reduced-motion:reduce){
+  .af-page *{animation:none!important}
+  .af-rise{opacity:1!important;transform:none!important}
+}
+</style>
+
+
+{% elif custom_page.path == 'pay' or custom_page.path == 'secure-checkout' %}
+
+{# ============================================================================
+   checkout.njk — custom checkout for Zaza Cheats (renders at /pay)
+
+   Uses only the shopUrl filter (safe on custom pages) plus window.shopId /
+   window.apiBaseUrl runtime globals — no component-only Nunjucks vars, so it
+   can't white-screen in the custom-page context.
+
+   Price data comes from (1) a snapshot written by the cart / Buy Now button,
+   (2) the internal cart API, or (3) a graceful item-count fallback. SellAuth
+   always computes the real charge server-side, so display is never binding.
+============================================================================ #}
+<div class="container">
+  <div class="zzco">
+    <style>
+    .zzco{--v:#BF40BF;--b:#7C3AED;--acc:#c084fc;--g:#22c55e;--a:#eab308;--r:#ef4444;
+      --panel:#0c0e1c;--void:#06070f;--edge:#1b1f3a;--edge2:#262b4d;
+      --ink:#e7ecff;--mut:rgba(231,236,255,.62);--mut2:rgba(231,236,255,.4);
+      font-family:'Satoshi','Inter',system-ui,sans-serif;color:var(--ink);
+      padding:6rem 0 4rem}
+    .zzco *{box-sizing:border-box}
+    .zzco__grid{display:grid;grid-template-columns:1fr;gap:1.4rem;max-width:1040px;margin:0 auto}
+    @media (min-width:900px){.zzco__grid{grid-template-columns:minmax(0,1fr) 1.1fr;align-items:start}}
+
+    /* ---------- summary ---------- */
+    .zzco__eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;letter-spacing:.2em;
+      text-transform:uppercase;color:var(--mut);margin:0 0 .4rem}
+    .zzco__amount{font-size:clamp(2rem,4vw,2.8rem);font-weight:800;letter-spacing:-.03em;margin:0 0 1.4rem;line-height:1;
+      background:linear-gradient(178deg,#fff 0%,#fff 55%,#ecddff 80%,#c77dff 100%);
+      -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;min-height:1px}
+    .zzco__card{border:1px solid var(--edge);border-radius:16px;overflow:hidden;
+      background:linear-gradient(150deg,var(--panel),rgba(6,7,15,.85))}
+    .zzco__line{display:flex;align-items:center;gap:1rem;padding:1rem}
+    .zzco__thumb{width:60px;height:60px;border-radius:12px;flex-shrink:0;overflow:hidden;border:1px solid var(--edge2);
+      background:var(--void);display:grid;place-items:center;position:relative}
+    .zzco__thumb img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;border-radius:inherit}
+    .zzco__lbody{min-width:0;flex:1}
+    .zzco__lname{font-weight:700;font-size:.9rem}
+    .zzco__lvar{font-size:.74rem;color:var(--mut);margin-top:.1rem}
+    .zzco__lqty{font-family:'JetBrains Mono',monospace;font-size:.64rem;color:var(--mut2);border:1px solid var(--edge2);
+      border-radius:5px;padding:.05rem .3rem;margin-left:.35rem}
+    .zzco__lprice{margin-left:auto;font-weight:800;font-size:.9rem;white-space:nowrap}
+    .zzco__totals{padding:.3rem 1rem 1rem}
+    .zzco__trow{display:flex;justify-content:space-between;font-size:.84rem;color:var(--mut);padding:.35rem 0}
+    .zzco__trow--save{color:#4ade80}
+    .zzco__trow--grand{border-top:1px solid var(--edge);margin-top:.25rem;padding-top:.7rem;color:#fff;font-weight:800;font-size:1.02rem}
+
+    /* what happens next — removes post-click uncertainty */
+    .zzco__next{margin-top:1rem;border:1px solid var(--edge);border-radius:14px;padding:.9rem 1rem;
+      background:rgba(12,14,28,.5)}
+    .zzco__next h4{margin:0 0 .6rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.16em;
+      text-transform:uppercase;color:var(--mut)}
+    .zzco__step{display:flex;gap:.6rem;align-items:flex-start;font-size:.78rem;padding:.22rem 0}
+    .zzco__step b{flex-shrink:0;width:17px;height:17px;border-radius:50%;display:grid;place-items:center;
+      font-size:.6rem;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--v),var(--b));margin-top:1px}
+    .zzco__step span{color:var(--ink);opacity:.82}
+
+    /* ---------- form ---------- */
+    .zzco__form{border:1px solid var(--edge);border-radius:20px;padding:1.6rem;position:relative;overflow:hidden;
+      background:linear-gradient(160deg,rgba(18,20,40,.9),rgba(6,7,15,.92))}
+    .zzco__legend{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+      color:var(--mut);margin:1.4rem 0 .7rem}
+    .zzco__legend:first-child{margin-top:0}
+    .zzco__field{border:1px solid var(--edge2);border-radius:12px;background:var(--void);padding:.65rem .9rem;
+      transition:border-color .2s,box-shadow .2s}
+    .zzco__field:focus-within{border-color:var(--v);box-shadow:0 0 0 3px rgba(191,64,191,.18)}
+    .zzco__field.is-bad{border-color:rgba(239,68,68,.55)}
+    .zzco__field label{display:block;font-size:.64rem;color:var(--mut2);margin-bottom:.1rem}
+    .zzco__field input{width:100%;border:0;background:transparent;color:#fff;font-size:.9rem;font-family:inherit;outline:none}
+    .zzco__hint{margin:.4rem 0 0;font-size:.7rem;color:var(--mut2);display:flex;align-items:center;gap:.35rem}
+    .zzco__hint svg{width:12px;height:12px;flex-shrink:0}
+    .zzco__coupon{display:flex;gap:.5rem}.zzco__coupon .zzco__field{flex:1}
+    .zzco__cnote{margin:.45rem 0 0;font-size:.74rem;line-height:1.45;color:#4ade80}
+    .zzco__cnote.is-warn{color:#fde047}
+    .zzco__capply{border:1px solid var(--edge2);background:var(--panel);color:var(--ink);border-radius:12px;
+      padding:0 1rem;font-weight:700;font-size:.8rem;cursor:pointer;transition:border-color .2s,color .2s}
+    .zzco__capply:hover{border-color:var(--v);color:#fff}
+    .zzco__capply.is-on{color:#4ade80;border-color:rgba(34,197,94,.5)}
+
+    /* vibrant payment tiles */
+    .zzco__pays{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
+    @media (max-width:520px){.zzco__pays{grid-template-columns:1fr}}
+    .zzco__pay{position:relative;display:flex;align-items:center;gap:.7rem;border:1px solid var(--edge2);border-radius:13px;
+      background:var(--panel);padding:.75rem .85rem;cursor:pointer;overflow:hidden;
+      transition:border-color .2s,transform .12s,background .2s,box-shadow .2s}
+    .zzco__pay:hover{transform:translateY(-1px)}
+    .zzco__pay::after{content:"";position:absolute;inset:0;opacity:0;transition:opacity .25s;pointer-events:none;
+      background:radial-gradient(120% 90% at 12% 50%,var(--tint,rgba(191,64,191,.22)),transparent 62%)}
+    .zzco__pay:hover::after,.zzco__pay.is-sel::after{opacity:1}
+    .zzco__pay.is-sel{border-color:var(--ring,var(--v));
+      box-shadow:0 0 0 1px var(--ring,var(--v)) inset,0 10px 26px -14px var(--ring,var(--v))}
+    .zzco__pico{width:36px;height:36px;border-radius:10px;flex-shrink:0;display:grid;place-items:center;position:relative;
+      background:var(--ico,#12172e)}
+    .zzco__pico svg{width:21px;height:21px;display:block}
+    .zzco__pbody{min-width:0;position:relative}
+    .zzco__pname{font-size:.8rem;font-weight:700;line-height:1.15}
+    .zzco__pvia{font-size:.64rem;color:var(--mut2)}
+    .zzco__badge{margin-left:auto;position:relative;font-family:'JetBrains Mono',monospace;font-size:.64rem;font-weight:700;
+      border-radius:999px;padding:.14rem .48rem;white-space:nowrap}
+    .zzco__badge--off{color:#4ade80;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3)}
+    .zzco__badge--fee{color:#fbbf24;background:rgba(234,179,8,.12);border:1px solid rgba(234,179,8,.32)}
+
+    .zzco__tos{display:flex;align-items:center;gap:.55rem;margin:1.4rem 0 1rem;font-size:.8rem;color:var(--mut)}
+    .zzco__tos input{width:17px;height:17px;accent-color:var(--v)}
+    .zzco__tos a{color:var(--acc);text-decoration:none}
+    .zzco__btn{width:100%;border:0;cursor:pointer;color:#fff;font-weight:800;font-size:.98rem;padding:1rem;border-radius:14px;
+      display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+      background:linear-gradient(135deg,var(--v),var(--b));box-shadow:0 16px 38px -12px rgba(191,64,191,.85);
+      transition:transform .15s,filter .15s}
+    .zzco__btn:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.08)}
+    .zzco__btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+    .zzco__err{margin-top:.9rem;font-size:.8rem;color:#ff9a9a;background:rgba(239,68,68,.1);
+      border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:.6rem .8rem;display:none}
+    .zzco__note{margin-top:.8rem;text-align:center;font-size:.68rem;color:var(--mut2)}
+
+    .zzco__trust{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--edge);
+      display:flex;flex-wrap:wrap;gap:.5rem .9rem;justify-content:center;font-size:.7rem;color:var(--mut)}
+    .zzco__trust span,.zzco__trust a{display:inline-flex;align-items:center;gap:.35rem}
+    .zzco__trust a{color:var(--acc);text-decoration:none}
+    .zzco__trust a:hover{text-decoration:underline}
+    .zzco__trust svg{width:12px;height:12px;opacity:.8}
+
+    .zzco__empty{border:1px dashed var(--edge2);border-radius:16px;padding:2.4rem;text-align:center;color:var(--mut)}
+    .zzco__spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;
+      animation:zzcoSpin .8s linear infinite;display:none}
+    .zzco__btn.is-loading .zzco__spin{display:inline-block}
+    @keyframes zzcoSpin{to{transform:rotate(360deg)}}
+    </style>
+
+    <div class="zzco__grid">
+      <div>
+        <p class="zzco__eyebrow">Pay Zaza Cheats</p>
+        <h1 class="zzco__amount" id="zzco-amount"></h1>
+        <div class="zzco__card">
+          <div id="zzco-lines"></div>
+          <div class="zzco__totals">
+            <div class="zzco__trow"><span>Subtotal</span><span id="zzco-subtotal">&mdash;</span></div>
+            <div class="zzco__trow zzco__trow--save" id="zzco-saverow" style="display:none">
+              <span id="zzco-savelabel">Crypto discount</span><span id="zzco-save">&mdash;</span>
+            </div>
+            <div class="zzco__trow zzco__trow--grand"><span>Total</span><span id="zzco-total">&mdash;</span></div>
+          </div>
+        </div>
+
+        <div class="zzco__next">
+          <h4>What happens next</h4>
+          <div class="zzco__step"><b>1</b><span>Pay with your chosen method on the next screen.</span></div>
+          <div class="zzco__step"><b>2</b><span>Your key is delivered instantly to the email you enter.</span></div>
+          <div class="zzco__step"><b>3</b><span>It stays tied to that email, so you can always recover it.</span></div>
+        </div>
+      </div>
+
+      <div class="zzco__form">
+        <p class="zzco__legend">Contact &amp; delivery</p>
+        <div class="zzco__field" id="zzco-emailwrap">
+          <label>E-mail address *</label>
+          <input type="email" id="zzco-email" placeholder="you@email.com" autocomplete="email" inputmode="email" />
+        </div>
+        <p class="zzco__hint">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M4 7.5l8 6 8-6" stroke="currentColor" stroke-width="1.7"/></svg>
+          Your key is sent here &mdash; double-check it's right.
+        </p>
+
+        <p class="zzco__legend">Discount</p>
+        <div class="zzco__coupon">
+          <div class="zzco__field"><input type="text" id="zzco-coupon" placeholder="Coupon code" /></div>
+          <button type="button" class="zzco__capply" id="zzco-coupon-apply">Apply</button>
+        </div>
+        <p class="zzco__cnote" id="zzco-coupon-note" hidden></p>
+
+        <p class="zzco__legend">Payment</p>
+        <div class="zzco__pays" id="zzco-pays"></div>
+
+        <label class="zzco__tos">
+          <input type="checkbox" id="zzco-tos" />
+          I have read and agree to Zaza Cheats's <a href="{{ '/terms-of-service' | shopUrl }}" target="_blank" rel="noopener">Terms of Service</a>.
+        </label>
+
+        <button type="button" class="zzco__btn" id="zzco-pay" disabled>
+          <span class="zzco__spin"></span>
+          <span id="zzco-pay-label">Proceed to Payment &rarr;</span>
+        </button>
+        <div class="zzco__err" id="zzco-err"></div>
+        <p class="zzco__note">You'll confirm the exact amount with your provider before paying.</p>
+
+        <div class="zzco__trust">
+          <span><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> Secure &amp; encrypted</span>
+          <span><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> Instant delivery</span>
+          <a href="{{ '/status' | shopUrl }}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Live status</a>
+          <a href="{{ '/refund-policy' | shopUrl }}" target="_blank" rel="noopener">Refund policy</a>
+          <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener">Support</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="zzco__empty" id="zzco-empty" style="display:none;max-width:1040px;margin:1rem auto 0">
+      Your cart is empty. <a href="{{ '/products' | shopUrl }}" style="color:var(--acc)">Browse products &rarr;</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* ===================== CONFIG ===================== */
+  var CHECKOUT_WORKER = 'https://nfa-sellauth-bridge-production.up.railway.app/checkout';
+
+  /* Vibrant brand-coloured tiles. `pct` mirrors the real dashboard fee/discount
+     and is display-only — SellAuth calculates the binding amount server-side. */
+  var PAYMENT_METHODS = [
+    { id: '195134', name: 'Cards, Apple Pay, PayPal', via: 'via Shopify', badge: '+5%', badgeType: 'fee', pct: 5,
+      ico: 'linear-gradient(135deg,#6366f1,#a855f7)', ring: '#8b5cf6', tint: 'rgba(139,92,246,.25)',
+      svg: '<svg viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="3" fill="#ffffff" fill-opacity=".95"/><rect x="2" y="8.4" width="20" height="2.6" fill="#312e81"/><circle cx="15.2" cy="15.1" r="2.4" fill="#eb001b"/><circle cx="18.2" cy="15.1" r="2.4" fill="#f79e1b" fill-opacity=".92"/><rect x="4.6" y="14.2" width="5" height="1.8" rx=".9" fill="#94a3b8"/></svg>' },
+    { id: '194378', name: 'Litecoin', via: 'via Litecoin Network', badge: '-5%', badgeType: 'off', pct: -5,
+      ico: 'linear-gradient(135deg,#4a7fd4,#2a4f8f)', ring: '#4a7fd4', tint: 'rgba(74,127,212,.28)',
+      svg: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#ffffff" fill-opacity=".16"/><path d="M9.7 5.5h3.2l-1.6 6.4 2.8-.9-.5 1.9-2.8.9-.8 3h6l-.6 2.3H6.8l1.3-5.2-2.1.7.5-1.9 2.1-.7L9.7 5.5z" fill="#ffffff"/></svg>' },
+    { id: '205537', name: 'Solana', via: 'via Solana Network', badge: '-5%', badgeType: 'off', pct: -5,
+      ico: 'linear-gradient(135deg,#9945FF,#14F195)', ring: '#14F195', tint: 'rgba(20,241,149,.25)',
+      svg: '<svg viewBox="0 0 24 24"><path d="M6.4 15.9a.8.8 0 01.55-.22h13.2c.33 0 .5.4.27.64l-2.8 2.8a.8.8 0 01-.55.22H3.87a.38.38 0 01-.27-.64l2.8-2.8z" fill="#ffffff"/><path d="M6.4 4.66a.8.8 0 01.55-.22h13.2c.33 0 .5.4.27.64l-2.8 2.8a.8.8 0 01-.55.22H3.87a.38.38 0 01-.27-.64l2.8-2.8z" fill="#ffffff" fill-opacity=".85"/><path d="M17.6 10.24a.8.8 0 00-.55-.22H3.87a.38.38 0 00-.27.64l2.8 2.8a.8.8 0 00.55.22h13.2c.33 0 .5-.4.27-.64l-2.8-2.8z" fill="#ffffff" fill-opacity=".6"/></svg>' },
+    { id: '205539', name: 'Ethereum', via: 'via Ethereum Network', badge: '-5%', badgeType: 'off', pct: -5,
+      ico: 'linear-gradient(135deg,#8a93f7,#454a75)', ring: '#8a93f7', tint: 'rgba(138,147,247,.28)',
+      svg: '<svg viewBox="0 0 24 24"><path d="M12 2.6l5.5 9.2L12 15 6.5 11.8 12 2.6z" fill="#ffffff" fill-opacity=".95"/><path d="M12 16.2l5.5-3.2L12 21.4 6.5 13l5.5 3.2z" fill="#ffffff" fill-opacity=".7"/></svg>' }
+  ];
+  /* ================================================== */
+
+  /* shop id + internal API base come from window globals that master.njk sets
+     on every page. Custom pages don't get shop.id or apiInternalUrl in Nunjucks
+     scope, so we read them here instead. */
+  var SHOP_ID = window.shopId;
+
+  var state = { cart: [], full: [], currency: 'USD', method: null, pct: 0, subtotal: 0, havePrices: false };
+
+  var $ = function(id){ return document.getElementById(id); };
+
+  function money(n, cur){
+    try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur || 'USD' }).format(n); }
+    catch(e){ return '$' + (Number(n) || 0).toFixed(2); }
+  }
+  function readCart(){
+    try { var c = JSON.parse(localStorage.getItem('cart') || '[]'); return Array.isArray(c) ? c : []; }
+    catch(e){ return []; }
+  }
+  function affiliate(){
+    try { return localStorage.getItem('affiliate') || ''; } catch(e){ return ''; }
+  }
+  /* Snapshot written by the cart / Buy Now button — same shape as fullCart. */
+  function readSnapshot(){
+    try {
+      var s = JSON.parse(localStorage.getItem('zz_pay_snapshot') || 'null');
+      return (Array.isArray(s) && s.length) ? s : null;
+    } catch(e){ return null; }
+  }
+
+  function renderPays(){
+    var wrap = $('zzco-pays');
+    wrap.innerHTML = '';
+    PAYMENT_METHODS.forEach(function(m, i){
+      var el = document.createElement('div');
+      el.className = 'zzco__pay' + (i === 0 ? ' is-sel' : '');
+      el.style.setProperty('--ring', m.ring);
+      el.style.setProperty('--tint', m.tint);
+      el.innerHTML =
+        '<div class="zzco__pico" style="background:' + m.ico + '">' + m.svg + '</div>' +
+        '<div class="zzco__pbody"><div class="zzco__pname">' + m.name + '</div>' +
+        '<div class="zzco__pvia">' + m.via + '</div></div>' +
+        (m.badge ? '<span class="zzco__badge zzco__badge--' + m.badgeType + '">' + m.badge + '</span>' : '');
+      el.addEventListener('click', function(){
+        state.method = m.id;
+        state.pct = m.pct || 0;
+        [].forEach.call(wrap.children, function(c){ c.classList.remove('is-sel'); });
+        el.classList.add('is-sel');
+        renderTotals();
+        refreshBtn();
+      });
+      wrap.appendChild(el);
+    });
+    if (PAYMENT_METHODS[0]){
+      state.method = PAYMENT_METHODS[0].id;
+      state.pct = PAYMENT_METHODS[0].pct || 0;
+    }
+  }
+
+  function renderTotals(){
+    if (!state.havePrices){
+      $('zzco-subtotal').textContent = '\u2014';
+      $('zzco-total').textContent = '\u2014';
+      $('zzco-amount').textContent = '';
+      $('zzco-saverow').style.display = 'none';
+      return;
+    }
+    var sub = state.subtotal;
+    var adj = sub * (state.pct / 100);
+    var total = sub + adj;
+    $('zzco-subtotal').textContent = money(sub, state.currency);
+    var row = $('zzco-saverow');
+    if (state.pct !== 0){
+      row.style.display = 'flex';
+      row.style.color = state.pct < 0 ? '#4ade80' : '#fbbf24';
+      $('zzco-savelabel').textContent = state.pct < 0 ? 'Crypto discount (est.)' : 'Card fee (est.)';
+      $('zzco-save').textContent = (adj < 0 ? '\u2212' : '+') + money(Math.abs(adj), state.currency);
+    } else {
+      row.style.display = 'none';
+    }
+    $('zzco-total').textContent = money(total, state.currency);
+    $('zzco-amount').textContent = money(total, state.currency);
+  }
+
+  /* Fallback product images, keyed by SellAuth product ID. Used when a product
+     has no image set in the dashboard. Paste a direct image URL (must end in
+     .png/.jpg) — e.g. upload to postimg.cc and copy the "Direct link". */
+  var PRODUCT_IMAGES = {
+    '760665': '',   // Rust Internal Private Cheat  -> box art
+    '766224': ''    // Rust NFA account             -> Steam account image
+  };
+
+  /* Products expose image_urls[] with image_url as a fallback, so try both. */
+  function imgOf(p, cartItem){
+    if (p){
+      if (p.image_urls && p.image_urls.length && p.image_urls[0]) return p.image_urls[0];
+      if (p.image_url) return p.image_url;
+      if (p.image) return p.image;
+      if (p.id && PRODUCT_IMAGES[String(p.id)]) return PRODUCT_IMAGES[String(p.id)];
+    }
+    if (cartItem && cartItem.productId && PRODUCT_IMAGES[String(cartItem.productId)]){
+      return PRODUCT_IMAGES[String(cartItem.productId)];
+    }
+    return null;
+  }
+  var PLACEHOLDER =
+    '<svg viewBox="0 0 24 24" fill="none" style="width:22px;height:22px;opacity:.5">' +
+    '<path d="M12 2.6l8 4v6.2c0 4.6-3.4 8.6-8 9.6-4.6-1-8-5-8-9.6V6.6l8-4z" stroke="#c084fc" stroke-width="1.6" stroke-linejoin="round"/>' +
+    '<path d="M9 12.2l2.2 2.2L15 10.6" stroke="#c084fc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function renderLines(){
+    var lines = $('zzco-lines');
+    lines.innerHTML = '';
+    var sub = 0;
+    state.full.forEach(function(it, idx){
+      var price = (it.variant && it.variant.price) || 0;
+      var qty = it.quantity || 1;
+      sub += price * qty;
+      var cur = (it.product && it.product.currency) || state.currency;
+      var src = imgOf(it.product, state.cart[idx]);
+
+      var row = document.createElement('div');
+      row.className = 'zzco__line';
+
+      var thumb = document.createElement('div');
+      thumb.className = 'zzco__thumb';
+      if (src){
+        var im = document.createElement('img');
+        im.src = src;
+        im.alt = '';
+        im.loading = 'lazy';
+        // Swap to the placeholder if the URL 404s. Done as a listener, not an
+        // inline onerror attribute — the SVG contains quotes and would break it.
+        im.addEventListener('error', function(){ thumb.innerHTML = PLACEHOLDER; });
+        thumb.appendChild(im);
+      } else {
+        thumb.innerHTML = PLACEHOLDER;
+      }
+
+      var body = document.createElement('div');
+      body.className = 'zzco__lbody';
+      body.innerHTML =
+        '<div class="zzco__lname">' + (it.product ? it.product.name : 'Item') +
+        '<span class="zzco__lqty">x' + qty + '</span></div>' +
+        '<div class="zzco__lvar">' + (it.variant ? it.variant.name : '') + '</div>';
+
+      var pr = document.createElement('div');
+      pr.className = 'zzco__lprice';
+      pr.textContent = money(price * qty, cur);
+
+      row.appendChild(thumb);
+      row.appendChild(body);
+      row.appendChild(pr);
+      lines.appendChild(row);
+    });
+    if (state.full[0] && state.full[0].product){
+      state.currency = state.full[0].product.currency || state.currency;
+    }
+    state.subtotal = sub;
+    state.havePrices = sub > 0;
+    renderTotals();
+  }
+
+  function renderFallback(){
+    var lines = $('zzco-lines');
+    lines.innerHTML = '';
+    var count = state.cart.reduce(function(n, i){ return n + (i.quantity || 1); }, 0);
+    var row = document.createElement('div');
+    row.className = 'zzco__line';
+    row.innerHTML = '<div class="zzco__thumb"></div>' +
+      '<div><div class="zzco__lname">' + count + (count === 1 ? ' item' : ' items') + ' in your order</div>' +
+      '<div class="zzco__lvar">Final total is confirmed on the payment step</div></div>';
+    lines.appendChild(row);
+    state.havePrices = false;
+    renderTotals();
+  }
+
+  function cartApiCandidates(){
+    var base = (window.apiBaseUrl || '').replace(/\/$/, '');
+    var list = [];
+    if (base) list.push(base + '/v1/cart');
+    list.push('https://api.sellauth.com/v1/cart');
+    list.push(location.origin + '/v1/cart');
+    return list;
+  }
+
+  async function fetchFull(){
+    var qs = 'shopId=' + encodeURIComponent(SHOP_ID) +
+             '&cart=' + encodeURIComponent(JSON.stringify(state.cart));
+    var cands = cartApiCandidates();
+    for (var i = 0; i < cands.length; i++){
+      try {
+        var res = await fetch(cands[i] + '?' + qs, { headers: { 'Accept': 'application/json' } });
+        if (!res.ok) continue;
+        var data = await res.json();
+        if (data && data.fullCart && data.fullCart.length) return data.fullCart;
+      } catch(e){ /* try next candidate */ }
+    }
+    return null;
+  }
+
+  async function hydrate(){
+    state.cart = readCart();
+    if (!state.cart.length){
+      $('zzco-empty').style.display = 'block';
+      $('zzco-pay').disabled = true;
+      return;
+    }
+
+    /* 1) instant: snapshot handed over by the cart / Buy Now button */
+    var snap = readSnapshot();
+    if (snap){ state.full = snap; renderLines(); }
+    else { renderFallback(); }
+
+    /* 2) refresh against the API when reachable */
+    var full = await fetchFull();
+    if (full && full.length){ state.full = full; renderLines(); }
+    else if (!snap){
+      console.warn('[checkout] price hydrate failed - apiBaseUrl:', window.apiBaseUrl, 'shopId:', window.shopId);
+    }
+
+    refreshBtn();
+  }
+
+  function emailOk(){ return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test($('zzco-email').value.trim()); }
+
+  function refreshBtn(){
+    var ok = state.cart.length && state.method && $('zzco-tos').checked && emailOk();
+    $('zzco-pay').disabled = !ok;
+  }
+
+  function showErr(msg){
+    var e = $('zzco-err');
+    e.textContent = msg;
+    e.style.display = 'block';
+  }
+
+  async function pay(){
+    var btn = $('zzco-pay');
+    if (btn.disabled) return;
+    btn.disabled = true;
+    btn.classList.add('is-loading');
+    $('zzco-pay-label').textContent = 'Creating checkout...';
+    $('zzco-err').style.display = 'none';
+
+    var email = $('zzco-email').value.trim();
+    try { localStorage.setItem('zz_email', email); } catch(e){}
+
+    var payload = { cart: state.cart, email: email, payment_method_id: state.method, currency: state.currency };
+    var coupon = $('zzco-coupon').value.trim();
+    if (coupon) payload.coupon = coupon;
+    var aff = affiliate();
+    if (aff) payload.affiliate = aff;
+
+    try {
+      var res = await fetch(CHECKOUT_WORKER, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      var data = await res.json();
+      if (data && data.url){
+        try {
+          localStorage.setItem('cart', JSON.stringify([]));
+          localStorage.removeItem('zz_pay_snapshot');
+        } catch(e){}
+        window.location.href = data.url;
+        return;
+      }
+      showErr('Could not start checkout (' + ((data && (data.detail || data.error)) || 'unknown') +
+              '). Nothing was charged - please try again.');
+    } catch(e){
+      showErr('Network error - nothing was charged. Please refresh and try again.');
+    }
+    btn.classList.remove('is-loading');
+    $('zzco-pay-label').textContent = 'Proceed to Payment \u2192';
+    refreshBtn();
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    renderPays();
+    hydrate();
+
+    /* prefill a remembered email so repeat buyers don't retype */
+    try {
+      var saved = (window.shopCustomer && window.shopCustomer.email) || localStorage.getItem('zz_email');
+      if (saved) $('zzco-email').value = saved;
+    } catch(e){}
+
+    var em = $('zzco-email');
+    em.addEventListener('input', function(){
+      $('zzco-emailwrap').classList.remove('is-bad');
+      refreshBtn();
+    });
+    em.addEventListener('blur', function(){
+      if (em.value.trim() && !emailOk()) $('zzco-emailwrap').classList.add('is-bad');
+    });
+    $('zzco-tos').addEventListener('change', refreshBtn);
+    $('zzco-pay').addEventListener('click', pay);
+    $('zzco-coupon-apply').addEventListener('click', function(){
+      var b = $('zzco-coupon-apply');
+      if ($('zzco-coupon').value.trim()){ b.textContent = 'Added'; b.classList.add('is-on'); }
+      else { b.textContent = 'Apply'; b.classList.remove('is-on'); }
+    });
+
+    /* v81 — coupon-model affiliates.
+       Every affiliate code is also a live 5%-off coupon. If the buyer
+       arrived through ?a=CODE we drop that code straight into the coupon
+       box so link traffic gets the same discount as people who were told
+       the code by name. We never overwrite a coupon they typed themselves,
+       and we don't stack: whichever code is in the box is the one sent.
+       The server still validates it — this is convenience, not authority. */
+    (function(){
+      var note = $('zzco-coupon-note');
+      var box  = $('zzco-coupon');
+      var aff  = affiliate();
+      if (!note || !box) return;
+
+      if (box.value.trim()) return;          // buyer typed one already
+      if (!aff) return;                      // no referral in play
+
+      box.value = aff.toUpperCase();
+      var b = $('zzco-coupon-apply');
+      if (b){ b.textContent = 'Added'; b.classList.add('is-on'); }
+      note.hidden = false;
+      note.textContent = 'Referral code ' + box.value + ' applied \u2014 5% off your cheat key.';
+
+      /* If they clear or change it, stop claiming the discount is on. */
+      box.addEventListener('input', function(){
+        var v = box.value.trim();
+        if (!v){ note.hidden = true; return; }
+        if (v.toUpperCase() === aff.toUpperCase()){
+          note.hidden = false; note.classList.remove('is-warn');
+          note.textContent = 'Referral code ' + v.toUpperCase() + ' applied \u2014 5% off your cheat key.';
+        } else {
+          note.hidden = false; note.classList.add('is-warn');
+          note.textContent = 'Using ' + v + ' instead of your referral code.';
+        }
+      });
+    })();
+    refreshBtn();
+    if (!em.value) em.focus();
+  });
+})();
+</script>
+
+{% elif custom_page.path == 'why-us' %}
+
+{#  =====================================================================
+    WHY US — the private-build argument.
+    Custom page, path "why-us". Static markup + one <style>; the FAQ is the
+    real dashboard FAQ component, rendered by the components_order loop at
+    the bottom of this branch (drag it onto this page in the Visual Editor).
+    Review count uses [data-zz-rc], synced sitewide by snippets/polish.njk.
+    ===================================================================== #}
+
+<div class="wu-page">
+  <div class="wu-bg" aria-hidden="true">
+    <div class="wu-bg__grid"></div>
+    <div class="wu-bg__beam wu-bg__beam--a"></div>
+    <div class="wu-bg__beam wu-bg__beam--b"></div>
+  </div>
+
+  <div class="wu-wrap">
+
+    <header class="wu-head wu-rise">
+      <p class="wu-eyebrow">// WHY ZAZA</p>
+      <h1 class="wu-title">Private build.<br>Not a public one.</h1>
+      <p class="wu-sub">Every cheat gets detected eventually. What decides <em>when</em> is how many people are running the same binary you are &mdash; and that is the one number we actually control.</p>
+    </header>
+
+    <!-- THE CORE ARGUMENT -->
+    <section class="wu-versus wu-rise" style="--d:.08s">
+      <div class="wu-vs wu-vs--bad">
+        <p class="wu-vs__tag wu-vs__tag--bad">Public / free build</p>
+        <p class="wu-vs__num">10,000<span>+</span></p>
+        <p class="wu-vs__label">people running the same file</p>
+        <div class="wu-bar"><span class="wu-bar__fill wu-bar__fill--bad"></span></div>
+        <ul class="wu-vs__list">
+          <li>Downloadable by anyone &mdash; including anti-cheat staff</li>
+          <li>Reverse-engineered and signatured within days</li>
+          <li>Detections land on the whole userbase at once</li>
+          <li>Re-uploaded, cracked, and bundled with malware</li>
+        </ul>
+      </div>
+
+      <div class="wu-vs__mid" aria-hidden="true"><span>VS</span></div>
+
+      <div class="wu-vs wu-vs--good">
+        <p class="wu-vs__tag wu-vs__tag--good">Zaza private build</p>
+        <p class="wu-vs__num">Capped<span>.</span></p>
+        <p class="wu-vs__label">paid, slot-limited userbase</p>
+        <div class="wu-bar"><span class="wu-bar__fill wu-bar__fill--good"></span></div>
+        <ul class="wu-vs__list">
+          <li>Paid gate &mdash; there is no free copy to sample</li>
+          <li>No public mirrors, no cracked builds in circulation</li>
+          <li>Small footprint means far less worth analysing</li>
+          <li>Re-verified after Rust updates before it goes back up</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- WHY USER COUNT IS THE MULTIPLIER -->
+    <section class="wu-card wu-rise" style="--d:.14s">
+      <p class="wu-kicker">// THE MECHANIC</p>
+      <h2 class="wu-h2">Why user count <em>is</em> the detection risk</h2>
+      <p class="wu-p wu-mb">Anti-cheat teams don&rsquo;t find cheats by magic. They need a sample, a reason to prioritise it, and enough flagged machines to make a ban wave worth running. Every one of those steps scales with how popular a build is.</p>
+      <ol class="wu-list">
+        <li><strong>Getting a sample is trivial.</strong> If anyone can download it, so can they. A free public build sits in an analyst&rsquo;s sandbox the week it launches. Ours costs money and ships per key.</li>
+        <li><strong>Signatures get written for the biggest targets first.</strong> Limited staff, ranked queue. A build with thousands of users is worth the engineering hours; a small private one usually isn&rsquo;t.</li>
+        <li><strong>Ban waves are batched.</strong> Detections get held back and fired in bulk for maximum damage. The bigger the pool, the bigger the wave &mdash; and the better the odds you&rsquo;re in it.</li>
+        <li><strong>Every extra user is another leak.</strong> Streamers, resellers, clip-happy friends. Popularity leaks a build into exactly the places you don&rsquo;t want it.</li>
+      </ol>
+      <p class="wu-note">None of this makes any cheat risk-free. It&rsquo;s about which side of the maths you sit on.</p>
+    </section>
+
+    <!-- TABLE -->
+    <section class="wu-card wu-rise" style="--d:.2s">
+      <p class="wu-kicker">// SIDE BY SIDE</p>
+      <h2 class="wu-h2">Public builds vs this one</h2>
+      <div class="wu-tablewrap">
+        <table class="wu-table">
+          <thead>
+            <tr><th scope="col">&nbsp;</th><th scope="col">Public / free cheat</th><th scope="col" class="wu-th--good">Zaza private</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Userbase</th><td>Unlimited, anonymous</td><td class="wu-td--good">Slot-capped, paid</td></tr>
+            <tr><th scope="row">How you get it</th><td>Free download, mirrors, forums</td><td class="wu-td--good">Licence key, instant on payment</td></tr>
+            <tr><th scope="row">Sample availability</th><td>Public &mdash; anyone can grab it</td><td class="wu-td--good">Behind a paid gate</td></tr>
+            <tr><th scope="row">Typical lifespan</th><td>Days to weeks</td><td class="wu-td--good">Maintained build, re-verified per update</td></tr>
+            <tr><th scope="row">After a game update</th><td>Whenever someone bothers</td><td class="wu-td--good">Taken offline, updated, put back up</td></tr>
+            <tr><th scope="row">Downtime honesty</th><td>You find out by getting banned</td><td class="wu-td--good"><a href="{{ '/status' | shopUrl }}">Public status page</a></td></tr>
+            <tr><th scope="row">Support</th><td>A dead forum thread</td><td class="wu-td--good">Direct ticket, usually under 10 minutes</td></tr>
+            <tr><th scope="row">Malware risk</th><td>High &mdash; re-uploads are trivial to poison</td><td class="wu-td--good">One source, one loader</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- WHAT PRIVATE MEANS -->
+    <section class="wu-rise" style="--d:.26s">
+      <p class="wu-kicker wu-kicker--center">// IN PRACTICE</p>
+      <h2 class="wu-h2 wu-h2--center">What &ldquo;private&rdquo; actually means here</h2>
+      <div class="wu-grid">
+        <div class="wu-mini">
+          <span class="wu-mini__ico">&#128274;</span>
+          <h3 class="wu-mini__t">Paid gate, on purpose</h3>
+          <p class="wu-mini__p">There is no free tier and no trial build floating around. Paying is friction &mdash; and friction is exactly what keeps casual scrapers and analysts out.</p>
+        </div>
+        <div class="wu-mini">
+          <span class="wu-mini__ico">&#127919;</span>
+          <h3 class="wu-mini__t">Slots, not scale</h3>
+          <p class="wu-mini__p">We&rsquo;d rather cap the userbase than chase volume. Growing past what a build can safely carry is exactly how private cheats turn into public ones.</p>
+        </div>
+        <div class="wu-mini">
+          <span class="wu-mini__ico">&#128736;</span>
+          <h3 class="wu-mini__t">Updated, not abandoned</h3>
+          <p class="wu-mini__p">Rust patches break things. The build goes down, gets updated and gets re-verified before it goes back up &mdash; rather than staying live and burning keys.</p>
+        </div>
+        <div class="wu-mini">
+          <span class="wu-mini__ico">&#128225;</span>
+          <h3 class="wu-mini__t">Status you can check</h3>
+          <p class="wu-mini__p">Undetected, updating or down &mdash; it&rsquo;s on the <a href="{{ '/status' | shopUrl }}">status page</a> before you load in, not after. Extended downtime gets added back to your key.</p>
+        </div>
+        <div class="wu-mini">
+          <span class="wu-mini__ico">&#9889;</span>
+          <h3 class="wu-mini__t">Instant delivery</h3>
+          <p class="wu-mini__p">Keys are automatic the moment payment clears. No queue, no &ldquo;DM me on Discord&rdquo;, no waiting on a reseller to wake up.</p>
+        </div>
+        <div class="wu-mini">
+          <span class="wu-mini__ico">&#128172;</span>
+          <h3 class="wu-mini__t">Support that answers</h3>
+          <p class="wu-mini__p">Open a ticket and a human replies &mdash; typically in under 10 minutes. Setup help, config questions, replacements.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROOF -->
+    <section class="wu-proof wu-rise" style="--d:.32s">
+      <div class="wu-proof__item">
+        <p class="wu-proof__n"><span data-zz-rc>78</span></p>
+        <p class="wu-proof__l">verified reviews</p>
+      </div>
+      <div class="wu-proof__item">
+        <p class="wu-proof__n">&lt;10m</p>
+        <p class="wu-proof__l">typical support reply</p>
+      </div>
+      <div class="wu-proof__item">
+        <p class="wu-proof__n">1</p>
+        <p class="wu-proof__l">build, maintained properly</p>
+      </div>
+      <div class="wu-proof__item">
+        <p class="wu-proof__n">24/7</p>
+        <p class="wu-proof__l">public status page</p>
+      </div>
+    </section>
+
+    <!-- HONESTY -->
+    <section class="wu-card wu-card--warn wu-rise" style="--d:.38s">
+      <h2 class="wu-h2 wu-h2--sm"><span class="wu-warn">!</span> What we don&rsquo;t claim</h2>
+      <p class="wu-p">No cheat is permanently undetected, and anyone telling you otherwise is selling you something. What we do claim is narrower and checkable: the build stays private, it comes down when it needs work, the status page says so honestly, and extended downtime is added back to your key. Play smart &mdash; sensible settings on a private build beat rage settings on any build.</p>
+    </section>
+
+    <!-- CTA -->
+    <section class="wu-cta wu-rise" style="--d:.44s">
+      <h2 class="wu-cta__t">Ready when you are</h2>
+      <p class="wu-cta__p">One build, keys by duration, instant delivery.</p>
+      <a class="wu-btn" href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}">
+        View the build
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <p class="wu-cta__f"><a href="{{ '/status' | shopUrl }}">Live status</a> &nbsp;&middot;&nbsp; <a href="{{ '/feedback' | shopUrl }}">Read the reviews</a></p>
+    </section>
+
+    <p class="wu-faqlead wu-rise" style="--d:.5s">Still deciding? The questions we get asked most:</p>
+
+  </div>
+</div>
+
+{#— The real dashboard FAQ component renders here (add it to this page in the Visual Editor) —#}
+<div class="components wu-components">
+  {% for componentId in components_order %}
+    {% render_component componentId %}
+  {% endfor %}
+</div>
+
+<style>
+.wu-page{--v:#BF40BF;--b:#7C3AED;--u:#22c55e;--ink:#eaf0ff;--mut:rgba(200,215,240,.62);
+  --edge:rgba(191,64,191,.14);--panel:rgba(12,15,30,.62);
+  position:relative;width:100%;overflow:hidden;
+  background:radial-gradient(130% 90% at 50% -10%,#0d1130 0%,#06070f 58%);
+  font-family:'Satoshi','Inter',system-ui,sans-serif;color:var(--ink)}
+.wu-page *{box-sizing:border-box}
+.wu-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.wu-bg__grid{position:absolute;inset:-2px;
+  background-image:linear-gradient(rgba(191,64,191,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(191,64,191,.05) 1px,transparent 1px);
+  background-size:46px 46px;-webkit-mask-image:radial-gradient(100% 60% at 50% 0%,#000 28%,transparent 78%);mask-image:radial-gradient(100% 60% at 50% 0%,#000 28%,transparent 78%)}
+.wu-bg__beam{position:absolute;border-radius:50%;filter:blur(100px);opacity:.4;animation:wuFloat 16s ease-in-out infinite}
+.wu-bg__beam--a{width:34rem;height:34rem;top:-12rem;left:-9rem;background:radial-gradient(circle,rgba(191,64,191,.5),transparent 65%)}
+.wu-bg__beam--b{width:30rem;height:30rem;top:-6rem;right:-9rem;background:radial-gradient(circle,rgba(124,58,237,.4),transparent 65%);animation-delay:-8s}
+@keyframes wuFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+
+.wu-wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:130px 20px 40px}
+.wu-rise{opacity:0;transform:translateY(20px);animation:wuRise .8s cubic-bezier(.16,1,.3,1) forwards;animation-delay:var(--d,0s)}
+@keyframes wuRise{to{opacity:1;transform:translateY(0)}}
+
+.wu-head{text-align:center;margin-bottom:40px}
+.wu-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--v);font-size:.74rem;letter-spacing:.22em;margin:0}
+.wu-title{font-size:clamp(2.2rem,6vw,3.6rem);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:.5rem 0 0;
+  background:linear-gradient(135deg,#fff,#a8c4ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.wu-sub{color:var(--mut);font-size:1.02rem;line-height:1.6;max-width:620px;margin:1rem auto 0}
+.wu-sub em{font-style:normal;color:#e6b3ff}
+
+.wu-versus{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;margin-bottom:18px}
+.wu-vs{border:1px solid var(--edge);border-radius:18px;padding:24px 22px;background:var(--panel);backdrop-filter:blur(14px)}
+.wu-vs--bad{border-color:rgba(239,68,68,.24);background:linear-gradient(160deg,rgba(239,68,68,.07),rgba(12,15,30,.62))}
+.wu-vs--good{border-color:rgba(34,197,94,.26);background:linear-gradient(160deg,rgba(34,197,94,.07),rgba(12,15,30,.62))}
+.wu-vs__tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:4px 10px;border-radius:6px;margin:0 0 14px}
+.wu-vs__tag--bad{color:#f87171;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.32)}
+.wu-vs__tag--good{color:#4ade80;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3)}
+.wu-vs__num{font-size:clamp(2rem,5vw,2.8rem);font-weight:800;letter-spacing:-.03em;margin:0;line-height:1}
+.wu-vs--bad .wu-vs__num{color:#fca5a5}
+.wu-vs--good .wu-vs__num{color:#86efac}
+.wu-vs__num span{opacity:.55}
+.wu-vs__label{color:var(--mut);font-size:.86rem;margin:6px 0 14px}
+.wu-bar{height:7px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden;margin-bottom:16px}
+.wu-bar__fill{display:block;height:100%;border-radius:99px}
+.wu-bar__fill--bad{width:100%;background:linear-gradient(90deg,rgba(239,68,68,.5),#ef4444)}
+.wu-bar__fill--good{width:14%;background:linear-gradient(90deg,rgba(34,197,94,.5),#22c55e)}
+.wu-vs__list{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.wu-vs__list li{position:relative;padding-left:20px;font-size:.87rem;line-height:1.45;color:rgba(205,218,242,.85)}
+.wu-vs__list li::before{position:absolute;left:0;top:0;font-size:.8rem}
+.wu-vs--bad .wu-vs__list li::before{content:"\2715";color:rgba(239,68,68,.8)}
+.wu-vs--good .wu-vs__list li::before{content:"\2713";color:rgba(34,197,94,.85)}
+.wu-vs__mid{display:grid;place-items:center;padding:0 14px}
+.wu-vs__mid span{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.14em;color:rgba(200,215,240,.4);
+  border:1px solid rgba(255,255,255,.08);border-radius:99px;padding:8px 10px;background:rgba(12,15,30,.7)}
+
+.wu-card{border:1px solid var(--edge);border-radius:18px;padding:26px;background:var(--panel);backdrop-filter:blur(14px);margin-bottom:18px}
+.wu-card--warn{border-color:rgba(234,179,8,.26);background:linear-gradient(135deg,rgba(234,179,8,.06),transparent)}
+.wu-kicker{font-family:'JetBrains Mono',monospace;color:var(--v);font-size:.66rem;letter-spacing:.2em;margin:0 0 6px}
+.wu-kicker--center{text-align:center;margin-top:26px}
+.wu-h2{font-size:clamp(1.25rem,3vw,1.7rem);font-weight:800;letter-spacing:-.02em;margin:0 0 14px}
+.wu-h2 em{font-style:normal;color:#e6b3ff}
+.wu-h2--center{text-align:center;margin-bottom:20px}
+.wu-h2--sm{font-size:1.15rem;display:flex;align-items:center;gap:10px}
+.wu-warn{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;font-size:.85rem;font-weight:800;flex-shrink:0;
+  background:rgba(234,179,8,.14);border:1px solid rgba(234,179,8,.3);color:#fbe08a}
+.wu-p{color:var(--mut);font-size:.94rem;line-height:1.65;margin:0}
+.wu-p strong{color:#fff}
+.wu-mb{margin-bottom:16px}
+.wu-note{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:rgba(200,215,240,.45);margin:16px 0 0;
+  padding-top:14px;border-top:1px solid rgba(255,255,255,.06)}
+.wu-page a{color:#a8c4ff;text-decoration:none}
+.wu-page a:hover{color:#fff;text-decoration:underline}
+
+.wu-list{margin:0;padding-left:0;list-style:none;counter-reset:wu}
+.wu-list li{position:relative;padding:12px 0 12px 42px;color:var(--mut);font-size:.94rem;line-height:1.6;border-top:1px solid rgba(255,255,255,.05)}
+.wu-list li:first-child{border-top:none}
+.wu-list li strong{color:#fff}
+.wu-list li::before{counter-increment:wu;content:counter(wu);position:absolute;left:0;top:12px;
+  width:26px;height:26px;display:grid;place-items:center;border-radius:8px;font-size:.78rem;font-weight:800;
+  background:rgba(191,64,191,.16);border:1px solid rgba(191,64,191,.3);color:#c7b8ff}
+
+.wu-tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.wu-table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:520px}
+.wu-table th,.wu-table td{padding:12px 14px;text-align:left;border-top:1px solid rgba(255,255,255,.055);vertical-align:top}
+.wu-table thead th{border-top:none;font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(200,215,240,.5);font-weight:600}
+.wu-table thead .wu-th--good{color:#4ade80}
+.wu-table tbody th{font-weight:600;color:#fff;width:26%}
+.wu-table td{color:rgba(205,218,242,.72)}
+.wu-table .wu-td--good{color:#d7e6ff;background:rgba(34,197,94,.045)}
+
+.wu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:18px}
+.wu-mini{border:1px solid var(--edge);border-radius:16px;padding:20px;background:var(--panel);backdrop-filter:blur(14px);
+  transition:border-color .25s,transform .25s}
+.wu-mini:hover{border-color:rgba(191,64,191,.32);transform:translateY(-3px)}
+.wu-mini__ico{font-size:1.4rem;display:block;margin-bottom:10px}
+.wu-mini__t{font-size:1rem;font-weight:700;margin:0 0 7px;letter-spacing:-.01em}
+.wu-mini__p{color:var(--mut);font-size:.88rem;line-height:1.55;margin:0}
+
+.wu-proof{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.wu-proof__item{border:1px solid var(--edge);border-radius:14px;padding:18px 14px;background:var(--panel);text-align:center}
+.wu-proof__n{font-size:1.6rem;font-weight:800;margin:0;letter-spacing:-.02em;
+  background:linear-gradient(135deg,#fff,#c7b8ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.wu-proof__l{font-size:.76rem;color:rgba(200,215,240,.55);margin:6px 0 0;line-height:1.35}
+
+.wu-cta{text-align:center;border:1px solid rgba(191,64,191,.3);border-radius:18px;padding:34px 24px;
+  background:linear-gradient(135deg,rgba(191,64,191,.1),rgba(124,58,237,.04))}
+.wu-cta__t{font-size:1.4rem;font-weight:800;margin:0;letter-spacing:-.02em}
+.wu-cta__p{color:var(--mut);font-size:.94rem;margin:.5rem 0 20px}
+.wu-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border-radius:12px;
+  background:linear-gradient(135deg,var(--v),var(--b));color:#fff;font-weight:700;font-size:1rem;text-decoration:none;
+  box-shadow:0 12px 32px -10px rgba(191,64,191,.8);transition:filter .25s,transform .25s,gap .25s}
+.wu-btn:hover{filter:brightness(1.1);transform:translateY(-2px);gap:13px;color:#fff;text-decoration:none}
+.wu-cta__f{font-family:'JetBrains Mono',monospace;font-size:.76rem;color:rgba(200,215,240,.45);margin:18px 0 0}
+
+.wu-faqlead{text-align:center;color:rgba(200,215,240,.5);font-size:.9rem;margin:44px 0 0}
+.wu-components{background:radial-gradient(120% 80% at 50% 0%,#0a0d24 0%,#06070f 60%)}
+
+@media (max-width:860px){
+  .wu-versus{grid-template-columns:1fr;gap:12px}
+  .wu-vs__mid{padding:2px 0}
+  .wu-proof{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:680px){
+  .wu-wrap{padding:104px 16px 32px}
+  .wu-card,.wu-mini{padding:20px}
+}
+@media (prefers-reduced-motion:reduce){
+  .wu-page *{animation:none!important;transition:none!important}
+  .wu-rise{opacity:1!important;transform:none!important}
+}
+</style>
+
+{% else %}
+
+<div class="container">
+  <section class="py-5-nav">
+    <div class="section-title">
+      <h1>{{ custom_page.name }}</h1>
+    </div>
+  </section>
+</div>
+
+<div class="components">
+  {% for componentId in components_order %}
+    {% render_component componentId %}
+  {% endfor %}
+</div>
+
+{% endif %}

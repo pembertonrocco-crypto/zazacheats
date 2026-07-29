@@ -1,0 +1,270 @@
+{# =========================================================================
+   SHOWCASE — hardcoded YouTube showcase section.
+   Fully static HTML (no {% set %} object arrays, no synthetic loops).
+   Colour-safe: uses var(--cl-accent) [hex] for solids and
+   rgba(var(--cl-accent-rgb), a) [triplet] for translucency, each with a
+   baked-in fallback so it renders even if a variable is missing.
+   Video: https://www.youtube.com/watch?v=VjcprZSnYh0
+   ========================================================================= #}
+<section class="zaza-showcase" aria-labelledby="zaza-showcase-title">
+  <div class="zaza-showcase__bg" aria-hidden="true">
+    <span class="zaza-showcase__bloom"></span>
+    <span class="zaza-showcase__orb zaza-showcase__orb--a"></span>
+    <span class="zaza-showcase__orb zaza-showcase__orb--b"></span>
+    <span class="zaza-showcase__grid"></span>
+  </div>
+
+  <div class="zaza-showcase__inner">
+    <p class="zaza-showcase__eyebrow">
+      <span class="zaza-showcase__dot"></span>See it in action
+    </p>
+
+    <h2 id="zaza-showcase-title" class="zaza-showcase__title">
+      <span class="zaza-showcase__title-fill" data-text="Showcase">Showcase</span>
+    </h2>
+
+    <p class="zaza-showcase__sub">
+      Real in-game footage — watch it run live in Rust before you buy.
+    </p>
+
+    <div class="zaza-showcase__frame" data-lenis-prevent>
+      <span class="zaza-showcase__frame-glow" aria-hidden="true"></span>
+      <button type="button"
+              class="zaza-showcase__facade"
+              id="zaza-showcase-facade"
+              aria-label="Play the showcase video">
+        <img class="zaza-showcase__thumb"
+             src="https://i.ytimg.com/vi/VjcprZSnYh0/maxresdefault.jpg"
+             onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/VjcprZSnYh0/hqdefault.jpg';"
+             alt="" width="1280" height="720" loading="lazy" decoding="async" />
+        <span class="zaza-showcase__scrim" aria-hidden="true"></span>
+        <span class="zaza-showcase__sheen" aria-hidden="true"></span>
+        <span class="zaza-showcase__play" aria-hidden="true">
+          <span class="zaza-showcase__play-ring zaza-showcase__play-ring--1"></span>
+          <span class="zaza-showcase__play-ring zaza-showcase__play-ring--2"></span>
+          <span class="zaza-showcase__play-core">
+            <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor" aria-hidden="true">
+              <path d="M8 5.14v13.72a.5.5 0 0 0 .77.42l10.29-6.86a.5.5 0 0 0 0-.84L8.77 4.72A.5.5 0 0 0 8 5.14Z"/>
+            </svg>
+          </span>
+        </span>
+        <span class="zaza-showcase__hint" aria-hidden="true">
+          <span class="zaza-showcase__hint-dot"></span>Watch the showcase
+        </span>
+      </button>
+    </div>
+
+    <div class="zznx">
+      <p class="zznx__line">Everything in that clip ships with <strong>every key</strong> — no feature tiers.</p>
+      <div class="zznx__row">
+        <a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="zznx__btn">Get your key</a>
+        <a href="{{ '/status' | shopUrl }}" class="zznx__btn zznx__btn--ghost">Check detection status first</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .zaza-showcase{
+    --zs-accent: var(--cl-accent, #BF40BF);
+    --zs-accent-rgb: var(--cl-accent-rgb, 191,64,191);
+    --zs-blue: 124,58,237;
+    --zs-text: var(--cl-t-primary, 255,255,255);
+    position:relative;overflow:hidden;isolation:isolate;
+    padding:clamp(3.25rem,7vw,5.5rem) 1.25rem;
+  }
+
+  /* ---------- atmosphere ---------- */
+  .zaza-showcase__bg{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden;}
+  .zaza-showcase__bloom{
+    position:absolute;top:8%;left:50%;width:min(900px,90%);height:420px;transform:translateX(-50%);
+    background:radial-gradient(60% 60% at 50% 40%,rgba(var(--zs-accent-rgb),.30),transparent 70%);
+    filter:blur(20px);
+  }
+  .zaza-showcase__orb{position:absolute;width:44vw;max-width:620px;aspect-ratio:1;border-radius:50%;filter:blur(130px);opacity:.55;}
+  .zaza-showcase__orb--a{top:-18%;left:-10%;background:rgba(var(--zs-accent-rgb),.6);}
+  .zaza-showcase__orb--b{bottom:-26%;right:-12%;background:rgba(var(--zs-blue),.5);}
+  .zaza-showcase__grid{
+    position:absolute;inset:0;opacity:.4;
+    -webkit-mask-image:radial-gradient(70% 60% at 50% 45%,#000 0%,transparent 75%);
+            mask-image:radial-gradient(70% 60% at 50% 45%,#000 0%,transparent 75%);
+    background-image:linear-gradient(rgba(var(--zs-text),.05) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(var(--zs-text),.05) 1px,transparent 1px);
+    background-size:46px 46px;
+  }
+
+  .zaza-showcase__inner{max-width:1000px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center;}
+
+  /* ---------- eyebrow ---------- */
+  .zaza-showcase__eyebrow{
+    display:inline-flex;align-items:center;gap:.6rem;margin:0 0 1.15rem;
+    font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;
+    font-size:.72rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--zs-accent);
+    padding:.45rem 1rem;border-radius:999px;
+    background:rgba(var(--zs-accent-rgb),.1);
+    border:1px solid rgba(var(--zs-accent-rgb),.3);
+    box-shadow:0 0 24px -6px rgba(var(--zs-accent-rgb),.5);
+  }
+  .zaza-showcase__dot{width:7px;height:7px;border-radius:50%;background:var(--zs-accent);box-shadow:0 0 0 0 rgba(var(--zs-accent-rgb),.7);animation:zsDot 2s ease-out infinite;}
+  @keyframes zsDot{0%{box-shadow:0 0 0 0 rgba(var(--zs-accent-rgb),.6);}70%{box-shadow:0 0 0 10px rgba(var(--zs-accent-rgb),0);}100%{box-shadow:0 0 0 0 rgba(var(--zs-accent-rgb),0);}}
+
+  /* ---------- SIGNATURE: animated wordmark ---------- */
+  .zaza-showcase__title{
+    margin:0 0 1.05rem;line-height:.92;
+    font-family:'Satoshi','Poppins',system-ui,sans-serif;
+    font-weight:700;letter-spacing:-.025em;
+    font-size:clamp(3.4rem,12vw,7.5rem);
+  }
+  .zaza-showcase__title-fill{
+    position:relative;display:inline-block;
+    color:var(--zs-accent);            /* always-visible fallback */
+  }
+  /* neon bloom clone behind the glyphs */
+  .zaza-showcase__title-fill::before{
+    content:attr(data-text);position:absolute;inset:0;z-index:-1;
+    color:var(--zs-accent);filter:blur(22px);opacity:.55;
+  }
+  @supports ((-webkit-background-clip:text) or (background-clip:text)){
+    .zaza-showcase__title-fill{
+      background:linear-gradient(100deg,
+        var(--zs-accent) 0%, #d65bff 26%, #7aa8ff 48%, #ffffff 56%, #7aa8ff 64%, #d65bff 80%, var(--zs-accent) 100%);
+      background-size:240% auto;
+      -webkit-background-clip:text;background-clip:text;
+      -webkit-text-fill-color:transparent;color:transparent;
+      animation:zsFlow 7s linear infinite;
+    }
+    /* moving glint */
+    .zaza-showcase__title-fill::after{
+      content:attr(data-text);position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.9) 50%,transparent 60%);
+      background-size:260% 100%;
+      -webkit-background-clip:text;background-clip:text;
+      -webkit-text-fill-color:transparent;color:transparent;
+      animation:zsGlint 6s ease-in-out infinite;
+    }
+  }
+  @keyframes zsFlow{0%{background-position:0% 50%;}100%{background-position:240% 50%;}}
+  @keyframes zsGlint{0%,72%{background-position:150% 0;}100%{background-position:-50% 0;}}
+
+  .zaza-showcase__sub{
+    margin:0 0 clamp(2.25rem,4vw,3rem);max-width:36rem;
+    font-size:clamp(1rem,2.1vw,1.18rem);line-height:1.6;
+    color:rgba(var(--zs-text),.66);
+  }
+
+  /* ---------- video frame ---------- */
+  .zaza-showcase__frame{
+    position:relative;width:100%;aspect-ratio:16/9;border-radius:20px;padding:2px;overflow:hidden;
+    box-shadow:0 40px 120px -30px rgba(var(--zs-accent-rgb),.55),0 20px 60px -25px rgba(0,0,0,.7);
+  }
+  .zaza-showcase__frame::before{
+    content:"";position:absolute;inset:-45%;z-index:0;
+    background:conic-gradient(from 0deg,
+      rgba(var(--zs-accent-rgb),1),
+      rgba(var(--zs-blue),1),
+      rgba(var(--zs-accent-rgb),0) 42%,
+      rgba(var(--zs-accent-rgb),0) 58%,
+      rgba(var(--zs-accent-rgb),1));
+    animation:zsSpin 8s linear infinite;
+  }
+  .zaza-showcase__frame::after{
+    content:"";position:absolute;inset:0;z-index:2;border-radius:20px;pointer-events:none;
+    border:1px solid rgba(var(--zs-text),.08);
+  }
+  @keyframes zsSpin{to{transform:rotate(1turn);}}
+  .zaza-showcase__frame-glow{display:none;}
+
+  .zaza-showcase__facade{
+    position:absolute;inset:2px;z-index:1;width:calc(100% - 4px);height:calc(100% - 4px);
+    display:block;border:0;padding:0;margin:0;cursor:pointer;border-radius:18px;overflow:hidden;background:#05070f;
+  }
+  .zaza-showcase__thumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.03);transition:transform .7s cubic-bezier(.16,1,.3,1),filter .4s ease;filter:saturate(1.06);}
+  .zaza-showcase__scrim{position:absolute;inset:0;background:radial-gradient(55% 55% at 50% 50%,transparent 0%,rgba(3,5,12,.5) 100%),linear-gradient(180deg,rgba(3,5,12,.1),rgba(3,5,12,.45));transition:opacity .4s ease;}
+  .zaza-showcase__sheen{position:absolute;inset:0;background:linear-gradient(120deg,transparent 35%,rgba(255,255,255,.06) 50%,transparent 65%);}
+
+  .zaza-showcase__play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:92px;height:92px;display:grid;place-items:center;}
+  .zaza-showcase__play-core{
+    position:relative;z-index:2;width:84px;height:84px;border-radius:50%;display:grid;place-items:center;color:#fff;
+    background:linear-gradient(135deg,var(--zs-accent),#7C3AED);
+    box-shadow:0 18px 50px -10px rgba(var(--zs-accent-rgb),.95),0 0 0 1px rgba(255,255,255,.16) inset,0 0 0 6px rgba(var(--zs-accent-rgb),.14);
+    transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s ease;
+  }
+  .zaza-showcase__play-core svg{margin-left:5px;}
+  .zaza-showcase__play-ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(var(--zs-accent-rgb),.65);}
+  .zaza-showcase__play-ring--1{animation:zsPulse 2.6s ease-out infinite;}
+  .zaza-showcase__play-ring--2{animation:zsPulse 2.6s ease-out infinite 1.3s;}
+  @keyframes zsPulse{0%{transform:scale(1);opacity:.7;}100%{transform:scale(2.1);opacity:0;}}
+
+  .zaza-showcase__hint{
+    position:absolute;left:50%;bottom:1.15rem;transform:translateX(-50%);
+    display:inline-flex;align-items:center;gap:.5rem;
+    font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#fff;
+    padding:.45rem .9rem;border-radius:999px;background:rgba(8,11,24,.6);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.16);
+    transition:transform .35s cubic-bezier(.16,1,.3,1),opacity .35s ease;
+  }
+  .zaza-showcase__hint-dot{width:6px;height:6px;border-radius:50%;background:var(--zs-accent);box-shadow:0 0 8px 1px rgba(var(--zs-accent-rgb),.9);}
+
+  .zaza-showcase__facade:hover .zaza-showcase__thumb{transform:scale(1.07);filter:saturate(1.18);}
+  .zaza-showcase__facade:hover .zaza-showcase__scrim{opacity:.82;}
+  .zaza-showcase__facade:hover .zaza-showcase__play-core{transform:scale(1.09);box-shadow:0 24px 64px -8px rgba(var(--zs-accent-rgb),1),0 0 0 1px rgba(255,255,255,.24) inset,0 0 0 8px rgba(var(--zs-accent-rgb),.2);}
+  .zaza-showcase__facade:hover .zaza-showcase__hint{transform:translateX(-50%) translateY(-3px);}
+  .zaza-showcase__facade:focus-visible{outline:3px solid var(--zs-accent);outline-offset:4px;}
+
+  .zaza-showcase__frame iframe{position:absolute;inset:2px;z-index:3;width:calc(100% - 4px);height:calc(100% - 4px);border:0;border-radius:18px;background:#000;pointer-events:auto;}
+
+  /* ---------- scroll reveal ---------- */
+  .zaza-showcase__eyebrow,.zaza-showcase__title,.zaza-showcase__sub,.zaza-showcase__frame{
+    opacity:0;transform:translateY(28px);
+    transition:opacity .85s cubic-bezier(.16,1,.3,1),transform .85s cubic-bezier(.16,1,.3,1);
+  }
+  .zaza-showcase.is-revealed .zaza-showcase__eyebrow{transition-delay:.05s;}
+  .zaza-showcase.is-revealed .zaza-showcase__title{transition-delay:.15s;}
+  .zaza-showcase.is-revealed .zaza-showcase__sub{transition-delay:.26s;}
+  .zaza-showcase.is-revealed .zaza-showcase__frame{transition-delay:.38s;}
+  .zaza-showcase.is-revealed .zaza-showcase__eyebrow,
+  .zaza-showcase.is-revealed .zaza-showcase__title,
+  .zaza-showcase.is-revealed .zaza-showcase__sub,
+  .zaza-showcase.is-revealed .zaza-showcase__frame{opacity:1;transform:none;}
+
+  @media (max-width:600px){
+    .zaza-showcase__play{width:76px;height:76px;}
+    .zaza-showcase__play-core{width:68px;height:68px;}
+    .zaza-showcase__play-core svg{width:26px;height:26px;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .zaza-showcase__title-fill{animation:none;background-position:50% 50%;}
+    .zaza-showcase__title-fill::after,.zaza-showcase__dot,.zaza-showcase__frame::before,.zaza-showcase__play-ring{animation:none;}
+    .zaza-showcase__eyebrow,.zaza-showcase__title,.zaza-showcase__sub,.zaza-showcase__frame{opacity:1;transform:none;transition:none;}
+  }
+</style>
+
+<script>
+(function(){
+  function ready(fn){ if(document.readyState!=='loading') fn(); else document.addEventListener('DOMContentLoaded',fn); }
+  ready(function(){
+    document.querySelectorAll('.zaza-showcase__facade:not([data-zs-bound])').forEach(function(btn){
+      btn.setAttribute('data-zs-bound','1');
+      btn.addEventListener('click',function(){
+        var frame=btn.closest('.zaza-showcase__frame');
+        if(!frame||frame.querySelector('iframe')) return;
+        var iframe=document.createElement('iframe');
+        iframe.src='https://www.youtube-nocookie.com/embed/VjcprZSnYh0?autoplay=1&start=19&rel=0&modestbranding=1&playsinline=1';
+        iframe.title='Showcase video';
+        iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.setAttribute('allowfullscreen','');
+        frame.appendChild(iframe);
+        btn.style.display='none';
+      });
+    });
+    var sections=document.querySelectorAll('.zaza-showcase:not([data-zs-seen])');
+    if(!('IntersectionObserver' in window)){ sections.forEach(function(s){ s.classList.add('is-revealed'); }); return; }
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('is-revealed'); io.unobserve(e.target); } });
+    },{threshold:0.18});
+    sections.forEach(function(s){ s.setAttribute('data-zs-seen','1'); io.observe(s); });
+  });
+})();
+</script>

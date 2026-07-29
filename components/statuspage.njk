@@ -1,0 +1,608 @@
+<div class="status-page-container component" data-component-id="{{ componentId }}">
+  <div class="status-page-wrapper">
+    <!-- Animated Background Elements -->
+    <div class="status-bg-gradient"></div>
+    <div class="status-bg-blur"></div>
+
+    <!-- Header Section -->
+    <div class="status-page-header">
+      <div class="header-content">
+        <h1 class="status-page-title">Status</h1>
+        <p class="status-page-subtitle">System Health & Availability</p>
+      </div>
+    </div>
+
+    <!-- Status Overview Banner -->
+    <div class="status-overview">
+      <div class="overview-content">
+        <div class="overview-dot operational"></div>
+        <div class="overview-info">
+          <h2 class="overview-title">All Systems Operational</h2>
+          <p class="overview-meta">No active incidents • Monitoring 24/7</p>
+        </div>
+      </div>
+      <div class="overview-stats">
+        <div class="stat-item">
+          <span class="stat-label">Uptime</span>
+          <span class="stat-value">99.9%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Legend -->
+    <div class="status-legend-container">
+      <div class="legend-item">
+        <div class="legend-dot undetected"></div>
+        <span class="legend-text">Undetected</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot updating"></div>
+        <span class="legend-text">Updating</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot detected"></div>
+        <span class="legend-text">Detected</span>
+      </div>
+    </div>
+
+    <!-- Service Cards -->
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="card-glow"></div>
+        
+        <div class="card-content">
+          <div class="card-header">
+            <div class="card-left">
+              <h3 class="card-title">Zaza Rust Private Cheat</h3>
+              <p class="card-description">Real-time status monitoring</p>
+            </div>
+            <div class="card-status undetected">
+              <div class="status-indicator">
+                <div class="indicator-dot"></div>
+                <div class="indicator-pulse"></div>
+              </div>
+              <span class="status-label">Undetected</span>
+            </div>
+          </div>
+
+          <div class="card-metrics">
+            <div class="metric">
+              <span class="metric-label">Uptime</span>
+              <div class="metric-bar">
+                <div class="metric-fill" style="width: 99.9%"></div>
+              </div>
+              <span class="metric-value">99.9%</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Response Time</span>
+              <div class="metric-bar">
+                <div class="metric-fill" style="width: 95%; background: linear-gradient(90deg, #3b82f6, #06b6d4);"></div>
+              </div>
+              <span class="metric-value">45ms</span>
+            </div>
+          </div>
+
+          <a href="https://zazacheats.mysellauth.com/product/zaza-rust-private-cheat" class="card-link">
+            <span>View Product</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 2L12 8L6 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Info -->
+    <div class="status-footer-section">
+      <p class="footer-text">Last updated <span class="update-time">just now</span> • <a href="#" class="footer-link">Subscribe to updates</a></p>
+    </div>
+  </div>
+</div>
+
+<style>
+.status-page-container {
+  width: 100%;
+  background: linear-gradient(135deg, #06091a 0%, #0f1430 100%);
+  position: relative;
+  overflow: hidden;
+  font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+}
+
+.status-page-wrapper {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 100px 24px;
+  z-index: 1;
+}
+
+/* Animated Background */
+.status-bg-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(191,64,191, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.status-bg-blur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 80% 80%, rgba(34, 197, 94, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(40px);
+}
+
+/* Header */
+.status-page-header {
+  text-align: center;
+  margin-bottom: 80px;
+  animation: fadeInDown 0.8s ease-out;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-page-title {
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #ffffff 0%, #a8c4ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.status-page-subtitle {
+  font-size: 1.1rem;
+  color: rgba(200, 215, 240, 0.6);
+  margin: 0;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* Status Overview Banner */
+.status-overview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(34, 197, 94, 0.02) 100%);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 60px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: slideUp 0.8s ease-out 0.1s both;
+  box-shadow: 0 8px 32px rgba(34, 197, 94, 0.08);
+}
+
+.overview-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.overview-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.8);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.overview-info h2 {
+  font-size: 1.2rem;
+  color: #22c55e;
+  margin: 0 0 4px 0;
+  font-weight: 700;
+}
+
+.overview-info p {
+  font-size: 0.9rem;
+  color: rgba(200, 215, 240, 0.5);
+  margin: 0;
+}
+
+.overview-stats {
+  display: flex;
+  gap: 32px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: rgba(200, 215, 240, 0.5);
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #22c55e;
+}
+
+/* Status Legend */
+.status-legend-container {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 80px;
+  flex-wrap: wrap;
+  animation: slideUp 0.8s ease-out 0.2s both;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-dot.undetected {
+  background: #22c55e;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+}
+
+.legend-dot.updating {
+  background: #eab308;
+  box-shadow: 0 0 12px rgba(234, 179, 8, 0.5);
+}
+
+.legend-dot.detected {
+  background: #ef4444;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+}
+
+.legend-text {
+  font-size: 0.9rem;
+  color: rgba(200, 215, 240, 0.7);
+  font-weight: 500;
+}
+
+/* Service Cards */
+.services-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 60px;
+}
+
+.service-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(191,64,191, 0.08) 0%, rgba(124,58,237, 0.04) 100%);
+  border: 1px solid rgba(191,64,191, 0.15);
+  border-radius: 20px;
+  padding: 32px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slideUp 0.8s ease-out 0.3s both;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(191,64,191, 0.5), transparent);
+}
+
+.service-card:hover {
+  background: linear-gradient(135deg, rgba(191,64,191, 0.12) 0%, rgba(124,58,237, 0.06) 100%);
+  border-color: rgba(191,64,191, 0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(191,64,191, 0.1);
+}
+
+.card-glow {
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(191,64,191, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.service-card:hover .card-glow {
+  opacity: 1;
+}
+
+.card-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.card-left {
+  flex: 1;
+}
+
+.card-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+}
+
+.card-description {
+  font-size: 0.9rem;
+  color: rgba(200, 215, 240, 0.5);
+  margin: 0;
+}
+
+.card-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.card-status.undetected {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.card-status.updating {
+  background: rgba(234, 179, 8, 0.1);
+  border-color: rgba(234, 179, 8, 0.2);
+}
+
+.card-status.detected {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.status-indicator {
+  position: relative;
+  width: 10px;
+  height: 10px;
+}
+
+.indicator-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #22c55e;
+}
+
+.indicator-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #22c55e;
+  transform: translate(-50%, -50%);
+  animation: expandPulse 2s ease-out infinite;
+}
+
+.status-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #22c55e;
+  white-space: nowrap;
+}
+
+/* Card Metrics */
+.card-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.metric-label {
+  font-size: 0.85rem;
+  color: rgba(200, 215, 240, 0.6);
+  font-weight: 500;
+  min-width: 100px;
+}
+
+.metric-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.metric-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  border-radius: 3px;
+}
+
+.metric-value {
+  font-size: 0.85rem;
+  color: rgba(200, 215, 240, 0.7);
+  font-weight: 600;
+  min-width: 50px;
+  text-align: right;
+}
+
+/* Card Link */
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, rgba(191,64,191, 0.2), rgba(124,58,237, 0.1));
+  border: 1px solid rgba(191,64,191, 0.2);
+  border-radius: 10px;
+  color: #a8c4ff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  width: fit-content;
+}
+
+.card-link:hover {
+  background: linear-gradient(135deg, rgba(191,64,191, 0.3), rgba(124,58,237, 0.15));
+  border-color: rgba(191,64,191, 0.3);
+  color: #ffffff;
+  transform: translateX(4px);
+}
+
+.card-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Footer */
+.status-footer-section {
+  text-align: center;
+  padding-top: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  animation: slideUp 0.8s ease-out 0.4s both;
+}
+
+.footer-text {
+  font-size: 0.9rem;
+  color: rgba(200, 215, 240, 0.5);
+  margin: 0;
+}
+
+.update-time {
+  color: rgba(200, 215, 240, 0.6);
+}
+
+.footer-link {
+  color: #a8c4ff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #ffffff;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 16px rgba(34, 197, 94, 0.8);
+  }
+  50% {
+    opacity: 0.5;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+  }
+}
+
+@keyframes expandPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .status-page-wrapper {
+    padding: 60px 20px;
+  }
+
+  .status-page-title {
+    font-size: 2rem;
+  }
+
+  .status-overview {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .card-header {
+    flex-direction: column;
+  }
+
+  .card-status {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .metric {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .metric-value {
+    text-align: left;
+  }
+}
+</style>

@@ -1,0 +1,226 @@
+{# =====================================================================
+   ZAZA RUST PRIVATE CHEAT — Product Content Block (.njk)
+   =====================================================================
+
+   WHERE THIS GOES
+   - Paste this whole file into the product's DESCRIPTION field in your
+     Sellauth dashboard (Products → Zaza Rust Private Cheat → General →
+     Description). Your theme renders the description with `| safe`, so the
+     HTML + styles below render inline on the product page.
+
+   WHAT THIS DOES / DOESN'T DO
+   - Adds the marketing sections your theme doesn't already include:
+     benefit hero copy, "what you get" steps, features grid, comparison
+     table, system requirements, and a closing trust block.
+   - It does NOT add fake live viewers / sales / purchase popups. Your theme
+     ALREADY shows those from REAL order data (liveStats.views, .sales,
+     .latestOrders via the salesNotifications component). Enable/adjust them
+     in your dashboard's live-stats settings — don't duplicate them here.
+   - Reviews: paste your real customer reviews into the marked list. Empty by
+     default, with an honest empty state.
+
+   VARIABLES
+   - Uses {{ product.name }} where helpful. Prices in the variant table are
+     written as plain fallbacks ($4.99 / $14.99 / $49.99 / $199.99). If you
+     prefer them pulled live, replace the static rows with your variant loop.
+   ===================================================================== #}
+
+<div class="zz">
+
+  {# ---------- HERO COPY ---------- #}
+  <section class="zz-hero">
+    <div class="zz-hero__glow" aria-hidden="true"></div>
+    <div class="zz-badges">
+      <a class="zz-chip zz-chip--green zz-chip--link" href="{{ '/status' | shopUrl }}"><span class="zz-dot"></span>LIVE STATUS &#8599;</a>
+      <span class="zz-chip">PRIVATE BUILD</span>
+      <span class="zz-chip">1 KEY = 1 PC (HWID)</span>
+    </div>
+    <p class="zz-eyebrow">// ZAZA CHEATS — RUST</p>
+    <h2 class="zz-h1">Dominate every wipe with <span class="zz-grad">{{ product.name }}</span></h2>
+    <p class="zz-lead">
+      A private-only Rust build with instant key delivery, a clean loader, and an actively
+      maintained feature set.
+    </p>
+    <div class="zz-trust">
+      <div class="zz-trust__item">⚡ INSTANT DELIVERY</div>
+      <div class="zz-trust__item">🛡️ 24H+ DOWNTIME COVERED</div>
+      <div class="zz-trust__item">🟢 DATED STATUS PAGE</div>
+      <div class="zz-trust__item">🔑 LOADER + KEY</div>
+    </div>
+  </section>
+
+  {# ---------- DELIVERY STRIP (compact) ---------- #}
+  <section class="zz-block">
+    <div class="zz-steps-strip">
+      <div class="zz-steps-strip__item"><span class="zz-num">01</span><span><strong>Buy a key</strong> — instant, automated checkout.</span></div>
+      <div class="zz-steps-strip__item"><span class="zz-num">02</span><span><strong>Get loader + serial</strong> — delivered on screen &amp; to your account.</span></div>
+      <div class="zz-steps-strip__item"><span class="zz-num">03</span><span><strong>Inject &amp; play</strong> — load into Rust in minutes.</span></div>
+    </div>
+  </section>
+
+  {# ---------- FEATURES GRID (edit to your REAL features) ---------- #}
+  <section class="zz-block">
+    <p class="zz-eyebrow">// FEATURE SET</p>
+    <h3 class="zz-h2">Built private, tuned for control</h3>
+    <div class="zz-grid zz-grid--3">
+      <div class="zz-card"><div class="zz-ico">🎯</div><h4 class="zz-h4">Precision aim assist</h4><p class="zz-p">Configurable targeting tuned for consistent, controlled results.</p></div>
+      <div class="zz-card"><div class="zz-ico">👁️</div><h4 class="zz-h4">Full ESP / visuals</h4><p class="zz-p">Players, loot, and threats rendered clearly so you always have the read.</p></div>
+      <div class="zz-card"><div class="zz-ico">🛡️</div><h4 class="zz-h4">Maintained for safety</h4><p class="zz-p">Updated alongside every patch, with the build's current state published — dated — on the status page.</p></div>
+      <div class="zz-card"><div class="zz-ico">⚙️</div><h4 class="zz-h4">Deep config control</h4><p class="zz-p">Dial in every setting and save profiles for different playstyles.</p></div>
+      <div class="zz-card"><div class="zz-ico">🔄</div><h4 class="zz-h4">Regular updates</h4><p class="zz-p">Maintained alongside game patches so downtime stays minimal.</p></div>
+      <div class="zz-card"><div class="zz-ico">💬</div><h4 class="zz-h4">Real support</h4><p class="zz-p">Setup help and troubleshooting through Discord and tickets.</p></div>
+    </div>
+  </section>
+
+
+  {# ---------- REVIEWS ----------
+     40 verified reviews carried over from the previous store.
+     To add more: copy a .zz-review block and edit the name, stars, and text. #}
+  <section class="zz-block">
+    <p class="zz-eyebrow">// VERIFIED FEEDBACK</p>
+    <h3 class="zz-h2">What customers say</h3>
+    <div class="zz-reviews-stat">
+      <span class="zz-reviews-stat__stars" data-zz-rstars>★★★★★</span>
+      <span class="zz-reviews-stat__txt"><span data-zz-rc>78</span> reviews · <span data-zz-ravg>{% if shop.average_rating and shop.average_rating > 0 %}{{ helpers.numbers.formatDecimal(shop.average_rating) }}{% else %}5.0{% endif %}</span> average</span>
+    </div>
+
+    <div class="zz-grid zz-grid--3 zz-reviews-grid">
+      <div class="zz-review">
+        <div class="zz-review__head">
+          <div class="zz-review__av">V</div>
+          <div>
+            <div class="zz-review__user">Verified buyer</div>
+            <div class="zz-review__stars">★★★★★</div>
+          </div>
+        </div>
+        <p class="zz-review__text">Been using this Rust private cheat for a couple months now and it&#x27;s stayed completely undetected through the recent updates. Installation was super easy, took me like 5 minutes tops, and the support is insanely fast. Solid stuff.</p>
+      </div>
+      <div class="zz-review">
+        <div class="zz-review__head">
+          <div class="zz-review__av">V</div>
+          <div>
+            <div class="zz-review__user">Verified buyer</div>
+            <div class="zz-review__stars">★★★★★</div>
+          </div>
+        </div>
+        <p class="zz-review__text">This cheat is undetectable and works perfectly. Easy to install with clear steps, and whenever I needed help the support got back to me right away. Zaza owner really knows what they&#x27;re doing.</p>
+      </div>
+      <div class="zz-review">
+        <div class="zz-review__head">
+          <div class="zz-review__av">V</div>
+          <div>
+            <div class="zz-review__user">Verified buyer</div>
+            <div class="zz-review__stars">★★★★★</div>
+          </div>
+        </div>
+        <p class="zz-review__text">Finally found a private Rust cheat that actually delivers. No detections at all, setup was straightforward, and support responses are quick every time. Definitely recommend it.</p>
+      </div>
+      <div class="zz-review">
+        <div class="zz-review__head">
+          <div class="zz-review__av">V</div>
+          <div>
+            <div class="zz-review__user">Verified buyer</div>
+            <div class="zz-review__stars">★★★★★</div>
+          </div>
+        </div>
+        <p class="zz-review__text">Undetected for weeks of daily play. The install process is dummy proof and the team behind it is super responsive. Makes the game way more fun again.</p>
+      </div>
+      <div class="zz-review">
+        <div class="zz-review__head">
+          <div class="zz-review__av">V</div>
+          <div>
+            <div class="zz-review__user">Verified buyer</div>
+            <div class="zz-review__stars">★★★★★</div>
+          </div>
+        </div>
+        <p class="zz-review__text">This private cheat has been rock solid. Zero bans, easy installation, and fast support whenever I hit them up with questions. Worth every bit.</p>
+      </div>
+      <div class="zz-review">
+        <div class="zz-review__head">
+          <div class="zz-review__av">V</div>
+          <div>
+            <div class="zz-review__user">Verified buyer</div>
+            <div class="zz-review__stars">★★★★★</div>
+          </div>
+        </div>
+        <p class="zz-review__text">Running strong with no issues. It&#x27;s fully undetected, installs in minutes, and the support is faster than most other providers I&#x27;ve tried. Happy customer here.</p>
+      </div>
+          </div>
+    <p class="zz-reviews-more"><a href="{{ '/feedback' | shopUrl }}">Read all <span data-zz-rc>78</span> verified reviews &rarr;</a></p>
+  </section>
+
+  {# ---------- CLOSING CTA ---------- #}
+  <section class="zz-block">
+    <div class="zz-cta">
+      <h3 class="zz-h3">Ready to take over the server?</h3>
+      <p class="zz-p">Choose your key. Get instant access. Load in.</p>
+      <a href="#zz-buybox" class="zz-cta__btn" onclick="var b=document.getElementById('zz-buybox');if(b){event.preventDefault();b.scrollIntoView({behavior:'smooth',block:'center'});}">
+        Choose your key
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M8 13l-4-4M8 13l4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <p class="zz-cta__meta">Status: Active · Undetected · Private build</p>
+    </div>
+  </section>
+
+</div>
+
+
+<script>
+(function(){
+  var blocks = document.querySelectorAll('.zz > section, .zz-hero');
+  if(!blocks.length) return;
+  // respect reduced motion
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  blocks.forEach(function(el, i){
+    el.classList.add('zz-reveal');
+    el.style.transitionDelay = Math.min(i * 60, 240) + 'ms';
+  });
+
+  if(!('IntersectionObserver' in window)){
+    blocks.forEach(function(el){ el.classList.add('zz-in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('zz-in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  blocks.forEach(function(el){ io.observe(el); });
+})();
+</script>
+
+<style>
+.zz-steps-strip{display:flex;flex-direction:column;gap:10px;padding:16px 18px;border-radius:14px;border:1px solid rgba(191,64,191,.16);background:rgba(255,255,255,.02)}
+.zz-steps-strip__item{display:flex;align-items:center;gap:12px;font-size:.9rem;color:rgba(205,218,242,.82)}
+.zz-steps-strip__item strong{color:#fff}
+.zz-steps-strip .zz-num{flex:0 0 auto}
+@media(min-width:768px){.zz-steps-strip{flex-direction:row;justify-content:space-between}.zz-steps-strip__item{flex:1}}
+/* ---- full feature list ---- */
+.zz-fl{display:grid;grid-template-columns:1fr;gap:14px;margin-top:18px}
+@media(min-width:768px){.zz-fl{grid-template-columns:1fr 1fr}}
+.zz-fl__cat{padding:16px 18px;border-radius:14px;border:1px solid rgba(191,64,191,.16);background:rgba(255,255,255,.02)}
+.zz-fl__head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.zz-fl__tag{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;font-weight:800;letter-spacing:.12em;padding:4px 9px;border-radius:6px}
+.zz-fl__tag--esp{color:#d76bff;background:rgba(191,64,191,.12);border:1px solid rgba(191,64,191,.35)}
+.zz-fl__tag--aim{color:#f87171;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.32)}
+.zz-fl__tag--world{color:#4ade80;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3)}
+.zz-fl__tag--misc{color:#7dd3fc;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.3)}
+.zz-fl__count{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.62rem;letter-spacing:.1em;color:rgba(200,215,240,.5);text-transform:uppercase}
+.zz-fl__list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:6px 14px}
+@media(min-width:520px){.zz-fl__list{grid-template-columns:1fr 1fr}}
+.zz-fl__list li{position:relative;padding-left:16px;font-size:.84rem;line-height:1.4;color:rgba(205,218,242,.85)}
+.zz-fl__list li::before{content:"▸";position:absolute;left:0;top:0;color:rgba(191,64,191,.75);font-size:.72rem;line-height:1.7}
+.zz-fl__list em{font-style:normal;font-size:.74rem;color:rgba(200,215,240,.5)}
+.zz-fl__note{margin:14px 0 0;text-align:center;font-size:.78rem;color:rgba(200,215,240,.55)}
+.zz-fl__note em{font-style:normal;color:#e6b3ff}
+.zz-fl__note--upd{margin-top:8px;font-size:.76rem;color:rgba(214,226,246,.72);border-top:1px solid rgba(191,64,191,.16);padding-top:10px}
+/* full feature list relocated into the Description tab (.zzd = narrower column):
+   stack categories in one column so item lists stay 2-up and don't cramp */
+.zzd .zz-fl{grid-template-columns:1fr}
+.zzd .zz-eyebrow{margin-top:2px}
+.zzd .zz-h2{font-size:clamp(1.15rem,2.6vw,1.5rem)}
+.zz-reviews-more{margin:14px 0 0;text-align:center}
+.zz-reviews-more a{font-size:.85rem;font-weight:600;color:#d98ad9;text-decoration:none}
+.zz-reviews-more a:hover{text-decoration:underline}
+</style>

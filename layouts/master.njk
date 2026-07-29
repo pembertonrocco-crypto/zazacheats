@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+
+    {% render_snippet "meta-tags.njk" %}
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link href="{{ 'pro.css' | assetUrl }}" rel="stylesheet"/>
+    <link href="{{ 'custom.css' | assetUrl }}" rel="stylesheet"/>
+
+    <style id="theme-styles">
+      :root {
+        --cl-accent: {{ global.properties.theme_color }};
+        --cl-accent-rgb: {{ global.properties.theme_color | hex_to_rgb }};
+        --cl-background-primary: {{ global.properties.primary_background_color }};
+        --cl-background-primary-rgb: {{ global.properties.primary_background_color | hex_to_rgb }};
+        --cl-background-secondary: {{ global.properties.secondary_background_color }};
+        --cl-background-secondary-rgb: {{ global.properties.secondary_background_color | hex_to_rgb }};
+        --cl-border: {{ global.properties.primary_border_color }};
+        --cl-border-rgb: {{ global.properties.primary_border_color | hex_to_rgb }};
+        --bs-font-sans-serif: '{{ (global.properties.font if global.properties.font else 'Poppins') }}', sans-serif;
+        --cl-snow: {{ (global.properties.snow_color if global.properties.snow_color else '#ffffff') | hex_to_rgb }};
+
+        --product-card-image-aspect-ratio: {{ (global.properties.product_card_image_aspect_ratio if global.properties.product_card_image_aspect_ratio else '16/9') }};
+        --product-page-image-aspect-ratio: {{ (global.properties.product_page_image_aspect_ratio if global.properties.product_page_image_aspect_ratio else '16/9') }};
+        --group-card-image-aspect-ratio: {{ (global.properties.group_card_image_aspect_ratio if global.properties.group_card_image_aspect_ratio else '16/9') }};
+        --blog-card-image-aspect-ratio: {{ (global.properties.blog_card_image_aspect_ratio if global.properties.blog_card_image_aspect_ratio else '16/9') }};
+        --product-image-fit: {{ (global.properties.product_image_fit if global.properties.product_image_fit else 'cover') }};
+        --group-image-fit: {{ (global.properties.group_image_fit if global.properties.group_image_fit else 'cover') }};
+      }
+
+      {% if global.properties.smooth_scroll !== false %}
+      html.lenis,
+      html.lenis body {
+        height: auto;
+      }
+
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      .lenis.lenis-smooth iframe {
+        pointer-events: none;
+      }
+      {% endif %}
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+    {# fontshare CSS comes from api. but the woff2 binaries come from cdn. —
+       preconnecting both means the hero's Clash Display swaps in a round-trip sooner #}
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family={{ (global.properties.font if global.properties.font else 'Poppins') | replace(" ", "+") }}:wght@300;400;500;600;700&display=swap" rel="stylesheet" id="theme-font">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&f[]=clash-display@600,700&display=swap" rel="stylesheet">
+    {# non-blocking: every above-the-fold icon (navbar, hero, buy buttons) is inline
+       SVG — Font Awesome only decorates labels further down, so it can load async
+       without any visible above-fold flash. ~33KB gzip off the critical path. #}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" media="print" onload="this.media='all'" />
+    <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" /></noscript>
+    {# non-blocking: only styles the currency dropdown, no need to hold first paint #}
+    <link href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css" rel="stylesheet" integrity="sha256-gS3HxgWFFFqEo0wQoALebu5XlWdYr3gqd4/Tk5wt8Ig=" crossorigin="anonymous" media="print" onload="this.media='all'" />
+
+    {# =====================================================================
+       GLOBAL SMOOTH LAYER — scroll reveals, refined interactions, polish.
+       FOUC-safe: content is only hidden when html.zz-motion is set (JS + no
+       reduced-motion), and a failsafe reveals everything if JS never inits.
+       ===================================================================== #}
+    <script>
+      (function(){
+        try{
+          var h = document.documentElement;
+          if(window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+          h.classList.add('zz-motion');
+          window.__zzInit = false;
+          // if the main reveal script never runs, reveal all content anyway
+          setTimeout(function(){ if(!window.__zzInit) h.classList.add('zz-revealed'); }, 3000);
+        }catch(e){ try{ document.documentElement.classList.add('zz-revealed'); }catch(_){} }
+      })();
+    </script>
+    <style id="zz-smooth">
+      /* ---------- page arrival ---------- */
+      @keyframes zzPageIn{from{opacity:0}to{opacity:1}}
+      html.zz-motion body{animation:zzPageIn .55s ease both}
+
+      /* ---------- scroll reveal (gated on html.zz-motion to avoid FOUC) ---------- */
+      html.zz-motion .components > *{
+        opacity:0;transform:translateY(34px) scale(.955);filter:blur(9px);
+        transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .95s cubic-bezier(.22,1,.36,1),filter .8s ease;
+        will-change:opacity,transform,filter;backface-visibility:hidden}
+      html.zz-motion .components > *.zz-in,
+      html.zz-motion.zz-revealed .components > *{opacity:1;transform:none;filter:none}
+      /* stagger is assigned per-batch by the reveal script (--zz-d), so it
+         works for any number of sections and any nesting depth */
+      html.zz-motion .components > *,
+      html.zz-motion [data-zz-reveal]{transition-delay:var(--zz-d,0s)}
+      /* opt-in reveal for nested elements inside sections */
+      html.zz-motion [data-zz-reveal]{
+        opacity:0;transform:translateY(26px);
+        transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .85s cubic-bezier(.22,1,.36,1)}
+      html.zz-motion [data-zz-reveal].zz-in,
+      html.zz-motion.zz-revealed [data-zz-reveal]{opacity:1;transform:none}
+
+      /* ---------- refined interaction transitions ---------- */
+      html.zz-motion a{transition:color .22s ease,opacity .22s ease,text-shadow .22s ease}
+      html.zz-motion .btn,html.zz-motion button{transition:background-color .25s ease,border-color .25s ease,color .2s ease,box-shadow .3s cubic-bezier(.22,1,.36,1),transform .22s cubic-bezier(.22,1,.36,1),filter .25s ease}
+      html.zz-motion .btn-primary:hover:not(:disabled){transform:translateY(-2px) scale(1.018);filter:brightness(1.06);box-shadow:0 18px 40px -14px rgba(var(--cl-accent-rgb,191,64,191),.85)}
+      html.zz-motion .btn-primary:active:not(:disabled){transform:translateY(0) scale(.985);transition-duration:.08s}
+      html.zz-motion .btn:not(.btn-primary):hover:not(:disabled){transform:translateY(-1px)}
+      html.zz-motion .card{transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s ease,border-color .35s ease}
+      html.zz-motion .card:hover{transform:translateY(-5px);box-shadow:0 28px 60px -28px rgba(0,0,0,.65)}
+      html.zz-motion img{transition:transform .45s cubic-bezier(.22,1,.36,1)}
+
+      /* ---------- inputs ---------- */
+      .form-control,.form-select,.choices__inner{transition:border-color .22s ease,box-shadow .3s cubic-bezier(.22,1,.36,1),background-color .22s ease,transform .22s ease!important}
+      .form-control:focus,.form-select:focus,.choices.is-focused .choices__inner{
+        box-shadow:0 0 0 3px rgba(var(--cl-accent-rgb,191,64,191),.22),0 8px 24px -12px rgba(var(--cl-accent-rgb,191,64,191),.45)!important;
+        border-color:rgba(var(--cl-accent-rgb,191,64,191),.6)!important}
+
+      /* ---------- accessible focus ring ---------- */
+      a:focus:not(:focus-visible),button:focus:not(:focus-visible){outline:none}
+      /* (::selection, :focus-visible, scrollbar and font-smoothing rules live
+         once in the LUXURY PASS block below — duplicates removed) */
+
+      /* Firefox scrollbar (webkit styling is in the luxury block) */
+      html{scrollbar-width:thin;scrollbar-color:rgba(var(--cl-accent-rgb,191,64,191),.6) transparent}
+
+      /* anchor targets (e.g. /#products) land clear of the fixed navbar pill */
+      html{scroll-padding-top:96px}
+      [id]{scroll-margin-top:96px}
+      /* headings wrap evenly instead of leaving orphan words */
+      h1,h2,h3{text-wrap:balance}
+      /* main is a programmatic focus target for the skip link — no ring needed */
+      main#zz-main{outline:none}
+      .choices__list--dropdown{transition:opacity .2s ease,transform .2s ease}
+
+      @media (prefers-reduced-motion:reduce){
+        html .components > *{opacity:1!important;transform:none!important;filter:none!important}
+        html.zz-motion body{animation:none!important}
+        *{scroll-behavior:auto!important}
+      }
+    
+      /* ================= LUXURY PASS ================= */
+      /* display type: headings step up to Clash Display */
+      h1,h2,.zz-h1,.zz-h2,.hero-title,.af-title,.fbq__title,.dl-title,
+      .rev-title,.zs-title,.af-h2,.zz-sc__title{
+        font-family:'Clash Display','Satoshi','Inter',system-ui,sans-serif!important;
+        letter-spacing:-.025em;font-weight:600}
+      h1 b,h1 strong,h2 b,h2 strong{font-weight:700}
+      body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+
+      /* ── z-index tiers (verified 2026-07; keep new fixed UI inside these bands) ──
+         waypoint rail / back-to-top .. 880–940
+         home & product buy bars ...... 990   (below navbar, above content)
+         navbar/header pill ........... 1000 !important
+         scratch-card popup overlay ... 1090  (above navbar & buy bars)
+         scroll progress hairline ..... 1200
+         (reserve 1300+ for toasts/one-offs)                                  */
+
+      /* premium selection + focus */
+      ::selection{background:rgba(191,64,191,.4);color:#fff}
+      :focus-visible{outline:2px solid rgba(191,64,191,.75);outline-offset:3px;border-radius:6px}
+
+      /* jewel scrollbar */
+      ::-webkit-scrollbar{width:10px;height:10px}
+      ::-webkit-scrollbar-track{background:#06070f}
+      ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#3a2a52,#241a38);
+        border-radius:99px;border:2px solid #06070f}
+      ::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#BF40BF,#7C3AED)}
+
+      /* gold ratings everywhere read as one metal */
+      .fbq__agg-stars,.zz-reviews-stat__stars,.pf-rating__stars,
+      .rev-score-stars-big,.scs-quote__stars{color:#f2c14e!important;
+        text-shadow:0 0 18px rgba(242,193,78,.35)}
+
+      /* primary CTA: shine sweep on hover */
+      html.zz-motion .btn-primary{position:relative;overflow:hidden;isolation:isolate}
+      html.zz-motion .btn-primary::after{content:"";position:absolute;inset:0;z-index:1;
+        background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);
+        transform:translateX(-130%);transition:transform .8s cubic-bezier(.22,1,.36,1);pointer-events:none}
+      html.zz-motion .btn-primary:hover::after{transform:translateX(130%)}
+
+      /* glass cards: hairline top highlight for depth */
+      html.zz-motion .card{position:relative}
+      html.zz-motion .card::before{content:"";position:absolute;inset:0 0 auto 0;height:1px;
+        background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);
+        border-radius:inherit;pointer-events:none}
+
+      /* smooth anchor travel */
+      html{scroll-behavior:smooth}
+      @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+    </style>
+
+    <style id="zz-status">
+      /* shared animated product status badge (snippets/status-badge.njk) — chamfered cyber chip */
+      .zzstatus{position:relative;display:inline-flex;isolation:isolate;--sc:34,197,94;--ch:6px;line-height:1}
+      .zzstatus--u{--sc:34,197,94}
+      .zzstatus--p{--sc:234,179,8}
+      .zzstatus--d{--sc:239,68,68}
+      .zzstatus__chip{position:relative;display:inline-flex;align-items:center;gap:6px;padding:5px 12px;line-height:1;
+        font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;font-weight:800;letter-spacing:.07em;
+        text-transform:uppercase;color:#fff;overflow:hidden;
+        background:rgba(var(--sc),.18);border:1px solid rgba(var(--sc),.6);
+        -webkit-clip-path:polygon(var(--ch) 0,calc(100% - var(--ch)) 0,100% var(--ch),100% calc(100% - var(--ch)),calc(100% - var(--ch)) 100%,var(--ch) 100%,0 calc(100% - var(--ch)),0 var(--ch));
+        clip-path:polygon(var(--ch) 0,calc(100% - var(--ch)) 0,100% var(--ch),100% calc(100% - var(--ch)),calc(100% - var(--ch)) 100%,var(--ch) 100%,0 calc(100% - var(--ch)),0 var(--ch));
+        animation:zzstatusGlow 2.6s ease-in-out infinite}
+      .zzstatus__icon{position:relative;z-index:2;flex:none}
+      .zzstatus__icon [stroke]{stroke:rgb(var(--sc))}
+      .zzstatus__icon path:first-child{fill:rgba(var(--sc),.2)}
+      .zzstatus__label{position:relative;z-index:2}
+      /* chamfered radar ring, lives outside the clipped chip so it can pulse outward */
+      .zzstatus__ring{position:absolute;inset:0;z-index:0;pointer-events:none;border:1px solid rgb(var(--sc));
+        -webkit-clip-path:polygon(var(--ch) 0,calc(100% - var(--ch)) 0,100% var(--ch),100% calc(100% - var(--ch)),calc(100% - var(--ch)) 100%,var(--ch) 100%,0 calc(100% - var(--ch)),0 var(--ch));
+        clip-path:polygon(var(--ch) 0,calc(100% - var(--ch)) 0,100% var(--ch),100% calc(100% - var(--ch)),calc(100% - var(--ch)) 100%,var(--ch) 100%,0 calc(100% - var(--ch)),0 var(--ch));
+        animation:zzstatusRing 2.4s cubic-bezier(.16,1,.3,1) infinite}
+      @keyframes zzstatusRing{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.24);opacity:0}}
+      .zzstatus__sweep{position:absolute;inset:0;z-index:1;pointer-events:none;
+        background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.4) 50%,transparent 65%);
+        transform:translateX(-130%);animation:zzstatusSweep 3.4s ease-in-out infinite}
+      @keyframes zzstatusSweep{0%,55%{transform:translateX(-130%)}82%,100%{transform:translateX(130%)}}
+      /* glow uses drop-shadow (not box-shadow) so it follows the chamfered outline */
+      @keyframes zzstatusGlow{0%,100%{filter:drop-shadow(0 0 5px rgba(var(--sc),.28))}
+        50%{filter:drop-shadow(0 0 13px rgba(var(--sc),.55))}}
+      @media (prefers-reduced-motion:reduce){
+        .zzstatus__chip,.zzstatus__ring,.zzstatus__sweep{animation:none}
+        .zzstatus__chip{filter:drop-shadow(0 0 6px rgba(var(--sc),.3))}
+        .zzstatus__sweep{display:none}
+      }
+    </style>
+
+    <style id="zz-neon">
+      /* slow ambient "neon-pulse" border ring (Aether-Chroma), brand violet.
+         Rendered as an inset ring child so it never fights a card's own
+         border or hover transition, and stays clip-safe inside the card. */
+      .zz-neon{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;
+        border:1px solid rgba(191,64,191,.32);
+        animation:zzNeonPulse 10s ease-in-out infinite}
+      @keyframes zzNeonPulse{
+        0%,100%{border-color:rgba(191,64,191,.26);box-shadow:0 0 6px rgba(191,64,191,.10),inset 0 0 9px rgba(191,64,191,.05)}
+        50%{border-color:rgba(191,64,191,.66);box-shadow:0 0 20px rgba(191,64,191,.34),inset 0 0 15px rgba(191,64,191,.12)}
+      }
+      @media (prefers-reduced-motion:reduce){
+        .zz-neon{animation:none;border-color:rgba(191,64,191,.34);box-shadow:none}
+      }
+    </style>
+  </head>
+  <body>
+    {# Global icon sprite — shared glyphs referenced via <use href="#…">.
+       Lives in the layout (rendered on every page) rather than a new snippet
+       because newly added .njk snippet files don't render on SellAuth. #}
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+      <symbol id="zz-ico-discord" viewBox="0 0 24 24"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.058a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.009c.12.099.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></symbol>
+    </svg>
+    {% if shop.background_image_url %}
+      <div class="bg-image" style="background-image: url({{ shop.background_image_url }});"></div>
+    {% endif %}
+
+    <div class="flex-wrapper" id="app" x-data="app">
+      <div>
+        {% if templateName != 'maintenance' %}
+          <header class="sticky-top">
+            {% render_snippet "bundle-bar.njk" %}
+            {% render_component "announcement" %}
+            {% render_component "navbar" %}
+          </header>
+        {% endif %}
+
+        <main id="zz-main" tabindex="-1">
+          {{ templateContent | safe }}
+        </main>
+      </div>
+
+      {% if templateName != 'maintenance' %}
+        {% render_component "footer" %}
+        {% render_snippet "customer-login-modal.njk" %}
+        {% render_snippet "scratch-card-popup.njk" %}
+      {% endif %}
+    </div>
+
+    <script>
+      window.shopId = {{ shop.id | json }};
+      window.apiBaseUrl = {{ '' | apiInternalUrl | json }};
+      window.currencyRatesUsd = {{ currency_rates_usd | json }};
+      window.currencySymbols = {{ currency_symbols | json }};
+      window.defaultCurrency = {{ currency | json }};
+      window.shopCustomer = {{ shop_customer | json }};
+    </script>
+
+    {% if isBuilder %}
+      {% render_snippet "script-builder.njk" %}
+    {% endif %}
+
+    {% if altcha or altcha_shop_customer %}
+      <script type="module">
+        import { Altcha } from 'https://cdn.jsdelivr.net/npm/altcha@1.2.0/+esm'
+      </script>
+    {% elif shop.recaptcha_key %}
+      <script src="https://www.google.com/recaptcha/api.js?render={{ shop.recaptcha_key }}"></script>
+    {% endif %}
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"
+      integrity="sha256-WCzAhd2P6gRJF9Hv3oOOd+hFJi/QJbv+Azn4CGB8gfY="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"
+      integrity="sha256-P+JgcxEeZtxwYS1+TAAuusKFM646SB8Oodk0TYu9zuo="
+      crossorigin="anonymous"
+    ></script>
+    {# jQuery removed 2026-07: audited every template/snippet/component and
+       script.js — zero usages. ~30KB gzip saved on every page load. #}
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="{{ 'script.js' | assetUrl }}"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"
+      integrity="sha256-aJ9ROXjRHWn00zeU9ylsmlhqLlXeebtEfN28P0dPnwc="
+      crossorigin="anonymous"
+    ></script>
+
+    {% if global.properties.smooth_scroll !== false %}
+    <script type="module">
+      import LocomotiveScroll from 'https://cdn.jsdelivr.net/npm/locomotive-scroll@5.0.1/+esm';
+
+      const scroll = new LocomotiveScroll({
+        lenisOptions: {
+          lerp: 0.1,
+          duration: 1.2,
+          smoothWheel: true,
+          wheelMultiplier: 1,
+          touchMultiplier: 2,
+          infinite: false,
+        }
+      });
+
+      window.locomotiveScroll = scroll;
+    </script>
+    {% endif %}
+
+    {% if global.properties.snow %}
+      <div id="snow"></div>
+      <script>snow({ count: 200 });</script>
+    {% endif %}
+
+    <script>
+      (function(){
+        var h = document.documentElement;
+        if(!h.classList.contains('zz-motion')) return;   // reduced-motion / disabled
+        window.__zzInit = true;
+        function run(){
+          // top-level sections plus any opted-in nested element ([data-zz-reveal])
+          var targets = Array.prototype.slice.call(document.querySelectorAll('.components > *, [data-zz-reveal]'));
+          if(!('IntersectionObserver' in window) || !targets.length){ h.classList.add('zz-revealed'); return; }
+          function reveal(el, i){
+            // stagger within the batch that intersected together; delay is
+            // cleared after the entrance so it never slows later transitions
+            el.style.setProperty('--zz-d', Math.min(i * 80, 400) + 'ms');
+            el.classList.add('zz-in');
+            setTimeout(function(){ el.style.removeProperty('--zz-d'); }, 1500 + i * 80);
+          }
+          var io = new IntersectionObserver(function(entries){
+            var batch = entries.filter(function(en){ return en.isIntersecting; });
+            // stagger in visual order, not observer-callback order
+            batch.sort(function(a, b){ return a.boundingClientRect.top - b.boundingClientRect.top; });
+            batch.forEach(function(en, i){ reveal(en.target, i); io.unobserve(en.target); });
+          }, { rootMargin:'0px 0px -6% 0px', threshold:0.03 });
+          targets.forEach(function(t){ io.observe(t); });
+          // reveal anything already in view on first paint (clean entrance, no
+          // wait), and re-check on full load in case images shifted layout —
+          // both batched in one rAF read pass, no layout thrash
+          function sweep(f){
+            requestAnimationFrame(function(){
+              var vh = window.innerHeight || h.clientHeight;
+              var seen = 0;
+              targets.forEach(function(t){
+                if(!t.classList.contains('zz-in') && t.getBoundingClientRect().top < vh * f){ reveal(t, seen++); }
+              });
+            });
+          }
+          sweep(0.98);
+          window.addEventListener('load', function(){ sweep(1); });
+        }
+        if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+        else run();
+      })();
+    </script>
+
+    {% render_snippet "polish.njk" %}
+    {% render_snippet "navigator.njk" %}
+    {% render_snippet "script-integrations.njk" %}
+    {# polish.njk refreshes the sitewide review total by loading /feedback in a
+       hidden same-origin iframe named zz-rc-sync. Cancel the deferred/async
+       third-party tags in that frame — they haven't executed yet at this point,
+       so removing them here stops a phantom pageview being logged. #}
+    <script>
+      try{
+        if(window.name==='zz-rc-sync'&&window.top!==window.self){
+          document.querySelectorAll('script[defer][src],script[async][src]').forEach(function(s){s.remove();});
+        }
+      }catch(e){}
+    </script>
+  </body>
+</html>

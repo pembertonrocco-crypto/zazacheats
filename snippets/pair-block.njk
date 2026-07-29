@@ -1,0 +1,195 @@
+{# =========================================================================
+   PAIR-BLOCK — The Cheat + The Account explainer.
+   Used on the homepage and on each product page as a cross-sell.
+   Fully static HTML, self-contained styles. Accent-driven via --cl-accent.
+   ========================================================================= #}
+<section class="zz-pair" aria-labelledby="zz-pair-title">
+  <div class="zz-pair__bg" aria-hidden="true"></div>
+  <div class="zz-pair__inner">
+
+    <p class="zz-pair__eyebrow"><span class="zz-pair__dot"></span>THE COMPLETE SETUP</p>
+    <h2 id="zz-pair-title" class="zz-pair__title">Two products. <span class="zz-pair__accent">One workflow.</span></h2>
+    <p class="zz-pair__sub">
+      Cheating in Rust takes two things: the cheat itself, and an account you don't mind losing.
+      We sell both — separately — so you can stock up on whichever runs out first.
+    </p>
+
+    <div class="zz-pair__grid">
+
+      <a class="zz-pair__card" href="/product/zaza-rust-private-cheat">
+        <div class="zz-pair__head">
+          <span class="zz-pair__num">01</span>
+          <span class="zz-pair__tag">THE TOOL</span>
+        </div>
+        <h3 class="zz-pair__name">Rust Private Cheat</h3>
+        <p class="zz-pair__desc">Private build with aim, ESP, configs, and active maintenance. One key, one user, updated alongside the game.</p>
+        <ul class="zz-pair__list">
+          <li>Actively maintained — status tracked live</li>
+          <li>Instant key delivery</li>
+          <li>Discord support &amp; updates</li>
+        </ul>
+        <div class="zz-pair__foot">
+          <span class="zz-pair__price">from $4.99</span>
+          <span class="zz-pair__cta">View product →</span>
+        </div>
+      </a>
+
+      <div class="zz-pair__plus" aria-hidden="true">+</div>
+
+      <a class="zz-pair__card zz-pair__card--alt" href="/product/rust-nfa">
+        <div class="zz-pair__head">
+          <span class="zz-pair__num">02</span>
+          <span class="zz-pair__tag zz-pair__tag--new">THE ACCOUNT · NEW</span>
+        </div>
+        <h3 class="zz-pair__name">Rust NFA</h3>
+        <p class="zz-pair__desc">A Non Full Access account with real playtime hours. Cheat on this instead of your main — when it dies, buy another.</p>
+        <ul class="zz-pair__list">
+          <li>Four tiers: 1–100h up to 1000+h</li>
+          <li>6-hour replacement warranty</li>
+          <li>Instant credential delivery</li>
+        </ul>
+        <div class="zz-pair__foot">
+          <span class="zz-pair__price">from $1.00</span>
+          <span class="zz-pair__cta">View product →</span>
+        </div>
+      </a>
+
+    </div>
+
+    <p class="zz-pair__note">
+      New here? Most customers grab one cheat key and pair it with whichever NFA tier suits their wipe.
+      Burn the account, keep the key, grab another NFA.
+    </p>
+  </div>
+</section>
+
+<style>
+  .zz-pair{
+    --p-accent: var(--cl-accent, #BF40BF);
+    --p-accent-rgb: var(--cl-accent-rgb, 191,64,191);
+    --p-ink: var(--cl-t-primary, 255,255,255);
+    --p-panel: rgba(255,255,255,.025);
+    --p-edge: rgba(255,255,255,.08);
+    position:relative;overflow:hidden;isolation:isolate;
+    padding:clamp(3.5rem,7vw,5.5rem) 1.25rem;
+  }
+  .zz-pair__bg{
+    position:absolute;inset:0;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(60% 50% at 15% 0%, rgba(var(--p-accent-rgb),.16), transparent 70%),
+      radial-gradient(50% 50% at 85% 100%, rgba(var(--p-accent-rgb),.12), transparent 70%);
+  }
+  .zz-pair__inner{max-width:1100px;margin:0 auto;text-align:center;}
+
+  .zz-pair__eyebrow{
+    display:inline-flex;align-items:center;gap:.55rem;margin:0 0 1rem;
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    font-size:.72rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--p-accent);
+    padding:.4rem .9rem;border-radius:999px;
+    background:rgba(var(--p-accent-rgb),.1);
+    border:1px solid rgba(var(--p-accent-rgb),.3);
+  }
+  .zz-pair__dot{width:7px;height:7px;border-radius:50%;background:var(--p-accent);box-shadow:0 0 8px 1px rgba(var(--p-accent-rgb),.7);}
+
+  .zz-pair__title{
+    margin:0 0 .9rem;line-height:1.05;letter-spacing:-.02em;
+    font-family:'Satoshi','Poppins',system-ui,sans-serif;font-weight:700;
+    font-size:clamp(2rem,4.5vw,3rem);
+    color:var(--p-ink);
+  }
+  .zz-pair__accent{color:var(--p-accent);}
+
+  .zz-pair__sub{
+    margin:0 auto 2.5rem;max-width:38rem;
+    font-size:clamp(1rem,2vw,1.1rem);line-height:1.6;
+    color:rgba(var(--p-ink),.66);
+  }
+
+  .zz-pair__grid{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    gap:1.25rem;align-items:stretch;
+    text-align:left;
+  }
+  .zz-pair__plus{
+    align-self:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:1.6rem;font-weight:500;color:rgba(var(--p-ink),.35);
+    padding:0 .25rem;
+  }
+
+  .zz-pair__card{
+    display:flex;flex-direction:column;gap:1rem;
+    padding:1.5rem;border-radius:14px;
+    background:var(--p-panel);border:1px solid var(--p-edge);
+    color:inherit;text-decoration:none;
+    transition:transform .35s cubic-bezier(.16,1,.3,1), border-color .25s ease, background .25s ease;
+  }
+  .zz-pair__card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(var(--p-accent-rgb),.45);
+    background:rgba(var(--p-accent-rgb),.04);
+  }
+
+  .zz-pair__head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;}
+  .zz-pair__num{
+    font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:600;
+    color:var(--p-accent);
+    text-shadow:0 0 18px rgba(var(--p-accent-rgb),.5);
+  }
+  .zz-pair__tag{
+    font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.16em;
+    color:rgba(var(--p-ink),.55);padding:.3rem .55rem;border-radius:4px;
+    background:rgba(var(--p-ink),.04);border:1px solid var(--p-edge);
+  }
+  .zz-pair__tag--new{
+    color:var(--p-accent);background:rgba(var(--p-accent-rgb),.1);
+    border-color:rgba(var(--p-accent-rgb),.35);
+  }
+
+  .zz-pair__name{
+    margin:.2rem 0 0;font-family:'Satoshi','Poppins',sans-serif;
+    font-size:1.45rem;font-weight:700;letter-spacing:-.01em;color:var(--p-ink);
+  }
+  .zz-pair__desc{
+    margin:0;font-size:.95rem;line-height:1.6;color:rgba(var(--p-ink),.62);
+  }
+  .zz-pair__list{
+    list-style:none;padding:0;margin:0;
+    display:flex;flex-direction:column;gap:.5rem;
+    font-size:.88rem;color:rgba(var(--p-ink),.78);
+  }
+  .zz-pair__list li{
+    position:relative;padding-left:1.4rem;
+  }
+  .zz-pair__list li::before{
+    content:"";position:absolute;left:0;top:.45rem;width:14px;height:2px;
+    background:var(--p-accent);border-radius:2px;
+  }
+
+  .zz-pair__foot{
+    display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+    margin-top:auto;padding-top:.85rem;
+    border-top:1px dashed var(--p-edge);
+  }
+  .zz-pair__price{
+    font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:600;color:var(--p-ink);
+  }
+  .zz-pair__cta{
+    font-family:'JetBrains Mono',monospace;font-size:.78rem;font-weight:600;letter-spacing:.06em;
+    color:var(--p-accent);
+  }
+  .zz-pair__card:hover .zz-pair__cta{text-decoration:underline;}
+
+  .zz-pair__note{
+    margin:2rem auto 0;max-width:42rem;
+    font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.65;
+    color:rgba(var(--p-ink),.45);
+  }
+
+  @media (max-width:780px){
+    .zz-pair__grid{grid-template-columns:1fr;}
+    .zz-pair__plus{transform:rotate(0);font-size:1.3rem;padding:.25rem 0;}
+  }
+</style>

@@ -1,0 +1,239 @@
+{# =========================================================================
+   CHEAT MENU — decorative ImGui-style menu panel for the homepage.
+   Pure static HTML/CSS/JS (SellAuth rule: no {% set %} object arrays, no
+   synthetic loops). The toggles/tabs/sliders are clickable for fun but
+   purely cosmetic — nothing here claims live data.
+   ========================================================================= #}
+<section class="zzm" aria-label="Feature menu preview">
+  <div class="zzm__inner">
+
+    <div class="zzm__copy">
+      <p class="zzm__eyebrow">// THE MENU</p>
+      <h2 class="zzm__title">Every setting, <span class="zzm__grad">yours to tune</span></h2>
+      <p class="zzm__sub">A preview of the in-game menu layout — clean tabs, per-feature toggles, and sliders for anything with a range. Click around; the real thing works the same way.</p>
+      <a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="zzm__cta">
+        See the full feature list
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <div class="zzm__panel" id="zzm-panel">
+      <div class="zzm__titlebar">
+        <span class="zzm__brand"><span class="zzm__brand-dot"></span>ZAZA <span class="zzm__brand-dim">— rust private</span></span>
+        <span class="zzm__winbtns" aria-hidden="true"><span></span><span></span><span></span></span>
+      </div>
+
+      <div class="zzm__tabs" role="tablist" aria-label="Menu tabs">
+        <button type="button" class="zzm__tab zzm__tab--active" data-zzm-tab="aim">AIM</button>
+        <button type="button" class="zzm__tab" data-zzm-tab="visuals">VISUALS</button>
+        <button type="button" class="zzm__tab" data-zzm-tab="misc">MISC</button>
+      </div>
+
+      <div class="zzm__body">
+
+        <div class="zzm__page zzm__page--active" data-zzm-page="aim">
+          <div class="zzm__row">
+            <span class="zzm__label">Aim assist</span>
+            <button type="button" class="zzm__toggle zzm__toggle--on" aria-pressed="true"><span class="zzm__knob"></span></button>
+          </div>
+          <div class="zzm__row zzm__row--slider">
+            <span class="zzm__label">FOV <span class="zzm__val" data-zzm-val>65</span></span>
+            <div class="zzm__slider" data-zzm-slider="65"><div class="zzm__slider-fill"></div><div class="zzm__slider-thumb"></div></div>
+          </div>
+          <div class="zzm__row zzm__row--slider">
+            <span class="zzm__label">Smoothing <span class="zzm__val" data-zzm-val>42</span></span>
+            <div class="zzm__slider" data-zzm-slider="42"><div class="zzm__slider-fill"></div><div class="zzm__slider-thumb"></div></div>
+          </div>
+          <div class="zzm__row">
+            <span class="zzm__label">Target bone</span>
+            <span class="zzm__select">Head <svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+          <div class="zzm__row">
+            <span class="zzm__label">Visibility check</span>
+            <button type="button" class="zzm__toggle zzm__toggle--on" aria-pressed="true"><span class="zzm__knob"></span></button>
+          </div>
+        </div>
+
+        <div class="zzm__page" data-zzm-page="visuals">
+          <div class="zzm__row">
+            <span class="zzm__label">Player ESP</span>
+            <button type="button" class="zzm__toggle zzm__toggle--on" aria-pressed="true"><span class="zzm__knob"></span></button>
+          </div>
+          <div class="zzm__row">
+            <span class="zzm__label">Skeleton</span>
+            <button type="button" class="zzm__toggle zzm__toggle--on" aria-pressed="true"><span class="zzm__knob"></span></button>
+          </div>
+          <div class="zzm__row">
+            <span class="zzm__label">Loot / crates</span>
+            <button type="button" class="zzm__toggle" aria-pressed="false"><span class="zzm__knob"></span></button>
+          </div>
+          <div class="zzm__row zzm__row--slider">
+            <span class="zzm__label">Render distance <span class="zzm__val" data-zzm-val>78</span></span>
+            <div class="zzm__slider" data-zzm-slider="78"><div class="zzm__slider-fill"></div><div class="zzm__slider-thumb"></div></div>
+          </div>
+          <div class="zzm__row">
+            <span class="zzm__label">Box style</span>
+            <span class="zzm__select">Corners <svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+
+        <div class="zzm__page" data-zzm-page="misc">
+          <div class="zzm__row">
+            <span class="zzm__label">No recoil</span>
+            <button type="button" class="zzm__toggle zzm__toggle--on" aria-pressed="true"><span class="zzm__knob"></span></button>
+          </div>
+          <div class="zzm__row">
+            <span class="zzm__label">Instant eoka</span>
+            <button type="button" class="zzm__toggle" aria-pressed="false"><span class="zzm__knob"></span></button>
+          </div>
+          <div class="zzm__row">
+            <span class="zzm__label">Config profiles</span>
+            <span class="zzm__select">legit-1 <svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+          <div class="zzm__row">
+            <span class="zzm__label">Stream-safe mode</span>
+            <button type="button" class="zzm__toggle" aria-pressed="false"><span class="zzm__knob"></span></button>
+          </div>
+          <div class="zzm__row zzm__row--slider">
+            <span class="zzm__label">Menu opacity <span class="zzm__val" data-zzm-val>92</span></span>
+            <div class="zzm__slider" data-zzm-slider="92"><div class="zzm__slider-fill"></div><div class="zzm__slider-thumb"></div></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="zzm__footer">
+        <span class="zzm__foot-seg">build: private</span>
+        <span class="zzm__foot-seg zzm__foot-seg--right">INSERT to toggle</span>
+      </div>
+
+      <span class="zzm__corner zzm__corner--tl" aria-hidden="true"></span>
+      <span class="zzm__corner zzm__corner--tr" aria-hidden="true"></span>
+      <span class="zzm__corner zzm__corner--bl" aria-hidden="true"></span>
+      <span class="zzm__corner zzm__corner--br" aria-hidden="true"></span>
+    </div>
+
+  </div>
+</section>
+
+<style>
+.zzm{position:relative;padding:90px 24px;font-family:'Satoshi','Inter',system-ui,sans-serif;overflow:hidden}
+.zzm__inner{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:center}
+.zzm__eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;letter-spacing:.16em;color:#d98ad9;margin:0 0 12px}
+.zzm__title{margin:0 0 14px;font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:800;color:#fff;line-height:1.12}
+.zzm__grad{background:linear-gradient(90deg,#BF40BF,#8b5cf6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.zzm__sub{margin:0 0 22px;font-size:.95rem;line-height:1.65;color:rgba(205,218,242,.68);max-width:42ch}
+.zzm__cta{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:.9rem;color:#e9d5ff;text-decoration:none;
+  padding:.7rem 1.15rem;border-radius:10px;border:1px solid rgba(191,64,191,.35);transition:border-color .2s,background .2s}
+.zzm__cta:hover{border-color:rgba(191,64,191,.7);background:rgba(191,64,191,.08)}
+
+/* ---- the panel ---- */
+.zzm__panel{position:relative;border-radius:12px;border:1px solid rgba(191,64,191,.3);
+  background:linear-gradient(180deg,rgba(19,13,32,.97),rgba(10,12,26,.97));
+  box-shadow:0 40px 90px -30px rgba(0,0,0,.85),0 0 70px -25px rgba(191,64,191,.4);
+  font-family:'JetBrains Mono',ui-monospace,monospace;user-select:none}
+.zzm__titlebar{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;
+  border-bottom:1px solid rgba(191,64,191,.18)}
+.zzm__brand{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:800;letter-spacing:.12em;color:#fff}
+.zzm__brand-dot{width:7px;height:7px;border-radius:50%;background:#BF40BF;box-shadow:0 0 10px rgba(191,64,191,.9)}
+.zzm__brand-dim{color:rgba(200,215,240,.4);font-weight:500;letter-spacing:.06em;text-transform:lowercase}
+.zzm__winbtns{display:flex;gap:6px}
+.zzm__winbtns span{width:9px;height:9px;border-radius:50%;background:rgba(200,215,240,.14)}
+.zzm__winbtns span:first-child{background:rgba(239,68,68,.5)}
+
+.zzm__tabs{display:flex;gap:4px;padding:10px 12px 0}
+.zzm__tab{flex:1;padding:9px 0;border:none;border-radius:8px 8px 0 0;background:transparent;cursor:pointer;
+  font-family:inherit;font-size:.66rem;font-weight:800;letter-spacing:.18em;color:rgba(200,215,240,.45);
+  border-bottom:2px solid transparent;transition:color .2s,border-color .2s,background .2s}
+.zzm__tab:hover{color:rgba(220,230,250,.8)}
+.zzm__tab--active{color:#e9d5ff;border-bottom-color:#BF40BF;background:rgba(191,64,191,.07)}
+
+.zzm__body{padding:16px 16px 8px;min-height:248px}
+.zzm__page{display:none;flex-direction:column;gap:4px}
+.zzm__page--active{display:flex}
+.zzm__row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:9px 10px;border-radius:8px;
+  transition:background .15s}
+.zzm__row:hover{background:rgba(191,64,191,.06)}
+.zzm__label{font-size:.72rem;color:rgba(215,225,245,.82);letter-spacing:.03em}
+.zzm__val{color:#d98ad9;margin-left:6px}
+
+.zzm__toggle{position:relative;width:36px;height:19px;border-radius:999px;border:1px solid rgba(200,215,240,.2);
+  background:rgba(255,255,255,.05);cursor:pointer;padding:0;transition:background .2s,border-color .2s}
+.zzm__toggle--on{background:rgba(191,64,191,.55);border-color:rgba(191,64,191,.8)}
+.zzm__knob{position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#cbd5f0;
+  transition:transform .2s cubic-bezier(.16,1,.3,1),background .2s}
+.zzm__toggle--on .zzm__knob{transform:translateX(17px);background:#fff}
+
+.zzm__row--slider{flex-direction:column;align-items:stretch;gap:8px}
+.zzm__slider{position:relative;height:5px;border-radius:999px;background:rgba(255,255,255,.08);cursor:pointer}
+.zzm__slider-fill{position:absolute;left:0;top:0;bottom:0;border-radius:999px;
+  background:linear-gradient(90deg,#BF40BF,#8b5cf6)}
+.zzm__slider-thumb{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background:#fff;
+  transform:translate(-50%,-50%);box-shadow:0 0 10px rgba(191,64,191,.8)}
+
+.zzm__select{display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:7px;
+  border:1px solid rgba(200,215,240,.16);font-size:.68rem;color:rgba(220,230,250,.85)}
+
+.zzm__footer{display:flex;justify-content:space-between;padding:10px 14px;border-top:1px solid rgba(191,64,191,.14);
+  font-size:.58rem;letter-spacing:.1em;color:rgba(200,215,240,.35)}
+
+.zzm__corner{position:absolute;width:14px;height:14px;border-color:rgba(191,64,191,.65);border-style:solid;border-width:0}
+.zzm__corner--tl{top:-5px;left:-5px;border-top-width:2px;border-left-width:2px}
+.zzm__corner--tr{top:-5px;right:-5px;border-top-width:2px;border-right-width:2px}
+.zzm__corner--bl{bottom:-5px;left:-5px;border-bottom-width:2px;border-left-width:2px}
+.zzm__corner--br{bottom:-5px;right:-5px;border-bottom-width:2px;border-right-width:2px}
+
+@media (max-width: 900px){
+  .zzm__inner{grid-template-columns:1fr;gap:36px}
+  .zzm{padding:64px 20px}
+}
+</style>
+
+<script>
+(function(){
+  var panel = document.getElementById('zzm-panel');
+  if(!panel) return;
+
+  /* tabs */
+  panel.querySelectorAll('[data-zzm-tab]').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      panel.querySelectorAll('[data-zzm-tab]').forEach(function(t){ t.classList.remove('zzm__tab--active'); });
+      panel.querySelectorAll('[data-zzm-page]').forEach(function(p){ p.classList.remove('zzm__page--active'); });
+      tab.classList.add('zzm__tab--active');
+      var page = panel.querySelector('[data-zzm-page="' + tab.getAttribute('data-zzm-tab') + '"]');
+      if(page) page.classList.add('zzm__page--active');
+    });
+  });
+
+  /* toggles */
+  panel.querySelectorAll('.zzm__toggle').forEach(function(t){
+    t.addEventListener('click', function(){
+      var on = t.classList.toggle('zzm__toggle--on');
+      t.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  });
+
+  /* sliders — cosmetic but draggable */
+  panel.querySelectorAll('[data-zzm-slider]').forEach(function(s){
+    var fill = s.querySelector('.zzm__slider-fill');
+    var thumb = s.querySelector('.zzm__slider-thumb');
+    var val = s.closest('.zzm__row') ? s.closest('.zzm__row').querySelector('[data-zzm-val]') : null;
+    function set(pct){
+      pct = Math.max(0, Math.min(100, pct));
+      fill.style.width = pct + '%';
+      thumb.style.left = pct + '%';
+      if(val) val.textContent = Math.round(pct);
+    }
+    set(parseFloat(s.getAttribute('data-zzm-slider')) || 50);
+    function fromEvent(e){
+      var r = s.getBoundingClientRect();
+      var x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+      set(x / r.width * 100);
+    }
+    var dragging = false;
+    s.addEventListener('pointerdown', function(e){ dragging = true; s.setPointerCapture(e.pointerId); fromEvent(e); });
+    s.addEventListener('pointermove', function(e){ if(dragging) fromEvent(e); });
+    s.addEventListener('pointerup', function(){ dragging = false; });
+  });
+})();
+</script>

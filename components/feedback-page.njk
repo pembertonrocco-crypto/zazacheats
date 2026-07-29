@@ -1101,6 +1101,10 @@
 .rc-name{display:block;font-weight:700;color:#fff;font-size:.9rem;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .rc-vfy{display:inline-flex;align-items:center;gap:4px;font-size:.66rem;font-weight:600;color:#22c55e;margin-top:3px;}
 .rc-vfy--auto{color:rgba(134,239,172,.85);}
+/* Was inline-flex, so it sized to its text and hung ~55px out of .rc-who
+   (which is flex:1 and can get narrow next to the stars). Block-level flex
+   cannot exceed its parent's width, and the label wraps instead. */
+.rc-vfy{display:flex;min-width:0;flex-wrap:wrap;overflow-wrap:anywhere;}
 .rc-stars{display:flex;gap:2px;flex-shrink:0;}
 .st{font-size:.95rem;line-height:1;}
 .st.on{color:var(--gold);filter:drop-shadow(0 0 4px rgba(245,185,66,.4));}

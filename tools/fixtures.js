@@ -17,9 +17,18 @@ const product = {
   stock: 42,
   image_url: 'https://cdn.example/product.jpg',
   images: [{ url: 'https://cdn.example/product.jpg' }],
+  /* The real tier names and prices from the live store. The names matter:
+     product-form.njk switches its merchandising badges ("Most Popular",
+     "Best Value") and its per-day / savings chips on exact variant names, so
+     placeholder names like "30 Days" render a far narrower row than reality
+     and hide layout bugs. Prices are the live ones, which is what makes the
+     savings chips ("Save 67% vs daily", "Pays for itself in 9 weeks")
+     actually appear. */
   variants: [
-    { id: 11, name: '1 Day', price: 12.99, stock: 25, currency: 'USD' },
-    { id: 12, name: '30 Days', price: 74.99, stock: 17, currency: 'USD' },
+    { id: 11, name: '1 Day', price: 4.99, stock: 25, currency: 'USD' },
+    { id: 12, name: '1 Week Key', price: 22.99, stock: 17, currency: 'USD' },
+    { id: 13, name: '1 Month Key', price: 49.99, stock: 12, currency: 'USD' },
+    { id: 14, name: 'Lifetime Key', price: 199.99, stock: 4, currency: 'USD' },
   ],
   groups: [],
 };

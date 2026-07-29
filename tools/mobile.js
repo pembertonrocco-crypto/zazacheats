@@ -15,6 +15,7 @@
  */
 
 const fs = require('fs');
+const http = require('http');
 const path = require('path');
 
 process.env.ZZ_LOCAL_ASSETS = '1';
@@ -40,6 +41,14 @@ const PAGES = [
   ['status', ['status-page']],
   ['feedback', ['feedback-page']],
   ['cart', ['cart-page']],
+];
+
+/* CDN URL -> local file, so the page runs with its real JS and CSS. */
+const vendor = (p) => path.join(ROOT, 'node_modules', p);
+const LOCAL_VENDOR = [
+  [/bootstrap@[\d.]+\/dist\/css\/bootstrap\.min\.css/, vendor('bootstrap/dist/css/bootstrap.min.css'), 'text/css'],
+  [/bootstrap@[\d.]+\/dist\/js\/bootstrap\.bundle\.min\.js/, vendor('bootstrap/dist/js/bootstrap.bundle.min.js'), 'text/javascript'],
+  [/alpinejs@[\d.]+\/dist\/cdn\.min\.js/, vendor('alpinejs/dist/cdn.min.js'), 'text/javascript'],
 ];
 
 const MIN_TAP = 44; // WCAG 2.2 AA target size (minimum)
@@ -74,24 +83,52 @@ const MEASURE = () => {
     return cs.display !== 'none' && cs.visibility !== 'hidden' && cs.opacity !== '0';
   };
 
+  /* Horizontal overflow.
+     "Wider than the viewport" is the wrong test on this site — marquees and
+     review carousels are deliberately thousands of pixels wide inside a
+     clipping parent, and decorative orbs are positioned outside their box on
+     purpose. The bug is an element spilling out of a parent that is NOT a
+     scroller or a clipper, because that parent expected it to fit. That is
+     the difference between a marquee (fine) and the buy box's price column
+     being sliced off (not fine). */
   for (const el of document.querySelectorAll('body *')) {
     const r = el.getBoundingClientRect();
     if (!visible(el, r)) continue;
 
-    // Horizontal overflow: something sticking out past the viewport.
-    // Fixed/sticky decorative layers are positioned deliberately and do not
-    // create a scrollbar, so they are not overflow.
     const cs = getComputedStyle(el);
-    if (r.right > vw + 1 && cs.position !== 'fixed' && cs.position !== 'sticky') {
-      const scrollParent = el.closest('[style*="overflow"],.overflow-auto');
-      if (!scrollParent) {
-        out.overflow.push({
-          tag: el.tagName.toLowerCase(),
-          cls: (el.className || '').toString().slice(0, 60),
-          right: Math.round(r.right),
-          width: Math.round(r.width),
-        });
-      }
+    if (cs.position === 'fixed' || cs.position === 'sticky' || cs.position === 'absolute') continue;
+    if (el.closest('[aria-hidden="true"]')) continue; // decorative layers
+
+    // display:contents elements have no box of their own, so their rect is
+    // meaningless to compare against — the real containing block is further
+    // up. (product-page dissolves .pp-col--media this way on mobile.)
+    let parent = el.parentElement;
+    while (parent && getComputedStyle(parent).display === 'contents') {
+      parent = parent.parentElement;
+    }
+    if (!parent || parent === document.body) continue;
+    const pcs = getComputedStyle(parent);
+    // A parent that scrolls or clips on purpose is handling this itself.
+    if (pcs.overflowX !== 'visible') continue;
+
+    // Bootstrap's .row uses negative horizontal margins by design, with the
+    // parent's gutter padding compensating — it is always "wider" than its
+    // parent by exactly the gutter and is not overflow.
+    if (/\brow\b/.test(el.className || '')) continue;
+
+    const pr = parent.getBoundingClientRect();
+    const spill = r.right - pr.right;
+    // >2px: sub-pixel rounding and any residual transform jitter are not bugs.
+    if (spill > 2) {
+      out.overflow.push({
+        tag: el.tagName.toLowerCase(),
+        cls: (el.className || '').toString().slice(0, 60),
+        right: Math.round(r.right),
+        width: Math.round(r.width),
+        spill: Math.round(spill),
+        parent: (parent.className || parent.tagName || '').toString().slice(0, 40),
+        offscreen: r.right > vw + 1,
+      });
     }
   }
 
@@ -173,8 +210,33 @@ const MEASURE = () => {
   return out;
 };
 
+/* Serve the repo over HTTP. file:// blocks the crossorigin="anonymous"
+   script tags, which meant script.js never loaded, Alpine.data('app') was
+   never registered, and every x-cloak'd element stayed display:none — so the
+   product buy box measured zero and was silently never checked. */
+function serve() {
+  const MIME = {
+    '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript',
+    '.jpg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp',
+    '.avif': 'image/avif', '.svg': 'image/svg+xml', '.json': 'application/json',
+  };
+  const server = http.createServer((req, res) => {
+    const rel = decodeURIComponent(req.url.split('?')[0]);
+    const file = path.join(ROOT, path.normalize(rel).replace(/^(\.\.[/\\])+/, ''));
+    if (!file.startsWith(ROOT) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
+      res.writeHead(404);
+      return res.end('not found');
+    }
+    res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream' });
+    fs.createReadStream(file).pipe(res);
+  });
+  return new Promise((r) => server.listen(0, '127.0.0.1', () => r(server)));
+}
+
 (async () => {
   renderAll();
+  const server = await serve();
+  const base = `http://127.0.0.1:${server.address().port}`;
   // Use the Chromium already present in the image rather than letting
   // Playwright download a build matching its own version.
   const CHROME = process.env.ZZ_CHROME || '/opt/pw-browsers/chromium';
@@ -194,28 +256,56 @@ const MEASURE = () => {
       isMobile: true,
       hasTouch: true,
     });
-    // Offline + deterministic: no third-party CSS/JS/fonts.
-    await ctx.route('**://**', (route) =>
-      route.request().url().startsWith('file://') ? route.continue() : route.abort()
-    );
+    /* Offline + deterministic, but NOT stripped-down: the CDN copies of
+       Bootstrap and Alpine are served from node_modules instead of being
+       blocked. This matters enormously — with Alpine missing, every
+       x-cloak'd element stays display:none, which meant the entire product
+       buy box (variant rows, quantity, buy button) measured zero and the
+       most important component on the site was never checked at all.
+       Everything else third-party (fonts, analytics, YouTube) is still
+       blocked so runs stay hermetic. */
+    await ctx.route('**://**', (route) => {
+      const url = route.request().url();
+      if (url.startsWith(base)) return route.continue();
+      const local = LOCAL_VENDOR.find(([re]) => re.test(url));
+      if (local) {
+        return route.fulfill({
+          status: 200,
+          contentType: local[2],
+          body: fs.readFileSync(local[1]),
+        });
+      }
+      return route.abort();
+    });
 
     for (const [name] of PAGES) {
       const page = await ctx.newPage();
       const errs = [];
       page.on('pageerror', (e) => errs.push(e.message));
-      await page.goto('file://' + path.join(OUT, `${name}.html`), { waitUntil: 'load' });
-      await page.waitForTimeout(250);
+      await page.goto(`${base}/.render/${name}.html`, { waitUntil: 'load' });
+      // Alpine boots on DOMContentLoaded and removes x-cloak; the theme's
+      // entrance animations (zs-rise et al) run transforms for up to ~1s.
+      // Measure after both have settled, or a mid-flight transform shows up
+      // as a phantom few-pixel overflow that changes between runs.
+      await page.waitForTimeout(1400);
 
       const r = await page.evaluate(MEASURE);
       checked++;
 
       const key = (o) => `${o.tag || ''}.${o.cls || o.id || ''}`.replace(/\s+/g, '.');
-      if (r.scrollWidth > vp.width + 1) {
-        for (const o of r.overflow) {
-          const k = key(o);
-          if (!findings.overflow.has(k)) findings.overflow.set(k, { ...o, where: [] });
-          findings.overflow.get(k).where.push(`${name}@${vp.width}`);
+      /* Report element overflow whether or not the document scrolls. This was
+         previously gated on document.scrollWidth exceeding the viewport,
+         which hid the worst case entirely: when an ancestor clips with
+         overflow:hidden the page does NOT scroll, so the gate discarded every
+         finding while the content was simply cut off — unreachable rather
+         than merely awkward. That is how the product page shipped with its
+         price column sliced off on every phone. */
+      for (const o of r.overflow) {
+        const k = key(o);
+        if (!findings.overflow.has(k)) {
+          findings.overflow.set(k, { ...o, where: [], clipped: r.scrollWidth <= vp.width + 1 });
         }
+        findings.overflow.get(k).where.push(`${name}@${vp.width}`);
       }
       for (const o of r.taps) {
         const k = key(o) + `|${o.w}x${o.h}`;
@@ -233,6 +323,7 @@ const MEASURE = () => {
     await ctx.close();
   }
   await browser.close();
+  server.close();
 
   const show = (title, map, fmt) => {
     if (!map.size) return console.log(`\n✓ ${title}: none`);
@@ -240,7 +331,10 @@ const MEASURE = () => {
     for (const v of map.values()) console.log('  ' + fmt(v) + `  [${v.where.slice(0, 3).join(', ')}]`);
   };
 
-  show('Horizontal overflow', findings.overflow, (o) => `<${o.tag}> .${o.cls} extends to ${o.right}px (w=${o.width})`);
+  show('Horizontal overflow', findings.overflow,
+       (o) => `<${o.tag}> .${o.cls} spills ${o.spill}px out of .${o.parent}` +
+              (o.offscreen ? ` — right edge ${o.right}px, past the ${o.offscreen ? 'viewport' : ''}` : '') +
+              (o.clipped ? ' [CLIPPED, page does not scroll]' : ''));
   show(`Tap targets under ${MIN_TAP}px`, findings.taps, (o) => `<${o.tag}> ${o.w}x${o.h} "${o.text}" .${o.cls}`);
   show(`Inputs under ${MIN_INPUT_FONT}px (iOS zooms on focus)`, findings.inputs, (o) => `${o.fontSize}px  #${o.id} .${o.cls}`);
 

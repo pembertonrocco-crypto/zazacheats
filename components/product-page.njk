@@ -1023,6 +1023,26 @@
       display: flex;
       flex-direction: column;
       gap: 32px;
+      /* The desktop rule sets align-items:start, which on a grid controls
+         vertical alignment. Switching to flex-direction:column turns the
+         cross axis horizontal, so that same start meant "shrink to fit
+         content" instead of "fill the width" — every column sized itself to
+         its widest unbreakable content (the price + savings chips) and hung
+         106px past the screen, clipped, with the prices sliced off. This is
+         the fix for that; do not drop it. */
+      align-items: stretch;
+    }
+
+    /* Flex/grid children default to min-width:auto, i.e. they refuse to
+       shrink below their content's intrinsic minimum. The buy box is full of
+       white-space:nowrap prices and chips, so without this the row pushes
+       itself wider than the screen again. */
+    .pp-col--form,
+    .pp-col--media,
+    .pp-tabs,
+    .pp-image-wrap {
+      min-width: 0;
+      max-width: 100%;
     }
 
     /* Dissolve the media column so its children can be reordered

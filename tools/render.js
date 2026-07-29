@@ -71,7 +71,7 @@ const hexToRgb = (hex) => {
    applied — that is what tools/mobile.js measures against. .render/ sits one
    level below the repo root, hence the ../. */
 const LOCAL_ASSETS = process.env.ZZ_LOCAL_ASSETS === '1';
-env.addFilter('assetUrl', (f) => (LOCAL_ASSETS ? `../assets/${f}` : `https://cdn.example/assets/${f}`));
+env.addFilter('assetUrl', (f) => (LOCAL_ASSETS ? `/assets/${f}` : `https://cdn.example/assets/${f}`));
 env.addFilter('shopUrl', (p) => `https://zazacheats.net${p}`);
 env.addFilter('apiInternalUrl', (p) => `https://api.example${p || ''}`);
 env.addFilter('hex_to_rgb', hexToRgb);

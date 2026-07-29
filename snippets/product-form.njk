@@ -114,17 +114,17 @@
              degrades to nothing if a tier is renamed, missing, or the
              saving is too small to be worth claiming. #}
           {% if variant.name == '1 Week Key' or variant.name == '1 Week' or variant.name == '7 Day Key' %}
-          <span class="pf-variant__perday" x-text="'≈ ' + appCurrency.format({{ variant.price }} / 7, '{{ product.currency }}') + ' / day'"></span>
+          <span class="pf-variant__perday" x-text="'≈ ' + appCurrency.format({{ variant.price }} / 7, '{{ product.currency }}') + ' / day'">≈ {{ formatPrice(variant.price / 7, product.currency) }} / day</span>
           {% if zzDayP %}{% set zzPct = (100 - ((variant.price / 7) / zzDayP) * 100) | round %}{% if zzPct >= 10 and zzPct < 95 %}
           <span class="pf-variant__save">Save {{ zzPct }}% vs daily</span>
           {% endif %}{% endif %}
           {% elif variant.name == '1 Month Key' or variant.name == '1 Month' or variant.name == '30 Day Key' %}
-          <span class="pf-variant__perday" x-text="'≈ ' + appCurrency.format({{ variant.price }} / 30, '{{ product.currency }}') + ' / day'"></span>
+          <span class="pf-variant__perday" x-text="'≈ ' + appCurrency.format({{ variant.price }} / 30, '{{ product.currency }}') + ' / day'">≈ {{ formatPrice(variant.price / 30, product.currency) }} / day</span>
           {% if zzDayP %}{% set zzPct = (100 - ((variant.price / 30) / zzDayP) * 100) | round %}{% if zzPct >= 10 and zzPct < 95 %}
           <span class="pf-variant__save">Save {{ zzPct }}% vs daily</span>
           {% endif %}{% endif %}
           {% elif variant.name == '3 Month Key' or variant.name == '90 Day Key' %}
-          <span class="pf-variant__perday" x-text="'≈ ' + appCurrency.format({{ variant.price }} / 90, '{{ product.currency }}') + ' / day'"></span>
+          <span class="pf-variant__perday" x-text="'≈ ' + appCurrency.format({{ variant.price }} / 90, '{{ product.currency }}') + ' / day'">≈ {{ formatPrice(variant.price / 90, product.currency) }} / day</span>
           {% if zzDayP %}{% set zzPct = (100 - ((variant.price / 90) / zzDayP) * 100) | round %}{% if zzPct >= 10 and zzPct < 95 %}
           <span class="pf-variant__save">Save {{ zzPct }}% vs daily</span>
           {% endif %}{% endif %}
@@ -135,19 +135,19 @@
           {# NFA hour-tiers: cost per 100 guaranteed hours (range minimum), and
              how much cheaper per hour than the entry hour-tier #}
           {% elif variant.name == '100-200 Hours' %}
-          <span class="pf-variant__perday" x-text="'≈ ' + appCurrency.format({{ variant.price }}, '{{ product.currency }}') + ' / 100 hrs'"></span>
+          <span class="pf-variant__perday" x-text="'≈ ' + appCurrency.format({{ variant.price }}, '{{ product.currency }}') + ' / 100 hrs'">≈ {{ formatPrice(variant.price, product.currency) }} / 100 hrs</span>
           {% elif variant.name == '200-500 Hours' %}
-          <span class="pf-variant__perday" x-text="'≈ ' + appCurrency.format({{ variant.price }} / 2, '{{ product.currency }}') + ' / 100 hrs'"></span>
+          <span class="pf-variant__perday" x-text="'≈ ' + appCurrency.format({{ variant.price }} / 2, '{{ product.currency }}') + ' / 100 hrs'">≈ {{ formatPrice(variant.price / 2, product.currency) }} / 100 hrs</span>
           {% if zzNfaBase %}{% set zzPct = (100 - ((variant.price / 2) / zzNfaBase) * 100) | round %}{% if zzPct >= 10 and zzPct < 95 %}
           <span class="pf-variant__save">{{ zzPct }}% cheaper / hr</span>
           {% endif %}{% endif %}
           {% elif variant.name == '500-1000 Hours' %}
-          <span class="pf-variant__perday" x-text="'≈ ' + appCurrency.format({{ variant.price }} / 5, '{{ product.currency }}') + ' / 100 hrs'"></span>
+          <span class="pf-variant__perday" x-text="'≈ ' + appCurrency.format({{ variant.price }} / 5, '{{ product.currency }}') + ' / 100 hrs'">≈ {{ formatPrice(variant.price / 5, product.currency) }} / 100 hrs</span>
           {% if zzNfaBase %}{% set zzPct = (100 - ((variant.price / 5) / zzNfaBase) * 100) | round %}{% if zzPct >= 10 and zzPct < 95 %}
           <span class="pf-variant__save">{{ zzPct }}% cheaper / hr</span>
           {% endif %}{% endif %}
           {% elif variant.name == '1000+ Hours' %}
-          <span class="pf-variant__perday" x-text="'≈ ' + appCurrency.format({{ variant.price }} / 10, '{{ product.currency }}') + ' / 100 hrs'"></span>
+          <span class="pf-variant__perday" x-text="'≈ ' + appCurrency.format({{ variant.price }} / 10, '{{ product.currency }}') + ' / 100 hrs'">≈ {{ formatPrice(variant.price / 10, product.currency) }} / 100 hrs</span>
           {% if zzNfaBase %}{% set zzPct = (100 - ((variant.price / 10) / zzNfaBase) * 100) | round %}{% if zzPct >= 10 and zzPct < 95 %}
           <span class="pf-variant__save pf-variant__save--gold">{{ zzPct }}% cheaper / hr</span>
           {% endif %}{% endif %}

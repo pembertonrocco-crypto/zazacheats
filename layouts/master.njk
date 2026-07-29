@@ -271,8 +271,19 @@
         .zznx__btn,.zzbb__cta,.zs-card__cta,.tpl__link,.zs-nav__lnk,
         .hero-status,.hero-resume__link,.zz-chip--link,.nb-toggler,
         .zzds__all,.zs-verify__link,.rev-bar-row,.rev-f,.rev-topic,
-        .rev-close__btn,.zzbar__link,.hero-rating,.zzhf__status{
+        .rev-close__btn,.zzbar__link,.hero-rating,.zzhf__status,
+        /* Buy box. These only became measurable once the harness ran Alpine —
+           until then x-cloak kept the whole form display:none, so none of it
+           had ever been checked. */
+        .pf-rating,.zzb__add{
           min-height:44px}
+        /* the +/- steppers are square, so they need the width too */
+        .pf-qty__btn{min-height:44px;min-width:44px}
+
+        /* Quantity field: 42px tall and 13px text, so it was both under the
+           target size and small enough for iOS to zoom the page on focus —
+           on the field a buyer taps mid-purchase. */
+        .pf-qty__input{min-height:44px;font-size:16px!important}
 
         /* Small icon buttons keep their visual size — a 44px "×" in a slim
            bar would look broken. Instead an invisible centred pseudo-element
@@ -295,7 +306,7 @@
         /* !important because these component styles live in <style> blocks
            rendered in the body, i.e. after this one — at equal specificity
            they win on document order. */
-        .faq-search__input,#rev-q,.rev-sort,.zaf__input{font-size:16px!important}
+        .faq-search__input,#rev-q,.rev-sort,.zaf__input,.pf-qty__input{font-size:16px!important}
       }
     </style>
 

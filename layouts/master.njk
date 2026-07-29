@@ -4,7 +4,35 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    {# =====================================================================
+       CONNECTION SETUP — must be the first thing in <head>.
+       These used to sit ~60 lines lower, below the Bootstrap/pro/custom
+       stylesheet links, which made them useless: by the time the parser
+       reached them the browser had already opened those connections the
+       slow way. Hoisted here, the DNS + TCP + TLS handshakes for every
+       render-blocking origin overlap with the HTML download instead of
+       queueing behind it (~200-400ms off first paint on mobile).
+       ===================================================================== #}
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+    {# fontshare CSS comes from api. but the woff2 binaries come from cdn. —
+       preconnecting both means the hero's Clash Display swaps in a round-trip sooner #}
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+    {# font-awesome + choices.js are loaded non-blocking further down, so a
+       cheap dns-prefetch is enough — no need to hold a TLS session open #}
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
+    {# LCP preload — the homepage hero background is the largest paint on the
+       most-trafficked page. It's discoverable in the markup, but only after
+       ~50KB of blocking CSS has been fetched; preloading starts it in the
+       first round trip. type= means only AVIF-capable browsers take this,
+       and those are exactly the ones <picture> will serve AVIF to, so no
+       byte is downloaded twice. #}
+    {% if templateName == 'shop' %}
+    <link rel="preload" as="image" href="{{ 'esp-demo-player.avif' | assetUrl }}" type="image/avif" fetchpriority="high">
+    {% endif %}
 
     {% render_snippet "meta-tags.njk" %}
 
@@ -62,15 +90,8 @@
       {% endif %}
     </style>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
-    {# fontshare CSS comes from api. but the woff2 binaries come from cdn. —
-       preconnecting both means the hero's Clash Display swaps in a round-trip sooner #}
-    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family={{ (global.properties.font if global.properties.font else 'Poppins') | replace(" ", "+") }}:wght@300;400;500;600;700&display=swap" rel="stylesheet" id="theme-font">
+    {# preconnects for these origins are hoisted to the top of <head> #}
+    <link href="https://fonts.googleapis.com/css2?family={{ (global.properties.font if global.properties.font else 'Poppins') | replace(" ", "+") }}:wght@400;500;600;700&display=swap" rel="stylesheet" id="theme-font">
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&f[]=clash-display@600,700&display=swap" rel="stylesheet">
     {# non-blocking: every above-the-fold icon (navbar, hero, buy buttons) is inline
        SVG — Font Awesome only decorates labels further down, so it can load async
@@ -264,6 +285,13 @@
     </style>
   </head>
   <body>
+    {# Skip link, server-rendered as the first focusable thing on the page.
+       polish.njk used to inject this from JS, which meant it did not exist
+       for no-JS users and — more to the point — did not exist during the
+       window where a keyboard user is most likely to press Tab. polish.njk
+       still guards on .zz-skip already existing, so it now no-ops. #}
+    <a class="zz-skip" href="#zz-main">Skip to content</a>
+
     {# Global icon sprite — shared glyphs referenced via <use href="#…">.
        Lives in the layout (rendered on every page) rather than a new snippet
        because newly added .njk snippet files don't render on SellAuth. #}
@@ -317,55 +345,95 @@
       <script src="https://www.google.com/recaptcha/api.js?render={{ shop.recaptcha_key }}"></script>
     {% endif %}
 
-    <script
+    {# =====================================================================
+       All five bundles are `defer`: they download in parallel with parsing
+       and execute in document order, right before DOMContentLoaded. Order
+       still matters and defer preserves it —
+         script.js must run before Alpine boots, because it registers
+         Alpine.data('app') on the `alpine:init` event;
+         bootstrap must be parsed before script.js's zzModal() is *called*,
+         which only happens on user interaction, well after both have run.
+       Everything else in script.js is already wrapped in zzReady()/
+       DOMContentLoaded, so nothing regresses. This takes ~230KB of
+       third-party JS off the parser's critical path.
+       ===================================================================== #}
+    <script defer
       src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"
       integrity="sha256-WCzAhd2P6gRJF9Hv3oOOd+hFJi/QJbv+Azn4CGB8gfY="
       crossorigin="anonymous"
     ></script>
-    <script
+    <script defer
       src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"
       integrity="sha256-P+JgcxEeZtxwYS1+TAAuusKFM646SB8Oodk0TYu9zuo="
       crossorigin="anonymous"
     ></script>
     {# jQuery removed 2026-07: audited every template/snippet/component and
        script.js — zero usages. ~30KB gzip saved on every page load. #}
-    <script
+    <script defer
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"
     ></script>
-    <script
+    <script defer
       src="{{ 'script.js' | assetUrl }}"
       crossorigin="anonymous"
     ></script>
-    <script
+    <script defer
       src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"
       integrity="sha256-aJ9ROXjRHWn00zeU9ylsmlhqLlXeebtEfN28P0dPnwc="
       crossorigin="anonymous"
     ></script>
 
     {% if global.properties.smooth_scroll !== false %}
-    <script type="module">
-      import LocomotiveScroll from 'https://cdn.jsdelivr.net/npm/locomotive-scroll@5.0.1/+esm';
+    {# =====================================================================
+       Smooth scroll, loaded conditionally rather than on every page.
+       Locomotive/Lenis takes over the scroll thread, so it is the single
+       largest INP liability on the site. Three gates, all of which used to
+       be missing:
+         1. prefers-reduced-motion — hijacked scrolling is exactly what that
+            setting asks us not to do. Previously it loaded regardless.
+         2. coarse pointers (phones/tablets) — native momentum scrolling is
+            better than the emulated kind, and these are the devices least
+            able to afford the main-thread cost. This is where most of the
+            traffic is.
+         3. deferred to idle — it is pure polish, so it must never compete
+            with the hero paint or the buy button becoming interactive.
+       Desktop pointer users still get the identical effect.
+       ===================================================================== #}
+    <script>
+      (function () {
+        var mq = window.matchMedia;
+        if (!mq) return;
+        if (mq('(prefers-reduced-motion:reduce)').matches) return;
+        if (mq('(pointer:coarse)').matches) return;
 
-      const scroll = new LocomotiveScroll({
-        lenisOptions: {
-          lerp: 0.1,
-          duration: 1.2,
-          smoothWheel: true,
-          wheelMultiplier: 1,
-          touchMultiplier: 2,
-          infinite: false,
-        }
-      });
+        var load = function () {
+          import('https://cdn.jsdelivr.net/npm/locomotive-scroll@5.0.1/+esm')
+            .then(function (m) {
+              window.locomotiveScroll = new m.default({
+                lenisOptions: {
+                  lerp: 0.1,
+                  duration: 1.2,
+                  smoothWheel: true,
+                  wheelMultiplier: 1,
+                  touchMultiplier: 2,
+                  infinite: false,
+                }
+              });
+            })
+            .catch(function () { /* polish only — plain scrolling is the fallback */ });
+        };
 
-      window.locomotiveScroll = scroll;
+        if ('requestIdleCallback' in window) requestIdleCallback(load, { timeout: 2500 });
+        else setTimeout(load, 1200);
+      })();
     </script>
     {% endif %}
 
     {% if global.properties.snow %}
       <div id="snow"></div>
-      <script>snow({ count: 200 });</script>
+      {# script.js is deferred now, so snow() is not defined until DOMContentLoaded #}
+      <script>document.addEventListener('DOMContentLoaded', function () { snow({ count: 200 }); });</script>
     {% endif %}
 
     <script>

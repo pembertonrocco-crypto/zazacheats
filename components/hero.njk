@@ -12,7 +12,18 @@
 >
   <div class="hero-scene" aria-hidden="true">
     <div class="hero-bg">
-      <img src="{{ 'esp-demo-player.jpg' | assetUrl }}" alt="" class="hero-bg__img" loading="eager" decoding="async" fetchpriority="high">
+      {# LCP element. AVIF 53K / WebP 60K / JPEG 93K — same pixels, and the
+         JPEG stays as the fallback so nothing regresses on older browsers.
+         Preloaded in master.njk for AVIF-capable browsers. width/height are
+         the intrinsic dimensions — .hero-bg__img is absolutely positioned so
+         they don't affect layout here, they just document the source size.
+         Sizing stays entirely with the existing class. #}
+      <picture>
+        <source srcset="{{ 'esp-demo-player.avif' | assetUrl }}" type="image/avif">
+        <source srcset="{{ 'esp-demo-player.webp' | assetUrl }}" type="image/webp">
+        <img src="{{ 'esp-demo-player.jpg' | assetUrl }}" alt="" class="hero-bg__img"
+             width="1058" height="671" loading="eager" decoding="async" fetchpriority="high">
+      </picture>
       <div class="hero-bg__grade"></div>
     </div>
     <canvas class="hero-canvas"></canvas>

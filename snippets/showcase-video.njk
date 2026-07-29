@@ -29,9 +29,14 @@
               id="zaza-showcase-nfa-facade"
               data-video-src="https://files.catbox.moe/38qmur.mp4"
               aria-label="Play the Rust NFA showcase video">
-        <img class="zaza-showcase__thumb"
-             src="{{ 'rust-nfa-showcase-poster.jpg' | assetUrl }}"
-             alt="" width="1920" height="1080" loading="lazy" decoding="async" />
+        {# AVIF/WebP 42K vs 85K JPEG, JPEG kept as fallback #}
+        <picture>
+          <source srcset="{{ 'rust-nfa-showcase-poster.avif' | assetUrl }}" type="image/avif">
+          <source srcset="{{ 'rust-nfa-showcase-poster.webp' | assetUrl }}" type="image/webp">
+          <img class="zaza-showcase__thumb"
+               src="{{ 'rust-nfa-showcase-poster.jpg' | assetUrl }}"
+               alt="" width="1920" height="1080" loading="lazy" decoding="async" />
+        </picture>
         <span class="zaza-showcase__scrim" aria-hidden="true"></span>
         <span class="zaza-showcase__sheen" aria-hidden="true"></span>
         <span class="zaza-showcase__play" aria-hidden="true">

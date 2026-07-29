@@ -24,7 +24,11 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
 .zz-skip{position:fixed;top:-60px;left:16px;z-index:2000;padding:10px 18px;border-radius:10px;
   background:#BF40BF;color:#fff;font-weight:800;font-size:.85rem;text-decoration:none;
   transition:top .25s ease;box-shadow:0 12px 30px -8px rgba(0,0,0,.8)}
-.zz-skip:focus-visible{top:14px}
+/* :focus as well as :focus-visible — a skip link is reached by Tab, but
+   programmatic focus (and some AT) sets :focus only, and a skip link that
+   stays off-screen when focused is worse than none at all */
+.zz-skip:focus,.zz-skip:focus-visible{top:14px}
+@media (prefers-reduced-motion:reduce){.zz-skip{transition:none}}
 
 /* ===== page entrance: gentle fade so navigation feels intentional ===== */
 @media (prefers-reduced-motion: no-preference){

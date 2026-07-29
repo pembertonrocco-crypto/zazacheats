@@ -13,6 +13,16 @@
 (function(){
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+  /* Desktop only. This is a full-viewport canvas repainting every frame for
+     the whole scroll of the homepage — the single most expensive decorative
+     thing on the page. The boxes are deliberately biased toward the screen
+     edges so they never sit under the reading column, but a phone has no
+     margin outside that column: they are either hidden behind content or
+     over it. So on touch devices this costs a continuous main-thread repaint
+     and battery for an effect nobody sees. Matches how the hero's crosshair
+     canvas already gates itself on (pointer: fine). */
+  if(!(window.matchMedia && window.matchMedia('(pointer: fine)').matches)) return;
+
   var c = document.createElement('canvas');
   c.id = 'zz-espfield';
   c.setAttribute('aria-hidden','true');

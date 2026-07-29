@@ -240,6 +240,63 @@
       /* smooth anchor travel */
       html{scroll-behavior:smooth}
       @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+      /* ================= TOUCH TARGETS =================
+         Measured with tools/mobile.js in headless Chromium at 375/393/768px:
+         every rule below is a control that rendered under the 44px WCAG 2.2
+         minimum on a phone. Scoped to (pointer:coarse) so the desktop design
+         is untouched — this only ever applies to fingers.
+         Display values are split the way the browser actually computed them,
+         so nothing changes box type: the block-level ones gain centring
+         alongside the min-height (otherwise their label would sit high in the
+         taller box), the flex ones only gain the height. */
+      @media (pointer:coarse){
+        /* computed display:block — grow and re-centre the label */
+        .faq-stuck__btn,.zs-filter__btn,.zs-more,.faq-toggleall,
+        .scs-proof__link,.rev-auto-more,.rev-sort,.pp-tab-btn,
+        .cart-code__copy,.faq-search__input{
+          min-height:44px;display:flex;align-items:center;justify-content:center}
+        /* form controls keep their own text alignment, not centred */
+        .rev-sort,.faq-search__input{display:block;line-height:1.2}
+
+        /* computed display:inline-block — needs a box to apply height to */
+        .bfq__review-link{min-height:44px;display:inline-flex;align-items:center}
+
+        /* Standalone links with no class of their own, reached via their
+           wrapper. Each is a real CTA, not a link inside a sentence. */
+        .zz-reviews-more a,.cart-trust a,#rev-q{
+          min-height:44px;display:inline-flex;align-items:center}
+
+        /* computed display:flex / inline-flex — already centred, just grow */
+        .zznx__btn,.zzbb__cta,.zs-card__cta,.tpl__link,.zs-nav__lnk,
+        .hero-status,.hero-resume__link,.zz-chip--link,.nb-toggler,
+        .zzds__all,.zs-verify__link,.rev-bar-row,.rev-f,.rev-topic,
+        .rev-close__btn,.zzbar__link,.hero-rating,.zzhf__status{
+          min-height:44px}
+
+        /* Small icon buttons keep their visual size — a 44px "×" in a slim
+           bar would look broken. Instead an invisible centred pseudo-element
+           carries the hit area. Safe here because all three compute to
+           overflow:visible, so it is never clipped, and none of them already
+           define ::after. */
+        /* .zzbar__x is deliberately left out — it computes to
+           position:absolute, so it already establishes a containing block for
+           its ::after, and forcing relative would drop it back into flow. */
+        .hero-resume__x,.zzbb__close{position:relative}
+        .hero-resume__x::after,.zzbar__x::after,.zzbb__close::after{
+          content:"";position:absolute;left:50%;top:50%;
+          transform:translate(-50%,-50%);
+          width:100%;height:100%;min-width:44px;min-height:44px}
+
+        /* iOS Safari zooms the whole page when a focused field is under 16px.
+           These four measured 13.76–14.72px, so tapping search or the review
+           sort control yanked the layout. 16px on touch only; the desktop
+           sizes are unchanged. */
+        /* !important because these component styles live in <style> blocks
+           rendered in the body, i.e. after this one — at equal specificity
+           they win on document order. */
+        .faq-search__input,#rev-q,.rev-sort,.zaf__input{font-size:16px!important}
+      }
     </style>
 
     <style id="zz-status">

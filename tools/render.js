@@ -66,7 +66,12 @@ const hexToRgb = (hex) => {
   return m ? [1, 2, 3].map((i) => parseInt(m[i], 16)).join(', ') : '0, 0, 0';
 };
 
-env.addFilter('assetUrl', (f) => `https://cdn.example/assets/${f}`);
+/* Asset URLs resolve to the real local files when rendering to disk, so the
+   dumped HTML can be opened in a browser with the actual CSS and images
+   applied — that is what tools/mobile.js measures against. .render/ sits one
+   level below the repo root, hence the ../. */
+const LOCAL_ASSETS = process.env.ZZ_LOCAL_ASSETS === '1';
+env.addFilter('assetUrl', (f) => (LOCAL_ASSETS ? `../assets/${f}` : `https://cdn.example/assets/${f}`));
 env.addFilter('shopUrl', (p) => `https://zazacheats.net${p}`);
 env.addFilter('apiInternalUrl', (p) => `https://api.example${p || ''}`);
 env.addFilter('hex_to_rgb', hexToRgb);

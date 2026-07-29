@@ -32,8 +32,10 @@ them from the dashboard.
 
 ```bash
 npm install
-npm run check          # renders all 12 templates and asserts against the HTML
+npm test               # both suites
+npm run check          # renders all 13 templates and asserts against the HTML
 npm run check:html     # same, plus writes the rendered HTML to .render/
+npm run mobile         # real layout measurement in headless Chromium
 ```
 
 `tools/check.js` renders every template through the layout against the mock
@@ -50,6 +52,22 @@ context in `tools/fixtures.js`, then asserts:
 - skip link, `<main>`, `lang` are present
 - no preconnect sits after the first external stylesheet, and no script is
   render-blocking
+
+`tools/mobile.js` renders the same pages, opens them in headless Chromium at
+375 / 393 / 768px with the real CSS applied, and measures what markup alone
+cannot tell you: horizontal overflow, computed tap-target sizes, and input
+font sizes. It found every touch fix listed below. Two things about it:
+
+- It blocks third-party CSS so runs are offline and deterministic, which
+  means anything Bootstrap sizes (`.btn`, `.form-control`) is skipped — those
+  are not the theme's to fix.
+- All three viewport profiles run with `hasTouch: true`. A tablet is a coarse
+  pointer too; gating that on width made the 768px run report every
+  `(pointer:coarse)` rule as missing.
+
+Both suites render **both product branches** — `product-page.njk` gates
+snippets on `product.path`, so testing only one path leaves the NFA half of
+the page (including the showcase video facade) completely unrendered.
 
 Exit code is non-zero on ERROR; WARN is advisory. `tools/render.js` stubs the
 platform's filters (`assetUrl`, `shopUrl`, `hex_to_rgb`, …) and its two custom
@@ -81,7 +99,46 @@ pointers, only without `prefers-reduced-motion`, and only at idle.
 
 **Images.** Hero and showcase poster ship as AVIF/WebP with the original JPEG
 as `<picture>` fallback. The source JPEGs are already well optimised — a q80
-re-encode came out *larger* — so do not "optimise" them again in place.
+re-encode came out *larger* — so do not "optimise" them again in place. The
+NFA showcase poster also carries a 1280w step: the frame measures ~330px on a
+phone, so without it a phone downloads the full 1920px file to paint a third
+of it.
+
+## Mobile
+
+Everything here is scoped to `(pointer: coarse)`, so the desktop design is
+untouched — these rules only ever apply to fingers.
+
+**Touch targets** live in one block in `layouts/master.njk`, not scattered
+across components. Selectors are grouped by the display value the browser
+actually computed, because that decides the fix: block-level controls need
+centring alongside `min-height` or their label rides high in the taller box;
+flex ones only need the height. Small icon buttons (the `×` closers) keep
+their visual size and carry the hit area on an invisible centred
+pseudo-element instead — a 44px `×` in a slim bar looks broken. That works
+because all of them compute to `overflow: visible`, so it is never clipped.
+
+**One deliberate exception:** the status page's 90-day uptime cells stay
+small. At 44px the grid would be six screens wide and stop being a chart, and
+WCAG 2.2 allows an undersized target where an equivalent exists — every cell
+links into the full dated log directly below, which has full-width rows.
+
+**Canvas loops are desktop-only.** `esp-field.njk` paints a full-viewport
+canvas every frame for the whole homepage scroll. Its boxes are biased toward
+the screen edges so they never sit under the reading column — but a phone has
+no margin outside that column, so on touch devices it was a continuous
+main-thread repaint for an effect nobody sees. The comparison slider's
+particle loop now also pauses when the tab is hidden or the slider scrolls off
+screen, and draws a single static frame under reduced motion.
+
+**`min-height: 100vh` is always paired with `100dvh`.** On mobile the address
+bar makes `vh` taller than the visible viewport; the `vh` line stays first as
+the fallback for browsers without `dvh`.
+
+**Inputs are 16px on touch.** Below that, iOS Safari zooms the whole page when
+a field takes focus. Those rules need `!important`: component styles live in
+`<style>` blocks rendered in the body, so at equal specificity they would win
+on document order.
 
 ## Editing content
 

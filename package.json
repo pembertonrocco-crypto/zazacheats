@@ -5,10 +5,13 @@
   "description": "Zaza Cheats SellAuth storefront theme (Nunjucks). Tooling only — the platform renders these templates server-side.",
   "scripts": {
     "check": "node tools/check.js",
-    "check:html": "node tools/check.js --html"
+    "check:html": "node tools/check.js --html",
+    "mobile": "node tools/mobile.js",
+    "test": "node tools/check.js && node tools/mobile.js"
   },
   "license": "UNLICENSED",
   "devDependencies": {
-    "nunjucks": "^3.2.4"
+    "nunjucks": "^3.2.4",
+    "playwright": "^1.62.0"
   }
 }

@@ -24,9 +24,12 @@ const err = (page, msg) => errors.push(`${page}: ${msg}`);
 const warn = (page, msg) => warns.push(`${page}: ${msg}`);
 
 /* Which templates to render, and the component set each one shows. */
+/* Both product branches: product-page.njk gates several snippets on
+   product.path, so testing only one path leaves half the page unrendered. */
 const PAGES = [
   ['shop', ['hero', 'products', 'feedbacks', 'faq']],
   ['product', ['product-page']],
+  ['product-nfa', ['product-page'], { product: { path: 'rust-nfa', name: 'Rust NFA' } }],
   ['products', ['products-page']],
   ['status', ['status-page']],
   ['feedback', ['feedback-page']],
@@ -39,11 +42,13 @@ const PAGES = [
   ['blog-post', ['blog-post-page']],
 ];
 
-function renderPage(templateName, componentsOrder) {
-  const ctx = baseContext(templateName, { components_order: componentsOrder });
-  const tplFile = path.join(ROOT, 'templates', `${templateName}.njk`);
+function renderPage(templateName, componentsOrder, overrides) {
+  const real = templateName.replace(/-nfa$/, '');
+  const ctx = baseContext(real, { components_order: componentsOrder });
+  if (overrides && overrides.product) Object.assign(ctx.product, overrides.product);
+  const tplFile = path.join(ROOT, 'templates', `${real}.njk`);
   ctx.templateContent = fs.existsSync(tplFile)
-    ? env.render(`templates/${templateName}.njk`, ctx)
+    ? env.render(`templates/${real}.njk`, ctx)
     : '<p>content</p>';
   return env.render('layouts/master.njk', ctx);
 }
@@ -218,10 +223,10 @@ let totalImgs = 0;
 let totalLd = 0;
 let totalJs = 0;
 
-for (const [name, components] of PAGES) {
+for (const [name, components, overrides] of PAGES) {
   let html;
   try {
-    html = renderPage(name, components);
+    html = renderPage(name, components, overrides);
   } catch (e) {
     err(name, `render failed — ${e.message.split('\n')[0]}`);
     continue;

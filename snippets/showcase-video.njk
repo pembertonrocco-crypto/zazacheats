@@ -29,10 +29,22 @@
               id="zaza-showcase-nfa-facade"
               data-video-src="https://files.catbox.moe/38qmur.mp4"
               aria-label="Play the Rust NFA showcase video">
-        {# AVIF/WebP 42K vs 85K JPEG, JPEG kept as fallback #}
+        {# AVIF/WebP with the JPEG kept as fallback (42K / 85K at full width).
+           The frame measures ~330px on a phone and ~1030px on a desktop, and
+           it is 16:9 in a 16:9 box so there is no crop — meaning a phone was
+           downloading the full 1920px file to paint a third of it. The 1280w
+           step covers phones at DPR2-3 and tablets; 1920w takes over on
+           desktop. sizes reflects measured layout: ~95vw up to 900px, ~72vw
+           above. #}
         <picture>
-          <source srcset="{{ 'rust-nfa-showcase-poster.avif' | assetUrl }}" type="image/avif">
-          <source srcset="{{ 'rust-nfa-showcase-poster.webp' | assetUrl }}" type="image/webp">
+          <source type="image/avif"
+                  sizes="(max-width: 900px) 95vw, 72vw"
+                  srcset="{{ 'rust-nfa-showcase-poster-1280.avif' | assetUrl }} 1280w,
+                          {{ 'rust-nfa-showcase-poster.avif' | assetUrl }} 1920w">
+          <source type="image/webp"
+                  sizes="(max-width: 900px) 95vw, 72vw"
+                  srcset="{{ 'rust-nfa-showcase-poster-1280.webp' | assetUrl }} 1280w,
+                          {{ 'rust-nfa-showcase-poster.webp' | assetUrl }} 1920w">
           <img class="zaza-showcase__thumb"
                src="{{ 'rust-nfa-showcase-poster.jpg' | assetUrl }}"
                alt="" width="1920" height="1080" loading="lazy" decoding="async" />

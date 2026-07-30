@@ -36,7 +36,7 @@ const MIN_TEXT_LEN = 220; // only judge line length on real paragraphs
 const IMG_WASTE = 2.2;    // intrinsic/rendered ratio worth re-encoding for
 
 const MEASURE = ({ maxLineCh, minTextLen, imgWaste }) => {
-  const out = { overflow: [], lines: [], focus: [], hover: [], images: [] };
+  const out = { overflow: [], blowout: [], lines: [], focus: [], hover: [], images: [] };
   const vw = document.documentElement.clientWidth;
 
   const visible = (el, r) => {
@@ -87,6 +87,55 @@ const MEASURE = ({ maxLineCh, minTextLen, imgWaste }) => {
     if (spill > 2) {
       out.overflow.push({ ...label(el), spill: Math.round(spill), width: Math.round(r.width),
                           parent: (parent.className || parent.tagName || '').toString().slice(0, 40) });
+    }
+  }
+
+  /* ---- container blowout ----
+     The overflow check above cannot see this one. A CSS grid or flex track
+     whose automatic minimum is min-content does not *spill* when something
+     unbreakable lands in it — the track itself grows, so every element is
+     still neatly inside its parent and nothing looks wrong locally. What
+     actually breaks is further up: the capped container is exceeded and the
+     siblings are crushed.
+
+     That is exactly how the Rust NFA page shipped with its buy box at 1896px
+     inside a 1120px layout, its media column squeezed to 42px and its variant
+     cards running off the side of the screen, while the overflow check
+     reported the page clean.
+
+     So: measure against the nearest ancestor that actually caps its width.
+     Anything wider than its own container has escaped. */
+  for (const el of document.querySelectorAll('body *')) {
+    const r = el.getBoundingClientRect();
+    if (!visible(el, r)) continue;
+    const cs = getComputedStyle(el);
+    if (cs.position === 'fixed' || cs.position === 'absolute') continue;
+    if (el.closest('[aria-hidden="true"]')) continue;
+
+    let cap = el.parentElement;
+    let capWidth = 0;
+    while (cap && cap !== document.body) {
+      const ccs = getComputedStyle(cap);
+      if (ccs.maxWidth && ccs.maxWidth !== 'none') {
+        const m = parseFloat(ccs.maxWidth);
+        if (m > 0) { capWidth = cap.getBoundingClientRect().width; break; }
+      }
+      if (ccs.overflowX !== 'visible') break;   // it clips on purpose
+      cap = cap.parentElement;
+    }
+    if (!capWidth || !cap) continue;
+    // Marquees and carousels are deliberately wider than everything.
+    if (/marquee|carousel|track|rail|scroller/i.test((el.className || '').toString())) continue;
+
+    const over = r.width - capWidth;
+    if (over > 2) {
+      out.blowout.push({
+        ...label(el),
+        width: Math.round(r.width),
+        cap: Math.round(capWidth),
+        over: Math.round(over),
+        capCls: (cap.className || cap.tagName || '').toString().slice(0, 40),
+      });
     }
   }
 
@@ -226,7 +275,7 @@ const MEASURE = ({ maxLineCh, minTextLen, imgWaste }) => {
   const browser = await launchBrowser();
 
   const findings = {
-    overflow: new Map(), lines: new Map(), focus: new Map(),
+    overflow: new Map(), blowout: new Map(), lines: new Map(), focus: new Map(),
     hover: new Map(), images: new Map(),
   };
   let checked = 0;
@@ -266,6 +315,7 @@ const MEASURE = ({ maxLineCh, minTextLen, imgWaste }) => {
       const key = (o) => `${o.tag || ''}.${o.cls || o.id || ''}`.replace(/\s+/g, '.');
 
       for (const o of r.overflow) add(findings.overflow, key(o), o);
+      for (const o of r.blowout) add(findings.blowout, key(o), o);
       for (const o of r.lines) add(findings.lines, key(o) + '|' + o.sample, o);
       for (const o of r.focus) add(findings.focus, key(o) + '|' + o.text, o);
       for (const o of r.hover) add(findings.hover, o.sel, o);
@@ -286,6 +336,8 @@ const MEASURE = ({ maxLineCh, minTextLen, imgWaste }) => {
 
   show('Horizontal overflow', findings.overflow,
        (o) => `<${o.tag}> .${o.cls} spills ${o.spill}px out of .${o.parent}`);
+  show('Wider than their container', findings.blowout,
+       (o) => `<${o.tag}> .${o.cls} is ${o.width}px inside a ${o.cap}px .${o.capCls} (+${o.over})`);
   show(`Lines over ${MAX_LINE_CH} characters`, findings.lines,
        (o) => `${o.ch}ch (${o.px}px @ ${o.fontSize}px) <${o.tag}> .${o.cls} — "${o.sample}…"`);
   show('No visible focus indicator', findings.focus,
@@ -302,5 +354,5 @@ const MEASURE = ({ maxLineCh, minTextLen, imgWaste }) => {
   /* Overflow is a defect — content is cut off or the page scrolls sideways.
      The rest is advisory: line length and image sizing are judgement calls,
      and focus/hover findings need a human to confirm the control is real. */
-  process.exit(findings.overflow.size ? 1 : 0);
+  process.exit(findings.overflow.size + findings.blowout.size ? 1 : 0);
 })();

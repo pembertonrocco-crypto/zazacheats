@@ -33,6 +33,30 @@ const product = {
   groups: [],
 };
 
+/* The add-on row rendered under the quantity stepper on both product pages.
+   It was missing from this file entirely, so neither browser suite had ever
+   drawn one — which is how a `white-space: nowrap` on its description shipped
+   and blew the whole buy box out past its container on desktop. The
+   description is deliberately the real one, at its real length: a short
+   placeholder wraps happily and hides exactly the bug this fixture exists to
+   catch. */
+const productAddons = [
+  {
+    id: 900,
+    name: '6 Hours Warranty',
+    currency: 'USD',
+    description:
+      'If it dies on arrival, we replace it. UP TO 3 TIMES. If the account is locked, ' +
+      'banned, or unusable within 6 hours of purchase, open a Discord ticket and we\'ll ' +
+      'swap it. After 6 hours the warranty ends — that\'s the window the market gives, ' +
+      'and it\'s the window we honor. No warranty disputes over accounts you\'ve already ' +
+      'played on for days.',
+    image_urls: [],
+    is_mandatory: false,
+    variants: [{ id: 901, name: '6 Hours', price: 0.5, stock: -1, currency: 'USD' }],
+  },
+];
+
 const shop = {
   id: 257236,
   name: 'Zaza Cheats',
@@ -66,6 +90,7 @@ function baseContext(templateName, extra = {}) {
       templateName,
       shop,
       product,
+      productAddons,
       products: [product],
       // products-page.njk switches layout on `items`, not `products`
       items: [product, Object.assign({}, product, { id: 2, name: 'Rust NFA', path: 'rust-nfa' })],
@@ -107,4 +132,4 @@ function baseContext(templateName, extra = {}) {
   );
 }
 
-module.exports = { baseContext, shop, product, global_ };
+module.exports = { baseContext, shop, product, productAddons, global_ };

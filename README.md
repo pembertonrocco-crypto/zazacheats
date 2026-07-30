@@ -74,8 +74,21 @@ font sizes. It found every touch fix listed below. Two things about it:
 `tools/desktop.js` is the counterpart, at 1366 / 1920 / 2560px with
 `hasTouch: false`. That matters: the ESP canvas, the Locomotive smooth-scroll
 import and every `:hover` affordance only exist for fine pointers, so the
-mobile run can never reach them. It measures horizontal overflow, line length,
-keyboard focus, hover-only affordances and images larger than their box.
+mobile run can never reach them. It measures horizontal overflow, container
+blowout, line length, keyboard focus, hover-only affordances and images larger
+than their box.
+
+**Container blowout is the one worth understanding.** An `fr` grid track's
+automatic minimum is min-content, so a single unbreakable string does not
+*spill* — the track grows to fit it and every element is still tidily inside
+its parent. Nothing looks wrong locally; what breaks is the capped container
+above and the crushed sibling beside. A `white-space: nowrap` add-on
+description shipped exactly this: the buy box went to 1896px inside a 1120px
+layout, the media column was squeezed to 42px, and the variant cards ran off
+the side of the screen — while the overflow check called the page clean. The
+suite now measures every element against the nearest ancestor that actually
+caps its width. `.pp-col{min-width:0}` is the structural guard on the product
+page; keep it.
 
 Both browser suites share `tools/harness.js` — the rendering, the local HTTP
 server and the offline routing. Only the viewport profiles, the measurements
@@ -101,6 +114,13 @@ sizing are advisory — they need a human to confirm the call.
 Both suites render **both product branches** — `product-page.njk` gates
 snippets on `product.path`, so testing only one path leaves the NFA half of
 the page (including the showcase video facade) completely unrendered.
+
+The fixture is the coverage. Anything absent from `tools/fixtures.js` is a
+blind spot no amount of viewport sweeping will find: `productAddons` was
+missing entirely, so no suite had ever drawn the add-on row, and it was hiding
+both the grid blowout above and a 57x31 "+ Add" button — a control a buyer taps
+mid-purchase. Keep the fixture data realistic in *length*, not just in shape.
+A short placeholder description wraps happily and hides the bug.
 
 Exit code is non-zero on ERROR; WARN is advisory. `tools/render.js` stubs the
 platform's filters (`assetUrl`, `shopUrl`, `hex_to_rgb`, …) and its two custom

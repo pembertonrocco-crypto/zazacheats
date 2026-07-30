@@ -260,7 +260,10 @@
         .rev-sort,.faq-search__input{display:block;line-height:1.2}
 
         /* computed display:inline-block — needs a box to apply height to */
-        .bfq__review-link{min-height:44px;display:inline-flex;align-items:center}
+        /* .pf-addon__btn measured 57x31: it is the add-on's only control and
+           sits mid-purchase, but no fixture rendered an add-on until now, so
+           the mobile suite had never once measured it. */
+        .bfq__review-link,.pf-addon__btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
 
         /* Standalone links with no class of their own, reached via their
            wrapper. Each is a real CTA, not a link inside a sentence.

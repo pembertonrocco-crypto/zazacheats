@@ -1079,15 +1079,23 @@
     letter-spacing: -0.01em;
   }
 
-  /* one line: the full pitch lives on the add-on's own product page */
+  /* One line — but clamped, never `white-space: nowrap`.
+
+     nowrap gives this element a min-content width of the entire unwrapped
+     sentence (1701px for the NFA warranty copy). The buy box is a `1fr` grid
+     track, and an fr track's automatic minimum is min-content, so the column
+     grew to 1896px inside a 1120px layout: the media column was crushed to
+     42px and the variant cards ran off the side of the screen. Clamping wraps
+     the text first and clips after, so min-content stays one word wide. */
   .pf-addon__desc {
     font-size: 11.5px;
     line-height: 1.4;
     color: rgba(220,225,255,0.5);
     margin: 1px 0 0;
-    white-space: nowrap;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .pf-addon__actions {

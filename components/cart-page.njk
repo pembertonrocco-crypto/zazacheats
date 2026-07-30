@@ -142,7 +142,7 @@
         </div>
         <div class="col-12 col-lg-4">
           <div class="d-flex flex-column gap-4 p-4 border rounded form">
-            <form @submit.prevent="window.location.href='/pay'">
+            <form @submit.prevent="goToPay()">
               <div class="pb-2 border-bottom">
                 <label class="form-label">Your Order</label>
                 <div class="d-flex justify-content-between">
@@ -353,6 +353,56 @@
         } finally {
           this.fullCartLoading = false;
         }
+      },
+
+      {#— Hand /pay the prices we already have before navigating.
+
+          /pay reads `zz_pay_snapshot` from localStorage to paint real line
+          items and a real total on arrival, then refreshes against the cart
+          API. Buy Now has always written it (product-form.njk); the cart
+          never did, so cart buyers landed on the degraded fallback — "2 items
+          in your order", subtotal and total both "—" — until the API round
+          trip returned, and saw no price at all if it failed. Same journey,
+          same information.
+
+          `fullCart` comes straight from SellAuth's /v1/cart response, so
+          nothing here is invented; we only forward what the cart just
+          rendered. Addons stay nested exactly as the API returns them, so the
+          snapshot and the later refresh describe the order identically and no
+          figure moves under the buyer.
+
+          Storage failures must never block a checkout: on private-mode or
+          quota errors we fall through to the navigation and /pay simply
+          hydrates from the API as it does today. —#}
+      goToPay: function () {
+        try {
+          const snapshot = (this.fullCart || []).map((item) => ({
+            product: {
+              id: item.product.id,
+              name: item.product.name,
+              image_urls: item.product.image_urls,
+              image_url: item.product.image_url,
+              currency: item.product.currency,
+            },
+            variant: { name: item.variant.name, price: item.variant.price },
+            quantity: item.quantity,
+            addons: (item.addons || []).map((addon) => ({
+              product: {
+                name: addon.product.name,
+                image_urls: addon.product.image_urls,
+                image_url: addon.product.image_url,
+                currency: addon.product.currency,
+              },
+              variant: { name: addon.variant.name, price: addon.variant.price },
+            })),
+          }));
+          if (snapshot.length > 0) {
+            localStorage.setItem('zz_pay_snapshot', JSON.stringify(snapshot));
+          }
+        } catch (error) {
+          /* no snapshot — /pay falls back to hydrating from the API */
+        }
+        window.location.href = '{{ '/pay' | shopUrl }}';
       },
 
       getAvailableVolumeDiscount: function (index) {

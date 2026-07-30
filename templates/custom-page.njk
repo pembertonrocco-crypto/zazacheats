@@ -630,6 +630,11 @@
     .zzco__lqty{font-family:'JetBrains Mono',monospace;font-size:.64rem;color:var(--mut2);border:1px solid var(--edge2);
       border-radius:5px;padding:.05rem .3rem;margin-left:.35rem}
     .zzco__lprice{margin-left:auto;font-weight:800;font-size:.9rem;white-space:nowrap}
+    /* addon rows sit under their parent key: no thumbnail, indented to the
+       width of one so they read as part of the item above, not a separate buy */
+    .zzco__line--addon{padding:0 1rem .85rem calc(1rem + 60px + 1rem);margin-top:-.5rem}
+    .zzco__line--addon .zzco__lname{font-weight:600;font-size:.82rem;color:var(--mut)}
+    .zzco__line--addon .zzco__lprice{font-weight:700;font-size:.82rem;color:var(--mut)}
     .zzco__totals{padding:.3rem 1rem 1rem}
     .zzco__trow{display:flex;justify-content:space-between;font-size:.84rem;color:var(--mut);padding:.35rem 0}
     .zzco__trow--save{color:#4ade80}
@@ -760,6 +765,13 @@
 
         <p class="zzco__legend">Payment</p>
         <div class="zzco__pays" id="zzco-pays"></div>
+        {# Crypto is preselected because it's the cheapest option, which means the
+           card tile is no longer the first thing read. Say so plainly, or a card
+           buyer can scan the list and assume cards aren't offered. #}
+        <p class="zzco__hint">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.7"/></svg>
+          Prefer card, Apple Pay or PayPal? Pick it above &mdash; the processor's 5% fee is added at the payment step.
+        </p>
 
         <label class="zzco__tos">
           <input type="checkbox" id="zzco-tos" />
@@ -832,6 +844,43 @@
   function affiliate(){
     try { return localStorage.getItem('affiliate') || ''; } catch(e){ return ''; }
   }
+
+  /* The scratch-card prize, if this visitor still holds an unexpired one.
+
+     scratch-card-popup.njk writes `zz_sc_claim` through its setC() helper, and
+     the cart page reads it back to promise "your scratch code is still active
+     — apply it at checkout". Checkout never read it, so the code the site had
+     just promised had to be remembered or re-copied by hand. This mirrors that
+     file's getC(): a localStorage {v, exp} envelope where `v` is itself the
+     JSON string {code, pct}, falling back to a plain cookie value when
+     localStorage is unavailable — the same two-tier storage setC() writes.
+
+     Expiry is enforced here as well as at write time: the popup caps the claim
+     at the real drop deadline, and honouring that means a dead code can never
+     be silently pre-filled into the box. */
+  function scratchClaim(){
+    var raw = null;
+    try {
+      raw = window.localStorage.getItem('zz_sc_claim');
+      if (raw !== null){
+        var o = JSON.parse(raw);
+        if (o && o.exp && Date.now() > o.exp){
+          window.localStorage.removeItem('zz_sc_claim');
+          return null;
+        }
+        raw = o ? o.v : null;
+      }
+    } catch(e){ raw = null; }
+    if (raw == null){
+      try { raw = (typeof Cookies !== 'undefined') ? Cookies.get('zz_sc_claim') : null; } catch(e){ return null; }
+    }
+    if (!raw) return null;
+    try {
+      var claim = JSON.parse(raw);
+      return (claim && claim.code) ? claim : null;
+    } catch(e){ return null; }
+  }
+
   /* Snapshot written by the cart / Buy Now button — same shape as fullCart. */
   function readSnapshot(){
     try {
@@ -840,10 +889,25 @@
     } catch(e){ return null; }
   }
 
+  /* Cheapest method first, and preselected.
+     The buyer has just come from a product page showing an exact total. If we
+     open on the card tile (+5%) that total visibly jumps the moment they land
+     here, which is the classic unexpected-cost abandonment. Sorting by `pct`
+     ascending puts the -5% crypto tiles at the top, so the headline amount
+     opens on the discounted figure and any change from here is a choice they
+     made. Sorting by the real `pct` rather than hardcoding an index means the
+     day a fee changes in the dashboard, this still picks the cheapest.
+     Array.prototype.sort is stable in every browser we support, so the three
+     crypto tiles keep their existing relative order. */
+  function orderedMethods(){
+    return PAYMENT_METHODS.slice().sort(function(a, b){ return (a.pct || 0) - (b.pct || 0); });
+  }
+
   function renderPays(){
     var wrap = $('zzco-pays');
     wrap.innerHTML = '';
-    PAYMENT_METHODS.forEach(function(m, i){
+    var methods = orderedMethods();
+    methods.forEach(function(m, i){
       var el = document.createElement('div');
       el.className = 'zzco__pay' + (i === 0 ? ' is-sel' : '');
       el.style.setProperty('--ring', m.ring);
@@ -863,9 +927,9 @@
       });
       wrap.appendChild(el);
     });
-    if (PAYMENT_METHODS[0]){
-      state.method = PAYMENT_METHODS[0].id;
-      state.pct = PAYMENT_METHODS[0].pct || 0;
+    if (methods[0]){
+      state.method = methods[0].id;
+      state.pct = methods[0].pct || 0;
     }
   }
 
@@ -964,6 +1028,34 @@
       row.appendChild(body);
       row.appendChild(pr);
       lines.appendChild(row);
+
+      /* Addons ride nested inside their parent item in the cart API's
+         response, so summing only the top level silently under-counts every
+         bundled order — the buyer would see a total that excludes the NFA
+         account they just added. Billed once each, matching how the cart page
+         totals them (quantity applies to the parent key, not the addon). */
+      var addons = (it.addons && it.addons.length) ? it.addons : [];
+      addons.forEach(function(ad){
+        var adPrice = (ad.variant && ad.variant.price) || 0;
+        sub += adPrice;
+
+        var adRow = document.createElement('div');
+        adRow.className = 'zzco__line zzco__line--addon';
+
+        var adBody = document.createElement('div');
+        adBody.className = 'zzco__lbody';
+        adBody.innerHTML =
+          '<div class="zzco__lname">+ ' + (ad.product ? ad.product.name : 'Addon') + '</div>' +
+          '<div class="zzco__lvar">' + (ad.variant ? ad.variant.name : '') + '</div>';
+
+        var adPr = document.createElement('div');
+        adPr.className = 'zzco__lprice';
+        adPr.textContent = money(adPrice, (ad.product && ad.product.currency) || cur);
+
+        adRow.appendChild(adBody);
+        adRow.appendChild(adPr);
+        lines.appendChild(adRow);
+      });
     });
     if (state.full[0] && state.full[0].product){
       state.currency = state.full[0].product.currency || state.currency;
@@ -1109,46 +1201,85 @@
     });
     $('zzco-tos').addEventListener('change', refreshBtn);
     $('zzco-pay').addEventListener('click', pay);
-    $('zzco-coupon-apply').addEventListener('click', function(){
-      var b = $('zzco-coupon-apply');
-      if ($('zzco-coupon').value.trim()){ b.textContent = 'Added'; b.classList.add('is-on'); }
-      else { b.textContent = 'Apply'; b.classList.remove('is-on'); }
-    });
 
-    /* v81 — coupon-model affiliates.
-       Every affiliate code is also a live 5%-off coupon. If the buyer
-       arrived through ?a=CODE we drop that code straight into the coupon
-       box so link traffic gets the same discount as people who were told
-       the code by name. We never overwrite a coupon they typed themselves,
-       and we don't stack: whichever code is in the box is the one sent.
-       The server still validates it — this is convenience, not authority. */
+    /* ---- Coupon box: prefill it, and say honestly what will happen ----
+
+       Two codes can be waiting for a buyer by the time they reach checkout:
+
+       - a scratch-card prize (`zz_sc_claim`), worth up to 10%, which the cart
+         page has already told them is "still active — apply it at checkout";
+       - an affiliate code (v81: every affiliate code is also a live 5%-off
+         coupon), so link traffic gets the same discount as people who were
+         told the code by name.
+
+       Only one can ride along — `payload.coupon` is a single string and the
+       codes don't stack — so precedence is: whatever the buyer typed, then the
+       scratch prize, then the affiliate code. Scratch outranks affiliate
+       because it's worth more and because we promised it by name one page ago.
+       Preferring it costs the referrer nothing: pay() sends `payload.affiliate`
+       separately from `payload.coupon`, so attribution survives either way.
+
+       We can't verify a code here — validation lives in the checkout worker,
+       which isn't part of this theme — so the copy never claims a discount has
+       already come off. It says the code travels with the order and lands at
+       the payment step, which is what actually happens. Claiming a discount
+       the totals don't show is how a buyer stops trusting every other number
+       on the page. */
     (function(){
       var note = $('zzco-coupon-note');
       var box  = $('zzco-coupon');
-      var aff  = affiliate();
+      var btn  = $('zzco-coupon-apply');
       if (!note || !box) return;
 
-      if (box.value.trim()) return;          // buyer typed one already
-      if (!aff) return;                      // no referral in play
+      var claim = scratchClaim();
+      var aff   = affiliate();
 
-      box.value = aff.toUpperCase();
-      var b = $('zzco-coupon-apply');
-      if (b){ b.textContent = 'Added'; b.classList.add('is-on'); }
-      note.hidden = false;
-      note.textContent = 'Referral code ' + box.value + ' applied \u2014 5% off your cheat key.';
+      /* The code we put there ourselves, and how to describe it while it is
+         still the one in the box. */
+      var prefill = null;
+      if (claim && claim.code){
+        var sc = String(claim.code).toUpperCase();
+        prefill = {
+          code: sc,
+          text: 'Scratch code ' + sc + ' added \u2014 ' +
+                (claim.pct ? claim.pct + '% off, applied' : 'applied') + ' at the payment step.'
+        };
+      } else if (aff){
+        prefill = {
+          code: aff.toUpperCase(),
+          text: 'Referral code ' + aff.toUpperCase() + ' added \u2014 5% off, applied at the payment step.'
+        };
+      }
 
-      /* If they clear or change it, stop claiming the discount is on. */
-      box.addEventListener('input', function(){
+      function setOn(on){
+        if (!btn) return;
+        btn.textContent = on ? 'Added' : 'Apply';
+        btn.classList[on ? 'add' : 'remove']('is-on');
+      }
+
+      function describe(){
         var v = box.value.trim();
-        if (!v){ note.hidden = true; return; }
-        if (v.toUpperCase() === aff.toUpperCase()){
-          note.hidden = false; note.classList.remove('is-warn');
-          note.textContent = 'Referral code ' + v.toUpperCase() + ' applied \u2014 5% off your cheat key.';
+        if (!v){ note.hidden = true; note.classList.remove('is-warn'); setOn(false); return; }
+        setOn(true);
+        note.hidden = false;
+        if (prefill && v.toUpperCase() === prefill.code){
+          note.classList.remove('is-warn');
+          note.textContent = prefill.text;
+        } else if (prefill){
+          note.classList.add('is-warn');
+          note.textContent = 'Using ' + v + ' instead of your saved code \u2014 we\u2019ll check it at the payment step.';
         } else {
-          note.hidden = false; note.classList.add('is-warn');
-          note.textContent = 'Using ' + v + ' instead of your referral code.';
+          note.classList.remove('is-warn');
+          note.textContent = 'Code ' + v + ' will be applied at the payment step.';
         }
-      });
+      }
+
+      /* Never overwrite a code the buyer typed themselves. */
+      if (prefill && !box.value.trim()) box.value = prefill.code;
+
+      describe();
+      box.addEventListener('input', describe);
+      if (btn) btn.addEventListener('click', describe);
     })();
     refreshBtn();
     if (!em.value) em.focus();

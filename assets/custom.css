@@ -47,7 +47,11 @@
 .zz-h4{font-size:1rem;font-weight:700;margin:.6rem 0 .2rem}
 .zz-grad{background:linear-gradient(90deg,var(--v),var(--b));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .zz-lead{color:var(--mut);font-size:1.05rem;line-height:1.7;max-width:42rem;margin:1rem 0 0}
-.zz-p{color:var(--mut);font-size:.9rem;line-height:1.5;margin:0}
+/* max-width in ch caps the wide full-bleed blocks (measured at 98-102
+   characters per line on a desktop, where prose stops being scannable) while
+   leaving the 3-column card grid alone — those columns are already narrower
+   than this, so the cap never engages. Found by tools/desktop.js. */
+.zz-p{color:var(--mut);font-size:.9rem;line-height:1.5;margin:0;max-width:74ch}
 
 .zz-hero{position:relative;overflow:hidden;border:1px solid var(--edge);background:var(--panel);
   border-radius:20px;padding:2.2rem 1.6rem;margin:0 0 1.4rem}

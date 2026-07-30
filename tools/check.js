@@ -247,6 +247,56 @@ for (const [name, components, overrides] of PAGES) {
   checkPerf(name, html);
 }
 
+/* ------------------------------------------------- review seed agreement
+
+   The review total lives in one authoritative place — zzTotal in
+   components/feedback-page.njk, echoed into <meta name="zz-review-total"> —
+   and snippets/polish.njk syncs it into every [data-zz-rc] at runtime. The
+   numbers written into the other templates are first-paint seeds AND the
+   floor that sync refuses to go below.
+
+   Those seeds rot. The site sat on "61" while /feedback said 78, and then on
+   "78" while /feedback said 90 — visible as a desktop showing 78 next to a
+   phone showing 90 on the same page. Nothing catches that, because each file
+   is individually plausible.
+
+   This cannot know the live total offline. What it can do is insist the seeds
+   agree with each other, which is how the drift always starts and is free to
+   check. Raising the count means changing every seed, and now the suite says
+   so out loud instead of letting one straggler ship. */
+function checkReviewSeeds() {
+  const seeds = new Map(); // number -> [file...]
+  const dirs = ['components', 'snippets', 'templates', 'layouts'];
+
+  for (const dir of dirs) {
+    const dirPath = path.join(ROOT, dir);
+    if (!fs.existsSync(dirPath)) continue;
+    for (const file of fs.readdirSync(dirPath).filter((f) => f.endsWith('.njk'))) {
+      const src = fs.readFileSync(path.join(dirPath, file), 'utf8');
+      for (const m of src.matchAll(/data-zz-rc>\s*(\d+)\s*<\/span>/g)) {
+        const n = parseInt(m[1], 10);
+        const rel = `${dir}/${file}`;
+        const at = seeds.get(n) || [];
+        if (!at.includes(rel)) at.push(rel);
+        seeds.set(n, at);
+      }
+    }
+  }
+
+  if (seeds.size === 0) {
+    warn('review-seeds', 'no [data-zz-rc] seeds found — has the sync been removed?');
+    return;
+  }
+  if (seeds.size > 1) {
+    const parts = [...seeds.entries()]
+      .sort((a, b) => b[0] - a[0])
+      .map(([n, files]) => `${n} (${files.join(', ')})`);
+    err('review-seeds', `seeds disagree: ${parts.join(' vs ')} — they must all be the same number`);
+  }
+}
+
+checkReviewSeeds();
+
 /* --------------------------------------------------------------- report */
 
 const byPage = (list) => {

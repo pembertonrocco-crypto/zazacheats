@@ -15,15 +15,9 @@
  */
 
 const fs = require('fs');
-const http = require('http');
 const path = require('path');
 
-process.env.ZZ_LOCAL_ASSETS = '1';
-const { env, ROOT } = require('./render');
-const { baseContext } = require('./fixtures');
-const { chromium } = require('playwright');
-
-const OUT = path.join(ROOT, '.render');
+const { ROOT, PAGES, renderAll, serve, launchBrowser, routeOffline } = require('./harness');
 
 const VIEWPORTS = [
   { name: 'iPhone SE', width: 375, height: 667, dpr: 2 },
@@ -31,42 +25,8 @@ const VIEWPORTS = [
   { name: 'iPad mini', width: 768, height: 1024, dpr: 2 },
 ];
 
-const PAGES = [
-  ['shop', ['hero', 'products', 'feedbacks', 'faq']],
-  ['product', ['product-page']],
-  // product-page.njk gates snippets on product.path — the NFA branch shows
-  // the showcase video facade, which the default branch never renders.
-  ['product-nfa', ['product-page'], { product: { path: 'rust-nfa', name: 'Rust NFA' } }],
-  ['products', ['products-page']],
-  ['status', ['status-page']],
-  ['feedback', ['feedback-page']],
-  ['cart', ['cart-page']],
-];
-
-/* CDN URL -> local file, so the page runs with its real JS and CSS. */
-const vendor = (p) => path.join(ROOT, 'node_modules', p);
-const LOCAL_VENDOR = [
-  [/bootstrap@[\d.]+\/dist\/css\/bootstrap\.min\.css/, vendor('bootstrap/dist/css/bootstrap.min.css'), 'text/css'],
-  [/bootstrap@[\d.]+\/dist\/js\/bootstrap\.bundle\.min\.js/, vendor('bootstrap/dist/js/bootstrap.bundle.min.js'), 'text/javascript'],
-  [/alpinejs@[\d.]+\/dist\/cdn\.min\.js/, vendor('alpinejs/dist/cdn.min.js'), 'text/javascript'],
-];
-
 const MIN_TAP = 44; // WCAG 2.2 AA target size (minimum)
 const MIN_INPUT_FONT = 16; // below this iOS Safari auto-zooms on focus
-
-function renderAll() {
-  fs.mkdirSync(OUT, { recursive: true });
-  for (const [name, components, overrides] of PAGES) {
-    const real = name.replace(/-nfa$/, '');
-    const ctx = baseContext(real, { components_order: components });
-    if (overrides && overrides.product) Object.assign(ctx.product, overrides.product);
-    const tpl = path.join(ROOT, 'templates', `${real}.njk`);
-    ctx.templateContent = fs.existsSync(tpl)
-      ? env.render(`templates/${real}.njk`, ctx)
-      : '<p>content</p>';
-    fs.writeFileSync(path.join(OUT, `${name}.html`), env.render('layouts/master.njk', ctx));
-  }
-}
 
 const MEASURE = () => {
   const vw = document.documentElement.clientWidth;
@@ -210,39 +170,11 @@ const MEASURE = () => {
   return out;
 };
 
-/* Serve the repo over HTTP. file:// blocks the crossorigin="anonymous"
-   script tags, which meant script.js never loaded, Alpine.data('app') was
-   never registered, and every x-cloak'd element stayed display:none — so the
-   product buy box measured zero and was silently never checked. */
-function serve() {
-  const MIME = {
-    '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript',
-    '.jpg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp',
-    '.avif': 'image/avif', '.svg': 'image/svg+xml', '.json': 'application/json',
-  };
-  const server = http.createServer((req, res) => {
-    const rel = decodeURIComponent(req.url.split('?')[0]);
-    const file = path.join(ROOT, path.normalize(rel).replace(/^(\.\.[/\\])+/, ''));
-    if (!file.startsWith(ROOT) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
-      res.writeHead(404);
-      return res.end('not found');
-    }
-    res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream' });
-    fs.createReadStream(file).pipe(res);
-  });
-  return new Promise((r) => server.listen(0, '127.0.0.1', () => r(server)));
-}
-
 (async () => {
   renderAll();
   const server = await serve();
   const base = `http://127.0.0.1:${server.address().port}`;
-  // Use the Chromium already present in the image rather than letting
-  // Playwright download a build matching its own version.
-  const CHROME = process.env.ZZ_CHROME || '/opt/pw-browsers/chromium';
-  const browser = await chromium.launch(
-    fs.existsSync(CHROME) ? { executablePath: CHROME } : {}
-  );
+  const browser = await launchBrowser();
   const findings = { overflow: new Map(), taps: new Map(), inputs: new Map() };
   let checked = 0;
 
@@ -256,27 +188,7 @@ function serve() {
       isMobile: true,
       hasTouch: true,
     });
-    /* Offline + deterministic, but NOT stripped-down: the CDN copies of
-       Bootstrap and Alpine are served from node_modules instead of being
-       blocked. This matters enormously — with Alpine missing, every
-       x-cloak'd element stays display:none, which meant the entire product
-       buy box (variant rows, quantity, buy button) measured zero and the
-       most important component on the site was never checked at all.
-       Everything else third-party (fonts, analytics, YouTube) is still
-       blocked so runs stay hermetic. */
-    await ctx.route('**://**', (route) => {
-      const url = route.request().url();
-      if (url.startsWith(base)) return route.continue();
-      const local = LOCAL_VENDOR.find(([re]) => re.test(url));
-      if (local) {
-        return route.fulfill({
-          status: 200,
-          contentType: local[2],
-          body: fs.readFileSync(local[1]),
-        });
-      }
-      return route.abort();
-    });
+    await routeOffline(ctx, base);
 
     for (const [name] of PAGES) {
       const page = await ctx.newPage();

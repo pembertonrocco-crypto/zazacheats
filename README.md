@@ -36,6 +36,7 @@ npm test               # both suites
 npm run check          # renders all 13 templates and asserts against the HTML
 npm run check:html     # same, plus writes the rendered HTML to .render/
 npm run mobile         # real layout measurement in headless Chromium
+npm run desktop        # the same, at desktop widths
 ```
 
 `tools/check.js` renders every template through the layout against the mock
@@ -52,6 +53,11 @@ context in `tools/fixtures.js`, then asserts:
 - skip link, `<main>`, `lang` are present
 - no preconnect sits after the first external stylesheet, and no script is
   render-blocking
+- every hardcoded `[data-zz-rc]` review seed is the **same number**. The seeds
+  are first-paint values that `polish.njk` overwrites at runtime, and they rot
+  silently: the site sat on "61" while `/feedback` said 78, then on "78" while
+  it said 90 — visible as a desktop and a phone disagreeing on the same page.
+  Raising the count means changing every seed, and this now says so out loud.
 
 `tools/mobile.js` renders the same pages, opens them in headless Chromium at
 375 / 393 / 768px with the real CSS applied, and measures what markup alone
@@ -64,6 +70,33 @@ font sizes. It found every touch fix listed below. Two things about it:
 - All three viewport profiles run with `hasTouch: true`. A tablet is a coarse
   pointer too; gating that on width made the 768px run report every
   `(pointer:coarse)` rule as missing.
+
+`tools/desktop.js` is the counterpart, at 1366 / 1920 / 2560px with
+`hasTouch: false`. That matters: the ESP canvas, the Locomotive smooth-scroll
+import and every `:hover` affordance only exist for fine pointers, so the
+mobile run can never reach them. It measures horizontal overflow, line length,
+keyboard focus, hover-only affordances and images larger than their box.
+
+Both browser suites share `tools/harness.js` — the rendering, the local HTTP
+server and the offline routing. Only the viewport profiles, the measurements
+and the reporting differ.
+
+Two notes on reading its output, both learned by getting them wrong first:
+
+- **Line length is measured in real `ch` units**, via the advance width of "0"
+  in the element's own font. An 0.5em approximation was off by ~25%, so a
+  `max-width: 74ch` fix still measured 94ch and the tool could never agree with
+  the stylesheet it was asking you to change.
+- **A universal focus ring counts.** `master.njk` and `polish.njk` set
+  `:focus-visible{outline:2px …}` for everything, so asking "which elements
+  have a focus style" reported 107 phantom findings — a bare `:focus-visible`
+  selector matches no element when you test it as a string. The suite asks the
+  useful question instead: which rules *remove* the ring without putting one
+  back. `:focus{outline:none}` paired with a `:focus-visible` ring is correct
+  and is not a finding.
+
+Only horizontal overflow fails the desktop run. Line length, focus and image
+sizing are advisory — they need a human to confirm the call.
 
 Both suites render **both product branches** — `product-page.njk` gates
 snippets on `product.path`, so testing only one path leaves the NFA half of

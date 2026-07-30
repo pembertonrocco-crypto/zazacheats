@@ -823,7 +823,14 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
       try{f.contentWindow&&f.contentWindow.stop();}catch(e){}
       try{f.remove();}catch(e){}
     }
-    var iv=setInterval(function(){
+    /* Read the frame. Called both by the poll and by the frame's own load
+       event, because the poll is not reliable on its own: on desktop the
+       120ms interval starves behind the ESP canvas and marquee rAF loops
+       (the same saturation documented above, where rIC sat for 18s), and the
+       20s budget could expire before a single tick got through. The load
+       event fires off the frame itself, so it survives a busy parent. */
+    function read(){
+      if(done)return;
       var d;
       try{d=f.contentDocument;}catch(e){finish();return;}   /* navigated off-origin */
       if(!d)return;
@@ -832,18 +839,42 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
       if(!trust(t)){finish();return;}                       /* starved render — keep the seed */
       var a=avgOf(d);
       apply(t,a);store(t,a);finish();
-    },120);
+    }
+    var iv=setInterval(read,120);
+    f.addEventListener('load',read);
     var to=setTimeout(finish,20000);      /* never cleared — the seeds just stay */
     f.src='{{ "/feedback" | shopUrl }}';
     document.body.appendChild(f);
   }
 
-  /* never compete with the page the visitor actually asked for.
+  /* Never compete with the page the visitor actually asked for — but never
+     be skipped by it either.
+
      (Deliberately a plain timer, not requestIdleCallback — measured on the live
      product page, rIC sat on the callback for 18s behind the marquee/canvas
-     rAF loops even with a 4s timeout. A fixed delay after load is predictable.) */
-  function later(){ setTimeout(refresh,1200); }
+     rAF loops even with a 4s timeout. A fixed delay is predictable.)
+
+     This used to hang solely off `load`. On desktop that is the one event most
+     likely to arrive late or never: the ESP canvas and the CDN import of
+     Locomotive smooth-scroll both run only for fine pointers, and a single
+     stalled subresource pins `load` indefinitely. The seeds then survived
+     forever, which is exactly how the site showed 78 on a desktop while a
+     phone — where the canvas never starts — showed the real 90.
+
+     So: whichever of DOMContentLoaded or load lands first wins, and a hard
+     backstop timer covers the case where neither ever fires. `once` guards the
+     three racing paths down to a single refresh. */
+  var started=false;
+  function later(){
+    if(started)return;started=true;
+    setTimeout(refresh,1200);
+  }
   if(document.readyState==='complete')later();
-  else window.addEventListener('load',later);
+  else {
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',later);
+    else later();
+    window.addEventListener('load',later);
+    setTimeout(later,8000);             /* backstop: load may never come */
+  }
 })();
 </script>

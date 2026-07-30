@@ -7,7 +7,8 @@
     "check": "node tools/check.js",
     "check:html": "node tools/check.js --html",
     "mobile": "node tools/mobile.js",
-    "test": "node tools/check.js && node tools/mobile.js"
+    "desktop": "node tools/desktop.js",
+    "test": "node tools/check.js && node tools/mobile.js && node tools/desktop.js"
   },
   "license": "UNLICENSED",
   "devDependencies": {

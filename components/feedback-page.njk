@@ -1109,7 +1109,11 @@
 .st{font-size:.95rem;line-height:1;}
 .st.on{color:var(--gold);filter:drop-shadow(0 0 4px rgba(245,185,66,.4));}
 .st.off{color:rgba(255,255,255,.13);}
-.rc-msg{padding:15px 20px 14px;font-size:.875rem;line-height:1.72;color:rgba(255,255,255,.74);margin:0;position:relative;}
+/* 74ch cap: the spotlight review measured 147 characters per line at 1250px
+   on a desktop — over twice a comfortable measure, and the one card on the
+   page most likely to actually be read. Narrow cards are unaffected.
+   Found by tools/desktop.js. */
+.rc-msg{padding:15px 20px 14px;font-size:.875rem;line-height:1.72;color:rgba(255,255,255,.74);margin:0;position:relative;max-width:74ch;}
 .rc-msg::before{content:open-quote;font-size:3.2rem;line-height:0;color:rgba(139,92,246,.2);vertical-align:-.55em;margin-right:3px;font-family:Georgia,serif;}
 .rc-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:11px 20px 17px;border-top:1px solid rgba(255,255,255,.05);margin-top:auto;}
 .rc-date{font-size:.68rem;color:rgba(255,255,255,.32);letter-spacing:.02em;white-space:nowrap;}

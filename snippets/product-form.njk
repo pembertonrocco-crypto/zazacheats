@@ -213,8 +213,10 @@
     <p class="pf-label">Recommended add-on</p>
     <div class="pf-addons">
       {% for addon in productAddons %}
+      {# A recommendation, not a second product pitch. The RECOMMENDED ribbon,
+         gradient, glow and accent border made this compete with the Buy button
+         it sits above. Same wiring, quieter box. #}
       <div class="pf-addon">
-        <span class="pf-addon__ribbon">RECOMMENDED</span>
         <div class="pf-addon__info">
           {% if addon.image_urls and addon.image_urls[0] %}
           <img src="{{ addon.image_urls[0] }}" alt="{{ addon.name }}" class="pf-addon__img" loading="lazy" decoding="async">
@@ -331,54 +333,44 @@
     {% endif %}
   </div>
 
-  {# ---- What happens after you click Buy Now: removes the "then what?" fear at the exact decision moment ---- #}
-  <div class="pf-next" aria-label="What happens after you buy">
-    <span class="pf-next__step"><span class="pf-next__num">1</span>Pay by card or crypto</span>
-    <svg class="pf-next__arrow" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <span class="pf-next__step"><span class="pf-next__num">2</span>Key appears on screen</span>
-    <svg class="pf-next__arrow" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M13 8l-4-4M13 8l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <span class="pf-next__step"><span class="pf-next__num">3</span>Load &amp; play</span>
-  </div>
+  {#— One trust strip, not six blocks.
 
-  <div class="pf-guarantee">
-    <div class="pf-guarantee__item">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 100 18 9 9 0 000-18z" stroke="#4ade80" stroke-width="1.5"/><circle cx="12" cy="12" r="3.5" fill="#4ade80"/></svg>
-      <div>
-        <span class="pf-guarantee__t">Live status: {% render_snippet "status-badge.njk", pname=product.name, pid=product.id %}</span>
-        <span class="pf-guarantee__d">Public and dated — <a href="{{ '/status' | shopUrl }}" style="color:#4ade80;text-decoration:underline">verify it yourself before you buy →</a></span>
-      </div>
-    </div>
-    <div class="pf-guarantee__item">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13H11l-1 9 8.5-11H12l1-9z" fill="#BF40BF"/></svg>
-      <div>
-        <span class="pf-guarantee__t">Instant delivery, guaranteed</span>
-        <span class="pf-guarantee__d">Your loader &amp; key are issued automatically the moment payment clears.</span>
-      </div>
-    </div>
-    <div class="pf-guarantee__item">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2.5l7 3v5.2c0 4.3-2.9 7.9-7 9.3-4.1-1.4-7-5-7-9.3V5.5l7-3z" fill="none" stroke="#22c55e" stroke-width="1.5"/><path d="M8.5 12.2l2.4 2.4 4.6-4.8" stroke="#22c55e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <div>
-        <span class="pf-guarantee__t">Extended downtime covered</span>
-        <span class="pf-guarantee__d">If the build is down 24h or more, we add that time back or replace your key.</span>
-      </div>
-    </div>
-  </div>
+      This used to be five stacked sections plus a JS-injected emoji bar:
+      a numbered 3-step "what happens next", a 3-item guarantee list, a
+      secure-checkout line, a policies line and a full Discord card. Between
+      them "instant delivery" was said four separate times, immediately below
+      a price block that already says it. At the exact moment a buyer has
+      decided to click, that is a wall of reading.
 
-  <div class="pf-checkout-info">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.5"/></svg>
-    <span>Secure automated checkout &middot; pay by card or crypto at the next step &middot; key tied to your email, always recoverable</span>
-  </div>
-
-  <p class="pf-policies">Read before you buy: <a href="{{ '/refund-policy' | shopUrl }}">Refund policy</a> &middot; <a href="{{ '/terms-of-service' | shopUrl }}">Terms</a> &mdash; the rules you're agreeing to, upfront.</p>
-
-  <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener"  class="pf-discord">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.058a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.009c.12.099.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-    <span class="pf-discord__text">
-      <span class="pf-discord__t">Not sure yet? Ask us anything before you buy</span>
-      <span class="pf-discord__d">Real answers on Discord — see the community first, spend nothing.</span>
+      Nothing is actually dropped: live status (still the real badge), instant
+      delivery, downtime cover, refund policy and terms all survive, and so
+      does the Discord route out for anyone not ready. They are just stated
+      once each, in one row. —#}
+  <div class="pf-trust">
+    {# The anchor needs its own display: .zzstatus is inline-flex with an
+       absolutely-positioned ring, so a plain inline <a> collapsed to 0x1 and
+       became unclickable. Measured by tools/mobile.js. #}
+    <a class="pf-trust__i pf-trust__status" href="{{ '/status' | shopUrl }}">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3a9 9 0 100 18 9 9 0 000-18z" stroke="#4ade80" stroke-width="1.5"/><circle cx="12" cy="12" r="3.5" fill="#4ade80"/></svg>
+      {% render_snippet "status-badge.njk", pname=product.name, pid=product.id %}
+    </a>
+    <span class="pf-trust__i">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M13 2L4.5 13H11l-1 9 8.5-11H12l1-9z" fill="#BF40BF"/></svg>
+      Instant delivery
     </span>
-    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </a>
+    <span class="pf-trust__i">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.5l7 3v5.2c0 4.3-2.9 7.9-7 9.3-4.1-1.4-7-5-7-9.3V5.5l7-3z" fill="none" stroke="#22c55e" stroke-width="1.4"/><path d="M8.5 12.2l2.4 2.4 4.6-4.8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      24h+ downtime covered
+    </span>
+    <span class="pf-trust__i"><a href="{{ '/refund-policy' | shopUrl }}">Refund policy</a></span>
+    <span class="pf-trust__i"><a href="{{ '/terms-of-service' | shopUrl }}">Terms</a></span>
+  </div>
+
+  <p class="pf-ask">
+    Not sure yet?
+    <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener">Ask us on Discord</a>
+    &mdash; costs nothing.
+  </p>
 
 </form>
 
@@ -394,27 +386,20 @@
 .pf-rating__text{font-size:.78rem;color:rgba(200,215,240,.75)}
 .pf-rating__text strong{color:#fff;font-weight:700}
 .pf-rating svg{color:rgba(200,215,240,.5)}
-.pf-checkout-info{margin-top:12px;display:flex;align-items:center;gap:8px;justify-content:center;
-  font-size:.72rem;color:rgba(200,215,240,.5)}
-.pf-checkout-info svg{flex-shrink:0;opacity:.7}
-.pf-policies{margin:8px 0 0;text-align:center;font-size:.72rem;color:rgba(200,215,240,.68)}
-.pf-policies a{color:rgba(200,215,240,.75);text-decoration:none;border-bottom:1px solid rgba(200,215,240,.25);transition:color .2s,border-color .2s}
-.pf-policies a:hover{color:#fff;border-color:rgba(191,64,191,.6)}
-.pf-discord{margin-top:12px;display:flex;align-items:center;gap:12px;padding:12px 14px;
-  border:1px solid rgba(88,101,242,.25);border-radius:12px;background:rgba(88,101,242,.07);
-  text-decoration:none;transition:border-color .2s,background .2s}
-.pf-discord:hover{border-color:rgba(88,101,242,.55);background:rgba(88,101,242,.13)}
-.pf-discord > svg:first-child{flex-shrink:0;color:#8b96f5}
-.pf-discord__text{flex:1;display:flex;flex-direction:column;line-height:1.3}
-.pf-discord__t{font-size:.83rem;font-weight:700;color:#fff}
-.pf-discord__d{font-size:.74rem;color:rgba(200,215,240,.6)}
-.pf-discord > svg:last-child{color:rgba(200,215,240,.4)}
-.pf-guarantee{margin-top:14px;display:flex;flex-direction:column;gap:10px;padding:14px 16px;
-  border:1px solid rgba(191,64,191,.16);border-radius:12px;background:rgba(191,64,191,.05)}
-.pf-guarantee__item{display:flex;align-items:flex-start;gap:10px}
-.pf-guarantee__item svg{flex-shrink:0;margin-top:1px}
-.pf-guarantee__t{display:block;font-size:.84rem;font-weight:700;color:#fff;line-height:1.3}
-.pf-guarantee__d{display:block;font-size:.76rem;color:rgba(200,215,240,.6);line-height:1.5;margin-top:1px}
+/* one row, wrapping: status - instant delivery - downtime - refund - terms */
+.pf-trust{margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  gap:6px 14px;padding:11px 12px;border:1px solid rgba(191,64,191,.16);border-radius:12px;
+  background:rgba(191,64,191,.05);font-size:.75rem;color:rgba(200,215,240,.72);line-height:1.35}
+.pf-trust__i{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.pf-trust__i svg{flex-shrink:0}
+.pf-trust a{color:rgba(200,215,240,.8);text-decoration:none;border-bottom:1px solid rgba(200,215,240,.25);
+  transition:color .2s,border-color .2s}
+.pf-trust a:hover{color:#fff;border-color:rgba(191,64,191,.6)}
+/* the status badge carries its own styling — no link underline over it */
+.pf-trust__status,.pf-trust__status:hover{border-bottom:0}
+.pf-ask{margin:9px 0 0;text-align:center;font-size:.75rem;color:rgba(200,215,240,.55)}
+.pf-ask a{color:#8b96f5;font-weight:700;text-decoration:none;border-bottom:1px solid rgba(139,150,245,.35)}
+.pf-ask a:hover{color:#aab3ff;border-color:rgba(139,150,245,.7)}
 </style>
 
 <script>
@@ -877,25 +862,6 @@
     background: linear-gradient(180deg, rgba(14,165,233,0.05), #0a0e22);
   }
 
-  /* post-buy-button "what happens next" strip */
-  .pf-next{
-    margin-top:12px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;
-    padding:10px 12px;border-radius:11px;
-    border:1px solid rgba(191,64,191,0.14);
-    background:rgba(191,64,191,0.04);
-  }
-  .pf-next__step{
-    display:inline-flex;align-items:center;gap:6px;
-    font-size:.72rem;font-weight:600;color:rgba(220,230,250,0.85);white-space:nowrap;
-  }
-  .pf-next__num{
-    display:inline-flex;align-items:center;justify-content:center;
-    width:16px;height:16px;border-radius:50%;
-    font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:800;color:#fff;
-    background:linear-gradient(135deg,#BF40BF,#7C3AED);
-  }
-  .pf-next__arrow{color:rgba(200,215,240,0.35);flex:none}
-
   @media (prefers-reduced-motion: reduce) {
     .pf-variant__badge--popular::after { animation: none; display: none; }
   }
@@ -1058,72 +1024,33 @@
   .pf-addon {
     position: relative;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    gap: 14px;
-    background:
-      linear-gradient(135deg, rgba(191,64,191,0.10), rgba(191,64,191,0.03) 60%),
-      #0d1126;
-    border: 1px solid rgba(191,64,191,0.32) !important;
-    border-left: 3px solid #BF40BF !important;
+    gap: 12px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 10px;
-    padding: 14px 16px 14px 18px;
-    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-    overflow: hidden;
-  }
-
-  .pf-addon::before {
-    content: "";
-    position: absolute;
-    top: -40%;
-    right: -10%;
-    width: 220px;
-    height: 220px;
-    background: radial-gradient(circle, rgba(191,64,191,0.18), transparent 70%);
-    pointer-events: none;
-    z-index: 0;
+    padding: 10px 12px;
+    transition: border-color 0.2s ease, background 0.2s ease;
   }
 
   .pf-addon:hover {
-    border-color: rgba(191,64,191,0.6) !important;
-    background:
-      linear-gradient(135deg, rgba(191,64,191,0.14), rgba(191,64,191,0.05) 60%),
-      #11163a;
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px -10px rgba(191,64,191,0.55);
-  }
-
-  .pf-addon__ribbon {
-    position: absolute;
-    top: 0;
-    right: 12px;
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    color: #fff;
-    background: linear-gradient(135deg, #BF40BF, #8E2D8E);
-    padding: 4px 9px 5px;
-    border-radius: 0 0 5px 5px;
-    box-shadow: 0 4px 12px -4px rgba(191,64,191,0.7);
-    z-index: 2;
+    border-color: rgba(191,64,191,0.32);
+    background: rgba(191,64,191,0.05);
   }
 
   .pf-addon__info {
-    position: relative;
-    z-index: 1;
     display: flex;
-    align-items: flex-start;
-    gap: 12px;
+    align-items: center;
+    gap: 10px;
     flex: 1;
     min-width: 0;
-    padding-top: 16px;
   }
 
   .pf-addon__img {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
     object-fit: cover;
     flex-shrink: 0;
   }
@@ -1132,11 +1059,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: rgba(191,64,191,0.14);
-    border: 1px solid rgba(191,64,191,0.35);
+    background: rgba(191,64,191,0.12);
+    border: 1px solid rgba(191,64,191,0.28);
     color: #BF40BF;
-    box-shadow: 0 0 18px -4px rgba(191,64,191,0.55) inset;
   }
+
+  .pf-addon__img--icon svg { width: 15px; height: 15px; }
 
   .pf-addon__text {
     min-width: 0;
@@ -1144,69 +1072,63 @@
   }
 
   .pf-addon__name {
-    font-size: 14px;
-    font-weight: 700;
-    color: #fff;
-    margin: 0 0 3px;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(235,240,255,0.92);
+    margin: 0;
     letter-spacing: -0.01em;
   }
 
+  /* one line: the full pitch lives on the add-on's own product page */
   .pf-addon__desc {
-    font-size: 12px;
-    line-height: 1.5;
-    color: rgba(220,225,255,0.62);
-    margin: 0;
-    white-space: pre-line;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    font-size: 11.5px;
+    line-height: 1.4;
+    color: rgba(220,225,255,0.5);
+    margin: 1px 0 0;
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .pf-addon__actions {
-    position: relative;
-    z-index: 1;
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
     flex-shrink: 0;
-    padding-top: 16px;
   }
 
   .pf-addon__price {
     font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 14px;
+    font-size: 12.5px;
     font-weight: 700;
-    color: #BF40BF;
+    color: rgba(235,240,255,0.85);
     letter-spacing: -0.01em;
-    text-shadow: 0 0 12px rgba(191,64,191,0.5);
     white-space: nowrap;
   }
 
   .pf-addon__btn {
     font-size: 11px;
     font-weight: 700;
-    border-radius: 6px;
-    padding: 7px 14px;
+    border-radius: 7px;
+    padding: 6px 11px;
     cursor: pointer;
-    border: 0;
-    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    letter-spacing: 0.04em;
     white-space: nowrap;
   }
 
+  /* outlined, never gradient: this must not compete with the Buy button */
   .pf-addon__btn--add {
-    background: linear-gradient(135deg, #BF40BF, #8E2D8E);
-    color: #fff;
-    box-shadow: 0 4px 14px -4px rgba(191,64,191,0.7), 0 0 0 1px rgba(255,255,255,0.08) inset;
+    background: transparent;
+    color: rgba(235,240,255,0.9);
+    border: 1px solid rgba(255,255,255,0.18);
   }
 
   .pf-addon__btn--add:hover:not(:disabled) {
-    background: linear-gradient(135deg, #d65bff, #BF40BF);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px -4px rgba(191,64,191,0.9), 0 0 0 1px rgba(255,255,255,0.16) inset;
+    background: rgba(191,64,191,0.14);
+    border-color: rgba(191,64,191,0.55);
+    color: #fff;
   }
 
   .pf-addon__btn--add:disabled {

@@ -153,9 +153,18 @@
   var pop=document.getElementById('zz-bundle-popup');
   if(!pop) return;
   var KEY='zzb_popup_seen';
+
+  /* ?bundle=1 forces the popup open even for a repeat visitor. The site-wide
+     bundle bar used to deep-link to #zz-bundles, the on-page block that no
+     longer exists; the popup is the offer's only home now, so the bar needs a
+     way back in. Deliberately ignores the seen-flag: someone who just clicked
+     "FREE NFA BUNDLE" is asking for it. */
+  var forced=false;
+  try{ forced=/[?&]bundle=1(&|$)/.test(location.search); }catch(e){}
+
   var seen;
-  try{ seen=localStorage.getItem(KEY); }catch(e){ return; }
-  if(seen) return;
+  try{ seen=localStorage.getItem(KEY); }catch(e){ if(!forced) return; }
+  if(seen && !forced) return;
 
   function close(){
     pop.hidden=true;
@@ -202,12 +211,14 @@
   }
 
   setTimeout(function(){
-    try{ localStorage.setItem(KEY,'1'); }catch(e){ return; }
+    /* A storage failure must not swallow a popup the visitor explicitly asked
+       for; it only suppresses the unprompted first-visit reveal. */
+    try{ localStorage.setItem(KEY,'1'); }catch(e){ if(!forced) return; }
     pop.hidden=false;
     confetti();
     document.addEventListener('keydown',onKey);
     var x=pop.querySelector('.zzp__x'); if(x) x.focus();
-  },1100);
+  }, forced ? 250 : 1100);
 
   Array.prototype.forEach.call(pop.querySelectorAll('[data-zzp-close]'),function(el){
     el.addEventListener('click',close);
@@ -278,9 +289,28 @@
     return false;
   }
 
-  function toBlock(){
+  /* Fallback when the cart add can't complete. This used to scroll to
+     #zz-bundles, the on-page bundle block — which no longer exists, so it
+     would have quietly closed the popup and done nothing at all. Now it lands
+     them on the buy box with the right key already selected, which is the
+     thing the block existed to do. */
+  function toBlock(kind){
     close();
-    var target=document.getElementById('zz-bundles');
+    var variant=null;
+    try{
+      var labels=(kind==='month')?['1 Month Key','1 Month']:['Lifetime Key','Lifetime'];
+      var buttons=document.querySelectorAll('.pf-variant');
+      for(var i=0;i<buttons.length;i++){
+        var text=(buttons[i].textContent||'').trim();
+        for(var j=0;j<labels.length;j++){
+          if(text.indexOf(labels[j])>-1){ variant=buttons[i]; break; }
+        }
+        if(variant) break;
+      }
+    }catch(e){}
+    if(variant) variant.click();
+
+    var target=document.getElementById('zz-buybox');
     if(target) target.scrollIntoView({behavior:'smooth',block:'center'});
   }
 
@@ -291,7 +321,7 @@
       // the confirmation. A brief ✓ beat first so the click feels received.
       setTimeout(function(){ window.location.href='/cart'; },550);
     }else{
-      toBlock();
+      toBlock(kind);
     }
   }
 

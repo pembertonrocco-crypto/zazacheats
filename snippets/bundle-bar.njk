@@ -7,7 +7,10 @@
    Static HTML, no template vars, safe under strict mode.
    ========================================================================= #}
 <div class="zzbar" id="zz-bundle-bar" hidden>
-  <a class="zzbar__link" href="/product/zaza-rust-private-cheat#zz-bundles">
+  {# ?bundle=1 re-opens the bundle popup, which is where the offer lives now.
+     This used to deep-link to #zz-bundles, the on-page block that has been
+     removed — the anchor would have gone nowhere. #}
+  <a class="zzbar__link" href="/product/zaza-rust-private-cheat?bundle=1">
     <span class="zzbar__gift" aria-hidden="true">🎁</span>
     <span class="zzbar__text">
       <strong class="zzbar__free">FREE NFA BUNDLE</strong>

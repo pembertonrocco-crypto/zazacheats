@@ -130,8 +130,11 @@
               {% endif %}
 
               {% render_snippet "product-form.njk", product=product %}
+              {# The free-NFA bundle lives in the popup only. The on-page block
+                 used to sit right here, under the variant picker, and it was
+                 the single biggest thing between a buyer and the Buy button.
+                 bundle-block.njk is left in the repo, just not rendered. #}
               {% if product.path == 'zaza-rust-private-cheat' %}
-              {% render_snippet "bundle-block.njk" %}
               {% render_snippet "bundle-popup.njk" %}
               {% endif %}
 
@@ -140,11 +143,17 @@
 
         </div>
 
+        {# Features lead on both products. The cheat page always had its block
+           here; the NFA page had none at all — zaza-nfa-block.njk shipped with
+           the theme but was never rendered anywhere. Its .zz classes come from
+           assets/custom.css, which loads on every page, so it renders styled. #}
         {% if product.path == 'zaza-rust-private-cheat' %}
         {% render_snippet "zaza-product-block.njk", product=product %}
         {% endif %}
 
-        {# Rust NFA description is now handled by showcase-video.njk below #}
+        {% if product.path == 'rust-nfa' %}
+        {% render_snippet "zaza-nfa-block.njk", product=product %}
+        {% endif %}
 
       </div>
     </section>
@@ -159,9 +168,12 @@
 <div class="pp-defer">{% render_snippet "showcase-video.njk" %}</div>
 {% endif %}
 
+{# pair-block.njk is NOT rendered here any more — the same NFA cross-sell was
+   appearing three times on this page (this section, the injected .ppx-pair
+   card, and inside the bundle block). The compact card near the buy button is
+   the one that survives. The homepage still renders pair-block; that stays. #}
 {% if product.path == 'zaza-rust-private-cheat' or product.path == 'rust-nfa' %}
 <div class="pp-defer">{% render_snippet "buy-faq.njk" %}</div>
-<div class="pp-defer">{% render_snippet "pair-block.njk" %}</div>
 {% endif %}
 
 {# ---------- MOBILE STICKY BUY BAR (mobile only) ---------- #}
@@ -1256,11 +1268,6 @@
   font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.14em;color:rgba(220,232,255,.6)}
 .pp-carousel__img{cursor:zoom-in}
 
-/* trust strip under buy buttons */
-.ppx-trust{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:14px;justify-content:center;
-  font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.62rem;letter-spacing:.1em;color:rgba(200,215,240,.55)}
-.ppx-trust span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
-
 /* pairs-with card */
 .ppx-pair{margin-top:18px;border:1px solid rgba(245,196,81,.28);border-radius:16px;padding:16px 18px;
   background:linear-gradient(150deg,rgba(245,196,81,.07),rgba(12,15,30,.55));text-decoration:none;display:block;
@@ -1278,13 +1285,12 @@
   var actions=document.querySelector('.pf-actions');
   var realBtn=document.querySelector('.pf-btn--primary');
 
-  /* ---------- trust strip + pairs-with, anchored to the buy form ---------- */
+  /* ---------- pairs-with card, anchored to the buy form ----------
+     The emoji trust bar that used to be injected here is gone: INSTANT
+     DELIVERY / SECURE CHECKOUT / CARD & CRYPTO / WARRANTY BACKED restated,
+     in shoutier form, everything the merged .pf-trust strip a few pixels
+     below already says. Four claims a buyer had to read twice. */
   if(actions){
-    var trust=document.createElement('div');
-    trust.className='ppx-trust';
-    trust.innerHTML='<span>\u26A1 INSTANT DELIVERY</span><span>\uD83D\uDD12 SECURE CHECKOUT</span><span>\uD83D\uDCB3 CARD &amp; CRYPTO</span><span>\uD83D\uDEE1 WARRANTY BACKED</span>';
-    actions.parentNode.insertBefore(trust,actions.nextSibling);
-
     var path=location.pathname;
     var pair=null;
     if(path.indexOf('zaza-rust-private-cheat')>-1){

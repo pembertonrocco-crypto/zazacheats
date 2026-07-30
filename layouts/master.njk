@@ -263,9 +263,16 @@
         .bfq__review-link{min-height:44px;display:inline-flex;align-items:center}
 
         /* Standalone links with no class of their own, reached via their
-           wrapper. Each is a real CTA, not a link inside a sentence. */
-        .zz-reviews-more a,.cart-trust a,#rev-q{
+           wrapper. Each is a real CTA, not a link inside a sentence.
+           .pf-trust a joined them when the buy box's five trailing blocks
+           merged into one row: Refund policy and Terms had been links inside a
+           sentence in .pf-policies, and became standalone targets. */
+        .zz-reviews-more a,.cart-trust a,.pf-trust a,#rev-q{
           min-height:44px;display:inline-flex;align-items:center}
+        /* "Terms" is 33px of text, and the status link shrinks to its 13px
+           icon for any product without a badge, so both need the width too.
+           Centred, or the short labels sit against the left edge of the box. */
+        .pf-trust a{min-width:44px;justify-content:center}
 
         /* computed display:flex / inline-flex — already centred, just grow */
         .zznx__btn,.zzbb__cta,.zs-card__cta,.tpl__link,.zs-nav__lnk,

@@ -200,8 +200,9 @@
       h1 b,h1 strong,h2 b,h2 strong{font-weight:700}
       body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
 
-      /* ── z-index tiers (verified 2026-07; keep new fixed UI inside these bands) ──
+      /* ── z-index tiers (verified 2026-08; keep new fixed UI inside these bands) ──
          waypoint rail / back-to-top .. 880–940
+         purchase toast ............... 960   (#fakebuyer-container, end of body)
          home & product buy bars ...... 990   (below navbar, above content)
          navbar/header pill ........... 1000 !important
          scratch-card popup overlay ... 1090  (above navbar & buy bars)
@@ -587,6 +588,269 @@
           document.querySelectorAll('script[defer][src],script[async][src]').forEach(function(s){s.remove();});
         }
       }catch(e){}
+    </script>
+
+    {# =====================================================================
+       PURCHASE TOAST — bottom-left "someone purchased <product>" notice.
+       The single replacement for every fake buy notification the theme used
+       to ship (the .zzla activity feed and the killfeed's purchase rows are
+       both gone). Products come from the shop's own catalogue, so the toast
+       never names something the store doesn't sell.
+
+       It lives here, at the very end of the layout body, rather than in a
+       snippet: newly added .njk snippet files don't render on SellAuth.
+       Markup after </body> is invalid and gets hoisted back into the body by
+       the parser anyway, so it sits immediately before the closing tag.
+
+       Position notes:
+       · bottom-left is also where the [B]/[INS] hotkey chips (.zwr-hotkey)
+         live on ≥1200px, and where the mobile buy bars end up — the v9
+         harmony layer in script.js lifts #fakebuyer-container clear of both.
+       · z-index 960 is the tier the old purchase feed used: above content,
+         below the navbar pill (1000), the scratch-card overlay (1090) and
+         any Bootstrap modal, so an ambient toast can never cover a dialog
+         the visitor actually opened. (The source snippet's 99999 would have.)
+       ===================================================================== #}
+    <style>
+      #fakebuyer-container {
+        position: fixed;
+        bottom: 28px;
+        left: 28px;
+        z-index: 960;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        pointer-events: none;
+      }
+      .fakebuyer-toast {
+        position: relative;
+        background: #0f0f13;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 8px;
+        width: 360px;
+        max-width: calc(100vw - 56px);
+        min-height: 110px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+        overflow: hidden;
+        pointer-events: auto;
+        animation: fb-slidein 0.45s cubic-bezier(0.22,1,0.36,1) forwards;
+        transform: translateX(-120%);
+        opacity: 0;
+        font-family: -apple-system, 'Inter', 'Segoe UI', sans-serif;
+      }
+      .fakebuyer-toast.fb-hiding {
+        animation: fb-slideout 0.38s cubic-bezier(0.55,0,0.78,0) forwards;
+      }
+      @keyframes fb-slidein { to { transform: translateX(0); opacity: 1; } }
+      @keyframes fb-slideout {
+        from { transform: translateX(0); opacity: 1; }
+        to   { transform: translateX(-120%); opacity: 0; }
+      }
+
+      .fakebuyer-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        width: 65%;
+      }
+
+      .fakebuyer-label {
+        font-size: 12px;
+        color: #888;
+        margin-bottom: 2px;
+      }
+      .fakebuyer-product {
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .fakebuyer-time {
+        font-size: 12px;
+        color: #888;
+        margin-top: 2px;
+      }
+      .fakebuyer-meta {
+        font-size: 13px;
+        color: #aaa;
+        margin-top: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .fakebuyer-image-container {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50%;
+        height: 100%;
+        z-index: 1;
+      }
+      .fakebuyer-image-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to right, #0f0f13 0%, rgba(15,15,19,0.8) 30%, transparent 100%);
+        z-index: 2;
+      }
+      .fakebuyer-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+    </style>
+
+    <div id="fakebuyer-container"></div>
+
+    <script>
+      window.__fbProducts = [];
+
+      {# The products component receives `sortedItems`; the layout only sees
+         the template-level collections, so fall back through them. Whichever
+         exists on this route, the toast ends up with the real catalogue. #}
+      {% set fbItems = sortedItems if sortedItems else (items if items else products) %}
+      {% if fbItems %}
+        {% for p in fbItems %}
+          {% if p.type != 'group' and p.name %}
+          window.__fbProducts.push({
+            name:  {{ p.name | json }},
+            image: {{ (p.image_urls[0] if (p.image_urls and p.image_urls|length > 0) else (p.image_url if p.image_url else '')) | json }}
+          });
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      {# also inject the current product when on a product page #}
+      {% if templateName == 'product' and product and product.name %}
+      (function(){
+        var exists = window.__fbProducts.some(function(x){ return x.name === {{ product.name | json }}; });
+        if (!exists) {
+          window.__fbProducts.push({
+            name:  {{ product.name | json }},
+            image: {{ (product.image_urls[0] if (product.image_urls and product.image_urls|length > 0) else (product.image_url if product.image_url else '')) | json }}
+          });
+        }
+      })();
+      {% endif %}
+    </script>
+
+    <script>
+    (function () {
+      'use strict';
+
+      var LOCATIONS = [
+        'Berlin, Germany','Munich, Germany','Hamburg, Germany','Frankfurt, Germany','Cologne, Germany',
+        'New York, United States','Los Angeles, United States','Chicago, United States',
+        'Miami, United States','Seattle, United States','Dallas, United States',
+        'London, United Kingdom','Manchester, United Kingdom',
+        'Paris, France','Amsterdam, Netherlands','Vienna, Austria',
+        'Zurich, Switzerland','Stockholm, Sweden','Madrid, Spain',
+        'Warsaw, Poland','Toronto, Canada','Sydney, Australia'
+      ];
+
+      function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+      function randomTime() {
+        var h = Math.floor(Math.random()*12)+1;
+        var m = String(Math.floor(Math.random()*60)).padStart(2,'0');
+        var ap = Math.random()<0.5?'AM':'PM';
+        var t = h+':'+m+' '+ap;
+        return rand([
+          'Today at '+t,'Today at '+t,
+          'Yesterday at '+t,
+          '1 day ago','2 days ago',
+          'Just now','A few minutes ago'
+        ]);
+      }
+
+      var container = document.getElementById('fakebuyer-container');
+
+      function showToast() {
+        var products = (window.__fbProducts || []).filter(function(p){ return p.name; });
+        if (products.length === 0) return;
+
+        var p        = rand(products);
+        var location = rand(LOCATIONS);
+        var timeStr  = randomTime();
+
+        var toast = document.createElement('div');
+        toast.className = 'fakebuyer-toast';
+
+        var content = document.createElement('div');
+        content.className = 'fakebuyer-content';
+
+        var label = document.createElement('span');
+        label.className = 'fakebuyer-label';
+        label.textContent = 'Someone purchased';
+
+        var prod = document.createElement('span');
+        prod.className = 'fakebuyer-product';
+        prod.textContent = p.name;
+
+        var time = document.createElement('span');
+        time.className = 'fakebuyer-time';
+        time.textContent = timeStr;
+
+        var meta = document.createElement('span');
+        meta.className = 'fakebuyer-meta';
+        meta.textContent = 'from '+location;
+
+        content.appendChild(label);
+        content.appendChild(prod);
+        content.appendChild(time);
+        content.appendChild(meta);
+        toast.appendChild(content);
+
+        // Image on the right side as background cover
+        if (p.image && p.image.length > 0) {
+          var imgCont = document.createElement('div');
+          imgCont.className = 'fakebuyer-image-container';
+
+          var img = document.createElement('img');
+          img.src = p.image;
+          img.className = 'fakebuyer-img';
+          img.alt = '';
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          img.onerror = function(){ this.style.display='none'; };
+
+          imgCont.appendChild(img);
+          toast.appendChild(imgCont);
+        }
+
+        container.appendChild(toast);
+
+        setTimeout(function(){
+          toast.classList.add('fb-hiding');
+          toast.addEventListener('animationend', function(){
+            if (toast.parentNode) toast.parentNode.removeChild(toast);
+          }, { once: true });
+        }, 5000);
+      }
+
+      function start() {
+        function next() {
+          var delay = Math.floor(Math.random()*6000)+3000;
+          setTimeout(function(){ if (!document.hidden) showToast(); next(); }, delay);
+        }
+        next();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function(){ setTimeout(start,1500); });
+      } else {
+        setTimeout(start,1500);
+      }
+    })();
     </script>
   </body>
 </html>

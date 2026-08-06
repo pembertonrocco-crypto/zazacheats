@@ -38,6 +38,7 @@ npm run check:html     # same, plus writes the rendered HTML to .render/
 npm run mobile         # real layout measurement in headless Chromium
 npm run desktop        # the same, at desktop widths
 npm run fonts          # synthetic-weight audit (needs network, not in `npm test`)
+npm run bundle         # rebuild assets/script.js from assets/script.src.js
 ```
 
 `tools/check.js` renders every template through the layout against the mock
@@ -236,6 +237,84 @@ signal a storefront can carry, and it lands on the number that most needs to
 stay legible. Glow lives on chips, dots and status indicators, at an alpha low
 enough to read as depth. The atmospheric blooms behind sections are deliberate
 and stay.
+
+## Icons, labels and motion
+
+**Icons are drawn, not typed.** One 24×24 stroke set (`fill:none`,
+`stroke:currentColor`, 1.7 width, round caps), inlined at each site because
+the platform will not render a new snippet file. Emoji were doing this job in
+47 places: they render in a different typeface on every operating system,
+cannot take the accent colour, and read as a placeholder somebody meant to
+replace. Emoji inside review text or a chat mock are fine — real people write
+those.
+
+**Section labels are labels.** Every eyebrow on the site used to open `// LIKE
+THIS`. Once, that is a voice; on every section of every page it is a tic, and
+it is the same tic every generated cheat page has.
+
+**Motion has to mean something.** There were 105 animations running forever:
+blobs drifting behind each section, light sweeping across every button,
+conic borders rotating, scanlines crawling, the hero photo slowly zooming for
+the length of the visit. Perpetual ambient motion with nothing behind it is
+what a template does to look alive. What survives reports state — live-status
+pulses, stock dots, loading spinners, the terminal caret — plus the two
+deliberate marquees and the one-shot entrances.
+
+Two traps when cutting these. A one-shot entrance and an infinite loop often
+share a shorthand (`animation: heroRise .8s both, heroGlitch 8.5s infinite`),
+so removing "the animation with `infinite` in it" silently kills the entrance
+too. And an element whose only animation is gone may still be `opacity:0` in
+its base rule — check before assuming it just stops moving.
+
+**No effects on headings.** A decrypt/scramble effect ran every `h2` through
+cipher glyphs for up to 1.1 seconds on scroll-in. It is the most recognisable
+stock JS effect there is, and it made each heading unreadable at exactly the
+moment the reader arrived at it.
+
+## The bundle
+
+`assets/script.js` is what the platform loads. `assets/script.src.js` is the
+readable source it is minified from. **Edit the source and run `npm run
+bundle`** — never edit the built file.
+
+Nothing wired these together before, so they were kept in step by hand. That
+is how the bundle sat on the old palette, with gradient-clipped text and a
+fabricated purchase feed, after every other file in the theme had moved: a
+sweep over `.njk` and `.css` never touched it. `check.js` now extracts every
+`css += "..."` rule from the source and fails if one is missing from the
+built file.
+
+## Claims
+
+**Nothing on the site may present an invented event as a real one.** This is
+not a style rule. A store that fabricates its own activity is the single
+clearest signal a visitor gets that the product behind it is not serious, and
+it is the thing customers notice before they notice anything else.
+
+Removed under this rule, and not to be reintroduced:
+
+- a "live purchase feed" whose usernames, cities and actions were picked at
+  random from fixed lists, and which carried a **LIVE** tag and a *Verified
+  activation* shield
+- a killfeed of the same invented usernames buying keys
+- session rank-ups awarded for keeping the tab open
+- "N players viewing this right now", derived from a hash of the URL and the
+  date
+- a cart "reserved for 15:00" countdown that reserved nothing and re-reserved
+  itself at zero
+- "N keys delivered in the last hour", from the same kind of hash
+- "147 players online now"
+
+What is allowed: the visitor's own data (their cart, their session), and
+figures the owner can stand behind and would repeat to a customer who asked.
+The review count qualifies — it comes from `/feedback`, which counts entries
+that actually render, floored at the owner-stated total. "Keys delivered" and
+"avg. delivery time" qualify as marketing claims the owner controls.
+
+The cart-abandonment toast stays because it is about the visitor's own cart.
+The rotating CTA quotes stay because they are real reviews.
+
+If a conversion idea needs a number nobody can source, it does not go in.
 
 ## Performance decisions
 

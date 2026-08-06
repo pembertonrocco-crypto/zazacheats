@@ -268,14 +268,14 @@
       /* jewel scrollbar */
       ::-webkit-scrollbar{width:10px;height:10px}
       ::-webkit-scrollbar-track{background:#06070f}
-      ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#3a2a52,#241a38);
+      ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#1b1f3a,#12162a);
         border-radius:99px;border:2px solid #06070f}
-      ::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#BF40BF,#7C3AED)}
+      ::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#BF40BF,#8e2d8e)}
 
       /* gold ratings everywhere read as one metal */
       .fbq__agg-stars,.zz-reviews-stat__stars,.pf-rating__stars,
-      .rev-score-stars-big,.scs-quote__stars{color:#f2c14e!important;
-        text-shadow:0 0 18px rgba(242,193,78,.35)}
+      .rev-score-stars-big,.scs-quote__stars{color:#fbbf24!important;
+        }
 
       /* primary CTA: shine sweep on hover */
       html.zz-motion .btn-primary{position:relative;overflow:hidden;isolation:isolate}
@@ -401,11 +401,11 @@
         transform:translateX(-130%);animation:zzstatusSweep 3.4s ease-in-out infinite}
       @keyframes zzstatusSweep{0%,55%{transform:translateX(-130%)}82%,100%{transform:translateX(130%)}}
       /* glow uses drop-shadow (not box-shadow) so it follows the chamfered outline */
-      @keyframes zzstatusGlow{0%,100%{filter:drop-shadow(0 0 5px rgba(var(--sc),.28))}
-        50%{filter:drop-shadow(0 0 13px rgba(var(--sc),.55))}}
+      @keyframes zzstatusGlow{0%,100%{filter:drop-shadow(0 0 5px rgba(var(--sc),0.13))}
+        50%{filter:drop-shadow(0 0 13px rgba(var(--sc),0.25))}}
       @media (prefers-reduced-motion:reduce){
         .zzstatus__chip,.zzstatus__ring,.zzstatus__sweep{animation:none}
-        .zzstatus__chip{filter:drop-shadow(0 0 6px rgba(var(--sc),.3))}
+        .zzstatus__chip{filter:drop-shadow(0 0 6px rgba(var(--sc),0.14))}
         .zzstatus__sweep{display:none}
       }
     </style>

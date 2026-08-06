@@ -45,7 +45,7 @@
   /* compact pill once you're into the page — quieter, more content room */
   .nb-pill{transition:padding .3s cubic-bezier(.22,1,.36,1),background .3s ease,box-shadow .3s ease,border-color .3s ease}
   html.zznv-scrolled .nb-pill{padding-top:.5rem;padding-bottom:.5rem;
-    background:rgba(6,9,22,.86);border-color:rgba(191,64,191,.22);
+    background:rgba(6,7,15,.86);border-color:rgba(191,64,191,.22);
     box-shadow:0 0 0 1px rgba(255,255,255,.04) inset,0 10px 44px rgba(0,0,0,.65),0 0 24px -8px rgba(191,64,191,.35)}
   @media (prefers-reduced-motion:reduce){
     .nb-wrapper,.nb-pill{transition:none}
@@ -56,7 +56,7 @@
   /* ============ 2. scroll progress ============ */
   .zznv-progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:1200;pointer-events:none;background:transparent}
   .zznv-progress__bar{display:block;height:100%;width:100%;transform-origin:0 50%;transform:scaleX(0);
-    background:linear-gradient(90deg,#BF40BF,#7C3AED 60%,#38bdf8);
+    background:linear-gradient(90deg,#BF40BF,#8e2d8e 60%,#e6aaff);
     box-shadow:0 0 8px rgba(191,64,191,.55)}
   @media (prefers-reduced-motion:no-preference){
     .zznv-progress__bar{transition:transform .08s linear}
@@ -84,7 +84,7 @@
   /* ============ 6. back to top ============ */
   .zznv-top{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:940;display:none;align-items:center;justify-content:center;
     width:42px;height:42px;border-radius:12px;cursor:pointer;
-    color:#e8ddff;background:rgba(10,13,30,.88);border:1px solid rgba(191,64,191,.35);
+    color:#e6aaff;background:rgba(6,7,15,.88);border:1px solid rgba(191,64,191,.35);
     box-shadow:0 10px 30px -10px rgba(0,0,0,.7),0 0 18px -6px rgba(191,64,191,.4);
     backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
     opacity:0;transform:translateY(10px)}
@@ -100,7 +100,7 @@
   .zznv-buy{position:fixed;right:20px;bottom:calc(72px + env(safe-area-inset-bottom,0px));z-index:940;display:none;align-items:center;gap:8px;
     padding:10px 15px;border-radius:12px;cursor:pointer;text-decoration:none;
     font-family:var(--zz-sans);font-size:.82rem;font-weight:700;letter-spacing:.01em;
-    color:#fff;background:linear-gradient(135deg,rgba(191,64,191,.92),rgba(124,58,237,.92));
+    color:#fff;background:linear-gradient(135deg,rgba(191,64,191,.92),rgba(191,64,191,.92));
     border:1px solid rgba(255,255,255,.18);
     box-shadow:0 14px 34px -12px rgba(191,64,191,.65),0 8px 22px -10px rgba(0,0,0,.7);
     opacity:0;transform:translateY(10px);pointer-events:none}

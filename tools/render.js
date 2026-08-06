@@ -42,8 +42,21 @@ function makeIncludeTag(tagName, dir) {
           `<!-- MISSING ${dir}/${file} -->`
         );
       }
-      const ctx = Object.assign({}, context.getVariables(), {
-        componentId: String(name).replace(/\.njk$/, ''),
+      const id = String(name).replace(/\.njk$/, '');
+      const vars = context.getVariables();
+      /* On the platform each component carries its own settings, so a single
+         shared `properties` object is a lie the fixture tells. It matters:
+         with one `title` for everything, the hero rendered the FAQ's heading
+         and the hardcoded two-line hero title — the only thing that uses the
+         accent line — was never rendered by any check. `componentProperties`
+         lets a fixture override per component; an explicit `null` means "this
+         component has nothing set", which is how its fallbacks get exercised. */
+      const per = (vars.componentProperties || {})[id];
+      const ctx = Object.assign({}, vars, {
+        componentId: id,
+        properties: per === undefined
+          ? vars.properties
+          : Object.assign({}, vars.properties, per),
       });
       return new nunjucks.runtime.SafeString(env.render(`${dir}/${file}`, ctx));
     }

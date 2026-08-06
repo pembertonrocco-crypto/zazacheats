@@ -24,12 +24,16 @@
   text-align: center !important;
 }
 
+/* The dashboard wraps emphasised words in this class, so it lands inside
+   display-size headings. #BF40BF is the accent, but it is too dark against
+   the near-black surfaces to carry a headline — same reason .zz-grad uses the
+   lighter tint. */
 .text-highlight {
-  color: #BF40BF !important;
+  color: #e6aaff !important;
 }
 /* ===== zz product-block shared styles (extracted from zaza-product-block.njk) ===== */
-.zz{--v:#BF40BF;--b:#7C3AED;--g:#22c55e;--a:#eab308;--r:#ef4444;
-  --panel:#0c0e1c;--void:#06070f;--edge:#1b1f3a;--ink:#e7ecff;--mut:rgba(231,236,255,.6);
+.zz{--v:#BF40BF;--b:#8e2d8e;--g:#22c55e;--a:#fbbf24;--r:#ef4444;
+  --panel:#0a0c18;--void:#06070f;--edge:#1b1f3a;--ink:#e7ecff;--mut:rgba(231,236,255,.6);
   color:var(--ink);font-family:var(--zz-sans);max-width:1100px;margin:0 auto}
 .zz *{box-sizing:border-box}
 .zz-eyebrow{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;color:var(--v);font-size:.8rem;letter-spacing:.18em;margin:0 0 .5rem}
@@ -64,7 +68,7 @@
    zaza-product-block and zaza-nfa-block were the only users, and both were
    dropped for repeating the buy box's .pf-trust row. */
 
-.zz-block{border:1px solid var(--edge);background:rgba(12,14,28,.45);border-radius:20px;padding:1.8rem 1.6rem;margin:0 0 1.4rem}
+.zz-block{border:1px solid var(--edge);background:rgba(6,7,15,.45);border-radius:20px;padding:1.8rem 1.6rem;margin:0 0 1.4rem}
 .zz-grid{display:grid;gap:.8rem;margin-top:1.4rem}
 .zz-grid--3{grid-template-columns:repeat(3,1fr)}
 .zz-card{border:1px solid var(--edge);background:var(--void);border-radius:16px;padding:1.4rem}
@@ -87,7 +91,7 @@
 
 .zz-review{border:1px solid var(--edge);background:var(--void);border-radius:16px;padding:1.2rem}
 .zz-reviews-stat{display:inline-flex;align-items:center;gap:10px;margin-top:1rem;padding:.5rem .9rem;
-  border:1px solid rgba(234,179,8,.22);background:rgba(234,179,8,.06);border-radius:999px}
+  border:1px solid rgba(251,191,36,.22);background:rgba(251,191,36,.06);border-radius:999px}
 .zz-reviews-stat__stars{color:var(--a);font-size:.9rem;letter-spacing:1px}
 .zz-reviews-stat__txt{font-size:.82rem;color:var(--mut);font-weight:500}
 .zz-reviews-grid{margin-top:1.4rem}
@@ -112,11 +116,11 @@
 .zz-faq__item[open] .zz-faq__plus::after{transform:rotate(90deg);opacity:0}
 .zz-faq__a{padding:0 1.2rem 1.1rem;color:var(--mut);font-size:.9rem;line-height:1.6;
   animation:zzFaq .3s ease both}
-.zz-faq__a a{color:#a8c4ff;text-decoration:none}
+.zz-faq__a a{color:#e6aaff;text-decoration:none}
 .zz-faq__a a:hover{color:#fff;text-decoration:underline}
 @keyframes zzFaq{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 
-.zz-cta{border:1px solid var(--edge);background:linear-gradient(135deg,rgba(191,64,191,.15),rgba(124,58,237,.08));
+.zz-cta{border:1px solid var(--edge);background:linear-gradient(135deg,rgba(191,64,191,.15),rgba(191,64,191,.08));
   border-radius:18px;padding:1.8rem;text-align:center}
 .zz-cta__btn{display:inline-flex;align-items:center;gap:9px;margin-top:1.1rem;padding:.85rem 1.6rem;
   position:relative;overflow:hidden;isolation:isolate;
@@ -176,7 +180,7 @@
   transition:transform .15s ease,box-shadow .15s ease,filter .15s ease}
 .zznx__btn:hover{transform:translateY(-1px);filter:brightness(1.08);
   box-shadow:0 10px 28px rgba(var(--cl-accent-rgb,191,64,191),.45)}
-.zznx__btn--ghost{background:rgba(255,255,255,.04);color:rgba(235,238,255,.85);
+.zznx__btn--ghost{background:rgba(255,255,255,.04);color:rgba(231,236,255,.85);
   border-color:rgba(255,255,255,.14);box-shadow:none}
 .zznx__btn--ghost:hover{border-color:rgba(var(--cl-accent-rgb,191,64,191),.5);filter:none}
 .zznx--charged .zznx__btn:not(.zznx__btn--ghost){animation:zznxPulse 1.6s ease-in-out infinite}

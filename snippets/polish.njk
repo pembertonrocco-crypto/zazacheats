@@ -9,12 +9,12 @@
 <style>
 /* ===== global feel: selection, scrollbar, focus, smoothness ===== */
 ::selection{background:rgba(191,64,191,.4);color:#fff}
-html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
+html{scrollbar-color:rgba(191,64,191,.45) #0a0c18}
 ::-webkit-scrollbar{width:11px;height:11px}
-::-webkit-scrollbar-track{background:#0a0c1a}
-::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(191,64,191,.55),rgba(124,58,237,.45));
-  border-radius:8px;border:2px solid #0a0c1a}
-::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,rgba(191,64,191,.8),rgba(124,58,237,.7))}
+::-webkit-scrollbar-track{background:#0a0c18}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(191,64,191,.55),rgba(191,64,191,.45));
+  border-radius:8px;border:2px solid #0a0c18}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,rgba(191,64,191,.8),rgba(191,64,191,.7))}
 
 /* keyboard users get a real focus ring; mouse users don't get outline spam */
 :focus{outline:none}
@@ -129,7 +129,7 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
 <style>
 /* ---- refined glass surfaces (modals, dropdowns, selects) ---- */
 .modal-content{
-  background:rgba(10,13,30,.78)!important;
+  background:rgba(6,7,15,.78)!important;
   border:1px solid rgba(255,255,255,.09)!important;
   border-radius:20px!important;
   backdrop-filter:blur(18px) saturate(140%);
@@ -138,7 +138,7 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
 }
 .modal-header,.modal-footer{border-color:rgba(255,255,255,.07)!important}
 .dropdown-menu,.dropdown-menu-dark{
-  background:rgba(10,13,30,.86)!important;
+  background:rgba(6,7,15,.86)!important;
   border:1px solid rgba(255,255,255,.08)!important;
   border-radius:14px!important;
   backdrop-filter:blur(14px) saturate(130%);
@@ -148,7 +148,7 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
 }
 .dropdown-item{border-radius:9px;transition:background-color .18s ease,color .18s ease}
 .choices__list--dropdown,.choices[data-type*="select-one"] .choices__list--dropdown{
-  background:rgba(10,13,30,.9)!important;
+  background:rgba(6,7,15,.9)!important;
   border:1px solid rgba(255,255,255,.09)!important;
   border-radius:14px!important;
   backdrop-filter:blur(14px);
@@ -378,9 +378,9 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
 
     /* horizon glow band */
     var hg = ctx.createLinearGradient(0, VY - 44, 0, VY + 44);
-    hg.addColorStop(0, 'rgba(124,58,237,0)');
-    hg.addColorStop(0.5, 'rgba(124,58,237,' + (0.05 * gA).toFixed(3) + ')');
-    hg.addColorStop(1, 'rgba(124,58,237,0)');
+    hg.addColorStop(0, 'rgba(191,64,191,0)');
+    hg.addColorStop(0.5, 'rgba(191,64,191,' + (0.05 * gA).toFixed(3) + ')');
+    hg.addColorStop(1, 'rgba(191,64,191,0)');
     ctx.fillStyle = hg;
     ctx.fillRect(0, VY - 44, W, 88);
 
@@ -421,10 +421,10 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
         var py = VY + (H - VY) * ps;
         var pa = (0.05 + 0.13 * pulseZ) * gA;
         ctx.lineWidth = 5;
-        ctx.strokeStyle = 'rgba(124,58,237,' + (pa * 0.35).toFixed(3) + ')';
+        ctx.strokeStyle = 'rgba(191,64,191,' + (pa * 0.35).toFixed(3) + ')';
         ctx.beginPath(); ctx.moveTo(gridX(xa, ps), py); ctx.lineTo(gridX(xb, ps), py); ctx.stroke();
         ctx.lineWidth = 1.4;
-        ctx.strokeStyle = 'rgba(236,221,255,' + pa.toFixed(3) + ')';
+        ctx.strokeStyle = 'rgba(230,170,255,' + pa.toFixed(3) + ')';
         ctx.beginPath(); ctx.moveTo(gridX(xa, ps), py); ctx.lineTo(gridX(xb, ps), py); ctx.stroke();
         ctx.lineWidth = 1;
       }
@@ -478,7 +478,7 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
       var g = ctx.createLinearGradient(tx, ty, tr.x, tr.y);
       g.addColorStop(0, 'rgba(191,64,191,0)');
       g.addColorStop(0.8, 'rgba(191,64,191,' + (0.4 * gA).toFixed(3) + ')');
-      g.addColorStop(1, 'rgba(216,140,255,' + (0.55 * gA).toFixed(3) + ')');
+      g.addColorStop(1, 'rgba(230,170,255,' + (0.55 * gA).toFixed(3) + ')');
       ctx.strokeStyle = g;
       ctx.lineWidth = 2.2;
       ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(tr.x, tr.y); ctx.stroke();
@@ -495,7 +495,7 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
       if(tr.flash > 0){
         tr.flash -= dt;
         var fp = 1 - tr.flash / 0.12;
-        ctx.strokeStyle = 'rgba(236,221,255,' + ((1 - fp) * 0.45 * gA).toFixed(3) + ')';
+        ctx.strokeStyle = 'rgba(230,170,255,' + ((1 - fp) * 0.45 * gA).toFixed(3) + ')';
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.arc(px - tr.vx * dt, py - tr.vy * dt, 2 + fp * 12, 0, Math.PI * 2);
@@ -520,7 +520,7 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
     g.addColorStop(1, 'rgba(191,64,191,0)');
     ctx.fillStyle = g;
     ctx.fillRect(0, sweepY - 55, W, 110);
-    ctx.fillStyle = 'rgba(236,221,255,' + (0.09 * gA).toFixed(3) + ')';
+    ctx.fillStyle = 'rgba(230,170,255,' + (0.09 * gA).toFixed(3) + ')';
     ctx.fillRect(0, sweepY, W, 1);
   }
 

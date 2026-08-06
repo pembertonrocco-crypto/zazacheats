@@ -7,7 +7,7 @@
     <div class="comparison-badge-wrap">
       <div class="comparison-badge">
         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 512 512" style="flex-shrink:0">
-          <path fill="rgba(180,210,255,0.8)" d="M288 448H64V224h64v-64H64c-35.3 0-64 28.7-64 64v224c0 35.3 28.7 64 64 64h224c35.3 0 64-28.7 64-64v-64h-64v64zm-64-96h224c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H224c-35.3 0-64 28.7-64 64v224c0 35.3 28.7 64 64 64z"/>
+          <path fill="rgba(231,236,255,0.8)" d="M288 448H64V224h64v-64H64c-35.3 0-64 28.7-64 64v224c0 35.3 28.7 64 64 64h224c35.3 0 64-28.7 64-64v-64h-64v64zm-64-96h224c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H224c-35.3 0-64 28.7-64 64v224c0 35.3 28.7 64 64 64z"/>
         </svg>
         <span>See the Difference</span>
       </div>
@@ -92,7 +92,7 @@
   top: 62%;
   transform: translateY(-50%);
   left: 5%;
-  background: radial-gradient(circle, rgba(124,58,237,0.2) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(191,64,191,0.2) 0%, transparent 70%);
 }
 
 .comparison__glow--right {
@@ -143,7 +143,7 @@
   top: 0;
   left: 15%; right: 15%;
   height: 6px;
-  background: linear-gradient(90deg, transparent, rgba(180,210,255,0.18) 40%, rgba(180,210,255,0.18) 60%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(231,236,255,0.18) 40%, rgba(231,236,255,0.18) 60%, transparent);
   border-radius: 999px;
   filter: blur(4px);
   pointer-events: none;
@@ -155,7 +155,7 @@
   bottom: 0;
   left: 15%; right: 15%;
   height: 6px;
-  background: linear-gradient(90deg, transparent, rgba(180,210,255,0.12) 40%, rgba(180,210,255,0.12) 60%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(231,236,255,0.12) 40%, rgba(231,236,255,0.12) 60%, transparent);
   border-radius: 999px;
   filter: blur(4px);
   pointer-events: none;
@@ -266,7 +266,7 @@
 .comparison__grip svg {
   width: 11px;
   height: 11px;
-  color: #111;
+  color: #06070f;
   flex-shrink: 0;
 }
 
@@ -329,8 +329,8 @@
     ctx.clearRect(0, 0, CW, CH);
 
     var glow = ctx.createRadialGradient(0, CY, 0, 0, CY, 55);
-    glow.addColorStop(0,    'rgba(180,200,255,1)');
-    glow.addColorStop(0.15, 'rgba(150,175,255,0.85)');
+    glow.addColorStop(0,    'rgba(231,236,255,1)');
+    glow.addColorStop(0.15, 'rgba(231,236,255,0.85)');
     glow.addColorStop(0.4,  'rgba(191,64,191,0.35)');
     glow.addColorStop(0.75, 'rgba(191,64,191,0.08)');
     glow.addColorStop(1,    'rgba(191,64,191,0)');
@@ -359,7 +359,7 @@
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(210,222,255,' + (p.alpha * fade) + ')';
+      ctx.fillStyle = 'rgba(231,236,255,' + (p.alpha * fade) + ')';
       ctx.fill();
     }
 

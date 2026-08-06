@@ -84,6 +84,26 @@ const global_ = {
   },
 };
 
+/* settings.json keys its components by instance id ("feedbacks-1776878048349"),
+   but a template asks for them by file name. Key on `type` so the lookup in
+   render.js matches the {% render_component %} argument, and drop the hero's
+   dashboard title so its own two-line headline is what gets measured — that
+   headline is the fallback the live site does not use today, but it is the
+   only thing in the theme that renders .hero-title-line--accent. */
+function settingsProperties(templateName) {
+  let settings;
+  try {
+    settings = require('../settings.json');
+  } catch { return {}; }
+  const components = ((settings.templates || {})[templateName] || {}).components || {};
+  const out = {};
+  for (const cfg of Object.values(components)) {
+    if (cfg && cfg.type) out[cfg.type] = Object.assign({}, cfg.properties);
+  }
+  if (out.hero) out.hero.title = null;
+  return out;
+}
+
 function baseContext(templateName, extra = {}) {
   return Object.assign(
     {
@@ -117,6 +137,14 @@ function baseContext(templateName, extra = {}) {
             answer: 'Each purchase is licensed to a single PC HWID, which keeps key sharing down and the detection rate low.' },
         ],
       },
+      /* Per-component properties, read out of the theme's own settings.json
+         and merged over `properties` by render.js. Before this there was one
+         shared `properties` object, so every component on the homepage
+         rendered the FAQ's title — the hero included, which meant the
+         hardcoded two-line headline and its accent line were never rendered
+         by any check, and every line-length measurement was taken against
+         copy nobody will ever see. */
+      componentProperties: settingsProperties(templateName),
       componentId: 'hero',
       components_order: [],
       currency: 'USD',

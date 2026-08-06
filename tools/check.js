@@ -293,6 +293,26 @@ function checkReviewSeeds() {
       .map(([n, files]) => `${n} (${files.join(', ')})`);
     err('review-seeds', `seeds disagree: ${parts.join(' vs ')} — they must all be the same number`);
   }
+
+  /* feedback-page.njk carries the owner-stated total as a floor rather than a
+     literal seed, so the loop above cannot see it. It has to agree with the
+     seeds or the two fight at runtime: a floor below the seeds lets a starved
+     render sync every page downwards, and a floor above them means the seeds
+     visibly jump the moment the sync lands. */
+  const fp = path.join(ROOT, 'components', 'feedback-page.njk');
+  if (fs.existsSync(fp)) {
+    const m = /{%\s*set\s+zzTotalFloor\s*=\s*(\d+)\s*%}/.exec(fs.readFileSync(fp, 'utf8'));
+    if (!m) {
+      warn('review-seeds', 'components/feedback-page.njk has no zzTotalFloor');
+    } else if (seeds.size === 1) {
+      const seed = [...seeds.keys()][0];
+      const floor = parseInt(m[1], 10);
+      if (floor !== seed) {
+        err('review-seeds',
+          `zzTotalFloor is ${floor} but every seed is ${seed} — /feedback and the rest of the site would show different numbers`);
+      }
+    }
+  }
 }
 
 checkReviewSeeds();

@@ -31,11 +31,11 @@
 /* head block — matches the hardcoded review cards */
 .fc__head{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .fc__avatar{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
-  font-weight:700;font-size:13px;color:#fff;background:linear-gradient(135deg,#BF40BF,#7C3AED)}
+  font-weight:700;font-size:13px;color:#fff;background:linear-gradient(135deg,#BF40BF,#8e2d8e)}
 .fc__who{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
 .fc__user{font-size:14px;font-weight:700;color:#fff;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fc__verified{font-size:10px;font-weight:500;color:rgba(74,222,128,.9);letter-spacing:.02em}
-.fc__product-tag{font-size:10px;font-weight:500;color:rgba(180,210,255,.6);
+.fc__verified{font-size:10px;font-weight:500;color:rgba(34,197,94,.9);letter-spacing:.02em}
+.fc__product-tag{font-size:10px;font-weight:500;color:rgba(231,236,255,.6);
   background:rgba(191,64,191,.08);border:1px solid rgba(191,64,191,.14);border-radius:999px;padding:3px 9px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%}
 
@@ -45,7 +45,7 @@
   flex-direction: column;
   gap: 12px;
   height: 180px;
-  background: #0a0e22;
+  background: #0a0c18;
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 14px;
   padding: 16px;
@@ -61,7 +61,7 @@
   left: 20%;
   right: 20%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(180, 210, 255, 0.22) 50%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(231, 236, 255, 0.22) 50%, transparent);
   opacity: 0;
   transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 1;
@@ -78,7 +78,7 @@
   background: radial-gradient(
     ellipse at center,
     rgba(191,64,191, 0.2) 0%,
-    rgba(124,58,237, 0.1) 30%,
+    rgba(191,64,191, 0.1) 30%,
     rgba(191,64,191, 0.03) 60%,
     transparent 75%
   );
@@ -89,8 +89,8 @@
 }
 
 .fc:hover {
-  background: #0c1128;
-  border-color: rgba(180, 210, 255, 0.14);
+  background: #0a0c18;
+  border-color: rgba(231, 236, 255, 0.14);
 }
 
 .fc:hover::before {
@@ -145,12 +145,12 @@
 }
 
 .fc__star--filled {
-  fill: rgba(255, 196, 70, 0.9);
+  fill: rgba(251, 191, 36, 0.9);
 }
 
 .fc__star--empty {
   fill: none;
-  stroke: rgba(255, 196, 70, 0.28);
+  stroke: rgba(251, 191, 36, 0.28);
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -195,8 +195,8 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: rgba(255, 196, 70, 0.07);
-  border: 1px solid rgba(255, 196, 70, 0.14);
+  background: rgba(251, 191, 36, 0.07);
+  border: 1px solid rgba(251, 191, 36, 0.14);
   border-radius: 999px;
   padding: 4px 8px;
   line-height: 1;
@@ -205,14 +205,14 @@
 .fc__rating-badge span {
   font-size: 10px;
   font-weight: 700;
-  color: rgba(255, 196, 70, 0.85);
+  color: rgba(251, 191, 36, 0.85);
   letter-spacing: 0.02em;
 }
 
 .fc__rating-star {
   width: 10px;
   height: 10px;
-  fill: rgba(255, 196, 70, 0.85);
+  fill: rgba(251, 191, 36, 0.85);
 }
 
 @media (max-width: 640px) {

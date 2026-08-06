@@ -99,7 +99,7 @@
 <style>
 .scs{max-width:940px;margin:64px auto 0;display:flex;flex-direction:column;gap:22px;
   font-family:var(--zz-sans)}
-.scs-eyebrow{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.78rem;letter-spacing:.16em;color:#c964e0;margin:0 0 18px;text-align:center}
+.scs-eyebrow{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.78rem;letter-spacing:.16em;color:#bf40bf;margin:0 0 18px;text-align:center}
 
 /* status ribbon */
 .scs-status{display:flex;align-items:center;gap:16px;padding:16px 20px;text-decoration:none;
@@ -111,19 +111,19 @@
 @keyframes scsPing{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.6);opacity:0}}
 .scs-status__text{flex:1;display:flex;flex-direction:column;gap:3px;line-height:1.4;min-width:0}
 .scs-status__t{font-size:1.06rem;font-weight:700;color:#fff}
-.scs-status__d{font-size:.88rem;color:rgba(208,222,244,.78)}
-.scs-status__go{flex-shrink:0;display:inline-flex;align-items:center;gap:7px;font-size:.92rem;font-weight:700;color:#5ee68f}
+.scs-status__d{font-size:.88rem;color:rgba(231,236,255,.78)}
+.scs-status__go{flex-shrink:0;display:inline-flex;align-items:center;gap:7px;font-size:.92rem;font-weight:700;color:#4ade80}
 
 /* steps */
 .scs-steps{padding:28px 26px;border:1px solid rgba(191,64,191,.14);border-radius:18px;background:rgba(255,255,255,.015)}
 .scs-steps__row{display:flex;align-items:stretch;gap:12px}
 .scs-step{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;min-width:0}
-.scs-step__ico{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;color:#cf9bff;
+.scs-step__ico{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;color:#e6aaff;
   border:1px solid rgba(191,64,191,.3);background:rgba(191,64,191,.11)}
 .scs-step__t{font-size:.98rem;font-weight:700;color:#fff;line-height:1.3}
-.scs-step__d{font-size:.85rem;color:rgba(206,220,244,.72);line-height:1.55}
+.scs-step__d{font-size:.85rem;color:rgba(231,236,255,.72);line-height:1.55}
 .scs-step__arrow{align-self:center;color:rgba(191,64,191,.65);flex-shrink:0}
-.scs-steps__note{margin:20px 0 0;text-align:center;font-size:.88rem;color:rgba(206,220,244,.72)}
+.scs-steps__note{margin:20px 0 0;text-align:center;font-size:.88rem;color:rgba(231,236,255,.72)}
 @media (max-width:720px){
   .scs-steps__row{flex-direction:column;gap:16px}
   .scs-step__arrow{transform:rotate(90deg)}
@@ -134,22 +134,22 @@
 @media (max-width:640px){.scs-proof__cards{grid-template-columns:1fr}}
 .scs-quote{margin:0;padding:20px 22px;border:1px solid rgba(191,64,191,.14);border-radius:16px;background:rgba(255,255,255,.015)}
 .scs-quote__stars{color:#fbbf24;font-size:.98rem;letter-spacing:.06em;margin-bottom:10px}
-.scs-quote blockquote{margin:0;font-size:.96rem;line-height:1.65;color:rgba(226,236,250,.92)}
-.scs-quote figcaption{margin-top:12px;font-size:.8rem;color:rgba(204,218,242,.65)}
-.scs-proof__link{display:block;margin-top:14px;text-align:center;font-size:.94rem;font-weight:700;color:#cf9bff;text-decoration:none}
-.scs-proof__link:hover{color:#e0b3ff;text-decoration:underline}
+.scs-quote blockquote{margin:0;font-size:.96rem;line-height:1.65;color:rgba(231,236,255,.92)}
+.scs-quote figcaption{margin-top:12px;font-size:.8rem;color:rgba(231,236,255,.65)}
+.scs-proof__link{display:block;margin-top:14px;text-align:center;font-size:.94rem;font-weight:700;color:#e6aaff;text-decoration:none}
+.scs-proof__link:hover{color:#e6aaff;text-decoration:underline}
 
 /* discord */
 .scs-discord{display:flex;align-items:center;gap:16px;padding:18px 20px;text-decoration:none;
   border:1px solid rgba(88,101,242,.25);border-radius:16px;background:rgba(88,101,242,.07);
   transition:border-color .25s,background .25s,transform .25s}
 .scs-discord:hover{border-color:rgba(88,101,242,.6);background:rgba(88,101,242,.13);transform:translateY(-2px)}
-.scs-discord > svg{flex-shrink:0;color:#8b96f5}
+.scs-discord > svg{flex-shrink:0;color:#e6aaff}
 .scs-discord__text{flex:1;display:flex;flex-direction:column;gap:3px;line-height:1.4;min-width:0}
 .scs-discord__t{font-size:1.06rem;font-weight:700;color:#fff}
-.scs-discord__d{font-size:.88rem;color:rgba(208,222,244,.78)}
+.scs-discord__d{font-size:.88rem;color:rgba(231,236,255,.78)}
 .scs-discord__btn{flex-shrink:0;padding:.7rem 1.3rem;border-radius:10px;font-size:.92rem;font-weight:700;color:#fff;
-  background:linear-gradient(135deg,#5865F2,#7C3AED);box-shadow:0 8px 22px -10px rgba(88,101,242,.8)}
+  background:linear-gradient(135deg,#5865F2,#8e2d8e);box-shadow:0 8px 22px -10px rgba(88,101,242,.8)}
 @media (max-width:520px){
   .scs-status,.scs-discord{flex-wrap:wrap}
   .scs-status__go,.scs-discord__btn{width:100%;justify-content:center;text-align:center;margin-top:4px}
@@ -164,17 +164,17 @@
   padding:15px 20px;border:1px solid rgba(239,68,68,.2);border-radius:14px;
   background:linear-gradient(180deg,rgba(239,68,68,.05),rgba(255,255,255,.01));text-align:center}
 .scs-refuse__label{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.72rem;
-  letter-spacing:.14em;color:rgba(254,190,190,.95);white-space:nowrap}
+  letter-spacing:.14em;color:rgba(248,113,113,.95);white-space:nowrap}
 .scs-refuse__items{display:inline-flex;gap:14px;flex-wrap:wrap;justify-content:center}
 .scs-refuse__items s{font-size:.9rem;font-weight:700;color:rgba(255,255,255,.72);
   text-decoration:line-through;text-decoration-color:rgba(239,68,68,.8);text-decoration-thickness:2px;
   white-space:nowrap}
-.scs-refuse__real{flex-basis:100%;font-size:.85rem;color:rgba(224,234,252,.72);line-height:1.55}
+.scs-refuse__real{flex-basis:100%;font-size:.85rem;color:rgba(231,236,255,.72);line-height:1.55}
 
 /* provenance + policies */
-.scs-proof__prov{margin:9px 0 0;text-align:center;font-size:.8rem;color:rgba(204,218,242,.7);line-height:1.55}
-.scs-policies{margin:2px 0 0;text-align:center;font-size:.85rem;color:rgba(206,220,244,.75)}
-.scs-policies a{color:rgba(214,228,250,.9);text-decoration:none;border-bottom:1px solid rgba(200,215,240,.35);
+.scs-proof__prov{margin:9px 0 0;text-align:center;font-size:.8rem;color:rgba(231,236,255,.7);line-height:1.55}
+.scs-policies{margin:2px 0 0;text-align:center;font-size:.85rem;color:rgba(231,236,255,.75)}
+.scs-policies a{color:rgba(231,236,255,.9);text-decoration:none;border-bottom:1px solid rgba(231,236,255,.35);
   transition:color .2s,border-color .2s}
 .scs-policies a:hover{color:#fff;border-color:rgba(191,64,191,.6)}
 </style>

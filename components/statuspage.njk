@@ -76,7 +76,7 @@
             <div class="metric">
               <span class="metric-label">Response Time</span>
               <div class="metric-bar">
-                <div class="metric-fill" style="width: 95%; background: linear-gradient(90deg, #3b82f6, #06b6d4);"></div>
+                <div class="metric-fill" style="width: 95%; background: linear-gradient(90deg, #bf40bf, #bf40bf);"></div>
               </div>
               <span class="metric-value">45ms</span>
             </div>
@@ -102,7 +102,7 @@
 <style>
 .status-page-container {
   width: 100%;
-  background: linear-gradient(135deg, #06091a 0%, #0f1430 100%);
+  background: linear-gradient(135deg, #0a0c18 0%, #12162a 100%);
   position: relative;
   overflow: hidden;
   font-family:var(--zz-sans);
@@ -164,7 +164,7 @@
 
 .status-page-subtitle {
   font-size: 1.1rem;
-  color: rgba(200, 215, 240, 0.6);
+  color: rgba(231, 236, 255, 0.6);
   margin: 0;
   font-weight: 400;
   letter-spacing: 0.01em;
@@ -197,7 +197,7 @@
   height: 12px;
   border-radius: 50%;
   background: #22c55e;
-  box-shadow: 0 0 16px rgba(34, 197, 94, 0.8);
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.36);
   animation: pulse 2s ease-in-out infinite;
 }
 
@@ -210,7 +210,7 @@
 
 .overview-info p {
   font-size: 0.9rem;
-  color: rgba(200, 215, 240, 0.5);
+  color: rgba(231, 236, 255, 0.5);
   margin: 0;
 }
 
@@ -227,7 +227,7 @@
 
 .stat-label {
   font-size: 0.85rem;
-  color: rgba(200, 215, 240, 0.5);
+  color: rgba(231, 236, 255, 0.5);
   font-weight: 500;
 }
 
@@ -261,22 +261,22 @@
 
 .legend-dot.undetected {
   background: #22c55e;
-  box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.23);
 }
 
 .legend-dot.updating {
-  background: #eab308;
-  box-shadow: 0 0 12px rgba(234, 179, 8, 0.5);
+  background: #fbbf24;
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.23);
 }
 
 .legend-dot.detected {
   background: #ef4444;
-  box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.23);
 }
 
 .legend-text {
   font-size: 0.9rem;
-  color: rgba(200, 215, 240, 0.7);
+  color: rgba(231, 236, 255, 0.7);
   font-weight: 500;
 }
 
@@ -290,7 +290,7 @@
 
 .service-card {
   position: relative;
-  background: linear-gradient(135deg, rgba(191,64,191, 0.08) 0%, rgba(124,58,237, 0.04) 100%);
+  background: linear-gradient(135deg, rgba(191,64,191, 0.08) 0%, rgba(191,64,191, 0.04) 100%);
   border: 1px solid rgba(191,64,191, 0.15);
   border-radius: 20px;
   padding: 32px;
@@ -310,7 +310,7 @@
 }
 
 .service-card:hover {
-  background: linear-gradient(135deg, rgba(191,64,191, 0.12) 0%, rgba(124,58,237, 0.06) 100%);
+  background: linear-gradient(135deg, rgba(191,64,191, 0.12) 0%, rgba(191,64,191, 0.06) 100%);
   border-color: rgba(191,64,191, 0.25);
   transform: translateY(-4px);
   box-shadow: 0 20px 40px rgba(191,64,191, 0.1);
@@ -362,7 +362,7 @@
 
 .card-description {
   font-size: 0.9rem;
-  color: rgba(200, 215, 240, 0.5);
+  color: rgba(231, 236, 255, 0.5);
   margin: 0;
 }
 
@@ -382,8 +382,8 @@
 }
 
 .card-status.updating {
-  background: rgba(234, 179, 8, 0.1);
-  border-color: rgba(234, 179, 8, 0.2);
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.2);
 }
 
 .card-status.detected {
@@ -438,7 +438,7 @@
 
 .metric-label {
   font-size: 0.85rem;
-  color: rgba(200, 215, 240, 0.6);
+  color: rgba(231, 236, 255, 0.6);
   font-weight: 500;
   min-width: 100px;
 }
@@ -459,7 +459,7 @@
 
 .metric-value {
   font-size: 0.85rem;
-  color: rgba(200, 215, 240, 0.7);
+  color: rgba(231, 236, 255, 0.7);
   font-weight: 500;
   min-width: 50px;
   text-align: right;
@@ -471,10 +471,10 @@
   align-items: center;
   gap: 8px;
   padding: 12px 20px;
-  background: linear-gradient(135deg, rgba(191,64,191, 0.2), rgba(124,58,237, 0.1));
+  background: linear-gradient(135deg, rgba(191,64,191, 0.2), rgba(191,64,191, 0.1));
   border: 1px solid rgba(191,64,191, 0.2);
   border-radius: 10px;
-  color: #a8c4ff;
+  color: #e6aaff;
   text-decoration: none;
   font-weight: 500;
   font-size: 0.95rem;
@@ -483,7 +483,7 @@
 }
 
 .card-link:hover {
-  background: linear-gradient(135deg, rgba(191,64,191, 0.3), rgba(124,58,237, 0.15));
+  background: linear-gradient(135deg, rgba(191,64,191, 0.3), rgba(191,64,191, 0.15));
   border-color: rgba(191,64,191, 0.3);
   color: #ffffff;
   transform: translateX(4px);
@@ -504,16 +504,16 @@
 
 .footer-text {
   font-size: 0.9rem;
-  color: rgba(200, 215, 240, 0.5);
+  color: rgba(231, 236, 255, 0.5);
   margin: 0;
 }
 
 .update-time {
-  color: rgba(200, 215, 240, 0.6);
+  color: rgba(231, 236, 255, 0.6);
 }
 
 .footer-link {
-  color: #a8c4ff;
+  color: #e6aaff;
   text-decoration: none;
   transition: color 0.3s ease;
 }
@@ -548,7 +548,7 @@
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
-    box-shadow: 0 0 16px rgba(34, 197, 94, 0.8);
+    box-shadow: 0 0 16px rgba(34, 197, 94, 0.36);
   }
   50% {
     opacity: 0.5;

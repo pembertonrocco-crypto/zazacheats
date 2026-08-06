@@ -9,10 +9,10 @@
         <div class="faq-badge-wrap">
           <div class="faq-badge">
             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 20 20" style="flex-shrink:0">
-              <path fill="rgba(180,210,255,0.8)" d="M11.739 16.213a2 2 0 1 1-4 0a2 2 0 0 1 4 0Z"/>
-              <path fill="rgba(180,210,255,0.8)" fill-rule="evenodd" d="M9.71 4.765c-.67 0-1.245.2-1.65.486c-.39.276-.583.597-.639.874a1.45 1.45 0 0 1-2.842-.574c.227-1.126.925-2.045 1.809-2.67c.92-.65 2.086-1.016 3.322-1.016c2.557 0 5.208 1.71 5.208 4.456c0 1.59-.945 2.876-2.169 3.626a1.45 1.45 0 0 1-1.514-2.474c.57-.349.783-.794.783-1.152c0-.574-.715-1.556-2.308-1.556Z" clip-rule="evenodd"/>
-              <path fill="rgba(180,210,255,0.5)" fill-rule="evenodd" d="M9.71 8.63c.8 0 1.45.648 1.45 1.45v1.502a1.45 1.45 0 1 1-2.9 0V10.08c0-.8.649-1.45 1.45-1.45Z" clip-rule="evenodd"/>
-              <path fill="rgba(180,210,255,0.5)" fill-rule="evenodd" d="M13.239 7.966a1.45 1.45 0 0 1-.5 1.99l-2.284 1.367a1.45 1.45 0 0 1-1.49-2.488l2.285-1.368a1.45 1.45 0 0 1 1.989.5Z" clip-rule="evenodd"/>
+              <path fill="rgba(231,236,255,0.8)" d="M11.739 16.213a2 2 0 1 1-4 0a2 2 0 0 1 4 0Z"/>
+              <path fill="rgba(231,236,255,0.8)" fill-rule="evenodd" d="M9.71 4.765c-.67 0-1.245.2-1.65.486c-.39.276-.583.597-.639.874a1.45 1.45 0 0 1-2.842-.574c.227-1.126.925-2.045 1.809-2.67c.92-.65 2.086-1.016 3.322-1.016c2.557 0 5.208 1.71 5.208 4.456c0 1.59-.945 2.876-2.169 3.626a1.45 1.45 0 0 1-1.514-2.474c.57-.349.783-.794.783-1.152c0-.574-.715-1.556-2.308-1.556Z" clip-rule="evenodd"/>
+              <path fill="rgba(231,236,255,0.5)" fill-rule="evenodd" d="M9.71 8.63c.8 0 1.45.648 1.45 1.45v1.502a1.45 1.45 0 1 1-2.9 0V10.08c0-.8.649-1.45 1.45-1.45Z" clip-rule="evenodd"/>
+              <path fill="rgba(231,236,255,0.5)" fill-rule="evenodd" d="M13.239 7.966a1.45 1.45 0 0 1-.5 1.99l-2.284 1.367a1.45 1.45 0 0 1-1.49-2.488l2.285-1.368a1.45 1.45 0 0 1 1.989.5Z" clip-rule="evenodd"/>
             </svg>
             <span>FAQ</span>
           </div>
@@ -111,8 +111,8 @@
 </section>
 
 <style>
-.zzfaq-pin{margin-top:14px;border:1px solid rgba(245,196,81,.3);border-radius:14px;overflow:hidden;
-  background:linear-gradient(160deg,rgba(245,196,81,.06),rgba(12,15,30,.55))}
+.zzfaq-pin{margin-top:14px;border:1px solid rgba(251,191,36,.3);border-radius:14px;overflow:hidden;
+  background:linear-gradient(160deg,rgba(251,191,36,.06),rgba(10,12,24,.55))}
 .zzfaq-pin__q{display:flex;align-items:center;gap:12px;cursor:pointer;list-style:none;padding:16px 18px}
 .zzfaq-pin__q::-webkit-details-marker{display:none}
 /* smooth open/close (progressive enhancement, no-op on older browsers) */
@@ -122,19 +122,19 @@
 .zzfaq-pin[open]::details-content{block-size:auto}
 @media (prefers-reduced-motion:reduce){.zzfaq-pin::details-content{transition:none}}
 .zzfaq-pin__badge{flex-shrink:0;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.58rem;font-weight:700;
-  letter-spacing:.18em;color:#0b0a05;background:linear-gradient(135deg,#ffe9a3,#e8b53a);border-radius:999px;padding:5px 10px}
+  letter-spacing:.18em;color:#06070f;background:linear-gradient(135deg,#fde047,#e8b53a);border-radius:999px;padding:5px 10px}
 .zzfaq-pin__t{flex:1;font-weight:700;color:#fff;font-size:1rem}
-.zzfaq-pin__q svg{color:rgba(200,215,240,.5);transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.zzfaq-pin__q svg{color:rgba(231,236,255,.5);transition:transform .3s cubic-bezier(.22,1,.36,1)}
 .zzfaq-pin[open] .zzfaq-pin__q svg{transform:rotate(180deg)}
-.zzfaq-pin__a{padding:0 18px 16px;color:rgba(220,232,255,.75);font-size:.94rem;line-height:1.65}
+.zzfaq-pin__a{padding:0 18px 16px;color:rgba(231,236,255,.75);font-size:.94rem;line-height:1.65}
 .zzfaq-pin__a p{margin:0 0 10px}
-.zzfaq-pin__a a{color:#f7d474;font-weight:700;text-decoration:none}
+.zzfaq-pin__a a{color:#fde047;font-weight:700;text-decoration:none}
 .zzfaq-pin__a a:hover{text-decoration:underline}
 @media (max-width:560px){.zzfaq-pin__q{flex-wrap:wrap;gap:8px}}
 
 .faq-section {
   position: relative;
-  background: #06091a;
+  background: #0a0c18;
   font-family:var(--zz-sans);
   overflow: hidden;
   padding-top: 7.5rem;
@@ -160,7 +160,7 @@
   top: 50%;
   transform: translateY(-50%);
   left: 280px;
-  background: radial-gradient(circle, rgba(124,58,237, 0.75) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(191,64,191, 0.75) 0%, transparent 70%);
 }
 
 .faq-glow--right {
@@ -228,7 +228,7 @@
   top: 0;
   left: 15%; right: 15%;
   height: 6px;
-  background: linear-gradient(90deg, transparent, rgba(180,210,255,0.18) 40%, rgba(180,210,255,0.18) 60%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(231,236,255,0.18) 40%, rgba(231,236,255,0.18) 60%, transparent);
   border-radius: 999px;
   filter: blur(4px);
   pointer-events: none;
@@ -240,7 +240,7 @@
   bottom: 0;
   left: 15%; right: 15%;
   height: 6px;
-  background: linear-gradient(90deg, transparent, rgba(180,210,255,0.12) 40%, rgba(180,210,255,0.12) 60%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(231,236,255,0.12) 40%, rgba(231,236,255,0.12) 60%, transparent);
   border-radius: 999px;
   filter: blur(4px);
   pointer-events: none;
@@ -262,7 +262,7 @@
 
 .faq-subtitle {
   font-size: 0.9rem;
-  color: rgba(200, 215, 240, 0.5);
+  color: rgba(231, 236, 255, 0.5);
   line-height: 1.8;
   margin: 0;
   max-width: 340px;
@@ -293,7 +293,7 @@
 .faq-question {
   font-size: 0.925rem;
   font-weight: 500;
-  color: rgba(220, 230, 255, 0.85);
+  color: rgba(231, 236, 255, 0.85);
   line-height: 1.5;
   transition: color 0.2s ease;
 }
@@ -307,7 +307,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(160, 196, 255, 0.35);
+  color: rgba(231, 236, 255, 0.35);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
 }
 
@@ -329,7 +329,7 @@
 .faq-answer {
   padding: 0 0 1.5rem;
   font-size: 0.875rem;
-  color: rgba(200, 215, 240, 0.7);
+  color: rgba(231, 236, 255, 0.7);
   line-height: 1.85;
   margin: 0;
   white-space: pre-line;
@@ -368,23 +368,23 @@
   border:1px solid rgba(191,64,191,.2);border-radius:12px;background:rgba(255,255,255,.02);
   transition:border-color .2s}
 .faq-search:focus-within{border-color:rgba(191,64,191,.55)}
-.faq-search svg{flex-shrink:0;color:rgba(200,215,240,.45)}
+.faq-search svg{flex-shrink:0;color:rgba(231,236,255,.45)}
 .faq-search__input{flex:1;padding:13px 0;border:0;background:transparent;color:#fff;
   font-size:.9rem;font-family:inherit;outline:none}
-.faq-search__input::placeholder{color:rgba(200,215,240,.35)}
-.faq-noresults{margin:0 0 14px;font-size:.84rem;color:rgba(200,215,240,.55);font-style:italic}
+.faq-search__input::placeholder{color:rgba(231,236,255,.35)}
+.faq-noresults{margin:0 0 14px;font-size:.84rem;color:rgba(231,236,255,.55);font-style:italic}
 .faq-stuck{margin-top:18px;display:flex;align-items:center;gap:14px;padding:16px 18px;
   border:1px solid rgba(88,101,242,.25);border-radius:14px;background:rgba(88,101,242,.06)}
 .faq-stuck__text{flex:1;display:flex;flex-direction:column;line-height:1.35;min-width:0}
 .faq-stuck__t{font-size:.9rem;font-weight:700;color:#fff}
-.faq-stuck__d{font-size:.76rem;color:rgba(200,215,240,.6)}
+.faq-stuck__d{font-size:.76rem;color:rgba(231,236,255,.6)}
 .faq-stuck__btn{flex-shrink:0;padding:.65rem 1.2rem;border-radius:10px;font-size:.82rem;font-weight:700;
-  color:#fff;text-decoration:none;background:linear-gradient(135deg,#5865F2,#7C3AED);
+  color:#fff;text-decoration:none;background:linear-gradient(135deg,#5865F2,#8e2d8e);
   box-shadow:0 8px 22px -10px rgba(88,101,242,.8);transition:transform .2s}
 .faq-stuck__btn:hover{transform:translateY(-2px)}
 @media (max-width:520px){.faq-stuck{flex-direction:column;text-align:center}.faq-stuck__btn{width:100%;text-align:center}}
 .faq-stuck__btns{display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap}
-.faq-stuck__btn--buy{background:linear-gradient(135deg,#BF40BF,#7C3AED);color:#fff;border:none;
+.faq-stuck__btn--buy{background:linear-gradient(135deg,#BF40BF,#8e2d8e);color:#fff;border:none;
   box-shadow:0 8px 22px -10px rgba(191,64,191,.8)}
 .faq-stuck__btn--buy:hover{filter:brightness(1.12)}
 @media (max-width:520px){.faq-stuck__btns{width:100%;flex-direction:column}}
@@ -392,19 +392,19 @@
 /* --- FAQ v2 additions: search hint, controls, highlight, copy-link --- */
 .faq-search{position:relative}
 .faq-search__kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);
-  font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.68rem;color:rgba(200,215,240,.45);
-  border:1px solid rgba(200,215,240,.18);border-radius:5px;padding:2px 7px;pointer-events:none}
+  font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.68rem;color:rgba(231,236,255,.45);
+  border:1px solid rgba(231,236,255,.18);border-radius:5px;padding:2px 7px;pointer-events:none}
 @media (max-width:640px){.faq-search__kbd{display:none}}
 .faq-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 2px 14px}
-.faq-count{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.7rem;letter-spacing:.06em;color:rgba(200,215,240,.5)}
-.faq-toggleall{background:none;border:1px solid rgba(200,215,240,.16);border-radius:8px;cursor:pointer;
-  padding:5px 12px;font-size:.72rem;font-weight:700;color:rgba(220,230,250,.75);transition:border-color .2s,color .2s}
+.faq-count{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.7rem;letter-spacing:.06em;color:rgba(231,236,255,.5)}
+.faq-toggleall{background:none;border:1px solid rgba(231,236,255,.16);border-radius:8px;cursor:pointer;
+  padding:5px 12px;font-size:.72rem;font-weight:700;color:rgba(231,236,255,.75);transition:border-color .2s,color .2s}
 .faq-toggleall:hover{border-color:rgba(191,64,191,.5);color:#fff}
 .faq-mark{background:rgba(191,64,191,.35);color:#fff;border-radius:3px;padding:0 2px}
 .faq-copylink{display:inline-flex;align-items:center;gap:6px;margin-top:12px;
   background:none;border:none;cursor:pointer;padding:0;
-  font-size:.72rem;color:rgba(200,215,240,.45);transition:color .2s}
-.faq-copylink:hover{color:#d98ad9}
+  font-size:.72rem;color:rgba(231,236,255,.45);transition:color .2s}
+.faq-copylink:hover{color:#e6aaff}
 .faq-copylink.is-copied{color:#22c55e}
 .faq-item:target{scroll-margin-top:90px}
 </style>

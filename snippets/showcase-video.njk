@@ -152,8 +152,7 @@
   }
   .zaza-showcase--nfa .zaza-showcase__title-dot{
     color:var(--zs-accent);
-    text-shadow:0 0 18px rgba(var(--zs-accent-rgb),.7);
-  }
+      }
 
   .zaza-showcase--nfa .zaza-showcase__sub{
     margin:0 0 clamp(1.8rem,3vw,2.2rem);max-width:38rem;
@@ -187,15 +186,15 @@
     display:inline-flex;align-items:center;gap:.4rem;align-self:flex-start;
     font-family:var(--zz-alt);font-variant-numeric:tabular-nums;
     font-size:.65rem;font-weight:700;letter-spacing:.14em;
-    color:#34d058;
+    color:#22c55e;
     padding:.32rem .55rem;border-radius:5px;
-    background:rgba(52,208,88,.1);
-    border:1px solid rgba(52,208,88,.32);
+    background:rgba(34,197,94,.1);
+    border:1px solid rgba(34,197,94,.32);
   }
   .zaza-showcase--nfa .zaza-wc__check{
     display:inline-flex;align-items:center;justify-content:center;
     width:14px;height:14px;border-radius:50%;
-    background:#34d058;color:#06091a;
+    background:#22c55e;color:#0a0c18;
   }
   .zaza-showcase--nfa .zaza-wc__tag--accent{
     color:var(--zs-accent);
@@ -252,16 +251,16 @@
 
   .zaza-showcase--nfa .zaza-showcase__facade{
     position:absolute;inset:2px;z-index:1;width:calc(100% - 4px);height:calc(100% - 4px);
-    display:block;border:0;padding:0;margin:0;cursor:pointer;border-radius:18px;overflow:hidden;background:#05070f;
+    display:block;border:0;padding:0;margin:0;cursor:pointer;border-radius:18px;overflow:hidden;background:#06070f;
   }
   .zaza-showcase--nfa .zaza-showcase__thumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.03);transition:transform .7s cubic-bezier(.16,1,.3,1),filter .4s ease;filter:saturate(1.06);}
-  .zaza-showcase--nfa .zaza-showcase__scrim{position:absolute;inset:0;background:radial-gradient(55% 55% at 50% 50%,transparent 0%,rgba(3,5,12,.5) 100%),linear-gradient(180deg,rgba(3,5,12,.1),rgba(3,5,12,.45));transition:opacity .4s ease;}
+  .zaza-showcase--nfa .zaza-showcase__scrim{position:absolute;inset:0;background:radial-gradient(55% 55% at 50% 50%,transparent 0%,rgba(6,7,15,.5) 100%),linear-gradient(180deg,rgba(6,7,15,.1),rgba(6,7,15,.45));transition:opacity .4s ease;}
   .zaza-showcase--nfa .zaza-showcase__sheen{position:absolute;inset:0;background:linear-gradient(120deg,transparent 35%,rgba(255,255,255,.06) 50%,transparent 65%);}
 
   .zaza-showcase--nfa .zaza-showcase__play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:92px;height:92px;display:grid;place-items:center;}
   .zaza-showcase--nfa .zaza-showcase__play-core{
     position:relative;z-index:2;width:84px;height:84px;border-radius:50%;display:grid;place-items:center;color:#fff;
-    background:linear-gradient(135deg,var(--zs-accent),#7c3aed);
+    background:linear-gradient(135deg,var(--zs-accent),#8e2d8e);
     box-shadow:0 18px 50px -10px rgba(var(--zs-accent-rgb),.95),0 0 0 1px rgba(255,255,255,.16) inset,0 0 0 6px rgba(var(--zs-accent-rgb),.14);
     transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s ease;
   }
@@ -274,7 +273,7 @@
     position:absolute;left:50%;bottom:1.15rem;transform:translateX(-50%);
     display:inline-flex;align-items:center;gap:.5rem;
     font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#fff;
-    padding:.45rem .9rem;border-radius:999px;background:rgba(8,11,24,.6);
+    padding:.45rem .9rem;border-radius:999px;background:rgba(6,7,15,.6);
     backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.16);
     transition:transform .35s cubic-bezier(.16,1,.3,1),opacity .35s ease;
   }
@@ -350,8 +349,8 @@
           if(frame.querySelector('.zsv-error')) return;
           var err=document.createElement('div');
           err.className='zsv-error';
-          err.style.cssText='position:absolute;inset:2px;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1.5rem;background:rgba(8,11,24,.92);color:#fff;border-radius:18px;font-family:var(--zz-alt);font-size:.82rem;line-height:1.6;';
-          err.innerHTML='<div style="font-weight:500;margin-bottom:.6rem;color:#ff6b6b;">Video failed to load</div><div style="opacity:.7;word-break:break-all;max-width:90%;">'+src+'</div>';
+          err.style.cssText='position:absolute;inset:2px;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1.5rem;background:rgba(6,7,15,.92);color:#fff;border-radius:18px;font-family:var(--zz-alt);font-size:.82rem;line-height:1.6;';
+          err.innerHTML='<div style="font-weight:500;margin-bottom:.6rem;color:#f87171;">Video failed to load</div><div style="opacity:.7;word-break:break-all;max-width:90%;">'+src+'</div>';
           frame.appendChild(err);
         }
         source.addEventListener('error',showError);

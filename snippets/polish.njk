@@ -801,17 +801,31 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
   });
   if(!hasUi&&!hasSchema)return;
 
-  /* The server-rendered seed is a FLOOR. feedback-page.njk warns that SellAuth
-     sometimes hands /feedback a data-starved render, which would compute a
-     total well below the truth — and a 12h sitewide cache would then spread it
-     everywhere. Review totals only grow, so anything under the seed is a bad
-     render: ignore it and keep what the page already says. */
+  /* The seed is a sanity floor, not an exact one.
+
+     feedback-page.njk warns that SellAuth sometimes hands /feedback a
+     data-starved render, which computes a total far below the truth — and a
+     sitewide cache would then spread it everywhere. That is the thing worth
+     rejecting.
+
+     It used to reject anything at all below the seed, which quietly made the
+     hand-maintained seed authoritative over the page that actually counts the
+     reviews. Set it one higher than reality — an easy thing to do, since it is
+     typed in by a human reading a dashboard — and every real total is refused
+     forever, freezing the wrong number on every page with no way to recover
+     except editing nine files again.
+
+     A starved render is not marginally low, it is catastrophically low: 12
+     against a real 78 in the case on record. So the floor is proportional.
+     Anything within sight of the seed is believed, and the page that can
+     actually count wins; anything near-empty is discarded. Self-healing in
+     both directions. */
   var seed=0;
   document.querySelectorAll('[data-zz-rc]').forEach(function(el){
     var v=parseInt((el.textContent||'').replace(/\D/g,''),10);
     if(v>seed)seed=v;
   });
-  function trust(t){ return t&&t>=seed; }
+  function trust(t){ return !!t && t>=Math.floor(seed*0.6); }
 
   /* Stale-while-revalidate.
 

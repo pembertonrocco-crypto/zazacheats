@@ -60,6 +60,13 @@ context in `tools/fixtures.js`, then asserts:
   it said 90 — visible as a desktop and a phone disagreeing on the same page.
   Raising the count means changing every seed, and this now says so out loud.
 
+  The seed is a *proportional* floor, not an exact one. It rejects a total
+  under 60% of itself — the data-starved render feedback-page.njk warns about,
+  which reported 12 against a real 78 — and believes anything above that, so
+  the page that actually counts the reviews wins over a number a human typed
+  in. An exact floor made the seed authoritative: set it one too high and
+  every real total is refused forever, freezing the wrong figure sitewide.
+
   The sync itself is **stale-while-revalidate, throttled per visit** — not per
   TTL. It paints the cached number instantly, then checks `/feedback` anyway.
   It used to return without checking whenever the cache was under 12h old,

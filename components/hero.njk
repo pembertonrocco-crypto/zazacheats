@@ -307,18 +307,7 @@
   letter-spacing: -0.03em;
   font-weight: 700;
   margin: 0;
-  background: linear-gradient(
-    176deg,
-    #ffffff 0%,
-    #ffffff 46%,
-    #f1e3ff 66%,
-    #d9b3ff 82%,
-    #BF40BF 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 3px 26px rgba(191, 64, 191, 0.28));
+  color: #fff;
 }
 .hero-title-line { display: inline-block; }
 
@@ -503,19 +492,12 @@ html.zz-motion .hero-title-mask .hero-title-line {
 html.zz-motion .hero-title-mask:nth-of-type(1) .hero-title-line { animation-delay: .62s; }
 html.zz-motion .hero-title-mask:nth-of-type(2) .hero-title-line { animation-delay: .76s; }
 
-/* accent line: slow living gradient + underline sweep */
+/* Accent line. Was a looping gradient sheen clipped to the text; the second
+   line of a two-line headline does not need to breathe. Flat tint plus the
+   underline sweep, which is enough to mark it as the emphasis. */
 .hero-title-line--accent {
   position: relative;
-  background: linear-gradient(100deg, #ffffff 0%, #e8c8ff 28%, #BF40BF 50%, #e8c8ff 72%, #ffffff 100%);
-  background-size: 220% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: heroAccentSheen 7s ease-in-out infinite;
-}
-@keyframes heroAccentSheen {
-  0%, 100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
+  color: #e6aaff;
 }
 .hero-title-line--accent::after {
   content: '';
@@ -523,7 +505,7 @@ html.zz-motion .hero-title-mask:nth-of-type(2) .hero-title-line { animation-dela
   left: 2%; right: 2%; bottom: -.09em;
   height: 2px;
   border-radius: 2px;
-  background: linear-gradient(90deg, transparent, rgba(191,64,191,.85), rgba(124,58,237,.85), transparent);
+  background: rgba(191,64,191,.75);
   transform: scaleX(0);
   transform-origin: left center;
 }
@@ -611,9 +593,7 @@ html.zz-motion .hero-scrollcue { animation: heroRise .8s cubic-bezier(.22,1,.36,
   .hero-btn-primary::after,
   .hero-btn-primary::before,
   .hero-status__pulse::after,
-  .hero-title-line--accent,
   .hero-scrollcue__dot { animation: none !important; }
-  .hero-title-line--accent { background-position: 50% 50%; }
   html.zz-motion .hero-status,
   html.zz-motion .hero-title,
   html.zz-motion .hero-title-mask .hero-title-line,

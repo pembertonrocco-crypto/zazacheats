@@ -147,14 +147,18 @@ stub it there or the render fails locally while working fine in production.
 ## Typography
 
 Three roles, defined once as custom properties on `:root` in `layouts/master.njk`:
-`--zz-sans` (Satoshi, body and labels), `--zz-display` (Clash Display,
-headings), `--zz-alt` (the label/eyebrow role). Nothing should name a typeface
-directly any more — the stacks used to be written out by hand in ~250 places
-across 34 files, which is how they drifted into eight spellings of the same
-thing.
+`--zz-sans` (body and labels), `--zz-display` (headings) and `--zz-alt` (the
+label/eyebrow role). **All three resolve to Satoshi.** The roles exist so the
+call sites do not have to be renamed, not because there are three faces — a
+separate geometric display face on every heading is the loudest "made from a
+template" signal a page can carry, and Apple, Rolex and Samsung all set their
+headlines in the body family and get hierarchy from size, weight and tracking
+instead. Nothing should name a typeface directly — the stacks used to be
+written out by hand in ~250 places across 34 files, which is how they drifted
+into eight spellings of the same thing.
 
 **Only ask for weights that are loaded.** Satoshi ships 300/400/500/700/900 on
-Fontshare and Clash Display 200-700; anything else is drawn by the browser
+Fontshare; anything else is drawn by the browser
 stretching the nearest real weight, and synthetic bold is the most recognisable
 cheap-web-page tell there is. The theme previously asked for Satoshi 800 in 146
 places while loading 400/500/700, so the price, the buy button and most

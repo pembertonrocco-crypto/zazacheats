@@ -121,36 +121,13 @@
     font-weight:700;letter-spacing:-.025em;
     font-size:clamp(3.4rem,12vw,7.5rem);
   }
+  /* Was a background-clip:text gradient with a looping sheen, a blurred neon
+     clone behind the glyphs and a second animated glint on ::after. Three
+     stacked effects on one word is the tell. It's one flat accent now. */
   .zaza-showcase__title-fill{
     position:relative;display:inline-block;
-    color:var(--zs-accent);            /* always-visible fallback */
+    color:var(--zs-accent);
   }
-  /* neon bloom clone behind the glyphs */
-  .zaza-showcase__title-fill::before{
-    content:attr(data-text);position:absolute;inset:0;z-index:-1;
-    color:var(--zs-accent);filter:blur(22px);opacity:.55;
-  }
-  @supports ((-webkit-background-clip:text) or (background-clip:text)){
-    .zaza-showcase__title-fill{
-      background:linear-gradient(100deg,
-        var(--zs-accent) 0%, #d65bff 26%, #7aa8ff 48%, #ffffff 56%, #7aa8ff 64%, #d65bff 80%, var(--zs-accent) 100%);
-      background-size:240% auto;
-      -webkit-background-clip:text;background-clip:text;
-      -webkit-text-fill-color:transparent;color:transparent;
-      animation:zsFlow 7s linear infinite;
-    }
-    /* moving glint */
-    .zaza-showcase__title-fill::after{
-      content:attr(data-text);position:absolute;inset:0;pointer-events:none;
-      background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.9) 50%,transparent 60%);
-      background-size:260% 100%;
-      -webkit-background-clip:text;background-clip:text;
-      -webkit-text-fill-color:transparent;color:transparent;
-      animation:zsGlint 6s ease-in-out infinite;
-    }
-  }
-  @keyframes zsFlow{0%{background-position:0% 50%;}100%{background-position:240% 50%;}}
-  @keyframes zsGlint{0%,72%{background-position:150% 0;}100%{background-position:-50% 0;}}
 
   .zaza-showcase__sub{
     margin:0 0 clamp(2.25rem,4vw,3rem);max-width:36rem;
@@ -240,8 +217,7 @@
   }
 
   @media (prefers-reduced-motion:reduce){
-    .zaza-showcase__title-fill{animation:none;background-position:50% 50%;}
-    .zaza-showcase__title-fill::after,.zaza-showcase__dot,.zaza-showcase__frame::before,.zaza-showcase__play-ring{animation:none;}
+    .zaza-showcase__dot,.zaza-showcase__frame::before,.zaza-showcase__play-ring{animation:none;}
     .zaza-showcase__eyebrow,.zaza-showcase__title,.zaza-showcase__sub,.zaza-showcase__frame{opacity:1;transform:none;transition:none;}
   }
 </style>

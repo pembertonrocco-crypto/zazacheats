@@ -18,7 +18,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
     {# fontshare CSS comes from api. but the woff2 binaries come from cdn. —
-       preconnecting both means the hero's Clash Display swaps in a round-trip sooner #}
+       preconnecting both means Satoshi swaps in a round-trip sooner #}
     <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
     {# font-awesome + choices.js are loaded non-blocking further down, so a
        cheap dns-prefetch is enough — no need to hold a TLS session open #}
@@ -75,7 +75,14 @@
            in place so a counter does not jitter as it ticks, tabular-nums does
            that job properly and without changing the typeface. */
         --zz-sans: 'Satoshi','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
-        --zz-display: 'Clash Display','Satoshi','Inter',system-ui,sans-serif;
+        /* One family. Clash Display was the display face on 79 headings, and a
+           geometric display face used at every heading size is the loudest
+           "made from a template" signal a page can carry — Apple, Rolex and
+           Samsung all set their headlines in the same family as their body
+           copy and get hierarchy from size, weight and tracking instead.
+           The role stays so nothing has to be renamed; it just resolves to
+           the text face now. */
+        --zz-display: 'Satoshi','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
         --zz-alt: 'Satoshi','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
         --cl-snow: {{ (global.properties.snow_color if global.properties.snow_color else '#ffffff') | hex_to_rgb }};
 
@@ -90,10 +97,10 @@
       /* Anything that does not name a face inherits from here. Without this it
          inherited Bootstrap's --bs-font-sans-serif, i.e. the dashboard font
          (Poppins) — so the buy box's labels and variant names were set in
-         Poppins while the headings were Clash Display and the eyebrows were
-         Satoshi. Three unrelated typefaces inside one card is most of what
-         reads as unconsidered. One family for text, one for display, and the
-         dashboard font stays on as a fallback rather than the default. */
+         Poppins while the headings and eyebrows were set in something else.
+         Three unrelated typefaces inside one card is most of what reads as
+         unconsidered. One family throughout, with the dashboard font kept on
+         as a fallback rather than the default. */
       body {
         font-family: var(--zz-sans);
         -webkit-font-smoothing: antialiased;
@@ -137,7 +144,7 @@
        Satoshi ships 300/400/500/700/900 and nothing between, so the CSS is
        normalised to those five rather than requesting weights that cannot
        exist. #}
-    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap" rel="stylesheet">
     {# non-blocking: every above-the-fold icon (navbar, hero, buy buttons) is inline
        SVG — Font Awesome only decorates labels further down, so it can load async
        without any visible above-fold flash. ~33KB gzip off the critical path. #}
@@ -237,7 +244,8 @@
       }
     
       /* ================= LUXURY PASS ================= */
-      /* display type: headings step up to Clash Display */
+      /* Display type. Same family as the body copy — hierarchy comes from
+         size, weight and tracking, which is how Apple, Rolex and Samsung do it. */
       h1,h2,.zz-h1,.zz-h2,.hero-title,.af-title,.fbq__title,.dl-title,
       .rev-title,.zs-title,.af-h2,.zz-sc__title{
         font-family:var(--zz-display)!important;

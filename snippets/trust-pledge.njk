@@ -118,12 +118,10 @@
 .ztp__head{text-align:center;max-width:640px;margin:0 auto 34px}
 .ztp__eyebrow{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.68rem;
   letter-spacing:.16em;color:#BF40BF;margin:0 0 12px}
-/* 700, not 900: this inherits Clash Display, which ships 200-700 on
-   Fontshare, so 900 was drawn by the browser stretching the 700. */
+/* 700, not 900: 900 was being drawn by the browser stretching a 700. */
 .ztp__title{margin:0 0 12px;font-size:clamp(1.7rem,3.6vw,2.4rem);font-weight:700;
   letter-spacing:-.02em;color:#fff;line-height:1.12}
-.ztp__grad{background:linear-gradient(90deg,#BF40BF,#c084fc);
-  -webkit-background-clip:text;background-clip:text;color:transparent}
+.ztp__grad{color:#e6aaff}
 .ztp__sub{margin:0;font-size:.92rem;line-height:1.6;color:rgba(200,215,240,.6)}
 
 .ztp__grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;align-items:stretch}

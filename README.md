@@ -60,6 +60,15 @@ context in `tools/fixtures.js`, then asserts:
   it said 90 — visible as a desktop and a phone disagreeing on the same page.
   Raising the count means changing every seed, and this now says so out loud.
 
+  The sync itself is **stale-while-revalidate, throttled per visit** — not per
+  TTL. It paints the cached number instantly, then checks `/feedback` anyway.
+  It used to return without checking whenever the cache was under 12h old,
+  which meant a phone that synced once in the morning repainted that morning's
+  figure all day while reviews came in. One hidden load per session is cheap;
+  being a day behind on the page's main piece of social proof is not. A failed
+  or bot-challenged load does not mark the visit checked, so it retries on the
+  next page view rather than writing the whole visit off.
+
 `tools/mobile.js` renders the same pages, opens them in headless Chromium at
 375 / 393 / 768px with the real CSS applied, and measures what markup alone
 cannot tell you: horizontal overflow, computed tap-target sizes, and input

@@ -60,6 +60,13 @@ context in `tools/fixtures.js`, then asserts:
   it said 90 — visible as a desktop and a phone disagreeing on the same page.
   Raising the count means changing every seed, and this now says so out loud.
 
+  It also asserts that `zzTotalFloor` in `components/feedback-page.njk` equals
+  that seed. `/feedback` derives its own total from entries that actually
+  render, plus a floor for the owner-stated count — and because the sync now
+  believes anything within 40% of the seed, a floor *below* the seeds lets a
+  data-starved render quietly drag every page down. Raise the seeds and the
+  floor together, or the check fails.
+
   The seed is a *proportional* floor, not an exact one. It rejects a total
   under 60% of itself — the data-starved render feedback-page.njk warns about,
   which reported 12 against a real 78 — and believes anything above that, so
@@ -139,6 +146,16 @@ both the grid blowout above and a 57x31 "+ Add" button — a control a buyer tap
 mid-purchase. Keep the fixture data realistic in *length*, not just in shape.
 A short placeholder description wraps happily and hides the bug.
 
+The same trap in a different shape: the fixture used to hand every component
+one shared `properties` object, so on the homepage the hero rendered the FAQ's
+title. The hero's own two-line headline — the only markup in the theme that
+uses `.hero-title-line--accent` — had never been rendered by any check, and
+every line-length measurement was taken against copy nobody will ever see.
+Component properties now come from the theme's own `settings.json`, keyed by
+`type` so the lookup matches the `{% render_component %}` argument, and
+`render.js` merges them per component. If a component needs its *fallback*
+exercised instead, override that property to `null` there.
+
 Exit code is non-zero on ERROR; WARN is advisory. `tools/render.js` stubs the
 platform's filters (`assetUrl`, `shopUrl`, `hex_to_rgb`, …) and its two custom
 tags (`render_component`, `render_snippet`). When the platform adds a filter,
@@ -180,6 +197,45 @@ tabular-nums` does that job without changing the typeface.
 snippets (`live-stats`, `live-activity`) into the bundle, styles and all, so a
 type change that only touches `.njk` and `.css` leaves those behind. Grepping
 the templates will never find them; `npm run fonts` will.
+
+## Colour
+
+**One accent ramp, one ink, four surfaces, three status colours.**
+
+| role | value | for |
+| --- | --- | --- |
+| accent light | `#e6aaff` | accent *text* on dark: links, eyebrows, values, heading highlights |
+| accent | `#bf40bf` | borders, dots, fills, the primary button |
+| accent deep | `#8e2d8e` | the far end of a tonal accent gradient |
+| ink | `#e7ecff` | body copy (`#ffffff` for headings) |
+| surfaces | `#06070f` `#0a0c18` `#12162a` `#1b1f3a` | void, panel, raised, hairline |
+| green | `#4ade80` `#22c55e` `#16a34a` | undetected / in stock / delivered |
+| gold | `#fde047` `#fbbf24` `#e8b53a` | stars, warranty, warnings, fees |
+| red | `#f87171` `#ef4444` | detected, errors, "not covered" |
+
+This used to be 172 hex literals and 177 rgba triplets, around 100 of each
+appearing exactly once — six colours for links, nineteen for gold, fifty
+tinted near-blacks, forty-seven shades of purple. None of it meant anything;
+it was whatever looked right at the moment each rule was written, and the
+cumulative effect — especially the magenta-to-violet gradient on every button
+and heading — is the thing that reads as machine-generated.
+
+**Green, gold and red are status, not decoration.** If a colour is not the
+accent or a neutral, it should be saying something about state. A green figure
+means the thing is live; a gold chip means money or a warranty; red means
+broken. Reaching for green because a number felt positive is how the palette
+grew the first time.
+
+**Somebody else's brand is never remapped.** Discord blurple, Solana, the
+Mastercard mark, the Litecoin and Ethereum icons, and the macOS window dots in
+the terminal mock are pinned by exact value. If you run a palette sweep, pin
+them again.
+
+**No neon on type.** A glow around a price is the loudest gamer-template
+signal a storefront can carry, and it lands on the number that most needs to
+stay legible. Glow lives on chips, dots and status indicators, at an alpha low
+enough to read as depth. The atmospheric blooms behind sections are deliberate
+and stay.
 
 ## Performance decisions
 

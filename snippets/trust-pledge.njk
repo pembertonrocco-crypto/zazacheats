@@ -113,12 +113,14 @@
 
 <style>
 .ztp{max-width:1080px;margin:72px auto 8px;padding:0 16px;
-  font-family:'Satoshi','Inter',system-ui,sans-serif}
+  font-family:var(--zz-sans)}
 
 .ztp__head{text-align:center;max-width:640px;margin:0 auto 34px}
-.ztp__eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;
+.ztp__eyebrow{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.68rem;
   letter-spacing:.16em;color:#BF40BF;margin:0 0 12px}
-.ztp__title{margin:0 0 12px;font-size:clamp(1.7rem,3.6vw,2.4rem);font-weight:900;
+/* 700, not 900: this inherits Clash Display, which ships 200-700 on
+   Fontshare, so 900 was drawn by the browser stretching the 700. */
+.ztp__title{margin:0 0 12px;font-size:clamp(1.7rem,3.6vw,2.4rem);font-weight:700;
   letter-spacing:-.02em;color:#fff;line-height:1.12}
 .ztp__grad{background:linear-gradient(90deg,#BF40BF,#c084fc);
   -webkit-background-clip:text;background-clip:text;color:transparent}
@@ -132,7 +134,7 @@
 .ztp__card--refuse{border-color:rgba(239,68,68,.22);
   background:linear-gradient(180deg,rgba(239,68,68,.05),rgba(255,255,255,.01))}
 
-.ztp__card-tag{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.64rem;
+.ztp__card-tag{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.64rem;
   letter-spacing:.15em;color:rgba(200,215,240,.5);margin:0 0 16px}
 .ztp__card-tag--refuse{color:rgba(252,165,165,.8)}
 
@@ -144,7 +146,7 @@
 .ztp__mark--ok{color:#4ade80;border:1px solid rgba(34,197,94,.3);background:rgba(34,197,94,.08)}
 .ztp__mark--no{color:#f87171;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.08)}
 
-.ztp__struck{font-size:.92rem;font-weight:800;color:rgba(255,255,255,.55);
+.ztp__struck{font-size:.92rem;font-weight:700;color:rgba(255,255,255,.55);
   text-decoration:line-through;text-decoration-color:rgba(239,68,68,.75);
   text-decoration-thickness:2px}
 .ztp__refuse-note{margin:16px 0 0;padding-top:14px;border-top:1px dashed rgba(239,68,68,.2);
@@ -157,7 +159,7 @@
   transition:border-color .2s,background .2s,transform .2s}
 .ztp__vlink:hover{border-color:rgba(191,64,191,.45);background:rgba(191,64,191,.09);
   transform:translateY(-1px)}
-.ztp__vlink-t{font-size:.84rem;font-weight:800;color:#fff;line-height:1.3}
+.ztp__vlink-t{font-size:.84rem;font-weight:700;color:#fff;line-height:1.3}
 .ztp__vlink-d{font-size:.71rem;color:rgba(200,215,240,.5)}
 .ztp__vlink-arrow{position:absolute;right:12px;top:50%;transform:translateY(-50%);
   color:rgba(192,132,252,.7)}

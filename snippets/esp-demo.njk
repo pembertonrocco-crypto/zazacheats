@@ -231,13 +231,13 @@
           </g>
           <g id="zed-ov-name" class="zed__layer">
             <rect x="472" y="252" width="70" height="20" rx="4" fill="rgba(8,6,14,.82)" stroke="rgba(233,30,233,.55)" stroke-width="1"/>
-            <text x="507" y="266" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#f5c6f5">Player</text>
+            <text x="507" y="266" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12" fill="#f5c6f5">Player</text>
           </g>
           <g id="zed-ov-weapon" class="zed__layer">
-            <text x="507" y="497" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#c084fc">AK-47</text>
+            <text x="507" y="497" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12" fill="#c084fc">AK-47</text>
           </g>
           <g id="zed-ov-distance" class="zed__layer">
-            <text x="558" y="292" font-family="'JetBrains Mono',monospace" font-size="12" fill="#e9a7e9">37m</text>
+            <text x="558" y="292" font-family="ui-monospace,monospace" font-size="12" fill="#e9a7e9">37m</text>
           </g>
           <g id="zed-ov-skeleton" class="zed__layer" stroke="#ff4df0" stroke-width="1.5" stroke-linecap="round" fill="none">
             <circle cx="507" cy="296" r="9"/>
@@ -289,11 +289,11 @@
 </script>
 
 <style>
-.zed{position:relative;padding:90px 24px;font-family:'Satoshi','Inter',system-ui,sans-serif}
+.zed{position:relative;padding:90px 24px;font-family:var(--zz-sans)}
 .zed__inner{max-width:1360px;margin:0 auto}
 .zed__head{text-align:center;margin-bottom:40px}
-.zed__eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;letter-spacing:.16em;color:#e97ae9;margin:0 0 12px}
-.zed__title{margin:0 0 12px;font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:800;color:#fff;line-height:1.12}
+.zed__eyebrow{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.68rem;letter-spacing:.16em;color:#e97ae9;margin:0 0 12px}
+.zed__title{margin:0 0 12px;font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:700;color:#fff;line-height:1.12}
 .zed__grad{background:linear-gradient(90deg,#e91ee9,#8b5cf6);-webkit-background-clip:text;background-clip:text;color:transparent}
 .zed__sub{margin:0 auto;font-size:.95rem;line-height:1.6;color:rgba(205,218,242,.68);max-width:56ch}
 
@@ -304,7 +304,7 @@
   border:1px solid rgba(233,30,233,.3);
   background:#0d0912;
   box-shadow:0 30px 70px -25px rgba(0,0,0,.85),0 0 60px -25px rgba(233,30,233,.4);
-  font-family:'JetBrains Mono',ui-monospace,monospace;user-select:none}
+  font-family:var(--zz-alt);font-variant-numeric:tabular-nums;user-select:none}
 
 /* --- sidebar --- */
 .zed__side{width:118px;flex-shrink:0;background:#0a0710;border-right:1px solid rgba(233,30,233,.14);
@@ -313,7 +313,7 @@
 .zed__side-bolt{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;
   background:linear-gradient(135deg,#e91ee9,#a21caf);color:#fff;font-size:.8rem;margin-bottom:7px;
   box-shadow:0 0 14px rgba(233,30,233,.6)}
-.zed__side-name{display:block;font-size:.72rem;font-weight:800;letter-spacing:.06em;line-height:1.25;color:#fff}
+.zed__side-name{display:block;font-size:.72rem;font-weight:700;letter-spacing:.06em;line-height:1.25;color:#fff}
 .zed__side-ver{display:block;margin-top:4px;font-size:.46rem;letter-spacing:.1em;color:rgba(233,150,233,.45)}
 .zed__side-item{display:flex;align-items:center;gap:9px;padding:11px 12px;font-size:.6rem;font-weight:700;
   letter-spacing:.1em;color:rgba(205,190,215,.5);border-left:2px solid transparent;cursor:default;
@@ -339,7 +339,7 @@
   background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);color:rgba(200,185,210,.4);font-size:.6rem;min-width:120px}
 
 .zed__tabs{display:flex;gap:4px;padding:12px 14px 0}
-.zed__tab{padding:8px 16px;font-size:.62rem;font-weight:800;letter-spacing:.12em;color:rgba(210,190,220,.45);
+.zed__tab{padding:8px 16px;font-size:.62rem;font-weight:700;letter-spacing:.12em;color:rgba(210,190,220,.45);
   border-bottom:2px solid transparent;cursor:default;transition:color .15s}
 .zed__tab:hover{color:rgba(230,215,240,.8)}
 .zed__tab--active{color:#fff;border-bottom-color:#e91ee9;background:rgba(233,30,233,.1);border-radius:6px 6px 0 0}
@@ -361,7 +361,7 @@
   background:rgba(10,7,15,.6);display:flex;flex-direction:column;gap:1px}
 .zed__panel-title{margin:0 0 10px;padding-bottom:8px;font-size:.74rem;font-weight:700;color:#fff;
   border-bottom:1px solid rgba(255,255,255,.09)}
-.zed__section{margin:14px 0 7px;font-size:.6rem;font-weight:800;letter-spacing:.1em;color:#e91ee9;
+.zed__section{margin:14px 0 7px;font-size:.6rem;font-weight:700;letter-spacing:.1em;color:#e91ee9;
   border-bottom:1px solid rgba(233,30,233,.45);padding-bottom:5px}
 .zed__section--first{margin-top:2px}
 .zed__sublabel{margin:8px 0 6px;font-size:.64rem;color:rgba(200,185,215,.5)}
@@ -399,7 +399,7 @@
 .zed__layer{transition:opacity .25s}
 .zed__vtag{position:absolute;top:12px;left:12px;display:inline-flex;align-items:center;gap:7px;
   padding:5px 10px;border-radius:7px;background:rgba(8,6,14,.7);backdrop-filter:blur(6px);
-  font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.58rem;letter-spacing:.16em;color:rgba(240,220,245,.8)}
+  font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.58rem;letter-spacing:.16em;color:rgba(240,220,245,.8)}
 .zed__vtag-dot{width:6px;height:6px;border-radius:50%;background:#e91ee9;box-shadow:0 0 8px rgba(233,30,233,.9);
   animation:zedPulse 1.8s infinite}
 @keyframes zedPulse{0%,100%{opacity:1}50%{opacity:.4}}

@@ -2,13 +2,14 @@
   "name": "zazacheats-theme",
   "version": "1.0.0",
   "private": true,
-  "description": "Zaza Cheats SellAuth storefront theme (Nunjucks). Tooling only — the platform renders these templates server-side.",
+  "description": "Zaza Cheats SellAuth storefront theme (Nunjucks). Tooling only \u2014 the platform renders these templates server-side.",
   "scripts": {
     "check": "node tools/check.js",
     "check:html": "node tools/check.js --html",
     "mobile": "node tools/mobile.js",
     "desktop": "node tools/desktop.js",
-    "test": "node tools/check.js && node tools/mobile.js && node tools/desktop.js"
+    "test": "node tools/check.js && node tools/mobile.js && node tools/desktop.js",
+    "fonts": "node tools/fonts.js"
   },
   "license": "UNLICENSED",
   "devDependencies": {

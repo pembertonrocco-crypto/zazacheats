@@ -37,6 +37,7 @@ npm run check          # renders all 13 templates and asserts against the HTML
 npm run check:html     # same, plus writes the rendered HTML to .render/
 npm run mobile         # real layout measurement in headless Chromium
 npm run desktop        # the same, at desktop widths
+npm run fonts          # synthetic-weight audit (needs network, not in `npm test`)
 ```
 
 `tools/check.js` renders every template through the layout against the mock
@@ -126,6 +127,39 @@ Exit code is non-zero on ERROR; WARN is advisory. `tools/render.js` stubs the
 platform's filters (`assetUrl`, `shopUrl`, `hex_to_rgb`, …) and its two custom
 tags (`render_component`, `render_snippet`). When the platform adds a filter,
 stub it there or the render fails locally while working fine in production.
+
+## Typography
+
+Three roles, defined once as custom properties on `:root` in `layouts/master.njk`:
+`--zz-sans` (Satoshi, body and labels), `--zz-display` (Clash Display,
+headings), `--zz-alt` (the label/eyebrow role). Nothing should name a typeface
+directly any more — the stacks used to be written out by hand in ~250 places
+across 34 files, which is how they drifted into eight spellings of the same
+thing.
+
+**Only ask for weights that are loaded.** Satoshi ships 300/400/500/700/900 on
+Fontshare and Clash Display 200-700; anything else is drawn by the browser
+stretching the nearest real weight, and synthetic bold is the most recognisable
+cheap-web-page tell there is. The theme previously asked for Satoshi 800 in 146
+places while loading 400/500/700, so the price, the buy button and most
+headings were faked. `npm run fonts` is the guard: it opens every page with the
+real webfonts and reports any computed family/weight pair that was never
+loaded. Keep its `LOADED` map in step with the Fontshare `<link>`.
+
+**Monospace is for the diegetic HUD only** — the `ZAZA.EXE · ATTACHED` strip,
+the ESP overlay labels, the scratch-card canvas. Those imitate a game overlay
+and should look like one. Everywhere else, monospace on an eyebrow or a badge
+is decoration, and it was JetBrains Mono, which no `<link>` on the page ever
+loaded: 187 declarations falling back to whatever the OS calls "monospace",
+which on a lot of Windows machines is Courier New. Labels are now the body face
+in small caps with wide tracking, and where the mono was actually holding
+digits in place so a counter does not jitter, `font-variant-numeric:
+tabular-nums` does that job without changing the typeface.
+
+**`assets/script.js` contains CSS too.** The platform build compiles some
+snippets (`live-stats`, `live-activity`) into the bundle, styles and all, so a
+type change that only touches `.njk` and `.css` leaves those behind. Grepping
+the templates will never find them; `npm run fonts` will.
 
 ## Performance decisions
 

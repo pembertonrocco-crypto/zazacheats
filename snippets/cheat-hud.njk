@@ -1,0 +1,194 @@
+{#
+  cheat-hud.njk — sitewide "aim-assist" cursor layer for Zaza Cheats.
+  ---------------------------------------------------------------------------
+  A soft crosshair trails the cursor; when it passes over a call-to-action
+  (buy buttons, product cards, primary links) it "locks on" with corner
+  brackets and a LOCKED tag — the product's own visual language, and it
+  quietly pulls the eye toward the things we want clicked.
+
+  House rules honoured:
+   · Static HTML/CSS/JS only.
+   · Additive overlay — the native cursor is never hidden, nothing is blocked
+     (pointer-events:none throughout). No JS → nothing renders.
+   · Only runs on a fine pointer (mouse) at >= 900px, and never under
+     prefers-reduced-motion or on touch — so it can't hurt mobile UX.
+   · Single requestAnimationFrame loop, transforms only (GPU-cheap).
+   · Konami-code easter egg flashes a harmless "GOD MODE" HUD banner.
+#}
+<div class="zzhud" id="zz-hud" aria-hidden="true">
+  <svg class="zzhud__cross" width="46" height="46" viewBox="0 0 46 46" fill="none">
+    <circle cx="23" cy="23" r="10" stroke="currentColor" stroke-width="1.1" opacity="0.55"/>
+    <circle cx="23" cy="23" r="1.6" fill="currentColor"/>
+    <path d="M23 4v9M23 33v9M4 23h9M33 23h9" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" opacity="0.7"/>
+  </svg>
+  <div class="zzhud__lock" data-zzhud-lock>
+    <span class="zzhud__c zzhud__c--tl"></span><span class="zzhud__c zzhud__c--tr"></span>
+    <span class="zzhud__c zzhud__c--bl"></span><span class="zzhud__c zzhud__c--br"></span>
+    <span class="zzhud__tag" data-zzhud-tag>LOCKED</span>
+  </div>
+</div>
+
+<div class="zzgod" id="zz-god" aria-hidden="true">
+  <span class="zzgod__scan"></span>
+  <span class="zzgod__txt">GOD&nbsp;MODE&nbsp;ENABLED</span>
+  <span class="zzgod__sub">// aim: max &middot; recoil: 0 &middot; esp: on</span>
+</div>
+
+<style>
+  .zzhud{position:fixed;inset:0;z-index:2147483000;pointer-events:none;
+    color:#e8b3ff;opacity:0;transition:opacity .3s ease;display:none}
+  .zzhud.zzhud--on{opacity:1}
+  @media (hover:hover) and (pointer:fine) and (min-width:900px){ .zzhud{display:block} }
+
+  .zzhud__cross{position:absolute;top:0;left:0;
+    transform:translate3d(var(--x,-100px),var(--y,-100px),0) translate(-50%,-50%) rotate(var(--spin,0deg));
+    transition:opacity .2s ease;
+    filter:drop-shadow(0 0 5px rgba(191,64,191,.6))}
+  .zzhud.zzhud--locked .zzhud__cross{opacity:0}
+
+  /* target-lock brackets — size/position driven by JS vars, snappy spring feel */
+  .zzhud__lock{position:absolute;top:0;left:0;
+    width:var(--w,0px);height:var(--h,0px);
+    transform:translate3d(var(--lx,-100px),var(--ly,-100px),0);
+    opacity:0;transition:opacity .18s ease}
+  .zzhud.zzhud--locked .zzhud__lock{opacity:1}
+  .zzhud__c{position:absolute;width:14px;height:14px;
+    border:2px solid #d76bff;
+    filter:drop-shadow(0 0 6px rgba(191,64,191,.8));
+    transition:inset .12s cubic-bezier(.16,1,.3,1)}
+  .zzhud__c--tl{top:-3px;left:-3px;border-right:0;border-bottom:0}
+  .zzhud__c--tr{top:-3px;right:-3px;border-left:0;border-bottom:0}
+  .zzhud__c--bl{bottom:-3px;left:-3px;border-right:0;border-top:0}
+  .zzhud__c--br{bottom:-3px;right:-3px;border-left:0;border-top:0}
+  .zzhud.zzhud--locked .zzhud__c{animation:zzhudLock .22s cubic-bezier(.16,1,.3,1)}
+  @keyframes zzhudLock{from{transform:scale(1.35);opacity:.4}to{transform:scale(1);opacity:1}}
+  .zzhud__tag{position:absolute;top:-19px;left:0;
+    font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:9px;font-weight:700;
+    letter-spacing:.16em;color:#fff;background:linear-gradient(135deg,#BF40BF,#7C3AED);
+    padding:2px 6px;border-radius:4px;white-space:nowrap;
+    box-shadow:0 4px 12px -4px rgba(191,64,191,.9)}
+
+  /* konami "god mode" flash */
+  .zzgod{position:fixed;inset:0;z-index:2147483001;pointer-events:none;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+    background:radial-gradient(circle at 50% 45%,rgba(191,64,191,.16),rgba(6,9,26,.55) 60%,rgba(6,9,26,.82));
+    opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s}
+  .zzgod.zzgod--on{opacity:1;visibility:visible}
+  .zzgod__txt{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-weight:700;
+    font-size:clamp(1.6rem,6vw,3.4rem);letter-spacing:.14em;color:#fff;
+    text-shadow:0 0 24px rgba(191,64,191,.9),0 0 60px rgba(124,58,237,.6);
+    transform:scale(.9);transition:transform .3s cubic-bezier(.16,1,.3,1)}
+  .zzgod.zzgod--on .zzgod__txt{transform:scale(1)}
+  .zzgod__sub{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.8rem;
+    letter-spacing:.1em;color:#4ade80}
+  .zzgod__scan{position:absolute;left:0;right:0;top:0;height:2px;
+    background:linear-gradient(90deg,transparent,rgba(216,107,255,.9),transparent);
+    box-shadow:0 0 14px rgba(191,64,191,.9)}
+  .zzgod.zzgod--on .zzgod__scan{animation:zzgodScan 1s linear infinite}
+  @keyframes zzgodScan{from{transform:translateY(0)}to{transform:translateY(100vh)}}
+
+  @media (prefers-reduced-motion:reduce){ .zzhud,.zzgod{display:none!important} }
+</style>
+
+<script>
+(function(){
+  'use strict';
+  var hud=document.getElementById('zz-hud');
+  var god=document.getElementById('zz-god');
+  if(!hud) return;
+
+  var fine=window.matchMedia&&window.matchMedia('(hover:hover) and (pointer:fine) and (min-width:900px)').matches;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(!fine||reduce) return;
+
+  var lock=hud.querySelector('[data-zzhud-lock]');
+  var tag=hud.querySelector('[data-zzhud-tag]');
+
+  // what counts as a "target" worth locking onto
+  var SEL='a.pf-btn,.pf-btn--primary,button.pf-btn,.hero-btn,.pc,.pc__buy,'+
+    'a[class*="cta"],button[class*="cta"],.zzbb__cta,.scs-discord__btn,'+
+    'a.btn-primary,button.btn-primary,.zz-cta__btn,[data-zzhud-target]';
+  var TAGS=['LOCKED','TARGET','AIM','ON TARGET'];
+
+  var x=-100,y=-100,spin=0;
+  var lx=-100,ly=-100,lw=0,lh=0;          // current lock box (lerped)
+  var tx=-100,ty=-100,tw=0,th=0;          // target lock box
+  var locked=null,raf=null,shown=false;
+
+  function setTargetFrom(el){
+    var r=el.getBoundingClientRect();
+    var pad=6;
+    tx=r.left-pad; ty=r.top-pad; tw=r.width+pad*2; th=r.height+pad*2;
+  }
+
+  function loop(){
+    // crosshair tracks the cursor 1:1 (its slow spin gives it life); the
+    // easing that reads as "aim assist" lives in the lock-box interpolation.
+    hud.style.setProperty('--x',x+'px');
+    hud.style.setProperty('--y',y+'px');
+    spin=(spin+0.6)%360;
+    hud.style.setProperty('--spin',spin+'deg');
+
+    if(locked){
+      lx+=(tx-lx)*0.28; ly+=(ty-ly)*0.28;
+      lw+=(tw-lw)*0.28; lh+=(th-lh)*0.28;
+      hud.style.setProperty('--lx',lx+'px');
+      hud.style.setProperty('--ly',ly+'px');
+      hud.style.setProperty('--w',lw+'px');
+      hud.style.setProperty('--h',lh+'px');
+    }
+    raf=requestAnimationFrame(loop);
+  }
+
+  document.addEventListener('pointermove',function(e){
+    if(e.pointerType==='touch') return;
+    x=e.clientX; y=e.clientY;
+    if(!shown){ shown=true; hud.classList.add('zzhud--on'); }
+
+    var t=e.target.closest?e.target.closest(SEL):null;
+    if(t){
+      if(t!==locked){
+        locked=t;
+        setTargetFrom(t);
+        // snap the lock box in near the target the first time so it doesn't
+        // fly across the screen from the previous target
+        if(lw<2){ lx=tx; ly=ty; lw=tw; lh=th; }
+        tag.textContent=TAGS[Math.floor(Math.random()*TAGS.length)];
+        hud.classList.add('zzhud--locked');
+      } else {
+        setTargetFrom(t); // keep tracking if the element moved/scrolled
+      }
+    } else if(locked){
+      locked=null;
+      hud.classList.remove('zzhud--locked');
+    }
+    if(raf===null) raf=requestAnimationFrame(loop);
+  },{passive:true});
+
+  document.addEventListener('mouseleave',function(){
+    hud.classList.remove('zzhud--on');
+    shown=false;
+  });
+
+  // keep lock box aligned while scrolling with a target held
+  window.addEventListener('scroll',function(){
+    if(locked) setTargetFrom(locked);
+  },{passive:true});
+
+  raf=requestAnimationFrame(loop);
+
+  // ---- konami easter egg: ↑↑↓↓←→←→ B A --------------------------------------
+  if(god){
+    var seq=[38,38,40,40,37,39,37,39,66,65],pos=0,godT=null;
+    window.addEventListener('keydown',function(e){
+      pos=(e.keyCode===seq[pos])?pos+1:(e.keyCode===seq[0]?1:0);
+      if(pos===seq.length){
+        pos=0;
+        god.classList.add('zzgod--on');
+        clearTimeout(godT);
+        godT=setTimeout(function(){ god.classList.remove('zzgod--on'); },2200);
+      }
+    });
+  }
+})();
+</script>

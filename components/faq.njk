@@ -121,7 +121,7 @@
   transition:block-size .32s cubic-bezier(.22,1,.36,1),content-visibility .32s allow-discrete}
 .zzfaq-pin[open]::details-content{block-size:auto}
 @media (prefers-reduced-motion:reduce){.zzfaq-pin::details-content{transition:none}}
-.zzfaq-pin__badge{flex-shrink:0;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.58rem;font-weight:800;
+.zzfaq-pin__badge{flex-shrink:0;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.58rem;font-weight:700;
   letter-spacing:.18em;color:#0b0a05;background:linear-gradient(135deg,#ffe9a3,#e8b53a);border-radius:999px;padding:5px 10px}
 .zzfaq-pin__t{flex:1;font-weight:700;color:#fff;font-size:1rem}
 .zzfaq-pin__q svg{color:rgba(200,215,240,.5);transition:transform .3s cubic-bezier(.22,1,.36,1)}
@@ -135,7 +135,7 @@
 .faq-section {
   position: relative;
   background: #06091a;
-  font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+  font-family:var(--zz-sans);
   overflow: hidden;
   padding-top: 7.5rem;
   padding-bottom: 7.5rem;
@@ -255,7 +255,7 @@
 
 .faq-title {
   font-size: clamp(1.75rem, 3vw, 2.5rem);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.03em;
   margin: 0 0 1.1rem;
@@ -298,12 +298,12 @@
   border: none;
   cursor: pointer;
   text-align: left;
-  font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+  font-family:var(--zz-sans);
 }
 
 .faq-question {
   font-size: 0.925rem;
-  font-weight: 600;
+  font-weight: 500;
   color: rgba(220, 230, 255, 0.85);
   line-height: 1.5;
   transition: color 0.2s ease;
@@ -387,9 +387,9 @@
 .faq-stuck{margin-top:18px;display:flex;align-items:center;gap:14px;padding:16px 18px;
   border:1px solid rgba(88,101,242,.25);border-radius:14px;background:rgba(88,101,242,.06)}
 .faq-stuck__text{flex:1;display:flex;flex-direction:column;line-height:1.35;min-width:0}
-.faq-stuck__t{font-size:.9rem;font-weight:800;color:#fff}
+.faq-stuck__t{font-size:.9rem;font-weight:700;color:#fff}
 .faq-stuck__d{font-size:.76rem;color:rgba(200,215,240,.6)}
-.faq-stuck__btn{flex-shrink:0;padding:.65rem 1.2rem;border-radius:10px;font-size:.82rem;font-weight:800;
+.faq-stuck__btn{flex-shrink:0;padding:.65rem 1.2rem;border-radius:10px;font-size:.82rem;font-weight:700;
   color:#fff;text-decoration:none;background:linear-gradient(135deg,#5865F2,#7C3AED);
   box-shadow:0 8px 22px -10px rgba(88,101,242,.8);transition:transform .2s}
 .faq-stuck__btn:hover{transform:translateY(-2px)}
@@ -403,11 +403,11 @@
 /* --- FAQ v2 additions: search hint, controls, highlight, copy-link --- */
 .faq-search{position:relative}
 .faq-search__kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);
-  font-family:'JetBrains Mono',monospace;font-size:.68rem;color:rgba(200,215,240,.45);
+  font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.68rem;color:rgba(200,215,240,.45);
   border:1px solid rgba(200,215,240,.18);border-radius:5px;padding:2px 7px;pointer-events:none}
 @media (max-width:640px){.faq-search__kbd{display:none}}
 .faq-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 2px 14px}
-.faq-count{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.06em;color:rgba(200,215,240,.5)}
+.faq-count{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.7rem;letter-spacing:.06em;color:rgba(200,215,240,.5)}
 .faq-toggleall{background:none;border:1px solid rgba(200,215,240,.16);border-radius:8px;cursor:pointer;
   padding:5px 12px;font-size:.72rem;font-weight:700;color:rgba(220,230,250,.75);transition:border-color .2s,color .2s}
 .faq-toggleall:hover{border-color:rgba(191,64,191,.5);color:#fff}

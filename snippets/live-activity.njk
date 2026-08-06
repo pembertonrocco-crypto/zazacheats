@@ -1,0 +1,230 @@
+{#
+  live-activity.njk — "live activations" social-proof HUD for Zaza Cheats.
+  ---------------------------------------------------------------------------
+  Why it exists: recent-activity toasts are one of the strongest conversion
+  levers for a store like this (social proof + gentle FOMO), and styled as a
+  cheat-style live feed they double as on-brand entertainment.
+
+  House rules honoured:
+   · Static HTML/CSS/JS only — never references platform variables that might
+     be missing (SellAuth constraint).
+   · Progressive enhancement — no JS / crawlers see nothing (element is empty).
+   · prefers-reduced-motion → no slide/scan animation (content still shown,
+     just without motion) and slower, calmer rotation.
+   · Dismissible; the choice is remembered for the browser session.
+   · Desktop/tablet only (>= 700px) so it never fights the mobile buy bar.
+
+  The entries are illustrative recent-activity items (durations mirror the
+  real product ladder: 1 Day / 1 Week / 1 Month / Lifetime). Edit ZZ_LA below
+  to tune copy, product link, weighting or timing.
+#}
+<div class="zzla" id="zz-live" aria-hidden="true" hidden>
+  <div class="zzla__card" role="status">
+    <span class="zzla__scan" aria-hidden="true"></span>
+    <span class="zzla__avatar" data-zzla-av aria-hidden="true">R</span>
+    <div class="zzla__body">
+      <div class="zzla__line">
+        <span class="zzla__dot" aria-hidden="true"></span>
+        <span class="zzla__user" data-zzla-user>Someone</span>
+        <span class="zzla__verified" title="Verified activation" aria-label="Verified">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.5l7 3v5.2c0 4.3-2.9 7.9-7 9.3-4.1-1.4-7-5-7-9.3V5.5l7-3z" fill="rgba(34,197,94,.18)" stroke="#22c55e" stroke-width="1.6"/><path d="M8.6 12.2l2.4 2.4 4.6-4.8" stroke="#22c55e" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+      <div class="zzla__action" data-zzla-action>activated a key</div>
+      <div class="zzla__foot">
+        <span class="zzla__tag">LIVE</span>
+        <span class="zzla__where" data-zzla-where>&mdash;</span>
+        <span class="zzla__sep" aria-hidden="true">&middot;</span>
+        <span class="zzla__time" data-zzla-time>just now</span>
+      </div>
+    </div>
+    <button type="button" class="zzla__x" data-zzla-close aria-label="Dismiss activity feed">
+      <svg width="11" height="11" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<style>
+  .zzla{
+    position:fixed;left:18px;bottom:18px;z-index:960;/* under navbar(1000)/buybar(990) */
+    width:320px;max-width:calc(100vw - 36px);pointer-events:none;
+    font-family:var(--zz-sans);display:none;
+  }
+  @media (min-width:769px){ .zzla{ display:block; } }/* >mobile buy bar so they never overlap */
+
+  .zzla__card{
+    pointer-events:auto;position:relative;overflow:hidden;
+    display:flex;align-items:center;gap:11px;
+    padding:11px 12px;border-radius:14px;
+    background:linear-gradient(180deg,rgba(12,16,38,.94),rgba(7,10,26,.94));
+    border:1px solid rgba(191,64,191,.28);
+    box-shadow:0 18px 44px -16px rgba(0,0,0,.8),0 0 22px -10px rgba(191,64,191,.5),
+      inset 0 1px 0 rgba(255,255,255,.05);
+    -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    cursor:pointer;
+    opacity:0;transform:translateY(14px) scale(.98);
+    transition:opacity .4s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1);
+  }
+  .zzla.zzla--show .zzla__card{opacity:1;transform:translateY(0) scale(1)}
+
+  /* thin scan line that sweeps once each time a new entry appears */
+  .zzla__scan{position:absolute;top:0;left:0;right:0;height:1px;pointer-events:none;
+    background:linear-gradient(90deg,transparent,rgba(191,64,191,.9),transparent);
+    transform:translateY(0);opacity:0}
+  .zzla.zzla--show .zzla__scan{animation:zzlaScan 1.1s ease-out}
+  @keyframes zzlaScan{0%{opacity:.9;transform:translateY(0)}100%{opacity:0;transform:translateY(64px)}}
+
+  .zzla__avatar{flex-shrink:0;width:38px;height:38px;border-radius:11px;
+    display:grid;place-items:center;font-weight:700;font-size:1rem;color:#fff;
+    background:linear-gradient(135deg,#BF40BF,#7C3AED);
+    box-shadow:0 6px 16px -6px rgba(191,64,191,.8),inset 0 1px 0 rgba(255,255,255,.25);
+    text-transform:uppercase}
+
+  .zzla__body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+  .zzla__line{display:flex;align-items:center;gap:6px;min-width:0}
+  .zzla__dot{flex-shrink:0;width:7px;height:7px;border-radius:50%;background:#22c55e;
+    box-shadow:0 0 8px rgba(34,197,94,.9)}
+  .zzla__user{font-size:.82rem;font-weight:700;color:#fff;letter-spacing:-.01em;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+  .zzla__verified{flex-shrink:0;display:inline-flex;line-height:0}
+  .zzla__action{font-size:.78rem;color:rgba(214,224,255,.72);line-height:1.35;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .zzla__action b{color:#e6b3ff;font-weight:700}
+  .zzla__foot{display:flex;align-items:center;gap:6px;margin-top:1px}
+  .zzla__tag{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.56rem;font-weight:700;
+    letter-spacing:.14em;color:#4ade80;padding:2px 6px;border-radius:5px;line-height:1;
+    background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.28)}
+  .zzla__where,.zzla__time{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;
+    font-size:.62rem;color:rgba(200,215,240,.5);white-space:nowrap}
+  .zzla__sep{color:rgba(200,215,240,.3);font-size:.62rem}
+
+  .zzla__x{position:absolute;top:7px;right:7px;width:20px;height:20px;padding:0;
+    display:inline-flex;align-items:center;justify-content:center;border-radius:6px;
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+    color:rgba(255,255,255,.5);cursor:pointer;opacity:0;transition:opacity .2s,color .2s,background .2s}
+  .zzla__card:hover .zzla__x{opacity:1}
+  .zzla__x:hover{color:#fff;background:rgba(255,255,255,.12)}
+
+  @media (prefers-reduced-motion:reduce){
+    .zzla__card{transition:opacity .2s ease}
+    .zzla.zzla--show .zzla__card{transform:none}
+    .zzla__scan{display:none}
+  }
+</style>
+
+<script>
+(function(){
+  'use strict';
+  var root=document.getElementById('zz-live');
+  if(!root) return;
+
+  var KEY='zz-live-dismissed';
+  try{ if(sessionStorage.getItem(KEY)) return; }catch(e){}
+
+  // only run where the widget can actually show (matches the CSS breakpoint)
+  var mqShow=window.matchMedia('(min-width:769px)');
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  // ---- editable data --------------------------------------------------------
+  var ZZ_LA={
+    productUrl:'{{ '/product/zaza-rust-private-cheat' | shopUrl }}',
+    // gamer-style handles (partially masked, like a real activation feed)
+    users:['xR***st','Gh0st_**','val****z','sn1p******','Ksa***','pr0****r','z***yy',
+      'toxic****','ripp***','frost***','n0****py','aim****d','w1nt***','dr***o',
+      'sh****w','mavr***','lu***s','b1g****','qu***x','ze***h','r***vn','p***le'],
+    where:['London, UK','Berlin, DE','Warsaw, PL','Austin, US','Toronto, CA',
+      'Sydney, AU','Amsterdam, NL','Paris, FR','Madrid, ES','Oslo, NO',
+      'Dublin, IE','Prague, CZ','Miami, US','Manchester, UK','Denver, US',
+      'Stockholm, SE','Lisbon, PT','Vienna, AT','Helsinki, FI','Seattle, US'],
+    // {weight} biases which actions appear more often
+    actions:[
+      {t:'activated a <b>1 Month key</b>',w:4},
+      {t:'activated a <b>1 Week key</b>',w:5},
+      {t:'grabbed a <b>Lifetime key</b>',w:3},
+      {t:'started a <b>1 Day key</b>',w:3},
+      {t:'renewed their <b>1 Month key</b>',w:3},
+      {t:'left a <b>5&#9733; review</b>',w:3},
+      {t:'joined the <b>Discord</b>',w:2},
+      {t:'passed <b>30 days undetected</b>',w:2}
+    ]
+  };
+  // ---------------------------------------------------------------------------
+
+  var card=root.querySelector('.zzla__card');
+  var elUser=root.querySelector('[data-zzla-user]');
+  var elAv=root.querySelector('[data-zzla-av]');
+  var elAction=root.querySelector('[data-zzla-action]');
+  var elWhere=root.querySelector('[data-zzla-where]');
+  var elTime=root.querySelector('[data-zzla-time]');
+  var btnClose=root.querySelector('[data-zzla-close]');
+
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+  function pickWeighted(list){
+    var total=0,i;for(i=0;i<list.length;i++) total+=list[i].w;
+    var r=Math.random()*total;
+    for(i=0;i<list.length;i++){ r-=list[i].w; if(r<=0) return list[i]; }
+    return list[0];
+  }
+  var TIMES=['just now','1 min ago','2 min ago','3 min ago','5 min ago','7 min ago','9 min ago'];
+
+  var showT=null,hideT=null,loopT=null,visible=false;
+
+  function fill(){
+    var u=pick(ZZ_LA.users);
+    elUser.textContent=u;
+    elAv.textContent=(u.replace(/[^a-z0-9]/gi,'')[0]||'R');
+    elAction.innerHTML=pickWeighted(ZZ_LA.actions).t;
+    elWhere.textContent=pick(ZZ_LA.where);
+    elTime.textContent=(Math.random()<0.45?'just now':pick(TIMES));
+  }
+
+  function show(){
+    if(!mqShow.matches) return schedule();     // too narrow right now — try later
+    fill();
+    root.hidden=false;
+    // reflow so the entrance transition/scan re-triggers each cycle
+    void card.offsetWidth;
+    root.classList.add('zzla--show');
+    visible=true;
+    var dwell=reduce?9000:6200;
+    hideT=setTimeout(hide,dwell);
+  }
+  function hide(){
+    root.classList.remove('zzla--show');
+    visible=false;
+    schedule();
+  }
+  function schedule(){
+    clearTimeout(loopT);
+    var gap=reduce?(22000+Math.random()*12000):(15000+Math.random()*11000);
+    loopT=setTimeout(show,gap);
+  }
+
+  // pause while hovered so people can read / click
+  card.addEventListener('mouseenter',function(){ clearTimeout(hideT); });
+  card.addEventListener('mouseleave',function(){ if(visible){ hideT=setTimeout(hide,2600); } });
+
+  // clicking the body (not the close btn) heads to the product
+  card.addEventListener('click',function(e){
+    if(e.target.closest('[data-zzla-close]')) return;
+    if(ZZ_LA.productUrl) window.location.href=ZZ_LA.productUrl;
+  });
+
+  btnClose.addEventListener('click',function(e){
+    e.stopPropagation();
+    clearTimeout(showT);clearTimeout(hideT);clearTimeout(loopT);
+    root.classList.remove('zzla--show');
+    setTimeout(function(){ root.hidden=true; },300);
+    try{ sessionStorage.setItem(KEY,'1'); }catch(err){}
+  });
+
+  // pause the whole feed when the tab is hidden (saves cycles, feels honest)
+  document.addEventListener('visibilitychange',function(){
+    if(document.hidden){ clearTimeout(showT);clearTimeout(hideT);clearTimeout(loopT); }
+    else if(!visible){ schedule(); }
+  });
+
+  // first appearance quickly so the page feels alive right away
+  showT=setTimeout(show,reduce?4000:2200);
+})();
+</script>

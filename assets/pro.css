@@ -410,7 +410,7 @@ input[type=number] {
 }
 
 .hero .content .stats div .value {
-  font-weight: 600;
+  font-weight: 500;
   font-size: 1rem;
 }
 
@@ -832,7 +832,7 @@ input[type=number] {
   background: var(--cl-accent);
   color: #ffffff;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
 }
@@ -915,7 +915,7 @@ input[type=number] {
 
 .features .list .feature .title {
   font-size: 1.125rem;
-  font-weight: 600;
+  font-weight: 500;
   margin-bottom: 1rem;
 }
 
@@ -1215,7 +1215,7 @@ input[type=number] {
 }
 
 .testimonial .footer .date {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .pagination .page-item:not(.active) .page-link {
@@ -1383,7 +1383,7 @@ input[type=number] {
 
 .status-card h3 {
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: 500;
   color: #ffffff;
 }
 
@@ -1394,7 +1394,7 @@ input[type=number] {
 .status-group h2 {
   margin-bottom: 1rem;
   font-size: 1.4rem;
-  font-weight: 600;
+  font-weight: 500;
   color: #ffffff;
 }
 
@@ -1412,7 +1412,7 @@ input[type=number] {
 }
 
 .status .label {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .pulsating {
@@ -1696,7 +1696,7 @@ input[type=number] {
 
 .ticket .ticket-sender-name {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--bs-body-color);
 }
 
@@ -2154,7 +2154,7 @@ table td .btn.btn-link {
   display: block; 
   position: relative; 
   padding: 0.5rem 0.5rem 0.5rem 1.5rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .editor .e-collapsible-title::marker,

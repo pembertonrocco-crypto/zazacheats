@@ -100,6 +100,22 @@ function baseContext(templateName, extra = {}) {
         title: 'Frequently Asked Questions',
         alignment: 'center',
         height: 'large',
+        /* The FAQ component renders from properties.items, which nothing here
+           supplied — so every measurement of the homepage was taken with the
+           FAQ section empty, and the real page is taller than the numbers
+           said. Five entries, matching settings.json, at realistic length. */
+        items: [
+          { question: 'What payment methods do you accept?',
+            answer: 'Card, Apple Pay, PayPal and several cryptocurrencies. Options are shown at checkout.' },
+          { question: 'How do I contact support?',
+            answer: 'Discord or a ticket. We typically respond within 10 minutes while we are online.' },
+          { question: 'Are your products safe to use?',
+            answer: 'Every product is tested before listing, and the live status page shows whether the build is currently undetected, updating or detected.' },
+          { question: 'Do you offer any discounts?',
+            answer: 'We run occasional promotions. Follow our socials or join the Discord to hear about them.' },
+          { question: 'Can I use the product on multiple PCs?',
+            answer: 'Each purchase is licensed to a single PC HWID, which keeps key sharing down and the detection rate low.' },
+        ],
       },
       componentId: 'hero',
       components_order: [],

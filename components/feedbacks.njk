@@ -1487,66 +1487,14 @@
 })();
 </script>
 
-{# ── WHY ZAZA — fair, checkable differentiation vs "most stores" ── #}
-<section class="zzwhy">
-  <div class="zzwhy__wrap">
-    <p class="zzwhy__eyebrow">// WHY ZAZA OVER THE REST</p>
-    <h2 class="zzwhy__title">Most stores sell promises.<br>We show receipts.</h2>
-
-    {# ── THE PRIVATE ADVANTAGE: small userbase vs mass-market builds ── #}
-    <div class="zzpriv">
-      <div class="zzpriv__col zzpriv__col--us">
-        <p class="zzpriv__tag">ZAZA — PRIVATE BUILD</p>
-        <div class="zzpriv__stat">~100<span class="zzpriv__stat-sub">players on an average day</span></div>
-        <div class="zzpriv__dots zzpriv__dots--sparse" aria-hidden="true"></div>
-        <ul class="zzpriv__list">
-          <li>A pool this small gives anti-cheat almost nothing to sample</li>
-          <li>Builds rebuilt and re-verified per Rust patch — feasible at our size</li>
-          <li>No public downloads, no leaked loaders circulating</li>
-        </ul>
-      </div>
-      <div class="zzpriv__vs" aria-hidden="true">VS</div>
-      <div class="zzpriv__col zzpriv__col--them">
-        <p class="zzpriv__tag zzpriv__tag--them">MASS-MARKET CHEATS</p>
-        <div class="zzpriv__stat zzpriv__stat--them">1000s<span class="zzpriv__stat-sub">on the same public build</span></div>
-        <div class="zzpriv__dots zzpriv__dots--dense" aria-hidden="true"></div>
-        <ul class="zzpriv__list zzpriv__list--them">
-          <li>Every extra user hands anti-cheat another detection sample</li>
-          <li>Public builds get signature-farmed within days of release</li>
-          <li>One detection wave bans the entire userbase at once</li>
-        </ul>
-      </div>
-    </div>
-    <p class="zzpriv__honest">Small doesn't mean invincible — it means we're a far smaller target. Either way, our detection status stays <a href="{{ '/status' | shopUrl }}">dated and public</a>.</p>
-
-    <div class="zzwhy__grid">
-      <div class="zzwhy__card">
-        <div class="zzwhy__ico">🎯</div>
-        <h3 class="zzwhy__h">Private build, full loadout</h3>
-        <p class="zzwhy__p">The cheat <em>and</em> NFA accounts from $1.00 in one checkout. Most stores sell you the key and leave you to source accounts elsewhere — here a worst-case ban costs pocket change, not your main.</p>
-      </div>
-      <div class="zzwhy__card">
-        <div class="zzwhy__ico">📋</div>
-        <h3 class="zzwhy__h">Status with dates, not vibes</h3>
-        <p class="zzwhy__p">Every "Undetected" on our <a href="{{ '/status' | shopUrl }}">status page</a> carries the date it was last verified, and red incidents stay in the public log forever. No evergreen green dots.</p>
-      </div>
-      <div class="zzwhy__card">
-        <div class="zzwhy__ico">🛡️</div>
-        <h3 class="zzwhy__h">Warranty in writing</h3>
-        <p class="zzwhy__p">Covered and not-covered spelled out <em>before</em> you pay — on cheat keys and on every NFA account, which ships with a free 6-hour replacement warranty.</p>
-      </div>
-      <div class="zzwhy__card">
-        <div class="zzwhy__ico">🧾</div>
-        <h3 class="zzwhy__h">Numbers we can defend</h3>
-        <p class="zzwhy__p">Our rating and review count are calculated live from the actual reviews on this site. You won't find "99.9% uptime" wallpaper or a zero-ban guarantee here — because nobody can honestly offer one.</p>
-      </div>
-    </div>
-    <div class="zzwhy__cta">
-      <a href="{{ '/status' | shopUrl }}" class="zzwhy__btn zzwhy__btn--ghost">Check live status</a>
-      <a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="zzwhy__btn">Get your key</a>
-    </div>
-  </div>
-</section>
+{# ── WHY ZAZA ──
+   Removed from the homepage. It was argument, not evidence: a full section
+   asserting that this store is better than "most stores", sitting directly
+   beneath the reviews that already demonstrate it and directly above the
+   trust pledge that makes the same point in a checkable way. It cost 1115px
+   on desktop and 2195px on a phone — over two and a half phone screens — to
+   restate a claim the two sections either side of it prove.
+   The styles below are left in place; only the markup is gone. #}
 
 <style>
 .zzwhy{position:relative;padding:26px 20px 70px}

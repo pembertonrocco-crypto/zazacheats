@@ -28,7 +28,11 @@ const OUT = path.join(ROOT, '.render');
    on product.path, so testing one path leaves the other half of the page —
    including the showcase video facade — completely unrendered. */
 const PAGES = [
-  ['shop', ['hero', 'products', 'feedbacks', 'faq']],
+  /* The real homepage component list from settings.json. It used to omit
+     `comparison` and `cta`, so every measurement of the longest, most-visited
+     page on the site was taken against a shorter page than anyone actually
+     gets — the same "fixture is the coverage" trap as the missing add-on. */
+  ['shop', ['hero', 'products', 'comparison', 'feedbacks', 'faq', 'cta']],
   ['product', ['product-page']],
   ['product-nfa', ['product-page'], { product: { path: 'rust-nfa', name: 'Rust NFA' } }],
   ['products', ['products-page']],

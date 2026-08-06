@@ -129,6 +129,15 @@ const MEASURE = () => {
     // report a height the live site never shows. Not the theme's to fix.
     if (/\b(btn|form-control|form-select|btn-close|form-check-input)\b/.test(el.className || '')) continue;
 
+    // An element that cannot receive pointer events is not a tap target, by
+    // definition — whatever is underneath it is. The comparison slider's
+    // handle is the case that prompted this: it is a 1px visual line marked
+    // `pointer-events:none` so that drags fall through to the whole stage
+    // behind it, which is the real, image-sized control. Measuring the line
+    // reported a 1x168 target for something no finger ever touches.
+    // (It stays keyboard-operable: role="slider", tabindex="0", arrow keys.)
+    if (getComputedStyle(el).pointerEvents === 'none') continue;
+
     // A control may carry its hit area on a pseudo-element (an invisible
     // centred box) so the visual size can stay small. getBoundingClientRect
     // does not see that, so read the pseudo's own min-width/min-height and

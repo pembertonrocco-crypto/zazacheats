@@ -354,6 +354,24 @@
   .zed__search{display:none}
   .zed__tabs{flex-wrap:wrap}
   .zed__tab{padding:8px 12px}
+
+  /* The menu renders every feature at full length, which came to 1231px on a
+     393px screen — one and a half phone viewports for a demo panel, and the
+     single biggest reason the homepage ran 13 screens on mobile. Capped with
+     an internal scroll: the demo still reads as a real, long feature list,
+     and anyone who wants to explore it still can. The fade is the affordance
+     that says there is more below. */
+  .zed__menu{
+    position:relative;
+    max-height:60vh;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+  }
+  .zed__menu::after{
+    content:"";position:sticky;bottom:0;left:0;display:block;height:44px;margin-top:-44px;
+    background:linear-gradient(180deg,transparent,rgba(6,9,26,.92));pointer-events:none;
+  }
 }
 
 .zed__panels{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px}

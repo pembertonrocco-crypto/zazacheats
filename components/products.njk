@@ -14,7 +14,7 @@
   <div class="products-badge-wrap">
     <div class="products-badge">
       <span class="products-badge__blip" aria-hidden="true"></span>
-      <span class="products-badge__txt">// THE ARSENAL</span>
+      <span class="products-badge__txt">WHAT WE SELL</span>
     </div>
   </div>
   {% if properties.title %}
@@ -86,7 +86,7 @@
   {# ---- ROUTER: honest "which key?" guidance. Duration names match the
        real variants badged on the product page. Static HTML only. ---- #}
   <div class="zzrt" aria-label="Which key should I get?">
-    <p class="zzrt__q">// WHICH KEY?</p>
+    <p class="zzrt__q">WHICH KEY?</p>
     <div class="zzrt__grid">
       <a href="{{ '/product/zaza-rust-private-cheat' | shopUrl }}" class="zzrt__cell">
         <span class="zzrt__k">TESTING THE WATERS</span>
@@ -218,9 +218,8 @@
   border-radius: 2px;
   background: linear-gradient(90deg, transparent, #BF40BF, transparent);
   box-shadow: 0 0 14px rgba(191,64,191,0.36);
-  animation: prodUnderline 3.2s ease-in-out infinite;
+  
 }
-@keyframes prodUnderline { 0%,100%{width:120px;opacity:.8} 50%{width:190px;opacity:1} }
 
 /* ---- backdrop: faint targeting grid + rotating reticle ---- */
 .products-grid-bg {
@@ -244,9 +243,8 @@
 .products-reticle__ring--dash {
   inset: 12%;
   border: 1px dashed rgba(191,64,191,.22);
-  animation: prodSpin 40s linear infinite;
+  
 }
-@keyframes prodSpin { to { transform: rotate(360deg); } }
 .products-reticle__cross::before,
 .products-reticle__cross::after {
   content: ''; position: absolute; background: rgba(191,64,191,.1);
@@ -320,9 +318,8 @@
 .products--pair > [class*="col-"]{display:flex}
 .products--pair .pc{width:100%}
 @media (min-width:576px){.products--pair{row-gap:0}}
-.products-glow{animation:prodGlow 11s ease-in-out infinite}
+.products-glow{}
 .products-glow--right{animation-delay:-5.5s}
-@keyframes prodGlow{0%,100%{transform:translate(0,0) scale(1);opacity:.55}50%{transform:translate(16px,-12px) scale(1.12);opacity:.9}}
 .products-reveal-ready .row.products > [class*="col-"]{opacity:0;transform:translateY(26px);
   transition:opacity .65s cubic-bezier(.16,1,.3,1),transform .65s cubic-bezier(.16,1,.3,1)}
 .products-reveal-ready .row.products > [class*="col-"].prod-in{opacity:1;transform:translateY(0)}

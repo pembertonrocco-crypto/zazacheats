@@ -416,12 +416,8 @@
          border or hover transition, and stays clip-safe inside the card. */
       .zz-neon{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;
         border:1px solid rgba(191,64,191,.32);
-        animation:zzNeonPulse 10s ease-in-out infinite}
-      @keyframes zzNeonPulse{
-        0%,100%{border-color:rgba(191,64,191,.26);box-shadow:0 0 6px rgba(191,64,191,.10),inset 0 0 9px rgba(191,64,191,.05)}
-        50%{border-color:rgba(191,64,191,.66);box-shadow:0 0 20px rgba(191,64,191,.34),inset 0 0 15px rgba(191,64,191,.12)}
-      }
-      @media (prefers-reduced-motion:reduce){
+        }
+            @media (prefers-reduced-motion:reduce){
         .zz-neon{animation:none;border-color:rgba(191,64,191,.34);box-shadow:none}
       }
     </style>

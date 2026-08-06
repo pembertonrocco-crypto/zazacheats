@@ -571,96 +571,11 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c18}
 })();
 </script>
 
-{# ===== DECRYPT HEADLINES — section titles resolve out of cipher text =====
-   When a section heading first scrolls into view, its characters flicker
-   through glyphs and settle left-to-right (cheat-menu boot vibe). Text nodes
-   are scrambled in place so nested markup (gradient spans etc.) survives;
-   the original string is restored exactly, an aria-label preserves the real
-   name for screen readers during the effect, and min-height is locked so
-   nothing reflows. Runs once per heading, capped, skipped for
-   prefers-reduced-motion and inside the hero (it has its own choreography). #}
-<script>
-(function(){
-  'use strict';
-  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  if(!('IntersectionObserver' in window)) return;
-
-  var GLYPHS = '!<>-_\\/=+*^?;:|01';
-  var SEL = 'main h2, .zz-h2, .fbq__title, .rev-title, .af-title, .dl-title, .zs-title, .af-h2';
-
-  function textNodes(el){
-    var out = [], w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
-    var n;
-    while((n = w.nextNode())){ if(n.nodeValue && n.nodeValue.trim()) out.push(n); }
-    return out;
-  }
-
-  function run(el){
-    if(el.__zzdec) return;
-    el.__zzdec = 1;
-    var tns = textNodes(el);
-    var parts = [], total = 0;
-    for(var i = 0; i < tns.length; i++){
-      var s = tns[i].nodeValue;
-      parts.push({ n: tns[i], s: s });
-      total += s.length;
-    }
-    if(!total || total > 90) return;
-
-    var label = (el.textContent || '').replace(/\s+/g, ' ').trim();
-    if(label) el.setAttribute('aria-label', label);
-    var mh = el.style.minHeight;
-    el.style.minHeight = el.offsetHeight + 'px';
-
-    var D = Math.min(340 + total * 26, 1100);
-    var st = performance.now();
-
-    function fr(now){
-      var p = Math.min((now - st) / D, 1);
-      var reveal = Math.floor(p * total);
-      var g = 0;
-      for(var i = 0; i < parts.length; i++){
-        var src = parts[i].s, out = '';
-        for(var j = 0; j < src.length; j++, g++){
-          var ch = src.charAt(j);
-          if(ch === ' ' || ch === '\n' || g < reveal) out += ch;
-          else out += GLYPHS.charAt((Math.random() * GLYPHS.length) | 0);
-        }
-        parts[i].n.nodeValue = out;
-      }
-      if(p < 1){ requestAnimationFrame(fr); }
-      else{
-        for(var k = 0; k < parts.length; k++) parts[k].n.nodeValue = parts[k].s;
-        el.removeAttribute('aria-label');
-        el.style.minHeight = mh;
-      }
-    }
-    requestAnimationFrame(fr);
-  }
-
-  function boot(){
-    var els = [], seen = [];
-    document.querySelectorAll(SEL).forEach(function(el){
-      if(seen.indexOf(el) !== -1) return;
-      if(el.closest('.hero') || el.closest('.modal') || el.closest('[class*="marquee"]')) return;
-      seen.push(el);
-      if(els.length < 30) els.push(el);
-    });
-    if(!els.length) return;
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(en){
-        if(!en.isIntersecting) return;
-        io.unobserve(en.target);
-        setTimeout(function(){ run(en.target); }, 140);
-      });
-    }, { threshold: 0.35, rootMargin: '0px 0px -8% 0px' });
-    els.forEach(function(el){ io.observe(el); });
-  }
-
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
-})();
-</script>
+{# The "decrypt headlines" effect was removed here. Every h2 on the site
+   flickered through cipher glyphs for up to 1.1s when it scrolled into view.
+   Two problems: it is the most recognisable stock JS effect there is, and it
+   made every section heading unreadable at exactly the moment the reader
+   arrived at it. The reveal transitions below still carry the entrance. #}
 
 {# ---- LIVE REVIEW COUNT SYNC ----
    Every [data-zz-rc] (count), [data-zz-ravg] (average), [data-zz-rstars]

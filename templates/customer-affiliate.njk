@@ -29,7 +29,7 @@
 
           {# ---------- header ---------- #}
           <div class="zaf__head">
-            <p class="zaf__eyebrow">// AFFILIATE OPS</p>
+            <p class="zaf__eyebrow">AFFILIATE OPS</p>
             <h2 class="zaf__title">Your link. Their key. <span class="zaf__accent">Your cut.</span></h2>
             <p class="zaf__sub">Your code takes <strong>5% off</strong> for whoever uses it and pays you <strong><span data-zrank-rate>{{ shop.affiliate_percentage }}</span>%</strong> on every Rust cheat key it moves — credited straight to your store balance, spendable at checkout like cash. Refer more, rank up, and the higher rate applies to everything you&rsquo;ve already sold. NFA products aren&rsquo;t part of the program.</p>
           </div>
@@ -117,7 +117,7 @@
           {# ---------- rank ladder ---------- #}
           <div class="zaf__rank" data-zrank-root data-zrank-count="{% if referred_customers_paginator and referred_customers_paginator.total %}{{ referred_customers_paginator.total }}{% else %}{{ referred_customers | length }}{% endif %}">
             <div class="zaf__rank-head">
-              <p class="zaf__kit-h" style="margin:0">// YOUR RANK</p>
+              <p class="zaf__kit-h" style="margin:0">YOUR RANK</p>
               <p class="zaf__rank-next" data-zrank-next></p>
             </div>
             <div class="zaf__rank-bar"><span class="zaf__rank-fill" data-zrank-fill></span></div>
@@ -147,7 +147,7 @@
 
           {# ---------- toolkit ---------- #}
           <div class="zaf__kit">
-            <p class="zaf__kit-h">// COPY-PASTE KIT</p>
+            <p class="zaf__kit-h">COPY-PASTE KIT</p>
             <div class="zaf__kit-item">
               <p class="zaf__kit-txt" id="zaf-blurb-a">Running Zaza's private Rust build this wipe. Every key gets the full menu — ESP, aim, radar, the lot — and their detection status page is public and dated, so check it yourself before you spend a penny. Code <strong>{{ shop_customer.affiliate_code }}</strong> takes 5% off: {{ shop.url }}/?a={{ shop_customer.affiliate_code }}</p>
               <button type="button" class="zaf__btn zaf__btn--ghost zaf__btn--sm" data-zaf-copy-target="zaf-blurb-a"><span data-zaf-label>Copy</span></button>
@@ -164,7 +164,7 @@
 
           {# ---------- referred table ---------- #}
           <div class="zaf__table-card">
-            <p class="zaf__kit-h">// YOUR REFERRALS</p>
+            <p class="zaf__kit-h">YOUR REFERRALS</p>
             {% if referred_customers.length > 0 %}
             <table class="zaf__table">
               <thead>
@@ -196,7 +196,7 @@
 
           {# ---------- not enrolled ---------- #}
           <div class="zaf__head">
-            <p class="zaf__eyebrow">// AFFILIATE OPS</p>
+            <p class="zaf__eyebrow">AFFILIATE OPS</p>
             <h2 class="zaf__title">Get paid to say <span class="zaf__accent">what you'd say anyway.</span></h2>
             <p class="zaf__sub">You get a discount code with your name on it. Whoever uses it saves <strong>5%</strong>, and you earn <strong>{{ shop.affiliate_percentage }}%</strong> of every Rust cheat key it moves &mdash; credited automatically to store balance and spendable at checkout. Rank up to <strong>20%</strong>. NFA products aren&rsquo;t part of the program.</p>
           </div>
@@ -213,7 +213,7 @@
                   data-email="{{ shop_customer.email | default('') }}"
                   data-customer-id="{{ shop_customer.id | default('') }}"
                   novalidate>
-              <p class="zaf__kit-h" style="margin:0 0 14px">// AFFILIATE APPLICATION</p>
+              <p class="zaf__kit-h" style="margin:0 0 14px">AFFILIATE APPLICATION</p>
 
               <div class="zaf__field">
                 <label class="zaf__label" for="zaf-ap-code">Affiliate code you want</label>

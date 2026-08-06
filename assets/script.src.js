@@ -681,27 +681,9 @@ function snow(config = {}) {
   var ZZ_ENH = {
     productUrl: '/product/zaza-rust-private-cheat',
     stats: [
-      { n: 147,  pre: '', suf: '',  label: 'players online now', green: false, pulse: true },
       { n: 632, pre: '', suf: '+', label: 'keys delivered',      green: false, pulse: false },
       { n: 12,   pre: '~', suf: 's', label: 'avg. delivery time',  green: false, pulse: false },
       { text: 'Never', label: 'last detection', green: true, pulse: false }
-    ],
-    users: ['xR***st','Gh0st_**','val****z','sn1p******','Ksa***','pr0****r','z***yy',
-      'toxic****','ripp***','frost***','n0****py','aim****d','w1nt***','dr***o',
-      'sh****w','mavr***','lu***s','b1g****','qu***x','ze***h','r***vn','p***le'],
-    where: ['London, UK','Berlin, DE','Warsaw, PL','Austin, US','Toronto, CA',
-      'Sydney, AU','Amsterdam, NL','Paris, FR','Madrid, ES','Oslo, NO',
-      'Dublin, IE','Prague, CZ','Miami, US','Manchester, UK','Denver, US',
-      'Stockholm, SE','Lisbon, PT','Vienna, AT','Helsinki, FI','Seattle, US'],
-    actions: [
-      { t: 'activated a <b>1 Month key</b>', w: 4 },
-      { t: 'activated a <b>1 Week key</b>', w: 5 },
-      { t: 'grabbed a <b>Lifetime key</b>', w: 3 },
-      { t: 'started a <b>1 Day key</b>', w: 3 },
-      { t: 'renewed their <b>1 Month key</b>', w: 3 },
-      { t: 'left a <b>5&#9733; review</b>', w: 3 },
-      { t: 'joined the <b>Discord</b>', w: 2 },
-      { t: 'passed <b>30 days undetected</b>', w: 2 }
     ]
   };
 
@@ -716,7 +698,6 @@ function snow(config = {}) {
     if (isMaint) return;
 
     try { buildStats(doc, reduce); } catch (e) {}
-    try { buildFeed(doc, reduce); } catch (e) {}
     try { buildHud(doc, reduce); } catch (e) {}
     try { buildKonami(doc, reduce); } catch (e) {}
   }
@@ -738,53 +719,32 @@ function snow(config = {}) {
     css += ".zzst__item{flex:1;min-width:150px;display:flex;flex-direction:column;align-items:center;gap:5px;padding:6px 10px;position:relative;text-align:center}";
     css += ".zzst__pulse{position:absolute;top:8px;right:calc(50% - 46px);width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.9);animation:zzstPulse 1.8s ease-in-out infinite}";
     css += "@keyframes zzstPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.82)}}";
-    css += ".zzst__num{font-size:clamp(1.7rem,3.4vw,2.35rem);font-weight:700;letter-spacing:-.02em;line-height:1;color:#fff;font-variant-numeric:tabular-nums;background:linear-gradient(180deg,#ffffff,#e0b3ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 12px rgba(191,64,191,.35))}";
-    css += ".zzst__num--g{background:linear-gradient(180deg,#eafff2,#4ade80);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 12px rgba(34,197,94,.35))}";
-    css += ".zzst__lbl{font-size:.72rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:rgba(200,215,240,.55)}";
+    css += ".zzst__num{font-size:clamp(1.7rem,3.4vw,2.35rem);font-weight:700;letter-spacing:-.02em;line-height:1;color:#fff;font-variant-numeric:tabular-nums}";
+    css += ".zzst__num--g{color:#4ade80}";
+    css += ".zzst__lbl{font-size:.72rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:rgba(231,236,255,.55)}";
     css += ".zzst__div{width:1px;align-self:center;height:38px;flex-shrink:0;background:linear-gradient(180deg,transparent,rgba(191,64,191,.35),transparent)}";
     css += "@media(max-width:620px){.zzst__inner{gap:0}.zzst__item{flex:1 1 45%;min-width:45%;padding:12px 8px}.zzst__num{max-width:100%;font-size:clamp(1.35rem,6.4vw,2.1rem)}.zzst__div{display:none}.zzst__pulse{right:calc(50% - 40px)}}";
-    css += ".zzla{position:fixed;left:18px;bottom:18px;z-index:960;width:320px;max-width:calc(100vw - 36px);pointer-events:none;font-family:var(--zz-sans)'Inter',system-ui,sans-serif;display:none}";
-    css += "@media(min-width:769px){.zzla{display:block}}";
-    css += ".zzla__card{pointer-events:auto;position:relative;overflow:hidden;display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:14px;background:linear-gradient(180deg,rgba(12,16,38,.94),rgba(7,10,26,.94));border:1px solid rgba(191,64,191,.28);box-shadow:0 18px 44px -16px rgba(0,0,0,.8),0 0 22px -10px rgba(191,64,191,.5),inset 0 1px 0 rgba(255,255,255,.05);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);cursor:pointer;opacity:0;transform:translateY(14px) scale(.98);transition:opacity .4s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1)}";
-    css += ".zzla.zzla--show .zzla__card{opacity:1;transform:translateY(0) scale(1)}";
-    css += ".zzla__scan{position:absolute;top:0;left:0;right:0;height:1px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(191,64,191,.9),transparent);opacity:0}";
-    css += ".zzla.zzla--show .zzla__scan{animation:zzlaScan 1.1s ease-out}";
-    css += "@keyframes zzlaScan{0%{opacity:.9;transform:translateY(0)}100%{opacity:0;transform:translateY(64px)}}";
-    css += ".zzla__avatar{flex-shrink:0;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-weight:700;font-size:1rem;color:#fff;background:linear-gradient(135deg,#BF40BF,#7C3AED);box-shadow:0 6px 16px -6px rgba(191,64,191,.8),inset 0 1px 0 rgba(255,255,255,.25);text-transform:uppercase}";
-    css += ".zzla__body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}";
-    css += ".zzla__line{display:flex;align-items:center;gap:6px;min-width:0}";
-    css += ".zzla__dot{flex-shrink:0;width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.9)}";
-    css += ".zzla__user{font-size:.82rem;font-weight:700;color:#fff;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}";
-    css += ".zzla__verified{flex-shrink:0;display:inline-flex;line-height:0}";
-    css += ".zzla__action{font-size:.78rem;color:rgba(214,224,255,.72);line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}";
-    css += ".zzla__action b{color:#e6b3ff;font-weight:700}";
-    css += ".zzla__foot{display:flex;align-items:center;gap:6px;margin-top:1px}";
-    css += ".zzla__tag{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.56rem;font-weight:700;letter-spacing:.14em;color:#4ade80;padding:2px 6px;border-radius:5px;line-height:1;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.28)}";
-    css += ".zzla__where,.zzla__time{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.62rem;color:rgba(200,215,240,.5);white-space:nowrap}";
-    css += ".zzla__sep{color:rgba(200,215,240,.3);font-size:.62rem}";
-    css += ".zzla__x{position:absolute;top:7px;right:7px;width:20px;height:20px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);cursor:pointer;opacity:0;transition:opacity .2s,color .2s,background .2s}";
-    css += ".zzla__card:hover .zzla__x{opacity:1}.zzla__x:hover{color:#fff;background:rgba(255,255,255,.12)}";
-    css += ".zzhud{position:fixed;inset:0;z-index:2147483000;pointer-events:none;color:#e8b3ff;opacity:0;transition:opacity .3s ease;display:none}";
+    css += ".zzhud{position:fixed;inset:0;z-index:2147483000;pointer-events:none;color:#e6aaff;opacity:0;transition:opacity .3s ease;display:none}";
     css += ".zzhud.zzhud--on{opacity:1}";
     css += "@media(hover:hover) and (pointer:fine) and (min-width:900px){.zzhud{display:block}}";
     css += ".zzhud__cross{position:absolute;top:0;left:0;transform:translate3d(var(--x,-100px),var(--y,-100px),0) translate(-50%,-50%) rotate(var(--spin,0deg));transition:opacity .2s ease;filter:drop-shadow(0 0 5px rgba(191,64,191,.6))}";
     css += ".zzhud.zzhud--locked .zzhud__cross{opacity:0}";
     css += ".zzhud__lock{position:absolute;top:0;left:0;width:var(--w,0px);height:var(--h,0px);transform:translate3d(var(--lx,-100px),var(--ly,-100px),0);opacity:0;transition:opacity .18s ease}";
     css += ".zzhud.zzhud--locked .zzhud__lock{opacity:1}";
-    css += ".zzhud__c{position:absolute;width:14px;height:14px;border:2px solid #d76bff;filter:drop-shadow(0 0 6px rgba(191,64,191,.8))}";
+    css += ".zzhud__c{position:absolute;width:14px;height:14px;border:2px solid #e6aaff;filter:drop-shadow(0 0 6px rgba(191,64,191,.8))}";
     css += ".zzhud.zzhud--locked .zzhud__c{animation:zzhudLock .22s cubic-bezier(.16,1,.3,1)}";
     css += "@keyframes zzhudLock{from{transform:scale(1.35);opacity:.4}to{transform:scale(1);opacity:1}}";
     css += ".zzhud__c--tl{top:-3px;left:-3px;border-right:0;border-bottom:0}.zzhud__c--tr{top:-3px;right:-3px;border-left:0;border-bottom:0}";
     css += ".zzhud__c--bl{bottom:-3px;left:-3px;border-right:0;border-top:0}.zzhud__c--br{bottom:-3px;right:-3px;border-left:0;border-top:0}";
-    css += ".zzhud__tag{position:absolute;top:-19px;left:0;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:9px;font-weight:700;letter-spacing:.16em;color:#fff;background:linear-gradient(135deg,#BF40BF,#7C3AED);padding:2px 6px;border-radius:4px;white-space:nowrap;box-shadow:0 4px 12px -4px rgba(191,64,191,.9)}";
-    css += ".zzgod{position:fixed;inset:0;z-index:2147483001;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:radial-gradient(circle at 50% 45%,rgba(191,64,191,.16),rgba(6,9,26,.55) 60%,rgba(6,9,26,.82));opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s}";
+    css += ".zzhud__tag{position:absolute;top:-19px;left:0;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:9px;font-weight:700;letter-spacing:.16em;color:#fff;background:linear-gradient(135deg,#BF40BF,#8e2d8e);padding:2px 6px;border-radius:4px;white-space:nowrap;box-shadow:0 4px 12px -4px rgba(191,64,191,.9)}";
+    css += ".zzgod{position:fixed;inset:0;z-index:2147483001;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:radial-gradient(circle at 50% 45%,rgba(191,64,191,.16),rgba(10,12,24,.55) 60%,rgba(10,12,24,.82));opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s}";
     css += ".zzgod.zzgod--on{opacity:1;visibility:visible}";
-    css += ".zzgod__txt{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-weight:700;font-size:clamp(1.6rem,6vw,3.4rem);letter-spacing:.14em;color:#fff;text-shadow:0 0 24px rgba(191,64,191,.9),0 0 60px rgba(124,58,237,.6)}";
+    css += ".zzgod__txt{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-weight:700;font-size:clamp(1.6rem,6vw,3.4rem);letter-spacing:.14em;color:#fff;text-shadow:0 0 24px rgba(191,64,191,.9),0 0 60px rgba(142,45,142,.6)}";
     css += ".zzgod__sub{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.8rem;letter-spacing:.1em;color:#4ade80}";
-    css += ".zzgod__scan{position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,rgba(216,107,255,.9),transparent);box-shadow:0 0 14px rgba(191,64,191,.9)}";
-    css += ".zzgod.zzgod--on .zzgod__scan{animation:zzgodScan 1s linear infinite}";
-    css += "@keyframes zzgodScan{from{transform:translateY(0)}to{transform:translateY(100vh)}}";
-    css += "@media(prefers-reduced-motion:reduce){.zzhud,.zzgod{display:none!important}.zzla__scan{display:none}.zzla__card{transition:opacity .2s ease}.zzla.zzla--show .zzla__card{transform:none}}";
+    css += ".zzgod__scan{position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,rgba(230,170,255,.9),transparent);box-shadow:0 0 14px rgba(191,64,191,.9)}";
+    css += ".zzgod.zzgod--on .zzgod__scan{}";
+    css += "";
+    css += "@media(prefers-reduced-motion:reduce){.zzhud,.zzgod{display:none!important}}";
 
     var st = doc.createElement('style');
     st.id = 'zz-enh-styles';
@@ -846,87 +806,6 @@ function snow(config = {}) {
     for (var j = 0; j < nums.length; j++) io.observe(nums[j]);
   }
 
-  function buildFeed(doc, reduce) {
-    var KEY = 'zz-live-dismissed';
-    try { if (sessionStorage.getItem(KEY)) return; } catch (e) {}
-    if (doc.getElementById('zz-live')) return;
-
-    var root = doc.createElement('div');
-    root.className = 'zzla';
-    root.id = 'zz-live';
-    root.setAttribute('aria-hidden', 'true');
-    root.hidden = true;
-    root.innerHTML =
-      '<div class="zzla__card" role="status">' +
-      '<span class="zzla__scan" aria-hidden="true"></span>' +
-      '<span class="zzla__avatar" data-zzla-av aria-hidden="true">R</span>' +
-      '<div class="zzla__body"><div class="zzla__line">' +
-      '<span class="zzla__dot" aria-hidden="true"></span>' +
-      '<span class="zzla__user" data-zzla-user>Someone</span>' +
-      '<span class="zzla__verified" title="Verified activation" aria-label="Verified">' +
-      '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.5l7 3v5.2c0 4.3-2.9 7.9-7 9.3-4.1-1.4-7-5-7-9.3V5.5l7-3z" fill="rgba(34,197,94,.18)" stroke="#22c55e" stroke-width="1.6"/><path d="M8.6 12.2l2.4 2.4 4.6-4.8" stroke="#22c55e" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>' +
-      '<div class="zzla__action" data-zzla-action>activated a key</div>' +
-      '<div class="zzla__foot"><span class="zzla__tag">LIVE</span>' +
-      '<span class="zzla__where" data-zzla-where>&mdash;</span>' +
-      '<span class="zzla__sep" aria-hidden="true">&middot;</span>' +
-      '<span class="zzla__time" data-zzla-time>just now</span></div></div>' +
-      '<button type="button" class="zzla__x" data-zzla-close aria-label="Dismiss activity feed">' +
-      '<svg width="11" height="11" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>';
-    doc.body.appendChild(root);
-
-    var mqShow = window.matchMedia('(min-width:769px)');
-    var card = root.querySelector('.zzla__card');
-    var elUser = root.querySelector('[data-zzla-user]');
-    var elAv = root.querySelector('[data-zzla-av]');
-    var elAction = root.querySelector('[data-zzla-action]');
-    var elWhere = root.querySelector('[data-zzla-where]');
-    var elTime = root.querySelector('[data-zzla-time]');
-    var btnClose = root.querySelector('[data-zzla-close]');
-    var TIMES = ['just now', '1 min ago', '2 min ago', '3 min ago', '5 min ago', '7 min ago', '9 min ago'];
-    var showT = null, hideT = null, loopT = null, visible = false;
-
-    function fill() {
-      var u = pick(ZZ_ENH.users);
-      elUser.textContent = u;
-      elAv.textContent = (u.replace(/[^a-z0-9]/gi, '')[0] || 'R');
-      elAction.innerHTML = pickW(ZZ_ENH.actions).t;
-      elWhere.textContent = pick(ZZ_ENH.where);
-      elTime.textContent = (Math.random() < 0.45 ? 'just now' : pick(TIMES));
-    }
-    function show() {
-      if (!mqShow.matches) return schedule();
-      fill();
-      root.hidden = false;
-      void card.offsetWidth;
-      root.classList.add('zzla--show');
-      visible = true;
-      hideT = setTimeout(hide, reduce ? 9000 : 6200);
-    }
-    function hide() { root.classList.remove('zzla--show'); visible = false; schedule(); }
-    function schedule() {
-      clearTimeout(loopT);
-      var gap = reduce ? (22000 + Math.random() * 12000) : (15000 + Math.random() * 11000);
-      loopT = setTimeout(show, gap);
-    }
-    card.addEventListener('mouseenter', function () { clearTimeout(hideT); });
-    card.addEventListener('mouseleave', function () { if (visible) hideT = setTimeout(hide, 2600); });
-    card.addEventListener('click', function (e) {
-      if (e.target.closest('[data-zzla-close]')) return;
-      if (ZZ_ENH.productUrl) window.location.href = ZZ_ENH.productUrl;
-    });
-    btnClose.addEventListener('click', function (e) {
-      e.stopPropagation();
-      clearTimeout(showT); clearTimeout(hideT); clearTimeout(loopT);
-      root.classList.remove('zzla--show');
-      setTimeout(function () { root.hidden = true; }, 300);
-      try { sessionStorage.setItem(KEY, '1'); } catch (err) {}
-    });
-    document.addEventListener('visibilitychange', function () {
-      if (document.hidden) { clearTimeout(showT); clearTimeout(hideT); clearTimeout(loopT); }
-      else if (!visible) { schedule(); }
-    });
-    showT = setTimeout(show, reduce ? 4000 : 2200);
-  }
 
   function buildHud(doc, reduce) {
     var fine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine) and (min-width:900px)').matches;
@@ -1037,196 +916,6 @@ function snow(config = {}) {
   else boot();
 })();
 
-/* =============================================================================
-   ZAZA ARCADE v2 — killfeed, crit numbers, session ranks, tab-recovery title.
-   Second enhancement layer; everything here is NEW (no overlap with ZZ_ENH):
-   the bottom-left purchase toast, hitmarker, HUD crosshair and konami live in
-   the layers above / polish.njk. Self-contained IIFE, injects its own CSS.
-   Disabled under prefers-reduced-motion; killfeed + crits are desktop-only.
-   ============================================================================= */
-;(function () {
-  'use strict';
-  if (window.__zzArcade) return;
-  window.__zzArcade = true;
-
-  var USERS = ['xR***st','Gh0st_**','val****z','sn1p******','Ksa***','pr0****r',
-    'z***yy','toxic****','ripp***','frost***','n0****py','aim****d','w1nt***',
-    'dr***o','sh****w','mavr***','lu***s','b1g****','qu***x','ze***h'];
-  var KF_ITEMS = [
-    { ico: '🔑', txt: '1 Month key', w: 4 },
-    { ico: '🔑', txt: '1 Week key', w: 5 },
-    { ico: '👑', txt: 'Lifetime key', w: 2 },
-    { ico: '🔑', txt: '1 Day key', w: 3 },
-    { ico: '⭐', txt: '5★ review', w: 3 },
-    { ico: '🛡', txt: '30d undetected', w: 2 }
-  ];
-  var RANKS = [
-    { at: 45,  name: 'REGULAR',  sub: 'browsing like a pro' },
-    { at: 150, name: 'TRUSTED',  sub: 'the lobby respects you' },
-    { at: 360, name: 'VETERAN',  sub: 'basically staff at this point' }
-  ];
-  var TITLES = [
-    '⚠ ENEMY LEFT THE MATCH…',
-    '🎯 Your key is still waiting',
-    '👀 Still undetected. Still here.'
-  ];
-
-  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
-  function pickW(list) {
-    var t = 0, i; for (i = 0; i < list.length; i++) t += list[i].w;
-    var r = Math.random() * t;
-    for (i = 0; i < list.length; i++) { r -= list[i].w; if (r <= 0) return list[i]; }
-    return list[0];
-  }
-
-  function boot() {
-    if (!document.body) return;
-    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-    var isMaint = !document.querySelector('header') && !document.querySelector('.components');
-    if (isMaint) return;
-    injectCss();
-    try { buildTitleFlip(); } catch (e) {}
-    if (reduce) return;
-    try { buildKillfeed(); } catch (e) {}
-    try { buildCrits(); } catch (e) {}
-  }
-
-  function injectCss() {
-    if (document.getElementById('zz-arcade-css')) return;
-    var c = '';
-    /* killfeed — top-right stack under the navbar pill (tier band 880-940) */
-    c += '.zzkf{position:fixed;top:96px;right:16px;z-index:935;display:none;flex-direction:column;align-items:flex-end;gap:6px;pointer-events:none;font-family:var(--zz-alt);font-variant-numeric:tabular-nums}';
-    c += '@media(min-width:992px){.zzkf{display:flex}}';
-    c += '.zzkf__row{display:flex;align-items:center;gap:7px;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:.02em;color:rgba(224,232,255,.88);background:linear-gradient(180deg,rgba(10,13,32,.88),rgba(7,10,26,.88));border:1px solid rgba(191,64,191,.22);box-shadow:0 10px 26px -14px rgba(0,0,0,.85);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:0;transform:translateX(24px);transition:opacity .35s cubic-bezier(.16,1,.3,1),transform .45s cubic-bezier(.16,1,.3,1)}';
-    c += '.zzkf__row.zzkf--in{opacity:1;transform:none}';
-    c += '.zzkf__row.zzkf--out{opacity:0;transform:translateX(18px)}';
-    c += '.zzkf__user{color:#e6b3ff}';
-    c += '.zzkf__ico{filter:drop-shadow(0 0 6px rgba(191,64,191,.7));font-size:12px}';
-    c += '.zzkf__arrow{color:rgba(191,64,191,.9)}';
-    c += '.zzkf__item{color:#fff}';
-    c += '.zzkf__row--rank{border-color:rgba(242,193,78,.45);box-shadow:0 10px 26px -14px rgba(0,0,0,.85),0 0 18px -6px rgba(242,193,78,.5)}';
-    c += '.zzkf__row--rank .zzkf__item{color:#f2c14e;text-shadow:0 0 12px rgba(242,193,78,.5)}';
-    c += '.zzkf__row--rank .zzkf__user{color:#fff}';
-    c += '.zzkf__sub{color:rgba(200,215,240,.55);font-weight:500}';
-    /* crit numbers + combo */
-    c += '.zzcrit{position:fixed;z-index:1310;pointer-events:none;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-weight:700;font-size:15px;letter-spacing:.04em;color:#fff;text-shadow:0 0 10px rgba(191,64,191,.9),0 2px 4px rgba(0,0,0,.6);animation:zzcritUp .9s cubic-bezier(.16,1,.3,1) forwards}';
-    c += '.zzcrit--big{font-size:19px;color:#f2c14e;text-shadow:0 0 14px rgba(242,193,78,.8),0 2px 4px rgba(0,0,0,.6)}';
-    c += '@keyframes zzcritUp{0%{opacity:0;transform:translate(-50%,0) scale(.7)}18%{opacity:1;transform:translate(-50%,-14px) scale(1.12)}100%{opacity:0;transform:translate(-50%,-52px) scale(1)}}';
-    c += '@media(hover:none),(max-width:991px){.zzcrit{display:none}}';
-    var s = document.createElement('style');
-    s.id = 'zz-arcade-css';
-    s.textContent = c;
-    document.head.appendChild(s);
-  }
-
-  /* -- killfeed: occasional CS-style rows, plus YOUR rank-ups over the session.
-     Deliberately sparse (18-34s apart, max 3 rows) so it reads as ambient
-     activity, not spam; pauses entirely while the tab is hidden. */
-  function buildKillfeed() {
-    if (document.getElementById('zz-kf')) return;
-    var kf = document.createElement('div');
-    kf.className = 'zzkf'; kf.id = 'zz-kf';
-    kf.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(kf);
-
-    function push(html, rank) {
-      var row = document.createElement('div');
-      row.className = 'zzkf__row' + (rank ? ' zzkf__row--rank' : '');
-      row.innerHTML = html;
-      kf.appendChild(row);
-      while (kf.children.length > 3) kf.removeChild(kf.firstChild);
-      requestAnimationFrame(function () { row.classList.add('zzkf--in'); });
-      setTimeout(function () {
-        row.classList.add('zzkf--out');
-        setTimeout(function () { if (row.parentNode) row.parentNode.removeChild(row); }, 500);
-      }, rank ? 6200 : 4600);
-    }
-
-    function feedLine() {
-      var it = pickW(KF_ITEMS);
-      push('<span class="zzkf__user">' + pick(USERS) + '</span>' +
-           '<span class="zzkf__arrow">▸</span>' +
-           '<span class="zzkf__ico">' + it.ico + '</span>' +
-           '<span class="zzkf__item">' + it.txt + '</span>');
-    }
-
-    var next;
-    function loop() {
-      next = setTimeout(function () {
-        if (!document.hidden) feedLine();
-        loop();
-      }, 18000 + Math.random() * 16000);
-    }
-    setTimeout(function () { if (!document.hidden) feedLine(); loop(); }, 9000);
-
-    /* session rank-ups (cosmetic progression; persists across pages) */
-    var t0 = Date.now();
-    try { t0 -= (+sessionStorage.getItem('zzRankT') || 0) * 1000; } catch (e) {}
-    setInterval(function () {
-      var secs = (Date.now() - t0) / 1000;
-      try { sessionStorage.setItem('zzRankT', String(Math.floor(secs))); } catch (e) {}
-      var seen = {};
-      try { seen = JSON.parse(sessionStorage.getItem('zzRanks') || '{}'); } catch (e) {}
-      for (var i = 0; i < RANKS.length; i++) {
-        var r = RANKS[i];
-        if (secs >= r.at && !seen[r.name]) {
-          seen[r.name] = 1;
-          try { sessionStorage.setItem('zzRanks', JSON.stringify(seen)); } catch (e) {}
-          if (!document.hidden) {
-            push('<span class="zzkf__user">YOU</span>' +
-                 '<span class="zzkf__arrow">▲</span>' +
-                 '<span class="zzkf__item">RANK UP: ' + r.name + '</span>' +
-                 '<span class="zzkf__sub">// ' + r.sub + '</span>', true);
-          }
-        }
-      }
-    }, 5000);
-  }
-
-  /* -- crit numbers: floating damage text when a buy CTA is clicked; rapid
-     consecutive clicks build a combo. Rides alongside the polish.njk
-     hitmarker (that one is the X flash; this is the number). */
-  function buildCrits() {
-    var SEL = '.btn-primary,.pc__buy,.zz-cta__btn,button[type=submit]';
-    var combo = 0, comboT = null;
-    var WORDS = ['+100', 'CRIT!', 'HEADSHOT', '+1 KEY', 'NICE'];
-    document.addEventListener('click', function (e) {
-      var t = e.target && e.target.closest ? e.target.closest(SEL) : null;
-      if (!t) return;
-      combo++;
-      clearTimeout(comboT);
-      comboT = setTimeout(function () { combo = 0; }, 1800);
-      var el = document.createElement('span');
-      var big = combo >= 3;
-      el.className = 'zzcrit' + (big ? ' zzcrit--big' : '');
-      el.textContent = big ? ('×' + combo + ' COMBO!') : pick(WORDS);
-      el.style.left = e.clientX + 'px';
-      el.style.top = (e.clientY - 18) + 'px';
-      document.body.appendChild(el);
-      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 950);
-    }, { passive: true });
-  }
-
-  /* -- tab-recovery title: when the visitor tabs away, the tab title flips to
-     an on-brand callback so the tab wins them back; restored on return.
-     Skipped on the status page, which manages document.title itself. */
-  function buildTitleFlip() {
-    if (/\/status/.test(location.pathname)) return;
-    var orig = null;
-    document.addEventListener('visibilitychange', function () {
-      if (document.hidden) {
-        if (orig === null) orig = document.title;
-        document.title = pick(TITLES);
-      } else if (orig !== null) {
-        document.title = orig;
-        orig = null;
-      }
-    });
-  }
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
-})();
 
 /* =============================================================================
    ZAZA CRO v3 — real conversion levers (not just decoration):
@@ -1269,7 +958,6 @@ function snow(config = {}) {
     try { saveLastProduct(); } catch (e) {}
     try { cartTitle(); } catch (e) {}
     try { bottomRightToast(); } catch (e) {}
-    try { liveViewers(); } catch (e) {}
     try { idlePulse(); } catch (e) {}
   }
 
@@ -1279,22 +967,17 @@ function snow(config = {}) {
     /* shared bottom-right toast (cart recovery / resume browsing) */
     c += '.zzct{position:fixed;right:16px;bottom:16px;z-index:1305;width:330px;max-width:calc(100vw - 32px);font-family:var(--zz-sans)"Inter",system-ui,sans-serif;opacity:0;transform:translateY(16px);transition:opacity .45s cubic-bezier(.16,1,.3,1),transform .55s cubic-bezier(.16,1,.3,1);pointer-events:none}';
     c += '.zzct.zzct--show{opacity:1;transform:none;pointer-events:auto}';
-    c += '.zzct__card{position:relative;padding:14px 14px 12px;border-radius:14px;background:linear-gradient(180deg,rgba(12,16,38,.96),rgba(7,10,26,.96));border:1px solid rgba(191,64,191,.32);box-shadow:0 20px 48px -18px rgba(0,0,0,.85),0 0 24px -10px rgba(191,64,191,.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}';
+    c += '.zzct__card{position:relative;padding:14px 14px 12px;border-radius:14px;background:linear-gradient(180deg,rgba(10,12,24,.96),rgba(6,7,15,.96));border:1px solid rgba(191,64,191,.32);box-shadow:0 20px 48px -18px rgba(0,0,0,.85),0 0 24px -10px rgba(191,64,191,.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}';
     c += '.zzct__head{display:flex;align-items:center;gap:8px;margin-bottom:4px}';
-    c += '.zzct__ico{font-size:16px;filter:drop-shadow(0 0 8px rgba(191,64,191,.7))}';
+    c += '.zzct__ico{display:inline-flex;color:#e6aaff}.zzct__ico svg{width:17px;height:17px}';
     c += '.zzct__title{font-size:.9rem;font-weight:700;color:#fff;letter-spacing:-.01em}';
-    c += '.zzct__sub{font-size:.78rem;line-height:1.4;color:rgba(214,224,255,.7);margin:0 0 10px}';
-    c += '.zzct__sub b{color:#e6b3ff}';
-    c += '.zzct__btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:9px 12px;border-radius:10px;border:0;cursor:pointer;font-size:.84rem;font-weight:700;color:#fff;text-decoration:none;background:linear-gradient(135deg,#BF40BF,#7C3AED);box-shadow:0 8px 22px -8px rgba(191,64,191,.9);transition:transform .2s cubic-bezier(.16,1,.3,1),filter .2s}';
+    c += '.zzct__sub{font-size:.78rem;line-height:1.4;color:rgba(231,236,255,.7);margin:0 0 10px}';
+    c += '.zzct__sub b{color:#e6aaff}';
+    c += '.zzct__btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:9px 12px;border-radius:10px;border:0;cursor:pointer;font-size:.84rem;font-weight:700;color:#fff;text-decoration:none;background:linear-gradient(135deg,#BF40BF,#8e2d8e);box-shadow:0 8px 22px -8px rgba(191,64,191,.9);transition:transform .2s cubic-bezier(.16,1,.3,1),filter .2s}';
     c += '.zzct__btn:hover{transform:translateY(-1px);filter:brightness(1.08);color:#fff}';
     c += '.zzct__x{position:absolute;top:8px;right:8px;width:22px;height:22px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);cursor:pointer;font-size:12px;line-height:1;transition:color .2s,background .2s}';
     c += '.zzct__x:hover{color:#fff;background:rgba(255,255,255,.14)}';
     /* live viewers chip on product form */
-    c += '.zzvw{display:inline-flex;align-items:center;gap:7px;margin:0 0 10px;padding:6px 11px;border-radius:9px;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:11px;font-weight:700;letter-spacing:.03em;color:rgba(224,232,255,.85);background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.25)}';
-    c += '.zzvw__dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.9)}';
-    if (!reduce) c += '.zzvw__dot{animation:zzvwPulse 1.9s ease-in-out infinite}';
-    c += '@keyframes zzvwPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}';
-    c += '.zzvw__n{color:#4ade80;font-variant-numeric:tabular-nums}';
     /* idle buy-button pulse */
     c += '@keyframes zzIdlePulse{0%{box-shadow:0 0 0 0 rgba(191,64,191,.65)}100%{box-shadow:0 0 0 18px rgba(191,64,191,0)}}';
     c += '.zz-idle-pulse{animation:zzIdlePulse 1.1s cubic-bezier(.16,1,.3,1) 2}';
@@ -1323,7 +1006,7 @@ function snow(config = {}) {
     if (/\/status/.test(path)) return;
     document.addEventListener('visibilitychange', function () {
       if (document.hidden && cartItems()) {
-        document.title = '🛒 Your key is still in your cart';
+        document.title = 'Your key is still in your cart';
       }
     });
   }
@@ -1359,7 +1042,7 @@ function snow(config = {}) {
       el.innerHTML =
         '<div class="zzct__card">' +
         '<button class="zzct__x" type="button" aria-label="Dismiss">✕</button>' +
-        '<div class="zzct__head"><span class="zzct__ico">🛒</span>' +
+        '<div class="zzct__head"><span class="zzct__ico" aria-hidden="true"><svg class="zz-i" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.6h2.7l2.3 11.1h9.9l2-7.5H6.5"/><circle cx="9" cy="19.4" r="1.6"/><circle cx="17.4" cy="19.4" r="1.6"/></svg></span>' +
         '<span class="zzct__title">Your key is reserved</span></div>' +
         '<p class="zzct__sub"><b>' + data.count + (data.count === 1 ? ' item' : ' items') + '</b> waiting in your cart — checkout takes about 30 seconds and delivery is instant.</p>' +
         '<a class="zzct__btn" href="' + cartHref() + '">Complete checkout →</a>' +
@@ -1371,7 +1054,7 @@ function snow(config = {}) {
       el.innerHTML =
         '<div class="zzct__card">' +
         '<button class="zzct__x" type="button" aria-label="Dismiss">✕</button>' +
-        '<div class="zzct__head"><span class="zzct__ico">🎯</span>' +
+        '<div class="zzct__head"><span class="zzct__ico" aria-hidden="true"><svg class="zz-i" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="2"/><path d="M12 1.6v3M12 19.4v3M1.6 12h3M19.4 12h3"/></svg></span>' +
         '<span class="zzct__title">Pick up where you left off</span></div>' +
         '<p class="zzct__sub">You were looking at <b>' + safeName + '</b>. It’s still in stock.</p>' +
         '<a class="zzct__btn" href="' + encodeURI(data.u) + '">Back to it →</a>' +
@@ -1407,27 +1090,6 @@ function snow(config = {}) {
 
   /* -- live viewers chip: session-stable count seeded per product per day,
      small ±1 drift so it feels alive. Injected above the buy buttons. -- */
-  function liveViewers() {
-    if (!onProduct) return;
-    var actions = document.querySelector('.pf-actions');
-    if (!actions || document.getElementById('zz-vw')) return;
-    var seedStr = path + new Date().toDateString();
-    var h = 0, i;
-    for (i = 0; i < seedStr.length; i++) h = (h * 31 + seedStr.charCodeAt(i)) >>> 0;
-    var n = 9 + (h % 14); /* 9-22, stable for this product today */
-    var chip = document.createElement('div');
-    chip.className = 'zzvw'; chip.id = 'zz-vw';
-    chip.innerHTML = '<span class="zzvw__dot"></span><span class="zzvw__n">' + n + '</span> players viewing this right now';
-    actions.parentNode.insertBefore(chip, actions);
-    if (!reduce) {
-      var numEl = chip.querySelector('.zzvw__n');
-      setInterval(function () {
-        if (document.hidden) return;
-        n = Math.max(6, Math.min(26, n + (Math.random() < .5 ? -1 : 1)));
-        numEl.textContent = n;
-      }, 25000 + Math.random() * 20000);
-    }
-  }
 
   /* -- idle pulse: if the visitor stalls on a product page, the Buy Now
      button pulses softly to pull the eye back. Max twice per pageview. --- */
@@ -1457,89 +1119,6 @@ function snow(config = {}) {
   else boot();
 })();
 
-/* =============================================================================
-   ZAZA CRO v4 — cart-page urgency: reservation countdown + delivery proof.
-   The cart is the last step before money and had zero time pressure. This
-   adds a "cart reserved for 15:00" bar under the Shopping Cart title with a
-   session-persisted countdown (refreshing doesn't reset it). It NEVER
-   touches the actual cart — at zero it quietly re-reserves for 10:00.
-   Functional, so it stays on under prefers-reduced-motion (pulse gated).
-   ============================================================================= */
-;(function () {
-  'use strict';
-  if (window.__zzCro4) return;
-  window.__zzCro4 = true;
-
-  function boot() {
-    var title = document.querySelector('.cart .section-title');
-    if (!title || document.getElementById('zz-res')) return;
-    var items;
-    try { items = JSON.parse(localStorage.getItem('cart') || '[]'); } catch (e) { items = []; }
-    if (!items || !items.length) return;
-
-    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-
-    var css = '';
-    css += '.zzres{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:2px 0 18px;padding:11px 15px;border-radius:12px;background:linear-gradient(180deg,rgba(191,64,191,.08),rgba(255,255,255,.015));border:1px solid rgba(191,64,191,.28);font-family:var(--zz-sans)"Inter",system-ui,sans-serif}';
-    css += '.zzres__l{display:flex;align-items:center;gap:9px;font-size:.85rem;color:rgba(224,232,255,.85)}';
-    css += '.zzres__ico{font-size:15px;filter:drop-shadow(0 0 8px rgba(191,64,191,.6))}';
-    css += '.zzres__t{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-weight:700;font-size:.95rem;color:#e6b3ff;font-variant-numeric:tabular-nums;letter-spacing:.04em}';
-    css += '.zzres--warn .zzres__t{color:#f2c14e}';
-    css += '.zzres--hot .zzres__t{color:#f87171}';
-    if (!reduce) css += '.zzres--hot .zzres__t{animation:zzresBlink 1s step-end infinite}';
-    css += '@keyframes zzresBlink{50%{opacity:.45}}';
-    css += '.zzres__proof{display:flex;align-items:center;gap:7px;font-size:.76rem;color:rgba(200,215,240,.6)}';
-    css += '.zzres__proof b{color:#4ade80;font-weight:700}';
-    css += '@media(max-width:576px){.zzres__proof{display:none}}';
-    var s = document.createElement('style');
-    s.textContent = css;
-    document.head.appendChild(s);
-
-    /* delivery-proof count: stable for the current hour, believable range */
-    var hourSeed = new Date().toDateString() + new Date().getHours();
-    var h = 0; for (var i = 0; i < hourSeed.length; i++) h = (h * 31 + hourSeed.charCodeAt(i)) >>> 0;
-    var delivered = 5 + (h % 9); /* 5-13 keys this hour */
-
-    var bar = document.createElement('div');
-    bar.className = 'zzres'; bar.id = 'zz-res';
-    bar.innerHTML =
-      '<span class="zzres__l"><span class="zzres__ico">🔒</span>' +
-      '<span>Cart reserved for <span class="zzres__t" data-zzres-t>15:00</span></span></span>' +
-      '<span class="zzres__proof">⚡ <b>' + delivered + ' keys</b>&nbsp;delivered in the last hour</span>';
-    title.parentNode.insertBefore(bar, title.nextSibling);
-
-    var tEl = bar.querySelector('[data-zzres-t]');
-    function getExp() {
-      var e = 0;
-      try { e = +sessionStorage.getItem('zzResExp') || 0; } catch (err) {}
-      if (e - Date.now() > 9e5) e = 0; /* sanity: never more than 15 min out */
-      if (e <= Date.now()) {
-        e = Date.now() + 9e5; /* 15:00 */
-        try { sessionStorage.setItem('zzResExp', String(e)); } catch (err) {}
-      }
-      return e;
-    }
-    var exp = getExp();
-    function tick() {
-      var left = Math.max(0, exp - Date.now());
-      if (left === 0) {
-        /* silent re-reserve — urgency without ever punishing the buyer */
-        exp = Date.now() + 6e5; /* 10:00 */
-        try { sessionStorage.setItem('zzResExp', String(exp)); } catch (err) {}
-        left = 6e5;
-      }
-      var m = Math.floor(left / 6e4), sec = Math.floor(left % 6e4 / 1e3);
-      tEl.textContent = m + ':' + (sec < 10 ? '0' : '') + sec;
-      bar.classList.toggle('zzres--warn', left < 18e4 && left >= 6e4);
-      bar.classList.toggle('zzres--hot', left < 6e4);
-    }
-    tick();
-    setInterval(tick, 1000);
-  }
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
-})();
 
 /* =============================================================================
    ZAZA CRO v5 — two last untapped levers:
@@ -1583,13 +1162,13 @@ function snow(config = {}) {
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 
     var css = '';
-    css += '.zzvq{display:flex;align-items:flex-start;gap:9px;margin-top:10px;padding:10px 13px;border-radius:11px;background:rgba(242,193,78,.05);border:1px solid rgba(242,193,78,.2);font-family:var(--zz-sans)"Inter",system-ui,sans-serif;overflow:hidden}';
-    css += '.zzvq__stars{flex:none;font-size:.72rem;letter-spacing:.08em;color:#f2c14e;text-shadow:0 0 12px rgba(242,193,78,.4);padding-top:2px}';
+    css += '.zzvq{display:flex;align-items:flex-start;gap:9px;margin-top:10px;padding:10px 13px;border-radius:11px;background:rgba(251,191,36,.05);border:1px solid rgba(251,191,36,.2);font-family:var(--zz-sans)"Inter",system-ui,sans-serif;overflow:hidden}';
+    css += '.zzvq__stars{flex:none;font-size:.72rem;letter-spacing:.08em;color:#fbbf24;text-shadow:0 0 12px rgba(251,191,36,.4);padding-top:2px}';
     css += '.zzvq__body{min-width:0;transition:opacity .45s ease}';
     css += '.zzvq--fade .zzvq__body{opacity:0}';
-    css += '.zzvq__q{display:block;font-size:.8rem;line-height:1.45;color:rgba(224,232,255,.85);font-style:italic}';
-    css += '.zzvq__u{display:block;margin-top:2px;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.64rem;letter-spacing:.06em;color:rgba(200,215,240,.55)}';
-    css += '.zzvq__u b{color:#e6b3ff;font-weight:700}';
+    css += '.zzvq__q{display:block;font-size:.8rem;line-height:1.45;color:rgba(231,236,255,.85);font-style:italic}';
+    css += '.zzvq__u{display:block;margin-top:2px;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.64rem;letter-spacing:.06em;color:rgba(231,236,255,.55)}';
+    css += '.zzvq__u b{color:#e6aaff;font-weight:700}';
     css += '.zzvq__u .zzvq__ok{color:#4ade80}';
     var s = document.createElement('style');
     s.textContent = css;
@@ -1648,7 +1227,7 @@ function snow(config = {}) {
   function warden() {
     if (!('IntersectionObserver' in window)) return;
     var SEL = '.zz-neon,.zzstatus__chip,.zzstatus__ring,.zzstatus__sweep,' +
-              '.zzst__pulse,.zzvw__dot,.pc__esp-scan';
+              '.zzst__pulse,.pc__esp-scan';
     var seen = typeof WeakSet === 'function' ? new WeakSet() : null;
     var tracked = [];
     var io = new IntersectionObserver(function (entries) {
@@ -1720,8 +1299,8 @@ function snow(config = {}) {
 
     var css = '.zzbc{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin:0 0 10px;' +
       'font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}' +
-      '.zzbc a{color:rgba(200,215,240,.55);text-decoration:none;transition:color .2s ease,text-shadow .2s ease}' +
-      '.zzbc a:hover{color:#e6b3ff;text-shadow:0 0 12px rgba(191,64,191,.6)}' +
+      '.zzbc a{color:rgba(231,236,255,.55);text-decoration:none;transition:color .2s ease,text-shadow .2s ease}' +
+      '.zzbc a:hover{color:#e6aaff;text-shadow:0 0 12px rgba(191,64,191,.6)}' +
       '.zzbc__sep{color:rgba(191,64,191,.7)}' +
       '.zzbc__here{color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:min(60vw,340px)}';
     var s = document.createElement('style');
@@ -1780,7 +1359,7 @@ function snow(config = {}) {
   try {
     var mono = 'font-family:monospace;';
     var brand = 'color:#BF40BF;font-weight:700;' + mono;
-    var dim = 'color:#8a93b8;' + mono;
+    var dim = 'color:#e7ecff;' + mono;
     var ok = 'color:#4ade80;' + mono;
     console.log('%c\n  ███████╗ █████╗ ███████╗ █████╗\n  ╚══███╔╝██╔══██╗╚══███╔╝██╔══██╗\n    ███╔╝ ███████║  ███╔╝ ███████║\n   ███╔╝  ██╔══██║ ███╔╝  ██╔══██║\n  ███████╗██║  ██║███████╗██║  ██║\n  ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝\n', brand);
     var lines = [
@@ -1794,7 +1373,7 @@ function snow(config = {}) {
       setTimeout(function () { console.log('%c' + l[0] + '%c' + l[1], dim, ok); }, l[2]);
     });
     setTimeout(function () {
-      console.log('%c[zaza] you read consoles. we like you. → discord.gg/zazacheats', 'color:#e6b3ff;' + mono);
+      console.log('%c[zaza] you read consoles. we like you. → discord.gg/zazacheats', 'color:#e6aaff;' + mono);
     }, 1950);
   } catch (e) {}
 
@@ -1812,7 +1391,7 @@ function snow(config = {}) {
     var css = '.zzins-flash{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.92);z-index:1320;' +
       'padding:10px 22px;border-radius:10px;pointer-events:none;opacity:0;' +
       "font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;letter-spacing:.18em;color:#fff;" +
-      'background:rgba(8,11,28,.92);border:1px solid rgba(191,64,191,.55);' +
+      'background:rgba(10,12,24,.92);border:1px solid rgba(191,64,191,.55);' +
       'box-shadow:0 0 34px rgba(191,64,191,.5);transition:opacity .18s ease,transform .22s cubic-bezier(.16,1,.3,1)}' +
       '.zzins-flash--on{opacity:1;transform:translate(-50%,-50%) scale(1)}';
     var s = document.createElement('style');
@@ -1874,8 +1453,8 @@ function snow(config = {}) {
       'background:repeating-linear-gradient(0deg,rgba(255,255,255,.022) 0 1px,transparent 1px 3px)}' +
       '.zzcrt__line{position:absolute;left:0;right:0;top:-8%;height:12vh;' +
       'background:linear-gradient(180deg,transparent,rgba(191,64,191,.028),transparent);' +
-      'animation:zzcrtDrift 13s linear infinite}' +
-      '@keyframes zzcrtDrift{from{transform:translateY(-12vh)}to{transform:translateY(112vh)}}';
+      '}' +
+      '';
     var s = document.createElement('style');
     s.textContent = css;
     document.head.appendChild(s);
@@ -1895,20 +1474,15 @@ function snow(config = {}) {
 })();
 
 /* =============================================================================
-   ZAZA v9 — fixed-UI harmony pass. Nine layers of enhancements had started
-   colliding in the viewport corners; this resolves every overlap:
-   · bottom-left: purchase feed (.zzla, bottom:18) was covering the [B]/[INS]
-     hotkey chips (.zwr-hotkey, same spot) → feed lifts to 70px on the
-     desktops where chips render (≥1200px).
+   ZAZA v9 — fixed-UI harmony pass. The enhancement layers had started
+   colliding in the viewport corners; this resolves the overlaps that remain
+   now the fabricated-activity feeds are gone:
    · bottom-right: cart/resume toast (.zzct, bottom:16) was sitting on the
      back-to-top (20px) and quick-buy (72px) buttons → toast lifts to 130px
      on ≥769px where those buttons exist.
    · mobile: the bottom edge belongs to the buy bars (.zzbb home, .ppx-bar
      product) → the toast lifts above them via :has() (graceful no-op in
      browsers without :has support).
-   · killfeed top offset was a hard-coded 96px; with the bundle bar +
-     announcement + navbar stacked the header can be taller → measured at
-     runtime instead.
    Loads last, so its equal-specificity rules win the cascade.
    ============================================================================= */
 ;(function () {
@@ -1917,7 +1491,6 @@ function snow(config = {}) {
   window.__zzV9 = true;
 
   var css = '';
-  css += '@media(min-width:1200px){.zzla{bottom:70px}}';
   css += '@media(min-width:769px){.zzct{bottom:130px}}';
   css += '@media(max-width:768px){body:has(.ppx-bar) .zzct,body:has(.zzbb:not([hidden])) .zzct{bottom:calc(104px + env(safe-area-inset-bottom,0px))}}';
   var s = document.createElement('style');

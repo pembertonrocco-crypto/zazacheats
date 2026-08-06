@@ -352,7 +352,7 @@
 .hero-btn__ico { flex-shrink: 0; }
 
 .hero-btn-primary {
-  background: linear-gradient(180deg, #bf40bf 0%, #BF40BF 42%, #bf40bf 100%);
+  background: #BF40BF;
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.16);
   box-shadow: 0 8px 28px rgba(191, 64, 191, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
@@ -366,13 +366,8 @@
   width: 34%;
   background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.32), transparent);
   transform: skewX(-18deg);
-  animation: heroShine 4.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  
   pointer-events: none;
-}
-@keyframes heroShine {
-  0%   { left: -60%; }
-  55%  { left: 140%; }
-  100% { left: 140%; }
 }
 .hero-btn-primary:hover {
   box-shadow: 0 10px 36px rgba(191, 64, 191, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.3);
@@ -451,23 +446,15 @@
 
 /* ---------- entrance (CSS only, gated on html.zz-motion) ---------- */
 @keyframes heroRise {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
 }
 html.zz-motion .hero-status { animation: heroRise .7s cubic-bezier(.22,1,.36,1) both; animation-delay: .55s; }
-html.zz-motion .hero-title  { animation: heroRise .8s cubic-bezier(.22,1,.36,1) .62s both, heroGlitch 8.5s steps(1, end) 4.6s infinite; }
+html.zz-motion .hero-title  { animation: heroRise .8s cubic-bezier(.22,1,.36,1) .62s both; }
 html.zz-motion .hero-sub    { animation: heroRise .8s cubic-bezier(.22,1,.36,1) both; animation-delay: .95s; }
 html.zz-motion .hero-ctas   { animation: heroRise .8s cubic-bezier(.22,1,.36,1) both; animation-delay: 1.1s; }
 html.zz-motion .hero-trust  { animation: heroRise .8s cubic-bezier(.22,1,.36,1) both; animation-delay: 1.25s; }
 
-/* signal glitch: rare hard-cut jitter on the headline — like a feed losing
-   lock for a frame. steps(1) holds each pose, so it cuts instead of sliding. */
-@keyframes heroGlitch {
-  0%, 90.4%, 92.9%, 100% { transform: none; filter: none; }
-  90.8% { transform: translate(-2px, 1px) skewX(-.6deg); filter: brightness(1.3) contrast(1.05); }
-  91.6% { transform: translate(2.5px, -1px) skewX(.8deg); filter: brightness(.92) saturate(1.5); }
-  92.3% { transform: translate(-1px, 0) skewX(-.3deg); filter: brightness(1.15); }
-}
 
 /* hero depth: the scene (bg image + ESP canvas) drifts a few px toward the
    cursor while the content stays pinned — vars driven by JS, desktop only */
@@ -618,11 +605,7 @@ html.zz-motion .hero-scrollcue { animation: heroRise .8s cubic-bezier(.22,1,.36,
 .hero-bg{position:absolute;inset:0;overflow:hidden}
 .hero-bg__img{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;
   filter:saturate(.55) brightness(.5) contrast(1.05);
-  animation:heroKenBurns 34s ease-in-out infinite alternate;will-change:transform}
-@keyframes heroKenBurns{
-  from{transform:scale(1) translate(0,0)}
-  to{transform:scale(1.09) translate(-1.6%,1.2%)}
-}
+  will-change:transform}
 .hero-bg__grade{position:absolute;inset:0;
   background:
     radial-gradient(ellipse 80% 60% at 50% 42%, rgba(6,7,15,.25), rgba(6,7,15,.88) 78%),

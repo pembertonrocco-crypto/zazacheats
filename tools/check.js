@@ -317,6 +317,42 @@ function checkReviewSeeds() {
 
 checkReviewSeeds();
 
+/* -------------------------------------------------- bundle freshness
+   assets/script.js is the file the platform actually loads;
+   assets/script.src.js is the readable source it is minified from. There was
+   no build wiring these together, so they were kept in step by hand — which
+   is how the whole bundle slipped past a palette sweep that walked only
+   .njk and .css, and stayed on the old colours after every other file had
+   moved. `npm run bundle` regenerates it; this asserts you remembered. */
+function checkBundleFresh() {
+  const src = path.join(ROOT, "assets", "script.src.js");
+  const out = path.join(ROOT, "assets", "script.js");
+  if (!fs.existsSync(src) || !fs.existsSync(out)) return;
+
+  /* Byte comparison would fail on an esbuild version bump, and a literal-set
+     comparison fails because the minifier folds adjacent concatenations. What
+     survives intact is each `css += "..."` statement, and those are where all
+     of this file's CSS lives — which is exactly the part a colour or type
+     sweep over .njk and .css will miss. */
+  const rules = [];
+  const re = /^\s*(?:css|c)\s*\+=\s*(?:'([^'\\\n]{20,})'|"([^"\\\n]{20,})")\s*;/gm;
+  let m;
+  const source = fs.readFileSync(src, "utf8");
+  while ((m = re.exec(source))) rules.push(m[1] || m[2]);
+
+  const built = fs.readFileSync(out, "utf8");
+  const missing = rules.filter((r) => !built.includes(r));
+  if (rules.length < 20) {
+    warn("bundle", "few CSS rules found in script.src.js — has this guard's pattern rotted?");
+  } else if (missing.length) {
+    err("bundle", `assets/script.js is stale — ${missing.length} of ${rules.length} CSS rules in `
+      + `script.src.js are missing from it, starting with "${missing[0].slice(0, 60)}". Run \`npm run bundle\`.`);
+  }
+}
+
+checkBundleFresh();
+
+
 /* --------------------------------------------------------------- report */
 
 const byPage = (list) => {

@@ -131,7 +131,7 @@
              (cheat product present, variant NOT month/lifetime) and no NFA
              yet. Honest product-fit framing, not a popularity claim. #}
           <div class="zzup" id="zz-nfa-upsell" hidden>
-            <div class="zzup__icon" aria-hidden="true">🛡️</div>
+            <div class="zzup__icon" aria-hidden="true"><svg class="zz-i" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.4 20 5.7v6c0 4.7-3.4 8.6-8 9.9-4.6-1.3-8-5.2-8-9.9v-6l8-3.3Z"/><path d="M8.7 11.9 11 14.2l4.3-4.3"/></svg></div>
             <div class="zzup__body">
               <p class="zzup__t">Running it on your main? Don't.</p>
               <p class="zzup__d">Add a disposable NFA account and keep your real one clean — 500–1000 hrs, <strong>$2.50</strong>, with up to 3 free replacements inside 6 hours.</p>
@@ -154,7 +154,7 @@
                    instead of a scary full-price subtotal. Display only — the
                    real discount is applied by SellAuth at checkout. #}
                 <div class="d-flex justify-content-between" id="zz-cartdisc" hidden>
-                  <span style="color:#4ade80">🎁 Bundle discount <small style="color:rgba(231,236,255,.55)">(applies at checkout)</small></span>
+                  <span style="color:#4ade80">Bundle discount <small style="color:rgba(231,236,255,.55)">(applies at checkout)</small></span>
                   <span class="fw-bold" style="color:#4ade80" data-zz-disc-amt></span>
                 </div>
                 <div class="d-flex justify-content-between" id="zz-carttotal" hidden>
@@ -216,7 +216,7 @@
               <p class="cart-policies">Read before you buy: <a href="{{ '/refund-policy' | shopUrl }}">Refund policy</a> &middot; <a href="{{ '/terms-of-service' | shopUrl }}">Terms</a></p>
 
               <a href="{{ '/product/rust-nfa' | shopUrl }}" class="cart-pair">
-                <span class="cart-pair__ico" aria-hidden="true">🛡️</span>
+                <span class="cart-pair__ico" aria-hidden="true"><svg class="zz-i" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.4 20 5.7v6c0 4.7-3.4 8.6-8 9.9-4.6-1.3-8-5.2-8-9.9v-6l8-3.3Z"/><path d="M8.7 11.9 11 14.2l4.3-4.3"/></svg></span>
                 <span class="cart-pair__txt"><b>Running it on your main? Don't.</b> Add a disposable NFA account &mdash; from $1.00, with the free 6-hour replacement warranty.</span>
                 <span class="cart-pair__cta">View &rarr;</span>
               </a>
@@ -244,7 +244,8 @@
                 border:1px solid rgba(191,64,191,.16);border-radius:12px;background:rgba(191,64,191,.04);
                 text-decoration:none;transition:border-color .2s,background .2s}
               .cart-pair:hover{border-color:rgba(191,64,191,.45);background:rgba(191,64,191,.09)}
-              .cart-pair__ico{flex-shrink:0;font-size:1.05rem}
+              .cart-pair__ico{flex-shrink:0;display:inline-flex;color:#e6aaff}
+              .cart-pair__ico svg{width:18px;height:18px}
               .cart-pair__txt{flex:1;font-size:.74rem;line-height:1.5;color:rgba(231,236,255,.65)}
               .cart-pair__txt b{color:#fff}
               .cart-pair__cta{flex-shrink:0;font-size:.76rem;font-weight:700;color:#e6aaff}
@@ -695,7 +696,8 @@
 <style>
 .zzup{display:flex;align-items:center;gap:14px;margin-top:14px;padding:14px 16px;border-radius:12px;border:1px solid rgba(var(--cl-accent-rgb,191,64,191),.35);background:linear-gradient(150deg,rgba(10,12,24,.85),rgba(10,12,24,.85))}
 .zzup[hidden]{display:none}
-.zzup__icon{font-size:1.5rem;flex-shrink:0;filter:drop-shadow(0 0 8px rgba(var(--cl-accent-rgb,191,64,191),0.32))}
+.zzup__icon{flex-shrink:0;display:inline-flex;color:#e6aaff}
+.zzup__icon svg{width:24px;height:24px}
 .zzup__body{flex:1;min-width:0}
 .zzup__t{margin:0 0 3px;font-size:.88rem;font-weight:700;color:#fff}
 .zzup__d{margin:0;font-size:.76rem;line-height:1.45;color:rgba(231,236,255,.7)}

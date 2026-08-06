@@ -11,7 +11,7 @@
   <div class="zed__inner">
 
     <div class="zed__head">
-      <p class="zed__eyebrow">// TRY IT YOURSELF</p>
+      <p class="zed__eyebrow">TRY IT YOURSELF</p>
       <h2 class="zed__title">The real menu. <span class="zed__grad">Live on a target.</span></h2>
       <p class="zed__sub">This is the actual menu layout — flip the Player ESP toggles and watch the viewport react.</p>
     </div>
@@ -24,7 +24,7 @@
         {# --- left sidebar --- #}
         <div class="zed__side">
           <div class="zed__side-logo">
-            <span class="zed__side-bolt">⚡</span>
+            <span class="zed__side-bolt" aria-hidden="true"><svg class="zz-i" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.2 2.4 4.6 13.7h6.2L10.8 21.6 19.4 10.3h-6.2l0-7.9Z"/></svg></span>
             <span class="zed__side-name">ZAZA<br>PRIVATE</span>
             <span class="zed__side-ver">V2.4 · BUILD 614</span>
           </div>
@@ -52,7 +52,7 @@
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.5c2.8.3 5 2.7 5 5.5"/></svg>
             FR1ENDS
           </div>
-          <div class="zed__side-foot"><span class="zed__side-bolt zed__side-bolt--sm">⚡</span></div>
+          <div class="zed__side-foot"><span class="zed__side-bolt zed__side-bolt--sm" aria-hidden="true"><svg class="zz-i" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.2 2.4 4.6 13.7h6.2L10.8 21.6 19.4 10.3h-6.2l0-7.9Z"/></svg></span></div>
         </div>
 
         {# --- main column --- #}
@@ -323,7 +323,9 @@
 .zed__side-item--active{color:#fff;background:rgba(191,64,191,.12);border-left-color:#bf40bf}
 .zed__side-item--active svg{color:#bf40bf;opacity:1}
 .zed__side-foot{margin-top:auto;padding:10px 12px 4px}
-.zed__side-bolt--sm{width:22px;height:22px;font-size:.68rem;margin:0}
+.zed__side-bolt--sm{width:22px;height:22px;margin:0}
+.zed__side-bolt svg{width:15px;height:15px}
+.zed__side-bolt--sm svg{width:12px;height:12px}
 
 /* --- main column --- */
 .zed__main{flex:1;min-width:0;display:flex;flex-direction:column}

@@ -276,7 +276,7 @@
     <button type="button" class="zz-exit__x" aria-label="Close" data-zz-exit-close>
       <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
     </button>
-    <p class="zz-exit__eyebrow">// BEFORE YOU GO</p>
+    <p class="zz-exit__eyebrow">BEFORE YOU GO</p>
     <h3 class="zz-exit__title" id="zz-exit-title">Something holding you back?</h3>
     <p class="zz-exit__d">No pressure — but if you're unsure about anything, you don't have to guess. Check the real state of the build, or ask us directly and spend nothing.</p>
     <div class="zz-exit__btns">
@@ -316,8 +316,7 @@
 .zz-exit__btn--dc{border:1px solid rgba(231,236,255,.22);color:rgba(231,236,255,.9)}
 .zz-exit__btn--dc:hover{border-color:rgba(231,236,255,.45)}
 .zz-exit__pulse{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 0 rgba(34,197,94,.6);
-  animation:zzExitPulse 1.8s infinite}
-@keyframes zzExitPulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.55)}70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+  }
 .zz-exit__dismiss{display:block;margin:14px auto 0;background:none;border:none;cursor:pointer;
   font-size:.75rem;color:rgba(231,236,255,.45);text-decoration:underline}
 .zz-exit__dismiss:hover{color:rgba(231,236,255,.75)}
@@ -1305,7 +1304,7 @@
     var path=location.pathname;
     var pair=null;
     if(path.indexOf('zaza-rust-private-cheat')>-1){
-      pair={href:'/product/rust-nfa',tag:'COMPLETE THE LOADOUT',t:'Add a disposable account \u2014 NFA from $1.00',
+      pair={href:'/product/rust-nfa',tag:'PAIRS WITH THIS',t:'Add a disposable account \u2014 NFA from $1.00',
         d:'Never risk your main. Aged NFA accounts with a free 6-hour replacement warranty, delivered instantly.'};
     }else if(path.indexOf('rust-nfa')>-1){
       pair={href:'/product/zaza-rust-private-cheat',tag:'PAIRS WITH',t:'Zaza Private Cheat \u2014 keys from $4.99',

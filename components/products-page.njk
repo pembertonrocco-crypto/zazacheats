@@ -25,7 +25,7 @@
 
   <div class="sp-wrap">
     <header class="sp-head">
-      <p class="sp-eyebrow">// THE PRODUCT</p>
+      <p class="sp-eyebrow">THE PRODUCT</p>
       <h1 class="sp-title">{{ title_to_use | renderString if title_to_use else 'Our Product' }}</h1>
       <p class="sp-subtitle">One private build. Built to dominate, maintained to last.</p>
     </header>
@@ -98,7 +98,7 @@
           </span>
 
           <div class="sp-card__trust">
-            <span>🛡️ 24h+ downtime covered</span><span>⚡ Instant key</span><span>💬 Support</span><span>🔄 Updated</span>
+            <span>24h+ downtime covered</span><span>Instant key</span><span>Discord support</span><span>Updated every patch</span>
           </div>
         </div>
       </a>
@@ -120,10 +120,9 @@
 .sp-bg__grid{position:absolute;inset:-2px;
   background-image:linear-gradient(rgba(191,64,191,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(191,64,191,.06) 1px,transparent 1px);
   background-size:44px 44px;-webkit-mask-image:radial-gradient(100% 70% at 50% 0%,#000 30%,transparent 80%);mask-image:radial-gradient(100% 70% at 50% 0%,#000 30%,transparent 80%)}
-.sp-bg__beam{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;animation:spFloat 14s ease-in-out infinite}
+.sp-bg__beam{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;}
 .sp-bg__beam--a{width:34rem;height:34rem;top:-12rem;left:-8rem;background:radial-gradient(circle,rgba(191,64,191,.5),transparent 65%)}
 .sp-bg__beam--b{width:30rem;height:30rem;top:-6rem;right:-8rem;background:radial-gradient(circle,rgba(191,64,191,.4),transparent 65%);animation-delay:-7s}
-@keyframes spFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
 
 .sp-wrap{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:130px 20px 90px}
 .sp-head{text-align:center;animation:spUp .7s ease both}
@@ -189,7 +188,7 @@
 
 {% elif (items | length) == 2 and not filters.keyword and not filters.price.from and not filters.price.to %}
 {# ============================================================
-   TWO-PRODUCT LOADOUT — decision layout, not a grid.
+   TWO-PRODUCT CHOICE — decision layout, not a grid.
    Cards get roles: 01/THE CHEAT (non-nfa path) renders first,
    02/THE ACCOUNT ('nfa' in path) second, via two passes over the
    real platform items (no synthetic data). Spec lines reuse only
@@ -204,7 +203,7 @@
 
   <div class="tp-wrap">
     <header class="sp-head">
-      <p class="sp-eyebrow">// BUILD YOUR LOADOUT</p>
+      <p class="sp-eyebrow">PICK WHAT YOU NEED</p>
       <h1 class="sp-title">{{ title_to_use | renderString if title_to_use else 'Our Products' }}</h1>
       <p class="sp-subtitle">Two pieces: the cheat, and the account you run it on. Most customers grab both.</p>
       <div class="sp-trust">
@@ -382,7 +381,7 @@
     {# ---- loadout advice strip ---- #}
     <aside class="tpl">
       <div class="tpl__text">
-        <p class="tpl__eyebrow">// THE FULL LOADOUT</p>
+        <p class="tpl__eyebrow">EVERYTHING WE SELL</p>
         <p class="tpl__line">One cheat key + one NFA account = a complete setup. Most customers grab both and pick the NFA tier that suits their wipe &mdash; the cheat needs an account you're willing to risk, and your main isn't it.</p>
       </div>
       <a class="tpl__link" href="{{ '/status' | shopUrl }}">
@@ -407,10 +406,9 @@
 .sp-bg__grid{position:absolute;inset:-2px;
   background-image:linear-gradient(rgba(191,64,191,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(191,64,191,.06) 1px,transparent 1px);
   background-size:44px 44px;-webkit-mask-image:radial-gradient(100% 70% at 50% 0%,#000 30%,transparent 80%);mask-image:radial-gradient(100% 70% at 50% 0%,#000 30%,transparent 80%)}
-.sp-bg__beam{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;animation:spFloat 14s ease-in-out infinite}
+.sp-bg__beam{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;}
 .sp-bg__beam--a{width:34rem;height:34rem;top:-12rem;left:-8rem;background:radial-gradient(circle,rgba(191,64,191,.5),transparent 65%)}
 .sp-bg__beam--b{width:30rem;height:30rem;top:-6rem;right:-8rem;background:radial-gradient(circle,rgba(191,64,191,.4),transparent 65%);animation-delay:-7s}
-@keyframes spFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
 
 .tp-wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:130px 24px 90px}
 .sp-head{text-align:center;animation:spUp .7s ease both}
@@ -459,9 +457,8 @@
 .tp-card__media{position:relative;aspect-ratio:16/10;overflow:hidden;background:#0a0c18;
   margin:16px 16px 0;border-radius:16px;
   box-shadow:0 20px 38px -16px rgba(0,0,0,.72),0 0 0 1px rgba(255,255,255,.06),0 0 26px -6px rgba(191,64,191,.22);
-  will-change:transform;animation:tpFloat 7s ease-in-out infinite}
+  will-change:transform;}
 .tp-card:hover .tp-card__media{box-shadow:0 30px 50px -16px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.09),0 0 36px -4px rgba(191,64,191,.4)}
-@keyframes tpFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .tp-card__img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .65s cubic-bezier(.16,1,.3,1)}
 .tp-card:hover .tp-card__img{transform:scale(1.06)}
 .tp-js .tp-card__media img.tp-card__img{opacity:0;transition:transform .65s cubic-bezier(.16,1,.3,1),opacity .7s ease}
@@ -518,8 +515,7 @@
   transition:border-color .25s,background .25s,gap .25s}
 .tpl__link:hover{border-color:rgba(34,197,94,.45);background:rgba(34,197,94,.1);gap:11px}
 .tpl__pulse{position:relative;width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.9)}
-.tpl__pulse::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(34,197,94,.55);animation:tplPulse 2.2s ease-out infinite}
-@keyframes tplPulse{0%{transform:scale(.5);opacity:1}70%,100%{transform:scale(1.6);opacity:0}}
+.tpl__pulse::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(34,197,94,.55);}
 
 @keyframes tpFade{from{opacity:0}to{opacity:1}}
 @keyframes spUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}

@@ -148,14 +148,13 @@
       rgba(var(--zs-accent-rgb),0) 42%,
       rgba(var(--zs-accent-rgb),0) 58%,
       rgba(var(--zs-accent-rgb),1));
-    animation:zsSpin 8s linear infinite;
+    
   }
   .zaza-showcase__frame::after{
     content:"";position:absolute;inset:0;z-index:2;border-radius:20px;pointer-events:none;
     border:1px solid rgba(var(--zs-text),.08);
   }
-  @keyframes zsSpin{to{transform:rotate(1turn);}}
-  .zaza-showcase__frame-glow{display:none;}
+    .zaza-showcase__frame-glow{display:none;}
 
   .zaza-showcase__facade{
     position:absolute;inset:2px;z-index:1;width:calc(100% - 4px);height:calc(100% - 4px);

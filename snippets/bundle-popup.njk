@@ -11,9 +11,8 @@
     <div class="zzp__panel">
       <button type="button" class="zzp__x" data-zzp-close aria-label="Close">×</button>
       <div class="zzp__glow" aria-hidden="true"></div>
-      <div class="zzp__scan" aria-hidden="true"></div>
 
-      <div class="zzp__ribbon"><span class="zzp__gift">🎁</span> FREE LOOT UNLOCKED</div>
+      <div class="zzp__ribbon"><span class="zzp__gift" aria-hidden="true"><svg class="zz-i" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.6 11.4h16.8v8.6a1.4 1.4 0 0 1-1.4 1.4H5a1.4 1.4 0 0 1-1.4-1.4Z"/><path d="M2.6 7.3h18.8v4.1H2.6z"/><path d="M12 7.3v14.1"/><path d="M12 7.3S10.7 2.6 8.3 2.6a2.4 2.4 0 1 0 0 4.7Z"/><path d="M12 7.3s1.3-4.7 3.7-4.7a2.4 2.4 0 1 1 0 4.7Z"/></svg></span> INCLUDED FREE</div>
 
       <h2 id="zzp-title" class="zzp__title">Up to <span class="zzp__big">5 FREE</span><br>NFA accounts with your key</h2>
       <p class="zzp__sub">Up to <strong class="zzp__val">$12.50 of accounts, on us.</strong> Burn the freebies, keep your main clean.</p>
@@ -24,7 +23,7 @@
           <div class="zzp__b-main">
             <div class="zzp__b-top">
               <span class="zzp__b-key">MONTH KEY</span>
-              <span class="zzp__tag zzp__tag--rare">RARE DROP</span>
+              <span class="zzp__tag zzp__tag--rare">WORTH $5.00</span>
             </div>
             <p class="zzp__b-what"><strong>2× NFA accounts</strong> <span class="zzp__chip">500–1000 hrs</span> <span class="zzp__worth"><s>$5.00</s> FREE</span></p>
             <p class="zzp__b-extra">+ 3 replacements on each — triple the standard warranty</p>
@@ -37,7 +36,7 @@
           <div class="zzp__b-main">
             <div class="zzp__b-top">
               <span class="zzp__b-key">LIFETIME KEY</span>
-              <span class="zzp__tag zzp__tag--legend">★ LEGENDARY</span>
+              <span class="zzp__tag zzp__tag--legend">WORTH $12.50</span>
             </div>
             <p class="zzp__b-what"><strong>5× NFA accounts</strong> <span class="zzp__chip zzp__chip--gold">500–1000 hrs each</span> <span class="zzp__worth zzp__worth--gold"><s>$12.50</s> FREE</span></p>
             <p class="zzp__b-extra">Five accounts to burn through — more than double the Month bundle</p>
@@ -62,22 +61,19 @@
 .zzp[hidden]{display:none}
 .zzp__backdrop{position:absolute;inset:0;background:rgba(6,7,15,.82);backdrop-filter:blur(5px)}
 
-/* animated gradient frame */
-.zzp__frame{position:relative;width:min(460px,100%);max-height:calc(100dvh - 28px);display:flex;border-radius:18px;padding:1.5px;background:linear-gradient(120deg,var(--cl-accent,#BF40BF),#8e2d8e,#fbbf24,#4ade80,var(--cl-accent,#BF40BF));background-size:320% 320%;animation:zzp-frame 5s ease infinite,zzp-in .38s cubic-bezier(.3,1.45,.45,1)}
-@keyframes zzp-frame{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+/* gradient frame — two tonal stops of the accent, held still */
+.zzp__frame{position:relative;width:min(460px,100%);max-height:calc(100dvh - 28px);display:flex;border-radius:18px;padding:1.5px;background:linear-gradient(120deg,var(--cl-accent,#BF40BF),#8e2d8e);animation:zzp-in .38s cubic-bezier(.3,1.45,.45,1)}
 @keyframes zzp-in{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
 .zzp__panel{position:relative;width:100%;border-radius:16.5px;padding:22px 22px 16px;max-height:calc(100dvh - 31px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:linear-gradient(155deg,#0a0c18 0%,#12162a 55%,#12162a 100%);overflow:hidden}
 .zzp__glow{position:absolute;inset:-40%;background:radial-gradient(circle at 18% 12%,rgba(var(--cl-accent-rgb,191,64,191),.28),transparent 42%),radial-gradient(circle at 88% 92%,rgba(251,191,36,.1),transparent 38%);pointer-events:none}
-.zzp__scan{position:absolute;top:0;left:-70%;width:50%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.05),transparent);transform:skewX(-16deg);animation:zzp-scan 4.5s ease-in-out infinite;pointer-events:none}
-@keyframes zzp-scan{0%,50%{left:-70%}90%,100%{left:140%}}
-.zzp__panel>*:not(.zzp__glow):not(.zzp__scan){position:relative;z-index:1}
+.zzp__panel>*:not(.zzp__glow){position:relative;z-index:1}
 
 .zzp__x{position:absolute;top:10px;right:12px;width:32px;height:32px;border:none;border-radius:8px;background:rgba(255,255,255,.06);color:rgba(231,236,255,.7);font-size:1.15rem;line-height:1;cursor:pointer;z-index:2;transition:background .15s,color .15s}
 .zzp__x:hover{background:rgba(255,255,255,.14);color:#fff}
 
 .zzp__ribbon{display:inline-flex;align-items:center;gap:8px;margin:0 0 12px;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.62rem;letter-spacing:.18em;font-weight:700;color:#06070f;padding:6px 12px;border-radius:99px;background:linear-gradient(90deg,#4ade80,#4ade80);box-shadow:0 4px 18px -6px rgba(34,197,94,.8)}
-.zzp__gift{font-size:.9rem;animation:zzp-bounce 2.4s ease-in-out infinite}
-@keyframes zzp-bounce{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-3px) rotate(4deg)}}
+.zzp__gift{display:inline-flex}
+.zzp__gift svg{width:15px;height:15px}
 
 /* 900 here was synthetic — the loaded face stopped at 700 */
 .zzp__title{margin:0 0 4px;font-size:1.55rem;line-height:1.15;font-weight:700;color:#fff;letter-spacing:-.015em}
@@ -98,7 +94,7 @@
 .zzp__b-key{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.62rem;letter-spacing:.12em;font-weight:700;color:#fff}
 .zzp__tag{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.54rem;letter-spacing:.1em;font-weight:700;padding:3px 8px;border-radius:99px}
 .zzp__tag--rare{color:#e6aaff;border:1px solid rgba(191,64,191,.5);background:rgba(191,64,191,.12)}
-.zzp__tag--legend{color:#fde047;border:1px solid rgba(251,191,36,.5);background:rgba(251,191,36,.1);box-shadow:0 0 14px -4px rgba(251,191,36,.6)}
+.zzp__tag--legend{color:#fde047;border:1px solid rgba(251,191,36,.5);background:rgba(251,191,36,.1)}
 .zzp__b-what{margin:0 0 3px;font-size:.86rem;color:rgba(231,236,255,.95)}
 .zzp__b-what strong{color:#4ade80;font-weight:700}
 .zzp__b--legend .zzp__b-what strong{color:#fde047}
@@ -117,8 +113,7 @@
 
 .zzp__cta{position:relative;display:block;width:100%;border:none;cursor:pointer;font-family:inherit;font-weight:900;font-size:.95rem;letter-spacing:.04em;color:#fff;padding:15px 20px;border-radius:11px;background:linear-gradient(135deg,var(--cl-accent,#BF40BF),#8e2d8e);box-shadow:0 10px 34px -10px rgba(var(--cl-accent-rgb,191,64,191),.9);overflow:hidden;transition:transform .15s ease,filter .15s ease}
 .zzp__cta:hover{transform:translateY(-2px);filter:brightness(1.12)}
-.zzp__cta-shine{position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.25),transparent);transform:skewX(-18deg);animation:zzp-cta 2.8s ease-in-out infinite}
-@keyframes zzp-cta{0%,55%{left:-60%}100%{left:140%}}
+.zzp__cta-shine{position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.25),transparent);transform:skewX(-18deg);}
 .zzp__ghost{display:block;margin:8px auto 0;border:none;background:none;cursor:pointer;font-family:inherit;font-size:.74rem;color:rgba(231,236,255,.45);padding:6px}
 .zzp__ghost:hover{color:rgba(231,236,255,.8)}
 .zzp__note{margin:10px 0 0;text-align:center;font-size:.62rem;line-height:1.5;color:rgba(231,236,255,.38)}
@@ -144,7 +139,7 @@
   .zzp__bundles{gap:6px;margin-bottom:9px}
   .zzp__b-extra{display:none}
 }
-@media (prefers-reduced-motion:reduce){.zzp__frame,.zzp__scan,.zzp__gift,.zzp__cta-shine{animation:none}}
+@media (prefers-reduced-motion:reduce){.zzp__frame{animation:none}}
 </style>
 
 <script>

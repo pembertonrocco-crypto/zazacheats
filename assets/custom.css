@@ -73,7 +73,11 @@
 .zz-grid--3{grid-template-columns:repeat(3,1fr)}
 .zz-card{border:1px solid var(--edge);background:var(--void);border-radius:16px;padding:1.4rem}
 .zz-num{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;color:var(--v);font-size:1.3rem}
-.zz-ico{font-size:1.5rem}
+/* Feature-card icon. Was an emoji at 1.5rem, which meant a different
+   typeface on every OS, no way to take the accent colour, and the look of a
+   placeholder. A stroke icon in a tinted square instead. */
+.zz-ico{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;color:#e6aaff;
+  background:rgba(191,64,191,.1);border:1px solid rgba(191,64,191,.24)}
 
 .zz-table-wrap{margin-top:1.4rem;border:1px solid var(--edge);border-radius:16px;overflow:hidden}
 .zz-table{width:100%;border-collapse:collapse;font-size:.88rem}
@@ -132,8 +136,7 @@
 .zz-cta__btn:hover svg{transform:translateY(2px)}
 .zz-cta__btn::after{content:'';position:absolute;top:0;bottom:0;left:-60%;width:42%;
   background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-18deg);
-  animation:zzCtaShine 3.4s ease-in-out infinite;pointer-events:none}
-@keyframes zzCtaShine{0%{left:-60%}55%{left:150%}100%{left:150%}}
+  pointer-events:none}
 .zz-cta__btn:hover::after{animation-duration:1.1s}
 .zz-cta__meta{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.7rem;color:rgba(231,236,255,.45);margin:.8rem 0 0}
 

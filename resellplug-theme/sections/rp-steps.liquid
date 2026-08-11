@@ -1,0 +1,85 @@
+{%- comment -%}
+  "How it works" — three numbered steps.
+
+  Its real job is to make the free join look small. A viewer who has just
+  watched a 20-second video will not commit to a business; they will commit
+  to step one if step one is obviously trivial and reversible.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+
+<div class="rp-section rp-section--tight" id="{{ section.settings.anchor | default: 'how' | handle }}">
+  <div class="rp-wrap">
+    <div class="rp-center">
+      <h2 class="rp-h2">{{ section.settings.heading | escape }}</h2>
+      {%- if section.settings.subheading != blank -%}
+        <p class="rp-lede">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="rp-grid rp-grid--3 rp-steps">
+      {%- for block in section.blocks -%}
+        <div class="rp-step" {{ block.shopify_attributes }}>
+          <h3 class="rp-h3">{{ block.settings.title | escape }}</h3>
+          <p class="rp-body">{{ block.settings.text | escape }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "RP · How it works",
+  "tag": "section",
+  "max_blocks": 5,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "How it works" },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Sub-heading",
+      "default": "Three steps. The first one takes about ten seconds and costs nothing."
+    },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "how" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Step" },
+        { "type": "textarea", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RP · How it works",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "title": "Join the free chat",
+            "text": "One tap. No email, no card, no application form. You can read the whole history before you say a word."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Take the free drops",
+            "text": "Grab the suppliers I post, follow the free guide, and place your first test order through an agent."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Upgrade only if you want more",
+            "text": "When the free stuff has paid for itself, the private community is there with the full vault and direct access to me."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

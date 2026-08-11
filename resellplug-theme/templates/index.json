@@ -1,0 +1,460 @@
+{
+  "sections": {
+    "rp_hero": {
+      "type": "rp-hero",
+      "settings": {
+        "show_welcome": true,
+        "welcome_text": "Came from TikTok? You're in the right place.",
+        "eyebrow": "Free to join · No card needed",
+        "heading": "Join the free UK reselling community",
+        "heading_accent": "free",
+        "subheading": "Real suppliers, real prices, real proof. Get free supplier drops, ask anything you're stuck on, and watch members' orders land — before you spend a penny.",
+        "cta_label": "",
+        "secondary_label": "See the proof first",
+        "secondary_link": "/#proof",
+        "reassure_1": "Free forever",
+        "reassure_2": "No email needed",
+        "reassure_3": "Leave any time",
+        "show_stats": true,
+        "stat_1_label": "In the free group",
+        "stat_2_label": "Vouches posted",
+        "stat_3_label": "Suppliers in the vault",
+        "show_media": true,
+        "image_alt": "Screenshot of the free reselling community chat"
+      }
+    },
+    "rp_value": {
+      "type": "rp-value",
+      "blocks": {
+        "v1": {
+          "type": "item",
+          "settings": {
+            "icon": "box",
+            "title": "Free supplier drops",
+            "text": "I post suppliers I've ordered from myself into the group for nothing. No paywall, no DM-me-for-the-link."
+          }
+        },
+        "v2": {
+          "type": "item",
+          "settings": {
+            "icon": "message",
+            "title": "Ask anything, get an answer",
+            "text": "Stuck on agents, shipping or which product to run? Ask in the chat. Me and the members who've already done it will answer."
+          }
+        },
+        "v3": {
+          "type": "item",
+          "settings": {
+            "icon": "star",
+            "title": "See every order land",
+            "text": "Members post their hauls and payouts as they happen. You can judge whether this works before you spend anything."
+          }
+        }
+      },
+      "block_order": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "settings": {
+        "eyebrow": "Inside the free group",
+        "heading": "What you get for £0",
+        "subheading": "No upsell wall. Join, read, ask, take what's useful. Most members never pay for anything.",
+        "anchor": "free",
+        "show_cta": true
+      }
+    },
+    "rp_steps": {
+      "type": "rp-steps",
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "title": "Join the free chat",
+            "text": "One tap. No email, no card, no application form. You can read the whole history before you say a word."
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "title": "Take the free drops",
+            "text": "Grab the suppliers I post, follow the free guide, and place your first test order through an agent."
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "title": "Upgrade only if you want more",
+            "text": "When the free stuff has paid for itself, the private community is there with the full vault and direct access to me."
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "settings": {
+        "heading": "How it works",
+        "subheading": "Three steps. The first one takes about ten seconds and costs nothing.",
+        "anchor": "how"
+      }
+    },
+    "rp_proof": {
+      "type": "angels-proof-slider",
+      "blocks": {
+        "image_Y89hqt": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-23-21.jpg"
+          }
+        },
+        "image_xLTbT7": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-06-17.jpg"
+          }
+        },
+        "image_MjeiHE": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-05-59.jpg"
+          }
+        },
+        "image_jMxX6Q": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-05-46.jpg"
+          }
+        },
+        "image_VMwN3K": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-05-30.jpg"
+          }
+        },
+        "image_JbAUnh": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-05-15.jpg"
+          }
+        },
+        "image_c3F3X8": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-04-45.jpg"
+          }
+        },
+        "image_7NUg76": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-04-27.jpg"
+          }
+        },
+        "image_VjaJzF": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-48.jpg"
+          }
+        },
+        "image_HmknpK": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-44.jpg"
+          }
+        },
+        "image_x3kAFb": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-40.jpg"
+          }
+        },
+        "image_ytM9gc": {
+          "type": "image",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-38.jpg"
+          }
+        },
+        "image_mJDBCP": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-35.jpg"
+          }
+        },
+        "image_iz7qtQ": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-32.jpg"
+          }
+        },
+        "image_KbBdQH": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-29.jpg"
+          }
+        },
+        "image_YfFBCn": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-25.jpg"
+          }
+        },
+        "image_N4TzdE": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-20.jpg"
+          }
+        },
+        "image_eWWDXb": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-17.jpg"
+          }
+        },
+        "image_XznA4b": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-10.jpg"
+          }
+        },
+        "image_NNQi4f": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/142099a3-330e-4204-bf04-19b4546e4146.webp"
+          }
+        }
+      },
+      "block_order": [
+        "image_Y89hqt",
+        "image_xLTbT7",
+        "image_MjeiHE",
+        "image_jMxX6Q",
+        "image_VMwN3K",
+        "image_JbAUnh",
+        "image_c3F3X8",
+        "image_7NUg76",
+        "image_VjaJzF",
+        "image_HmknpK",
+        "image_x3kAFb",
+        "image_ytM9gc",
+        "image_mJDBCP",
+        "image_iz7qtQ",
+        "image_KbBdQH",
+        "image_YfFBCn",
+        "image_N4TzdE",
+        "image_eWWDXb",
+        "image_XznA4b",
+        "image_NNQi4f"
+      ],
+      "settings": {
+        "eyebrow": "Receipts",
+        "title": "Members' orders, straight from the chat",
+        "subheading": "Every screenshot below was posted by a member. The vouches channel is public — go and read it before you buy anything.",
+        "speed": 45,
+        "default_alt": "Screenshot of a member's order posted in the community chat",
+        "anchor": "proof",
+        "show_cta": true,
+        "cta_label": "",
+        "vouches_label": "Read every vouch",
+        "vouches_link": ""
+      }
+    },
+    "rp_ladder": {
+      "type": "rp-ladder",
+      "blocks": {
+        "f1": {
+          "type": "free_item",
+          "settings": {
+            "text": "Free suppliers posted in the chat",
+            "included": true
+          }
+        },
+        "f2": {
+          "type": "free_item",
+          "settings": {
+            "text": "Ask questions, get answers from members",
+            "included": true
+          }
+        },
+        "f3": {
+          "type": "free_item",
+          "settings": {
+            "text": "See every vouch and haul as it's posted",
+            "included": true
+          }
+        },
+        "f4": {
+          "type": "free_item",
+          "settings": {
+            "text": "The full supplier vault",
+            "included": false
+          }
+        },
+        "f5": {
+          "type": "free_item",
+          "settings": {
+            "text": "Direct access to me",
+            "included": false
+          }
+        },
+        "p1": {
+          "type": "paid_item",
+          "settings": {
+            "text": "Everything in the free group"
+          }
+        },
+        "p2": {
+          "type": "paid_item",
+          "settings": {
+            "text": "The full supplier vault, with contacts and catalogues"
+          }
+        },
+        "p3": {
+          "type": "paid_item",
+          "settings": {
+            "text": "Winning products posted before they blow up"
+          }
+        },
+        "p4": {
+          "type": "paid_item",
+          "settings": {
+            "text": "The full agent + shipping walkthrough"
+          }
+        },
+        "p5": {
+          "type": "paid_item",
+          "settings": {
+            "text": "Message me directly when you're stuck"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "p5"
+      ],
+      "settings": {
+        "eyebrow": "Two ways in",
+        "heading": "Start free. Upgrade if it's working.",
+        "subheading": "The free group is not a trial that runs out. It's the same chat, forever. The private community is for people who want the whole vault and me on hand.",
+        "anchor": "join",
+        "free_tag": "Free",
+        "free_title": "The public community",
+        "free_price": "£0",
+        "free_price_note": "forever",
+        "product": "",
+        "paid_tag": "Private",
+        "paid_title": "The private community",
+        "paid_price_note": "one-off, lifetime",
+        "paid_cta": "Get instant access",
+        "paid_reassure": "Invite link sent the second you pay"
+      }
+    },
+    "rp_products": {
+      "type": "rp-products",
+      "settings": {
+        "eyebrow": "Paid access",
+        "heading": "Lifetime access to premium suppliers",
+        "subheading": "Every supplier here has been ordered from and checked personally. Buy once, keep the contacts forever.",
+        "collection": "homepage",
+        "limit": 12,
+        "button_label": "Get access",
+        "show_details": true,
+        "anchor": "suppliers"
+      }
+    },
+    "rp_faq": {
+      "type": "rp-faq",
+      "blocks": {
+        "q1": {
+          "type": "qa",
+          "settings": {
+            "question": "Is the free group actually free?",
+            "answer": "<p>Yes. No card, no email, no trial that runs out. You join, you read, you ask, and if you never buy anything that's completely fine. The paid community exists for people who want the full vault — it isn't a wall in front of the free chat.</p>"
+          }
+        },
+        "q2": {
+          "type": "qa",
+          "settings": {
+            "question": "How do I know this isn't a scam?",
+            "answer": "<p>Fair question, and you shouldn't take my word for it. The vouches channel is public and open before you spend anything — every screenshot in it is from a real member. Join the free group first and watch it for a week. Nothing about that costs you money.</p>"
+          }
+        },
+        "q3": {
+          "type": "qa",
+          "settings": {
+            "question": "What does buying a supplier actually get me?",
+            "answer": "<p>The supplier's contact details and their full catalogue, so you can browse everything they make and order directly. It's digital — it lands the moment you pay, and you get an email link as well.</p>"
+          }
+        },
+        "q4": {
+          "type": "qa",
+          "settings": {
+            "question": "Which supplier should I start with?",
+            "answer": "<p>Depends on the niche you want to run. They've all been ordered from and checked personally, so it isn't a question of which ones are real — it's which products you want to sell. Ask in the free group and I'll point you at the right one.</p>"
+          }
+        },
+        "q5": {
+          "type": "qa",
+          "settings": {
+            "question": "Do they ship to the UK?",
+            "answer": "<p>Yes, worldwide, using an agent. The full agent walkthrough is included free with anything you buy, and the basics get posted in the free group too.</p>"
+          }
+        },
+        "q6": {
+          "type": "qa",
+          "settings": {
+            "question": "I've never resold anything before. Is this for me?",
+            "answer": "<p>Yes — that's most of the group. Start in the free chat, follow the guide, place one small test order through an agent. You don't need stock, a company, or money up front to learn how it works.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6"
+      ],
+      "settings": {
+        "heading": "Questions people actually ask",
+        "anchor": "faq",
+        "show_cta": true,
+        "cta_text": "Still not sure? Come and read the chat before you decide.",
+        "cta_label": ""
+      }
+    },
+    "rp_cta": {
+      "type": "rp-cta",
+      "settings": {
+        "eyebrow": "Last thing",
+        "heading": "The free group is one tap away",
+        "subheading": "You don't have to buy anything today. Come in, read what's already been posted, and decide from there.",
+        "cta_label": "",
+        "secondary_label": "Don't trust it? Read the vouches",
+        "secondary_link": "",
+        "reassure": "Free forever · leave whenever you like",
+        "anchor": "join-now"
+      }
+    }
+  },
+  "order": [
+    "rp_hero",
+    "rp_value",
+    "rp_steps",
+    "rp_proof",
+    "rp_ladder",
+    "rp_products",
+    "rp_faq",
+    "rp_cta"
+  ]
+}

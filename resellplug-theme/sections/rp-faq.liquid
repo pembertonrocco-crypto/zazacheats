@@ -1,0 +1,150 @@
+{%- comment -%}
+  FAQ.
+
+  Questions are blocks rather than hardcoded markup so they can be reordered
+  and rewritten from the editor as objections change. The order matters: the
+  first two answer "is this a scam" and "is the free group really free",
+  because those are the two thoughts standing between a TikTok viewer and the
+  join button. Delivery and how-to questions come after.
+
+  A FAQPage JSON-LD block is emitted alongside so the answers can surface in
+  search results.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'rp.js' | asset_url }}" defer></script>
+
+<div class="rp-section" id="{{ section.settings.anchor | default: 'faq' | handle }}">
+  <div class="rp-wrap rp-wrap--narrow">
+    <div class="rp-center">
+      <h2 class="rp-h2">{{ section.settings.heading | escape }}</h2>
+    </div>
+
+    <div class="rp-faq">
+      {%- for block in section.blocks -%}
+        <div class="rp-faq__item" {{ block.shopify_attributes }}>
+          <button
+            type="button"
+            class="rp-faq__q"
+            aria-expanded="false"
+            aria-controls="rp-faq-{{ section.id }}-{{ forloop.index }}"
+          >
+            {{ block.settings.question | escape }}
+            <span class="rp-faq__icon" aria-hidden="true">⌄</span>
+          </button>
+          <div class="rp-faq__a" id="rp-faq-{{ section.id }}-{{ forloop.index }}">
+            <div class="rp-faq__a-inner">{{ block.settings.answer }}</div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.show_cta -%}
+      <div class="rp-center" style="margin-top: 32px">
+        <p class="rp-body" style="margin-bottom:16px">{{ section.settings.cta_text | escape }}</p>
+        <div class="rp-actions">
+          {% render 'rp-group-button', label: section.settings.cta_label, source: 'faq' %}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- if section.blocks.size > 0 -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- for block in section.blocks -%}
+          {
+            "@type": "Question",
+            "name": {{ block.settings.question | strip_html | json }},
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": {{ block.settings.answer | strip_html | strip_newlines | json }}
+            }
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "RP · FAQ",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Questions people actually ask" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "faq" },
+    { "type": "checkbox", "id": "show_cta", "label": "Show join button", "default": true },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Line above the button",
+      "default": "Still not sure? Come and read the chat before you decide."
+    },
+    { "type": "text", "id": "cta_label", "label": "Button text" }
+  ],
+  "blocks": [
+    {
+      "type": "qa",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question" },
+        { "type": "richtext", "id": "answer", "label": "Answer" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RP · FAQ",
+      "blocks": [
+        {
+          "type": "qa",
+          "settings": {
+            "question": "Is the free group actually free?",
+            "answer": "<p>Yes. No card, no email, no trial that runs out. You join, you read, you ask, and if you never buy anything that's completely fine. The paid community exists for people who want the full vault — it isn't a wall in front of the free chat.</p>"
+          }
+        },
+        {
+          "type": "qa",
+          "settings": {
+            "question": "How do I know this isn't a scam?",
+            "answer": "<p>Fair question, and you shouldn't take my word for it. The vouches channel is public and open before you spend anything — every screenshot in it is from a real member. Join the free group first and watch it for a week. Nothing about that costs you money.</p>"
+          }
+        },
+        {
+          "type": "qa",
+          "settings": {
+            "question": "What does buying a supplier actually get me?",
+            "answer": "<p>The supplier's contact details and their full catalogue, so you can browse everything they make and order directly. It's digital — it lands the moment you pay, and you get an email link as well.</p>"
+          }
+        },
+        {
+          "type": "qa",
+          "settings": {
+            "question": "Which supplier should I start with?",
+            "answer": "<p>Depends on the niche you want to run. They've all been ordered from and checked personally, so it isn't a question of which ones are real — it's which products you want to sell. Ask in the free group and I'll point you at the right one.</p>"
+          }
+        },
+        {
+          "type": "qa",
+          "settings": {
+            "question": "Do they ship to the UK?",
+            "answer": "<p>Yes, worldwide, using an agent. The full agent walkthrough is included free with anything you buy, and the basics get posted in the free group too.</p>"
+          }
+        },
+        {
+          "type": "qa",
+          "settings": {
+            "question": "I've never resold anything before. Is this for me?",
+            "answer": "<p>Yes — that's most of the group. Start in the free chat, follow the guide, place one small test order through an agent. You don't need stock, a company, or money up front to learn how it works.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

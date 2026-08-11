@@ -1,0 +1,160 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": {
+          "type": "text",
+          "settings": {
+            "text": "{{ product.vendor }}",
+            "text_style": "uppercase"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "circle"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "description",
+        "share"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-1",
+        "media_size": "large",
+        "constrain_to_viewport": true,
+        "media_fit": "cover",
+        "gallery_layout": "stacked",
+        "mobile_thumbnails": "hide",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 24
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "heading": "Members also bought",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "padding_top": 36,
+        "padding_bottom": 28
+      }
+    },
+    "rp_faq": {
+      "type": "rp-faq",
+      "blocks": {
+        "q1": {
+          "type": "qa",
+          "settings": {
+            "question": "How fast do I get it?",
+            "answer": "<p>Instantly. The moment payment clears you get the download link on screen and the same link by email.</p>"
+          }
+        },
+        "q2": {
+          "type": "qa",
+          "settings": {
+            "question": "Is there a free version?",
+            "answer": "<p>There's a free community where I post suppliers, answer questions and members post their orders. Join that first if you're not sure — it costs nothing and you can read everything before you decide.</p>"
+          }
+        },
+        "q3": {
+          "type": "qa",
+          "settings": {
+            "question": "How do I know this is real?",
+            "answer": "<p>The vouches channel is public and you can read it right now, before you buy. Every screenshot in it came from a member.</p>"
+          }
+        },
+        "q4": {
+          "type": "qa",
+          "settings": {
+            "question": "Do these ship to the UK?",
+            "answer": "<p>Yes — worldwide, through an agent. The full agent walkthrough is included free with your purchase.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4"
+      ],
+      "settings": {
+        "heading": "Before you buy",
+        "anchor": "faq",
+        "show_cta": true,
+        "cta_text": "Not ready to spend anything? Start in the free group.",
+        "cta_label": ""
+      }
+    },
+    "rp_cta": {
+      "type": "rp-cta",
+      "settings": {
+        "eyebrow": "Free either way",
+        "heading": "Join the free community",
+        "subheading": "Free supplier drops, straight answers, and every member's order posted as it lands.",
+        "cta_label": "",
+        "secondary_label": "Read the vouches",
+        "secondary_link": "",
+        "reassure": "Free forever · leave whenever you like",
+        "anchor": "join-now"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related-products",
+    "rp_faq",
+    "rp_cta"
+  ]
+}

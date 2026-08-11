@@ -1,0 +1,208 @@
+{%- comment -%}
+  Hero — the first screen a visitor from TikTok sees.
+
+  The job of this section is to answer, above the fold and in under two
+  seconds: what is this, what do I get, is it free, what do I press. The old
+  homepage opened straight onto a grid of paid supplier cards, so a viewer
+  arriving from a video had to work all of that out for themselves, and most
+  of them left instead.
+
+  The primary action is the FREE community, not a product. Someone who has
+  watched one video will not send money yet; they will join a group. The paid
+  tier is sold later on the page, and then continuously inside the group.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  The headline is a plain text setting rather than a richtext one so that the
+  <h1> holds text and not a nested <p>. The accent word is escaped before it
+  is wrapped, so the string is safe to print unescaped afterwards.
+{%- endcomment -%}
+{%- liquid
+  assign heading_html = section.settings.heading | escape
+  assign accent = section.settings.heading_accent | escape
+  if accent != blank
+    assign wrapped = '<span class="rp-accent">' | append: accent | append: '</span>'
+    assign heading_html = heading_html | replace: accent, wrapped
+  endif
+-%}
+
+<div class="rp-hero" data-rp-sticky-after>
+  <div class="rp-hero__inner">
+    <div class="rp-hero__body">
+      {%- if section.settings.show_welcome -%}
+        <p class="rp-hero__welcome">
+          {% render 'rp-icon', icon: 'tiktok', size: 16 %}
+          <span>{{ section.settings.welcome_text }}</span>
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rp-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+
+      <h1 class="rp-h1">{{ heading_html }}</h1>
+
+      {%- if section.settings.subheading != blank -%}
+        <p class="rp-lede">{{ section.settings.subheading | escape | newline_to_br }}</p>
+      {%- endif -%}
+
+      <div class="rp-actions">
+        {% render 'rp-group-button', label: section.settings.cta_label, source: 'hero' %}
+
+        {%- if section.settings.secondary_label != blank and section.settings.secondary_link != blank -%}
+          <a class="rp-btn rp-btn--ghost" href="{{ section.settings.secondary_link }}" {% if section.settings.secondary_link contains '://' %}target="_blank" rel="noopener"{% endif %}>
+            {{ section.settings.secondary_label | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+
+      <p class="rp-reassure">
+        {%- if section.settings.reassure_1 != blank -%}
+          <span>{% render 'rp-icon', icon: 'check', size: 14 %}{{ section.settings.reassure_1 | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.reassure_2 != blank -%}
+          <span>{% render 'rp-icon', icon: 'check', size: 14 %}{{ section.settings.reassure_2 | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.reassure_3 != blank -%}
+          <span>{% render 'rp-icon', icon: 'check', size: 14 %}{{ section.settings.reassure_3 | escape }}</span>
+        {%- endif -%}
+      </p>
+
+      {%- if section.settings.show_stats -%}
+        <ul class="rp-hero__stats">
+          <li>
+            <p class="rp-hero__stat-value">{{ settings.rp_stat_members | escape }}</p>
+            <p class="rp-hero__stat-label">{{ section.settings.stat_1_label | escape }}</p>
+          </li>
+          <li>
+            <p class="rp-hero__stat-value">{{ settings.rp_stat_vouches | escape }}</p>
+            <p class="rp-hero__stat-label">{{ section.settings.stat_2_label | escape }}</p>
+          </li>
+          <li>
+            <p class="rp-hero__stat-value">{{ settings.rp_stat_suppliers | escape }}</p>
+            <p class="rp-hero__stat-label">{{ section.settings.stat_3_label | escape }}</p>
+          </li>
+        </ul>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_media -%}
+      <div class="rp-hero__media">
+        {%- if section.settings.image != blank -%}
+          {{
+            section.settings.image
+            | image_url: width: 760
+            | image_tag:
+              loading: 'eager',
+              fetchpriority: 'high',
+              sizes: '(min-width: 990px) 380px, 90vw',
+              widths: '380, 560, 760',
+              alt: section.settings.image_alt
+          }}
+        {%- else -%}
+          <div class="rp-hero__media-empty">
+            <strong>Drop a screenshot here</strong>
+            A photo of the group chat, a delivered order, or a payout. Theme
+            editor → this section → Image.
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "RP · Hero",
+  "tag": "section",
+  "class": "rp-section-hero",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The first thing a TikTok visitor sees. Keep the headline to one promise."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_welcome",
+      "label": "Show \"came from TikTok\" line",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "welcome_text",
+      "label": "Welcome line",
+      "default": "Came from TikTok? You're in the right place."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Free to join · No card needed"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Headline",
+      "default": "Join the free UK reselling community"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Word to highlight in green",
+      "default": "free",
+      "info": "Must match the headline exactly, including capitals."
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Sub-headline",
+      "default": "Real suppliers, real prices, real proof. Get free supplier drops, ask anything you're stuck on, and watch members' orders land — before you spend a penny."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Main button text",
+      "info": "Leave blank to use \"Join the free <platform>\" automatically."
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Second button text",
+      "default": "See the proof first"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Second button link",
+      "info": "Point this at your vouches channel, or at #proof to scroll down the page."
+    },
+    { "type": "header", "content": "Reassurance line" },
+    { "type": "text", "id": "reassure_1", "label": "Point 1", "default": "Free forever" },
+    { "type": "text", "id": "reassure_2", "label": "Point 2", "default": "No email needed" },
+    { "type": "text", "id": "reassure_3", "label": "Point 3", "default": "Leave any time" },
+    { "type": "header", "content": "Numbers" },
+    {
+      "type": "checkbox",
+      "id": "show_stats",
+      "label": "Show the numbers row",
+      "default": true,
+      "info": "The values come from Theme settings → Resell Plug — funnel links."
+    },
+    { "type": "text", "id": "stat_1_label", "label": "Label 1", "default": "Members" },
+    { "type": "text", "id": "stat_2_label", "label": "Label 2", "default": "Vouches posted" },
+    { "type": "text", "id": "stat_3_label", "label": "Label 3", "default": "Suppliers in the vault" },
+    { "type": "header", "content": "Image" },
+    { "type": "checkbox", "id": "show_media", "label": "Show image", "default": true },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image description",
+      "default": "Screenshot of the free reselling community chat"
+    }
+  ],
+  "presets": [{ "name": "RP · Hero" }]
+}
+{% endschema %}

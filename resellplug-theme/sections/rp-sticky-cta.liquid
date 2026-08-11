@@ -1,0 +1,40 @@
+{%- comment -%}
+  Sticky join bar.
+
+  On a phone — which is where essentially all TikTok traffic lands — the join
+  button is otherwise only reachable at two points in a long scroll. This
+  keeps it in thumb reach the whole way down.
+
+  It stays hidden while the hero is on screen (see initSticky in rp.js) so it
+  never covers the headline it is meant to support, and it publishes its own
+  height to --rp-stickybar so the footer is still fully readable underneath.
+
+  Place this section in the footer group so it appears on product and cart
+  pages too, not just the homepage.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'rp.js' | asset_url }}" defer></script>
+
+<div class="rp-sticky" data-rp-sticky aria-hidden="true">
+  <div class="rp-sticky__inner">
+    <p class="rp-sticky__copy">
+      <strong>{{ section.settings.title | escape }}</strong>
+      {{ section.settings.subtitle | escape }}
+    </p>
+    {% render 'rp-group-button', label: section.settings.cta_label, source: 'sticky' %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "RP · Sticky join bar",
+  "tag": "aside",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "Free community" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Suppliers, answers and proof — £0" },
+    { "type": "text", "id": "cta_label", "label": "Button text", "default": "Join free" }
+  ],
+  "presets": [{ "name": "RP · Sticky join bar" }]
+}
+{% endschema %}

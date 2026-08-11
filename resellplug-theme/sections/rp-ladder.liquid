@@ -1,0 +1,202 @@
+{%- comment -%}
+  Free tier vs private community.
+
+  Putting the two side by side is what makes the paid tier sellable without
+  hiding the free one. The free column is deliberately generous and its
+  button is the primary style: someone who only ever joins the free group is
+  a win, because the group is where the paid tier actually gets sold.
+
+  The price and the buy button come from a real product so there is a single
+  source of truth for price, stock and checkout.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign paid = section.settings.product
+  assign variant = paid.selected_or_first_available_variant
+-%}
+
+<div class="rp-section" id="{{ section.settings.anchor | default: 'join' | handle }}">
+  <div class="rp-wrap rp-wrap--narrow">
+    <div class="rp-center">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rp-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 class="rp-h2">{{ section.settings.heading | escape }}</h2>
+      {%- if section.settings.subheading != blank -%}
+        <p class="rp-lede">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="rp-ladder">
+      {%- comment -%} Free tier {%- endcomment -%}
+      <div class="rp-tier">
+        <p class="rp-tier__tag">{{ section.settings.free_tag | escape }}</p>
+        <h3 class="rp-h3">{{ section.settings.free_title | escape }}</h3>
+        <p class="rp-tier__price">
+          {{ section.settings.free_price | escape }}
+          <small>{{ section.settings.free_price_note | escape }}</small>
+        </p>
+
+        <ul class="rp-tier__list">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'free_item' -%}
+              <li data-state="{% if block.settings.included %}yes{% else %}no{% endif %}" {{ block.shopify_attributes }}>
+                {% if block.settings.included %}
+                  {% render 'rp-icon', icon: 'check', size: 16 %}
+                {% else %}
+                  {% render 'rp-icon', icon: 'cross', size: 16 %}
+                {% endif %}
+                <span>{{ block.settings.text | escape }}</span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+
+        {% render 'rp-group-button', block: true, source: 'ladder' %}
+      </div>
+
+      {%- comment -%} Paid tier {%- endcomment -%}
+      <div class="rp-tier rp-tier--paid">
+        <p class="rp-tier__tag">{{ section.settings.paid_tag | escape }}</p>
+        <h3 class="rp-h3">
+          {{ section.settings.paid_title | default: paid.title | escape }}
+        </h3>
+
+        <p class="rp-tier__price">
+          {%- if paid != blank -%}
+            {{ variant.price | money }}
+            <small>
+              {%- if variant.compare_at_price > variant.price -%}
+                was {{ variant.compare_at_price | money }} ·
+              {%- endif -%}
+              {{ section.settings.paid_price_note | escape }}
+            </small>
+          {%- else -%}
+            —
+            <small>Pick a product in the theme editor</small>
+          {%- endif -%}
+        </p>
+
+        <ul class="rp-tier__list">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'paid_item' -%}
+              <li data-state="yes" {{ block.shopify_attributes }}>
+                {% render 'rp-icon', icon: 'check', size: 16 %}
+                <span>{{ block.settings.text | escape }}</span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+
+        {%- if paid != blank and variant != blank -%}
+          {%- form 'product', paid, id: 'rp-ladder-form', class: 'rp-tier__form' -%}
+            <input type="hidden" name="id" value="{{ variant.id }}">
+            <button
+              type="submit"
+              class="rp-btn rp-btn--primary rp-btn--block"
+              {% unless variant.available %}disabled{% endunless %}
+            >
+              {%- if variant.available -%}
+                {% render 'rp-icon', icon: 'lock', size: 18 %}
+                <span>{{ section.settings.paid_cta | escape }}</span>
+              {%- else -%}
+                <span>Sold out</span>
+              {%- endif -%}
+            </button>
+          {%- endform -%}
+          <p class="rp-reassure" style="margin-top:12px">
+            <span>{% render 'rp-icon', icon: 'bolt', size: 14 %}{{ section.settings.paid_reassure | escape }}</span>
+          </p>
+        {%- else -%}
+          <p class="rp-body">Choose the private community product in the theme editor to show its price and buy button here.</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "RP · Free vs private",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Two ways in" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Start free. Upgrade if it's working." },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Sub-heading",
+      "default": "The free group is not a trial that runs out. It's the same chat, forever. The private community is for people who want the whole vault and me on hand."
+    },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "join" },
+    { "type": "header", "content": "Free column" },
+    { "type": "text", "id": "free_tag", "label": "Tag", "default": "Free" },
+    { "type": "text", "id": "free_title", "label": "Title", "default": "The public community" },
+    { "type": "text", "id": "free_price", "label": "Price", "default": "£0" },
+    { "type": "text", "id": "free_price_note", "label": "Price note", "default": "forever" },
+    { "type": "header", "content": "Paid column" },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Private community product",
+      "info": "Price, stock and checkout all come from this product."
+    },
+    { "type": "text", "id": "paid_tag", "label": "Tag", "default": "Private" },
+    {
+      "type": "text",
+      "id": "paid_title",
+      "label": "Title",
+      "info": "Leave blank to use the product title.",
+      "default": "The private community"
+    },
+    { "type": "text", "id": "paid_price_note", "label": "Price note", "default": "one-off, lifetime" },
+    { "type": "text", "id": "paid_cta", "label": "Button text", "default": "Get instant access" },
+    {
+      "type": "text",
+      "id": "paid_reassure",
+      "label": "Line under the button",
+      "default": "Invite link sent the second you pay"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "free_item",
+      "name": "Free column line",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text" },
+        {
+          "type": "checkbox",
+          "id": "included",
+          "label": "Included",
+          "default": true,
+          "info": "Untick to show it as a grey cross — this is what makes the paid column worth reading."
+        }
+      ]
+    },
+    {
+      "type": "paid_item",
+      "name": "Paid column line",
+      "settings": [{ "type": "text", "id": "text", "label": "Text" }]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RP · Free vs private",
+      "blocks": [
+        { "type": "free_item", "settings": { "text": "Free suppliers posted in the chat", "included": true } },
+        { "type": "free_item", "settings": { "text": "Ask questions, get answers from members", "included": true } },
+        { "type": "free_item", "settings": { "text": "See every vouch and haul as it's posted", "included": true } },
+        { "type": "free_item", "settings": { "text": "The full supplier vault", "included": false } },
+        { "type": "free_item", "settings": { "text": "Direct access to me", "included": false } },
+        { "type": "paid_item", "settings": { "text": "Everything in the free group" } },
+        { "type": "paid_item", "settings": { "text": "The full supplier vault, with contacts and catalogues" } },
+        { "type": "paid_item", "settings": { "text": "Winning products posted before they blow up" } },
+        { "type": "paid_item", "settings": { "text": "The full agent + shipping walkthrough" } },
+        { "type": "paid_item", "settings": { "text": "Message me directly when you're stuck" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

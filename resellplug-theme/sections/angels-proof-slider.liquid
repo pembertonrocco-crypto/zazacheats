@@ -1,0 +1,142 @@
+{%- comment -%}
+  Proof marquee.
+
+  Kept under its original file name and with the same block type and setting
+  id, so the screenshots already uploaded to this section stay attached. What
+  changed is everything around them:
+
+  - the "white box killer" rule that forced background:#000 onto every
+    .shopify-section and .page-width on the page is gone. It was there to
+    beat Dawn's light colour schemes; the schemes are dark now, so nothing
+    needs overriding and the rest of the site is no longer collateral.
+  - img_url is deprecated, so images go through image_url/image_tag and get a
+    real srcset instead of one 600px file scaled up to a 380px-tall frame.
+  - a heading and a join button, because a wall of screenshots with nothing
+    to press is the single most common place to lose someone who is now
+    convinced.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'rp.js' | asset_url }}" defer></script>
+
+<div class="rp-section" id="{{ section.settings.anchor | default: 'proof' | handle }}">
+  <div class="rp-wrap rp-center">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="rp-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    <h2 class="rp-h2">{{ section.settings.title | escape }}</h2>
+    {%- if section.settings.subheading != blank -%}
+      <p class="rp-lede">{{ section.settings.subheading | escape }}</p>
+    {%- endif -%}
+  </div>
+
+  {%- if section.blocks.size > 0 -%}
+    <div class="rp-proof" style="--rp-proof-speed: {{ section.settings.speed }}s">
+      <div class="rp-proof__track">
+        {%- for pass in (1..2) -%}
+          <div class="rp-proof__group" {% if forloop.last %}aria-hidden="true"{% endif %}>
+            {%- for block in section.blocks -%}
+              {%- if block.settings.image != blank -%}
+                {{
+                  block.settings.image
+                  | image_url: height: 760
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '240, 360, 480',
+                    sizes: '(min-width: 750px) 380px, 300px',
+                    class: 'rp-proof__img',
+                    alt: block.settings.alt | default: section.settings.default_alt
+                }}
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- else -%}
+    <div class="rp-wrap rp-center">
+      <p class="rp-body">Add screenshots to this section in the theme editor.</p>
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.show_cta -%}
+    <div class="rp-wrap rp-center" style="margin-top: 30px">
+      <div class="rp-actions">
+        {% render 'rp-group-button', label: section.settings.cta_label, source: 'proof' %}
+
+        {%- assign vouches = section.settings.vouches_link | default: settings.rp_vouches_url -%}
+        {%- if vouches != blank -%}
+          <a class="rp-btn rp-btn--ghost" href="{{ vouches }}" target="_blank" rel="noopener">
+            {{ section.settings.vouches_label | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "RP · Proof slider",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Receipts" },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Members' orders, straight from the chat"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Sub-heading",
+      "default": "Every screenshot below was posted by a member. The vouches channel is public — go and read it before you buy anything."
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll time",
+      "min": 20,
+      "max": 90,
+      "step": 5,
+      "unit": "s",
+      "default": 45,
+      "info": "Higher is slower."
+    },
+    {
+      "type": "text",
+      "id": "default_alt",
+      "label": "Image description",
+      "default": "Screenshot of a member's order posted in the community chat"
+    },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "proof" },
+    { "type": "header", "content": "Buttons" },
+    { "type": "checkbox", "id": "show_cta", "label": "Show buttons", "default": true },
+    { "type": "text", "id": "cta_label", "label": "Join button text" },
+    { "type": "text", "id": "vouches_label", "label": "Vouches button text", "default": "Read every vouch" },
+    {
+      "type": "url",
+      "id": "vouches_link",
+      "label": "Vouches link",
+      "info": "Leave blank to use the vouches link from Theme settings."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Proof image",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Screenshot" },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Image description",
+          "info": "Optional. Describe what the screenshot shows."
+        }
+      ]
+    }
+  ],
+  "presets": [{ "name": "RP · Proof slider" }]
+}
+{% endschema %}

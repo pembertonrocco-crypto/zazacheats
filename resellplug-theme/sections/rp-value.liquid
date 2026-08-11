@@ -1,0 +1,130 @@
+{%- comment -%}
+  "What you actually get in the free group."
+
+  This sits directly under the hero because the single biggest reason a
+  visitor does not tap a free join button is that they cannot picture what is
+  on the other side of it. Each block is one concrete thing they will see in
+  the chat, not a benefit adjective.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+
+<div class="rp-section" id="{{ section.settings.anchor | default: 'free' | handle }}">
+  <div class="rp-wrap">
+    <div class="rp-center">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rp-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 class="rp-h2">{{ section.settings.heading | escape }}</h2>
+      {%- if section.settings.subheading != blank -%}
+        <p class="rp-lede">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="rp-grid rp-grid--3">
+      {%- for block in section.blocks -%}
+        <div class="rp-card" {{ block.shopify_attributes }}>
+          <div class="rp-value__icon">
+            {% render 'rp-icon', icon: block.settings.icon, size: 20 %}
+          </div>
+          <h3 class="rp-h3">{{ block.settings.title | escape }}</h3>
+          <p class="rp-body">{{ block.settings.text | escape }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.show_cta -%}
+      <div class="rp-center" style="margin-top: 30px">
+        <div class="rp-actions">
+          {% render 'rp-group-button', source: 'value' %}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "RP · What's free",
+  "tag": "section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Inside the free group" },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What you get for £0"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Sub-heading",
+      "default": "No upsell wall. Join, read, ask, take what's useful. Most members never pay for anything."
+    },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "free" },
+    { "type": "checkbox", "id": "show_cta", "label": "Show join button", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "box",
+          "options": [
+            { "value": "box", "label": "Box" },
+            { "value": "message", "label": "Chat" },
+            { "value": "star", "label": "Star" },
+            { "value": "users", "label": "People" },
+            { "value": "bolt", "label": "Lightning" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "lock", "label": "Lock" }
+          ]
+        },
+        { "type": "text", "id": "title", "label": "Title", "default": "Free supplier drops" },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Describe exactly what lands in the chat."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RP · What's free",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "icon": "box",
+            "title": "Free supplier drops",
+            "text": "I post suppliers I've ordered from myself into the group for nothing. No paywall, no DM-me-for-the-link."
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "message",
+            "title": "Ask anything, get an answer",
+            "text": "Stuck on agents, shipping or which product to run? Ask in the chat. Me and the members who've already done it will answer."
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "star",
+            "title": "See every order land",
+            "text": "Members post their hauls and payouts as they happen. You can judge whether this works before you spend anything."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

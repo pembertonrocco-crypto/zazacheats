@@ -1,0 +1,91 @@
+{%- comment -%}
+  Scrolling announcement bar.
+
+  This replaces the custom-liquid marquee that ran a "live viewers" counter
+  incrementing from a random seed and a "price increasing in 59:54" timer
+  that reset to 60:00 forever. Both were invented, and the visitors this site
+  is trying to convert are exactly the audience that recognises them — a fake
+  timer reads as proof the site is a scam, which is the opposite of what a
+  trust strip is for. (In the UK they are also a CAP Code problem: a
+  countdown that never ends is a misleading time-limited offer.)
+
+  Every line here is a block you fill in yourself, so what it says is
+  whatever you can actually stand behind. The member/vouch counts pull from
+  Theme settings so there is one number to keep honest, not five.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'rp.js' | asset_url }}" defer></script>
+
+{%- if section.blocks.size > 0 -%}
+  <div class="rp-ticker" style="--rp-ticker-speed: {{ section.settings.speed }}s">
+    <div class="rp-ticker__track">
+      {%- for i in (1..2) -%}
+        <div class="rp-ticker__group" {% if forloop.last %}aria-hidden="true"{% endif %}>
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign text = block.settings.text
+              assign text = text | replace: '{members}', settings.rp_stat_members
+              assign text = text | replace: '{vouches}', settings.rp_stat_vouches
+              assign text = text | replace: '{suppliers}', settings.rp_stat_suppliers
+            -%}
+            <span class="rp-ticker__item" {% if forloop.parentloop.first %}{{ block.shopify_attributes }}{% endif %}>
+              {%- if block.settings.emoji != blank -%}
+                <span aria-hidden="true">{{ block.settings.emoji }}</span>
+              {%- endif -%}
+              <span{% if block.settings.highlight %} class="rp-accent"{% endif %}>{{ text | escape }}</span>
+            </span>
+          {%- endfor -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "RP · Announcement ticker",
+  "tag": "section",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Type {members}, {vouches} or {suppliers} in any line and the number from Theme settings drops in. Only claim what you can screenshot."
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll time",
+      "min": 12,
+      "max": 60,
+      "step": 2,
+      "unit": "s",
+      "default": 30,
+      "info": "Higher is slower. Under about 20s it is hard to read on a phone."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Line",
+      "settings": [
+        { "type": "text", "id": "emoji", "label": "Emoji" },
+        { "type": "text", "id": "text", "label": "Text" },
+        { "type": "checkbox", "id": "highlight", "label": "Green", "default": true }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RP · Announcement ticker",
+      "blocks": [
+        { "type": "item", "settings": { "emoji": "🇬🇧", "text": "UK reselling community", "highlight": true } },
+        { "type": "item", "settings": { "emoji": "💬", "text": "{members} in the free group", "highlight": true } },
+        { "type": "item", "settings": { "emoji": "✅", "text": "{vouches} vouches posted", "highlight": true } },
+        { "type": "item", "settings": { "emoji": "📦", "text": "Free suppliers dropped every week", "highlight": true } },
+        { "type": "item", "settings": { "emoji": "⚡", "text": "Instant delivery on every order", "highlight": true } }
+      ]
+    }
+  ]
+}
+{% endschema %}

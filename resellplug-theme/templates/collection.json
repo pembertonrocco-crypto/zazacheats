@@ -1,0 +1,50 @@
+{
+  "sections": {
+    "banner": {
+      "type": "main-collection-banner",
+      "settings": {
+        "show_collection_description": true,
+        "show_collection_image": false,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "product-grid": {
+      "type": "main-collection-product-grid",
+      "settings": {
+        "products_per_page": 16,
+        "columns_desktop": 4,
+        "color_scheme": "scheme-1",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "enable_filtering": true,
+        "filter_type": "horizontal",
+        "enable_sorting": true,
+        "columns_mobile": "2",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "rp_cta": {
+      "type": "rp-cta",
+      "settings": {
+        "eyebrow": "Free either way",
+        "heading": "Not ready to buy? Join the free group",
+        "subheading": "Free suppliers, questions answered, and members' orders posted as they land.",
+        "cta_label": "",
+        "secondary_label": "Read the vouches",
+        "secondary_link": "",
+        "reassure": "Free forever · leave whenever you like",
+        "anchor": "join-now"
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "product-grid",
+    "rp_cta"
+  ]
+}

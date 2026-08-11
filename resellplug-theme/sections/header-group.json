@@ -1,0 +1,132 @@
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "rp_announcement": {
+      "type": "rp-announcement",
+      "blocks": {
+        "t1": {
+          "type": "item",
+          "settings": {
+            "emoji": "🇬🇧",
+            "text": "UK reselling community",
+            "highlight": true
+          }
+        },
+        "t2": {
+          "type": "item",
+          "settings": {
+            "emoji": "💬",
+            "text": "{members} in the free group",
+            "highlight": true
+          }
+        },
+        "t3": {
+          "type": "item",
+          "settings": {
+            "emoji": "✅",
+            "text": "{vouches} vouches posted",
+            "highlight": true
+          }
+        },
+        "t4": {
+          "type": "item",
+          "settings": {
+            "emoji": "📦",
+            "text": "Free suppliers dropped every week",
+            "highlight": true
+          }
+        },
+        "t5": {
+          "type": "item",
+          "settings": {
+            "emoji": "⚡",
+            "text": "Instant delivery on every order",
+            "highlight": true
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5"
+      ],
+      "settings": {
+        "speed": 30
+      }
+    },
+    "rp_header": {
+      "type": "rp-header",
+      "blocks": {
+        "n1": {
+          "type": "link",
+          "settings": {
+            "label": "Free group",
+            "link": "/#free"
+          }
+        },
+        "n2": {
+          "type": "link",
+          "settings": {
+            "label": "Suppliers",
+            "link": "/#suppliers"
+          }
+        },
+        "n3": {
+          "type": "link",
+          "settings": {
+            "label": "Proof",
+            "link": "/#proof"
+          }
+        },
+        "n4": {
+          "type": "link",
+          "settings": {
+            "label": "FAQ",
+            "link": "/#faq"
+          }
+        }
+      },
+      "block_order": [
+        "n1",
+        "n2",
+        "n3",
+        "n4"
+      ],
+      "settings": {
+        "logo_width": 120,
+        "brand_text": "",
+        "show_cta": true,
+        "cta_label": "Join free",
+        "show_cart": true
+      }
+    },
+    "header": {
+      "type": "header",
+      "disabled": true,
+      "settings": {
+        "logo_position": "middle-left",
+        "mobile_logo_position": "center",
+        "menu": "main-menu",
+        "menu_type_desktop": "dropdown",
+        "sticky_header_type": "on-scroll-up",
+        "show_line_separator": true,
+        "color_scheme": "scheme-1",
+        "menu_color_scheme": "scheme-1",
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "enable_customer_avatar": true,
+        "margin_bottom": 0,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    }
+  },
+  "order": [
+    "rp_announcement",
+    "rp_header",
+    "header"
+  ]
+}

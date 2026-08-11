@@ -1,0 +1,72 @@
+{%- comment -%}
+  The primary call to action, used by every section that sends someone to the
+  free community. Centralised so the link, the platform icon and the tracking
+  parameter are defined once.
+
+  Parameters
+    label  — button text. Defaults to "Join the free <platform>".
+    style  — 'primary' (default) or 'ghost'.
+    block  — true to fill the container width.
+    source — value appended as ?src= so you can see in your group's join
+             stats which section on the page sent the person.
+
+  If no free community link is set in Theme settings the button renders as a
+  disabled placeholder rather than a link to nowhere — a dead CTA that looks
+  live is worse than an obviously unfinished one.
+{%- endcomment -%}
+
+{%- liquid
+  assign url = settings.rp_group_url
+  assign platform = settings.rp_group_platform | default: 'Telegram'
+  assign text = label | default: 'Join the free ' | append: platform
+
+  assign key = platform | downcase
+  assign icon_name = 'message'
+  if key contains 'telegram'
+    assign icon_name = 'telegram'
+  elsif key contains 'whatsapp'
+    assign icon_name = 'whatsapp'
+  elsif key contains 'discord'
+    assign icon_name = 'discord'
+  endif
+
+  assign variant = 'rp-btn--primary'
+  if style == 'ghost'
+    assign variant = 'rp-btn--ghost'
+  endif
+
+  assign width_class = ''
+  if block
+    assign width_class = ' rp-btn--block'
+  endif
+
+  # Group invite links rarely carry a query string, but if one is pasted in
+  # with parameters already on it, a second "?" would break the whole URL.
+  assign href = url
+  if source != blank
+    assign separator = '?'
+    if url contains '?'
+      assign separator = '&'
+    endif
+    assign src = source | url_encode
+    assign href = url | append: separator | append: 'src=' | append: src
+  endif
+-%}
+
+{%- if url != blank -%}
+  <a
+    class="rp-btn {{ variant }}{{ width_class }}"
+    href="{{ href }}"
+    target="_blank"
+    rel="noopener"
+    data-rp-cta="{{ source | default: 'group' }}"
+  >
+    {% render 'rp-icon', icon: icon_name, size: 20 %}
+    <span>{{ text }}</span>
+  </a>
+{%- else -%}
+  <span class="rp-btn {{ variant }}{{ width_class }}" aria-disabled="true" style="opacity:.5;cursor:not-allowed">
+    {% render 'rp-icon', icon: icon_name, size: 20 %}
+    <span>Add your community link in Theme settings</span>
+  </span>
+{%- endif -%}

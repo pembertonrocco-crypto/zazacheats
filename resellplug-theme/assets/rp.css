@@ -1,0 +1,947 @@
+/* ==========================================================================
+   Resell Plug — funnel design system
+   One stylesheet for every rp-* section. Loaded once from layout/theme.liquid.
+
+   This file replaces the per-section <style> blocks that used to live inside
+   custom-liquid sections. Those blocks each re-declared the same fonts and
+   colours and leaned on !important to beat Dawn's light colour schemes; the
+   colour schemes in config/settings_data.json are dark now, so none of that
+   overriding is needed any more.
+   ========================================================================== */
+
+:root {
+  --rp-bg: #050505;
+  --rp-surface: #0e0e0e;
+  --rp-surface-2: #161616;
+  --rp-line: #262626;
+  --rp-line-strong: #3a3a3a;
+  --rp-text: #ffffff;
+  --rp-muted: #a5a5a5;
+  --rp-accent: #39ff14;
+  --rp-accent-dim: #2bd10f;
+  --rp-accent-ink: #041104;
+  --rp-danger: #ff3b30;
+
+  /* Follows the theme's heading font (set to Montserrat in Theme settings →
+     Typography) so changing the font there changes it everywhere, and no
+     second copy of the font is fetched from Google. */
+  --rp-font: var(--font-heading-family, 'Montserrat', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif);
+  --rp-radius: 14px;
+  --rp-radius-sm: 10px;
+  --rp-max: 1180px;
+  --rp-gutter: 20px;
+
+  /* Height of the sticky mobile CTA bar. Used to pad the page bottom so the
+     bar never covers the last row of the footer. */
+  --rp-stickybar: 0px;
+}
+
+/* --------------------------------------------------------------------------
+   Primitives
+   -------------------------------------------------------------------------- */
+
+.rp-section {
+  background: var(--rp-bg);
+  color: var(--rp-text);
+  font-family: var(--rp-font);
+  padding: 44px 0;
+}
+
+@media (min-width: 750px) {
+  .rp-section { padding: 64px 0; }
+}
+
+.rp-section--tight { padding: 32px 0; }
+
+/* The header is sticky, so an in-page jump would otherwise land with the
+   section heading hidden underneath it. */
+html {
+  scroll-padding-top: 84px;
+}
+.rp-section--flush-top { padding-top: 0; }
+
+.rp-wrap {
+  max-width: var(--rp-max);
+  margin: 0 auto;
+  padding: 0 var(--rp-gutter);
+}
+
+.rp-wrap--narrow { max-width: 820px; }
+
+.rp-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rp-accent);
+  border: 1px solid rgba(57, 255, 20, 0.35);
+  background: rgba(57, 255, 20, 0.07);
+  border-radius: 999px;
+  padding: 7px 14px;
+  margin: 0 0 18px;
+}
+
+.rp-h1,
+.rp-h2 {
+  font-family: var(--rp-font);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  color: var(--rp-text);
+  margin: 0 0 16px;
+  text-wrap: balance;
+}
+
+.rp-h1 { font-size: clamp(2rem, 8.5vw, 4.25rem); }
+.rp-h2 { font-size: clamp(1.65rem, 5.5vw, 2.6rem); }
+
+.rp-h3 {
+  font-family: var(--rp-font);
+  font-size: 1.0625rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  margin: 0 0 8px;
+  color: var(--rp-text);
+}
+
+.rp-accent { color: var(--rp-accent); }
+
+.rp-lede {
+  font-size: clamp(1rem, 3.6vw, 1.1875rem);
+  line-height: 1.55;
+  color: var(--rp-muted);
+  margin: 0 0 28px;
+  max-width: 46ch;
+  text-wrap: pretty;
+}
+
+.rp-center { text-align: center; }
+.rp-center .rp-lede { margin-left: auto; margin-right: auto; }
+
+.rp-body { color: var(--rp-muted); line-height: 1.6; margin: 0; }
+
+/* Buttons ---------------------------------------------------------------- */
+
+.rp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 16px 28px;
+  border-radius: var(--rp-radius-sm);
+  border: 1px solid transparent;
+  font-family: var(--rp-font);
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.12s ease, background-color 0.12s ease, border-color 0.12s ease;
+}
+
+.rp-btn:hover { text-decoration: none; }
+.rp-btn:active { transform: translateY(1px); }
+
+.rp-btn--primary {
+  background: var(--rp-accent);
+  color: var(--rp-accent-ink);
+  box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.45);
+}
+
+.rp-btn--primary:hover { background: #4dff2d; color: var(--rp-accent-ink); }
+
+.rp-btn--ghost {
+  background: transparent;
+  color: var(--rp-text);
+  border-color: var(--rp-line-strong);
+}
+
+.rp-btn--ghost:hover { border-color: var(--rp-text); color: var(--rp-text); }
+
+.rp-btn--block { width: 100%; }
+
+.rp-btn svg { flex: 0 0 auto; }
+
+/* One visible focus style for every interactive element in this system. */
+.rp-btn:focus-visible,
+.rp-faq__q:focus-visible,
+.rp-card a:focus-visible,
+.rp-header a:focus-visible {
+  outline: 3px solid var(--rp-accent);
+  outline-offset: 3px;
+}
+
+.rp-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0 0 18px;
+}
+
+.rp-center .rp-actions { align-items: stretch; }
+
+@media (min-width: 750px) {
+  .rp-actions { flex-direction: row; flex-wrap: wrap; }
+  .rp-center .rp-actions { justify-content: center; }
+  .rp-btn { width: auto; }
+}
+
+/* The line directly under the primary CTA that removes the last objection. */
+.rp-reassure {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--rp-muted);
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+}
+
+.rp-center .rp-reassure { justify-content: center; }
+
+.rp-reassure span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.rp-reassure svg { color: var(--rp-accent); }
+
+/* Cards ------------------------------------------------------------------- */
+
+.rp-card {
+  background: var(--rp-surface);
+  border: 1px solid var(--rp-line);
+  border-radius: var(--rp-radius);
+  padding: 22px;
+}
+
+.rp-grid { display: grid; gap: 14px; }
+
+@media (min-width: 750px) {
+  .rp-grid--3 { grid-template-columns: repeat(3, 1fr); }
+  .rp-grid--4 { grid-template-columns: repeat(4, 1fr); }
+  .rp-grid--2 { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* --------------------------------------------------------------------------
+   Announcement marquee
+   -------------------------------------------------------------------------- */
+
+.rp-ticker {
+  background: #000;
+  color: #fff;
+  font-family: var(--rp-font);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 11px 0;
+  overflow: hidden;
+  border-bottom: 1px solid var(--rp-line);
+  display: flex;
+  white-space: nowrap;
+}
+
+.rp-ticker__track {
+  display: flex;
+  width: max-content;
+  animation: rp-scroll var(--rp-ticker-speed, 26s) linear infinite;
+}
+
+.rp-ticker:hover .rp-ticker__track { animation-play-state: paused; }
+
+.rp-ticker__group { display: flex; gap: 44px; padding-right: 44px; }
+.rp-ticker__item { display: flex; align-items: center; gap: 7px; }
+
+@keyframes rp-scroll {
+  to { transform: translateX(-50%); }
+}
+
+/* --------------------------------------------------------------------------
+   Header
+   -------------------------------------------------------------------------- */
+
+.rp-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: rgba(5, 5, 5, 0.92);
+  backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid var(--rp-line);
+  font-family: var(--rp-font);
+}
+
+.rp-header__bar {
+  max-width: var(--rp-max);
+  margin: 0 auto;
+  padding: 10px var(--rp-gutter);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.rp-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 900;
+  font-size: 0.9375rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--rp-text);
+  text-decoration: none;
+  margin-right: auto;
+  min-height: 44px;
+
+  /* A long store name must not push the join button into wrapping — the bar
+     is three fixed-purpose controls and the name is the one that can give. */
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rp-header__brand span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 750px) {
+  .rp-header__brand { font-size: 1.0625rem; }
+}
+
+.rp-header__brand img { display: block; height: auto; }
+
+.rp-header__nav {
+  display: none;
+  gap: 24px;
+  margin-right: 8px;
+}
+
+.rp-header__nav a {
+  color: var(--rp-muted);
+  text-decoration: none;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.rp-header__nav a:hover { color: var(--rp-text); }
+
+@media (min-width: 990px) {
+  .rp-header__nav { display: flex; }
+}
+
+.rp-header .rp-btn {
+  min-height: 44px;
+  padding: 10px 14px;
+  font-size: 0.8125rem;
+  border-radius: 8px;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.rp-header__cart {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--rp-text);
+  text-decoration: none;
+}
+
+.rp-header__count {
+  position: absolute;
+  top: 4px;
+  right: 2px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--rp-accent);
+  color: var(--rp-accent-ink);
+  font-size: 11px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  padding: 0 5px;
+}
+
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+
+.rp-hero {
+  position: relative;
+  background: var(--rp-bg);
+  color: var(--rp-text);
+  font-family: var(--rp-font);
+  padding: 44px 0 40px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Soft accent wash behind the headline. Pure decoration, no layout cost. */
+.rp-hero::before {
+  content: '';
+  position: absolute;
+  inset: -30% 30% 55% -20%;
+  background: radial-gradient(closest-side, rgba(57, 255, 20, 0.13), transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.rp-hero__inner {
+  max-width: var(--rp-max);
+  margin: 0 auto;
+  padding: 0 var(--rp-gutter);
+  display: grid;
+  gap: 34px;
+}
+
+@media (min-width: 990px) {
+  .rp-hero { padding: 72px 0 64px; }
+  .rp-hero__inner { grid-template-columns: 1.05fr 0.95fr; align-items: center; gap: 48px; }
+}
+
+/* The "came from TikTok?" welcome line. Makes the landing feel continuous
+   with the video the visitor just watched instead of like a cold storefront. */
+.rp-hero__welcome {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--rp-muted);
+  margin: 0 0 14px;
+}
+
+.rp-hero__welcome strong { color: var(--rp-text); }
+
+.rp-hero__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--rp-line);
+  padding-top: 22px;
+}
+
+.rp-hero__stats dt,
+.rp-hero__stat-value {
+  font-size: clamp(1.25rem, 5vw, 1.75rem);
+  font-weight: 900;
+  color: var(--rp-accent);
+  line-height: 1;
+  margin: 0 0 6px;
+}
+
+.rp-hero__stat-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rp-muted);
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Phone mock — the visual proof next to the headline. */
+.rp-hero__media {
+  position: relative;
+  border: 1px solid var(--rp-line);
+  border-radius: 20px;
+  background: var(--rp-surface);
+  padding: 12px;
+  max-width: 380px;
+  width: 100%;
+  justify-self: center;
+}
+
+.rp-hero__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.rp-hero__media-empty {
+  aspect-ratio: 9 / 16;
+  border-radius: 12px;
+  background:
+    linear-gradient(160deg, rgba(57, 255, 20, 0.1), transparent 55%),
+    var(--rp-surface-2);
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 8px;
+  padding: 24px;
+  color: var(--rp-muted);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.rp-hero__media-empty strong {
+  display: block;
+  color: var(--rp-text);
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   Steps ("how it works")
+   -------------------------------------------------------------------------- */
+
+.rp-steps { counter-reset: rp-step; }
+
+.rp-step { position: relative; padding-left: 56px; }
+
+.rp-step::before {
+  counter-increment: rp-step;
+  content: counter(rp-step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(57, 255, 20, 0.12);
+  border: 1px solid rgba(57, 255, 20, 0.4);
+  color: var(--rp-accent);
+  font-weight: 900;
+  font-size: 1rem;
+  display: grid;
+  place-items: center;
+}
+
+/* --------------------------------------------------------------------------
+   Value cards
+   -------------------------------------------------------------------------- */
+
+.rp-value__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(57, 255, 20, 0.12);
+  color: var(--rp-accent);
+  display: grid;
+  place-items: center;
+  margin: 0 0 14px;
+}
+
+/* --------------------------------------------------------------------------
+   Ladder (free vs paid)
+   -------------------------------------------------------------------------- */
+
+/* stretch, not start: the two cards hold different numbers of lines, and
+   .rp-tier__list takes the slack so both join buttons land on the same
+   baseline instead of one floating halfway up the row. */
+.rp-ladder { display: grid; gap: 16px; align-items: stretch; }
+
+@media (min-width: 750px) {
+  .rp-ladder { grid-template-columns: 1fr 1fr; gap: 20px; }
+}
+
+.rp-tier {
+  background: var(--rp-surface);
+  border: 1px solid var(--rp-line);
+  border-radius: var(--rp-radius);
+  padding: 26px 22px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.rp-tier--paid {
+  border-color: rgba(57, 255, 20, 0.45);
+  background: linear-gradient(180deg, rgba(57, 255, 20, 0.06), var(--rp-surface) 55%);
+}
+
+.rp-tier__tag {
+  align-self: flex-start;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 999px;
+  margin: 0 0 14px;
+  background: var(--rp-surface-2);
+  color: var(--rp-muted);
+  border: 1px solid var(--rp-line);
+}
+
+.rp-tier--paid .rp-tier__tag {
+  background: var(--rp-accent);
+  color: var(--rp-accent-ink);
+  border-color: var(--rp-accent);
+}
+
+.rp-tier__price {
+  font-size: 2.25rem;
+  font-weight: 900;
+  line-height: 1;
+  margin: 0 0 6px;
+}
+
+/* Its own line. Inline, a two-part note ("was £79.99 · one-off, lifetime")
+   wraps under the price digits and pulls the card's rhythm apart. */
+.rp-tier__price small {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--rp-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.35;
+}
+
+.rp-tier__list {
+  list-style: none;
+  margin: 18px 0 24px;
+  padding: 0;
+  display: grid;
+  gap: 11px;
+  flex: 1 1 auto;
+}
+
+.rp-tier__list li {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 10px;
+  align-items: start;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--rp-text);
+}
+
+.rp-tier__list li[data-state='no'] { color: var(--rp-muted); }
+.rp-tier__list svg { margin-top: 2px; }
+.rp-tier__list li[data-state='yes'] svg { color: var(--rp-accent); }
+.rp-tier__list li[data-state='no'] svg { color: #5a5a5a; }
+
+/* --------------------------------------------------------------------------
+   Product grid
+   -------------------------------------------------------------------------- */
+
+.rp-products { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+@media (min-width: 750px) { .rp-products { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
+@media (min-width: 1100px) { .rp-products { grid-template-columns: repeat(4, 1fr); } }
+
+.rp-product {
+  position: relative;
+  background: var(--rp-surface);
+  border: 1px solid var(--rp-line);
+  border-radius: var(--rp-radius);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.rp-product__badge {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 2;
+  background: var(--rp-danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.rp-product__media {
+  display: block;
+  border-radius: var(--rp-radius-sm);
+  overflow: hidden;
+  background: var(--rp-surface-2);
+  aspect-ratio: 1 / 1;
+}
+
+.rp-product__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.rp-product:hover .rp-product__media img { transform: scale(1.04); }
+
+.rp-product__title {
+  font-size: 0.875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1.25;
+  margin: 12px 0 8px;
+  color: var(--rp-text);
+}
+
+.rp-product__title a { color: inherit; text-decoration: none; }
+
+/* On a finger, the title is the natural thing to tap to read more. It is an
+   inline link, so WCAG 2.2 does not require 44px of it, but a one-line title
+   otherwise lands at about 17px — worth the padding either way. */
+@media (pointer: coarse) {
+  .rp-product__title a {
+    display: inline-block;
+    padding: 5px 0;
+  }
+}
+
+.rp-product__price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 12px;
+  flex: 1 1 auto;
+}
+
+.rp-product__now { font-size: 1.125rem; font-weight: 900; color: var(--rp-text); }
+.rp-product__was { font-size: 0.8125rem; color: #7b7b7b; text-decoration: line-through; }
+
+.rp-product .rp-btn {
+  min-height: 48px;
+  padding: 12px 14px;
+  font-size: 0.8125rem;
+  width: 100%;
+}
+
+.rp-product__details {
+  background: none;
+  border: 0;
+  color: var(--rp-muted);
+  font-family: var(--rp-font);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 12px 4px;
+  min-height: 44px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.rp-product__details:hover { color: var(--rp-text); }
+
+/* Details dialog --------------------------------------------------------- */
+
+.rp-modal {
+  border: 1px solid var(--rp-line);
+  border-radius: var(--rp-radius);
+  background: var(--rp-surface);
+  color: var(--rp-text);
+  font-family: var(--rp-font);
+  max-width: 560px;
+  width: calc(100vw - 32px);
+  padding: 0;
+}
+
+.rp-modal::backdrop { background: rgba(0, 0, 0, 0.75); }
+
+.rp-modal__inner { padding: 26px 22px 24px; }
+
+.rp-modal__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: none;
+  color: var(--rp-muted);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.rp-modal__close:hover { color: var(--rp-text); }
+.rp-modal__body { color: var(--rp-muted); line-height: 1.6; font-size: 0.9375rem; }
+.rp-modal__body p { margin: 0 0 12px; }
+
+/* --------------------------------------------------------------------------
+   Proof marquee
+   -------------------------------------------------------------------------- */
+
+.rp-proof { overflow: hidden; }
+
+.rp-proof__track {
+  display: flex;
+  width: max-content;
+  animation: rp-scroll var(--rp-proof-speed, 45s) linear infinite;
+}
+
+.rp-proof:hover .rp-proof__track { animation-play-state: paused; }
+.rp-proof__group { display: flex; gap: 16px; padding-right: 16px; }
+
+.rp-proof__img {
+  height: 300px;
+  width: auto;
+  border-radius: 12px;
+  border: 1px solid var(--rp-line);
+  object-fit: cover;
+  display: block;
+}
+
+@media (min-width: 750px) { .rp-proof__img { height: 380px; } }
+
+/* --------------------------------------------------------------------------
+   FAQ
+   -------------------------------------------------------------------------- */
+
+.rp-faq__item {
+  border-bottom: 1px solid var(--rp-line);
+}
+
+.rp-faq__q {
+  width: 100%;
+  background: none;
+  border: 0;
+  color: var(--rp-text);
+  font-family: var(--rp-font);
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: left;
+  padding: 20px 40px 20px 0;
+  min-height: 60px;
+  cursor: pointer;
+  position: relative;
+  line-height: 1.35;
+}
+
+.rp-faq__icon {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--rp-accent);
+  transition: transform 0.2s ease;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.rp-faq__item.is-open .rp-faq__icon { transform: translateY(-50%) rotate(180deg); }
+
+.rp-faq__a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.28s ease;
+}
+
+.rp-faq__a-inner {
+  padding: 0 0 22px;
+  color: var(--rp-muted);
+  line-height: 1.6;
+  font-size: 0.9375rem;
+}
+
+/* --------------------------------------------------------------------------
+   Sticky mobile CTA
+   -------------------------------------------------------------------------- */
+
+.rp-sticky {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  background: rgba(5, 5, 5, 0.96);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--rp-line);
+  padding: 10px var(--rp-gutter) calc(10px + env(safe-area-inset-bottom));
+  font-family: var(--rp-font);
+  transform: translateY(110%);
+  transition: transform 0.25s ease;
+}
+
+.rp-sticky.is-visible { transform: translateY(0); }
+
+.rp-sticky__inner {
+  max-width: var(--rp-max);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* The bar is a persistent overlay, so every pixel of it is page the visitor
+   cannot read. Both lines are clamped to one line each and the subtitle is
+   dropped entirely on narrow phones — the button is the point of the bar. */
+.rp-sticky__copy {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--rp-muted);
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rp-sticky__copy strong {
+  display: block;
+  color: var(--rp-text);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 419px) {
+  .rp-sticky__copy { font-size: 0; }
+  .rp-sticky__copy strong { font-size: 0.8125rem; }
+}
+
+.rp-sticky .rp-btn {
+  min-height: 46px;
+  padding: 12px 18px;
+  font-size: 0.875rem;
+  flex: 0 0 auto;
+}
+
+@media (min-width: 750px) {
+  .rp-sticky__copy { font-size: 0.875rem; }
+}
+
+body { padding-bottom: var(--rp-stickybar); }
+
+/* --------------------------------------------------------------------------
+   Motion
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .rp-ticker__track,
+  .rp-proof__track { animation: none; }
+
+  /* With the animation off the duplicated group would just sit there as dead
+     repeated content, so the marquee falls back to a normal scrollable row. */
+  .rp-ticker,
+  .rp-proof { overflow-x: auto; }
+
+  .rp-ticker__group + .rp-ticker__group,
+  .rp-proof__group + .rp-proof__group { display: none; }
+
+  .rp-faq__a { transition: none; }
+  .rp-sticky { transition: none; }
+  .rp-product__media img { transition: none; }
+}

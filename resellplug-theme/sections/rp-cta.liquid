@@ -1,0 +1,72 @@
+{%- comment -%}
+  Closing call to action.
+
+  The last screen of the page should be the join button and nothing else
+  competing with it. The old page ended on "Don't trust it? Click here for
+  proof", which sent people off-site to a vouches channel with no way back —
+  the proof link stays, but as the secondary action.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+
+<div class="rp-section" id="{{ section.settings.anchor | default: 'join-now' | handle }}">
+  <div class="rp-wrap rp-wrap--narrow rp-center">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="rp-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+
+    <h2 class="rp-h2">{{ section.settings.heading | escape }}</h2>
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="rp-lede">{{ section.settings.subheading | escape }}</p>
+    {%- endif -%}
+
+    <div class="rp-actions">
+      {% render 'rp-group-button', label: section.settings.cta_label, source: 'footer-cta' %}
+
+      {%- assign proof = section.settings.secondary_link | default: settings.rp_vouches_url -%}
+      {%- if section.settings.secondary_label != blank and proof != blank -%}
+        <a class="rp-btn rp-btn--ghost" href="{{ proof }}" target="_blank" rel="noopener">
+          {{ section.settings.secondary_label | escape }}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <p class="rp-reassure">
+      <span>{% render 'rp-icon', icon: 'check', size: 14 %}{{ section.settings.reassure | escape }}</span>
+    </p>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "RP · Final CTA",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Last thing" },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The free group is one tap away"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Sub-heading",
+      "default": "You don't have to buy anything today. Come in, read what's already been posted, and decide from there."
+    },
+    { "type": "text", "id": "cta_label", "label": "Button text" },
+    { "type": "text", "id": "secondary_label", "label": "Second button text", "default": "Don't trust it? Read the vouches" },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Second button link",
+      "info": "Leave blank to use the vouches link from Theme settings."
+    },
+    { "type": "text", "id": "reassure", "label": "Line under the buttons", "default": "Free forever · leave whenever you like" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "join-now" }
+  ],
+  "presets": [{ "name": "RP · Final CTA" }]
+}
+{% endschema %}

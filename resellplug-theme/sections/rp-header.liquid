@@ -1,0 +1,138 @@
+{%- comment -%}
+  Header.
+
+  Dawn's own header section was switched off on this store, which left the
+  site with no way to reach the cart, no way back to the homepage from a
+  product page, and no persistent join button. This is a slim replacement:
+  brand, a few in-page links, the join button, and a working cart icon.
+
+  The cart anchor keeps Dawn's id="cart-icon-bubble" and its inner markup,
+  because cart-drawer.js binds the drawer open to that id and replaces the
+  contents of that element with the rendered cart-icon-bubble section after
+  every add to cart. Rename either and the count silently stops updating.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+
+<style>
+  /* Dawn paints the count bubble for a light header; restate it for this one. */
+  .rp-header .cart-count-bubble {
+    position: absolute;
+    top: 4px;
+    right: 2px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--rp-accent);
+    color: var(--rp-accent-ink);
+    font-family: var(--rp-font);
+    font-size: 11px;
+    font-weight: 800;
+    display: grid;
+    place-items: center;
+    line-height: 1;
+  }
+
+  .rp-header .svg-wrapper svg {
+    width: 22px;
+    height: 22px;
+  }
+</style>
+
+<header class="rp-header">
+  <div class="rp-header__bar">
+    <a class="rp-header__brand" href="{{ routes.root_url }}">
+      {%- if section.settings.logo != blank -%}
+        {%- comment -%}
+          A filter cannot be applied to a filter argument, so the two derived
+          strings are built first.
+        {%- endcomment -%}
+        {%- liquid
+          assign logo_px = section.settings.logo_width | append: 'px'
+          assign logo_style = 'width:' | append: logo_px
+        -%}
+        {{
+          section.settings.logo
+          | image_url: width: 300
+          | image_tag: loading: 'eager', widths: '90, 180, 300', sizes: logo_px, style: logo_style, alt: shop.name
+        }}
+      {%- else -%}
+        <span>{{ section.settings.brand_text | default: shop.name | escape }}</span>
+      {%- endif -%}
+    </a>
+
+    {%- if section.blocks.size > 0 -%}
+      <nav class="rp-header__nav" aria-label="Main">
+        {%- for block in section.blocks -%}
+          <a href="{{ block.settings.link }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</a>
+        {%- endfor -%}
+      </nav>
+    {%- endif -%}
+
+    {%- if section.settings.show_cta -%}
+      {% render 'rp-group-button', label: section.settings.cta_label, source: 'header' %}
+    {%- endif -%}
+
+    {%- if section.settings.show_cart -%}
+      <a class="rp-header__cart" id="cart-icon-bubble" href="{{ routes.cart_url }}">
+        {% if cart == empty %}
+          <span class="svg-wrapper">{{ 'icon-cart-empty.svg' | inline_asset_content }}</span>
+        {% else %}
+          <span class="svg-wrapper">{{ 'icon-cart.svg' | inline_asset_content }}</span>
+        {% endif %}
+        <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
+        {%- if cart != empty -%}
+          <div class="cart-count-bubble">
+            {%- if cart.item_count < 100 -%}
+              <span aria-hidden="true">{{ cart.item_count }}</span>
+            {%- endif -%}
+            <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+          </div>
+        {%- endif -%}
+      </a>
+    {%- endif -%}
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "RP · Header",
+  "tag": "div",
+  "max_blocks": 5,
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo" },
+    { "type": "range", "id": "logo_width", "label": "Logo width", "min": 60, "max": 220, "step": 10, "unit": "px", "default": 120 },
+    {
+      "type": "text",
+      "id": "brand_text",
+      "label": "Wordmark",
+      "info": "Used when no logo is set. Defaults to the store name."
+    },
+    { "type": "checkbox", "id": "show_cta", "label": "Show join button", "default": true },
+    { "type": "text", "id": "cta_label", "label": "Join button text", "default": "Join free" },
+    { "type": "checkbox", "id": "show_cart", "label": "Show cart", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RP · Header",
+      "blocks": [
+        { "type": "link", "settings": { "label": "Free group", "link": "/#free" } },
+        { "type": "link", "settings": { "label": "Suppliers", "link": "/#suppliers" } },
+        { "type": "link", "settings": { "label": "Proof", "link": "/#proof" } },
+        { "type": "link", "settings": { "label": "FAQ", "link": "/#faq" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

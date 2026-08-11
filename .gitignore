@@ -4,3 +4,6 @@ node_modules/
 
 # packaged theme artifact (rebuild with the zip command in README)
 zazacheats-theme.zip
+
+# packaged Shopify theme artifact (rebuild with resellplug-theme/tools/package.sh)
+resellplug-theme.zip

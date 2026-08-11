@@ -1,0 +1,154 @@
+{%- comment -%}
+  Supplier / product grid.
+
+  Rebuilt from the custom-liquid version that used to sit in the header
+  group. Three things changed that matter:
+
+  1. The collection is a setting instead of a hardcoded handle, so renaming
+     the collection in Shopify no longer empties the homepage silently.
+  2. Titles link to the real product page. The old grid only ever opened a
+     JavaScript modal, which meant no product page was reachable, nothing was
+     indexable, and nothing could be linked from a TikTok bio.
+  3. "Buy now" no longer forces return_to=/checkout. Skipping the cart on the
+     first tap is what loses the second item on a two-product order; the cart
+     drawer opens instead and keeps the basket alive.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'rp.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign collection = collections[section.settings.collection]
+  assign products = collection.products
+-%}
+
+<div class="rp-section" id="{{ section.settings.anchor | default: 'suppliers' | handle }}">
+  <div class="rp-wrap">
+    <div class="rp-center">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rp-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 class="rp-h2">{{ section.settings.heading | escape }}</h2>
+      {%- if section.settings.subheading != blank -%}
+        <p class="rp-lede">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- if products.size > 0 -%}
+      <div class="rp-products">
+        {%- for product in products limit: section.settings.limit -%}
+          {%- liquid
+            assign variant = product.selected_or_first_available_variant
+            assign form_id = 'rp-buy-' | append: section.id | append: '-' | append: product.id
+            assign dialog_id = 'rp-dialog-' | append: section.id | append: '-' | append: product.id
+            assign media_alt = product.featured_image.alt | default: product.title
+          -%}
+          <div class="rp-product">
+            {%- if product.compare_at_price > product.price -%}
+              <span class="rp-product__badge">Sale</span>
+            {%- endif -%}
+
+            <a class="rp-product__media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+              {%- if product.featured_image -%}
+                {{
+                  product.featured_image
+                  | image_url: width: 600
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '200, 300, 400, 600',
+                    sizes: '(min-width: 1100px) 270px, (min-width: 750px) 32vw, 46vw',
+                    alt: media_alt
+                }}
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </a>
+
+            <h3 class="rp-product__title">
+              <a href="{{ product.url }}">{{ product.title | escape }}</a>
+            </h3>
+
+            <p class="rp-product__price">
+              <span class="rp-product__now">{{ variant.price | money }}</span>
+              {%- if product.compare_at_price > product.price -%}
+                <span class="rp-product__was">{{ product.compare_at_price | money }}</span>
+              {%- endif -%}
+            </p>
+
+            {%- form 'product', product, id: form_id -%}
+              <input type="hidden" name="id" value="{{ variant.id }}">
+              <button
+                type="submit"
+                class="rp-btn rp-btn--primary"
+                {% unless variant.available %}disabled{% endunless %}
+              >
+                {% if variant.available %}{{ section.settings.button_label | escape }}{% else %}Sold out{% endif %}
+              </button>
+            {%- endform -%}
+
+            {%- if section.settings.show_details and product.description != blank -%}
+              <button
+                type="button"
+                class="rp-product__details"
+                data-rp-dialog-open="{{ dialog_id }}"
+              >
+                Details
+              </button>
+
+              <dialog class="rp-modal" id="{{ dialog_id }}">
+                <button type="button" class="rp-modal__close" data-rp-dialog-close aria-label="Close">&times;</button>
+                <div class="rp-modal__inner">
+                  <h3 class="rp-h3">{{ product.title | escape }}</h3>
+                  <div class="rp-modal__body">{{ product.description }}</div>
+                  <a class="rp-btn rp-btn--ghost rp-btn--block" href="{{ product.url }}" style="margin-top:14px">
+                    Open full page
+                  </a>
+                </div>
+              </dialog>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p class="rp-body rp-center">
+        No products yet. Pick a collection for this section in the theme editor
+        {%- if section.settings.collection != blank %} — nothing was found under the handle
+          <code>{{ section.settings.collection | escape }}</code>{% endif -%}.
+      </p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "RP · Products",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Paid access" },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Lifetime access to premium suppliers"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Sub-heading",
+      "default": "Every supplier here has been ordered from and checked personally. Buy once, keep the contacts forever."
+    },
+    {
+      "type": "text",
+      "id": "collection",
+      "label": "Collection handle",
+      "default": "homepage",
+      "info": "The part of the collection's URL after /collections/."
+    },
+    { "type": "range", "id": "limit", "label": "Products to show", "min": 4, "max": 24, "step": 2, "default": 12 },
+    { "type": "text", "id": "button_label", "label": "Button text", "default": "Get access" },
+    { "type": "checkbox", "id": "show_details", "label": "Show \"Details\" link", "default": true },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "suppliers" }
+  ],
+  "presets": [{ "name": "RP · Products" }]
+}
+{% endschema %}

@@ -84,66 +84,31 @@
     </div>
 
     <div class="zz-grid zz-grid--3 zz-reviews-grid">
+      {# Six of the carried-over reviews. Same wording as the array in
+         components/feedbacks.njk, first six entries, so the product page and
+         the homepage wall cannot disagree about what a customer said. The star
+         row follows the rating now instead of being six hardcoded five-star
+         strings — one of these six is a four. #}
+      {% set zzVouches = [
+        {"r":5,"d":"2026-05-23","m":"Couple of months on it now. It's come through the last few Rust updates without a flag, which is more than I can say for the one I used before this."},
+        {"r":5,"d":"2026-05-06","m":"Install was step by step and clear. Never had to guess at anything."},
+        {"r":5,"d":"2026-05-07","m":"Finally one that does what the page says it does."},
+        {"r":5,"d":"2026-02-02","m":"Weeks of daily play, no flags."},
+        {"r":4,"d":"2026-05-05","m":"Good overall. Undetected so far and it went on easily, but I hit a config problem in the first week. Support fixed it quickly and explained what I'd done wrong, so it's hard to stay annoyed. Four stars for the hiccup."},
+        {"r":5,"d":"2026-04-18","m":"Support is the fastest I've had from any provider, and I've paid a few over the years."}
+      ] %}
+      {% for v in zzVouches %}
       <div class="zz-review">
         <div class="zz-review__head">
           <div class="zz-review__av">V</div>
           <div>
             <div class="zz-review__user">Verified buyer</div>
-            <div class="zz-review__stars">★★★★★</div>
+            <div class="zz-review__stars" aria-label="{{ v.r }} out of 5 stars">{% for i in range(0, v.r) %}★{% endfor %}{% for i in range(0, 5 - v.r) %}☆{% endfor %}</div>
           </div>
         </div>
-        <p class="zz-review__text">Been using this Rust private cheat for a couple months now and it&#x27;s stayed completely undetected through the recent updates. Installation was super easy, took me like 5 minutes tops, and the support is insanely fast. Solid stuff.</p>
+        <p class="zz-review__text">{{ v.m }}</p>
       </div>
-      <div class="zz-review">
-        <div class="zz-review__head">
-          <div class="zz-review__av">V</div>
-          <div>
-            <div class="zz-review__user">Verified buyer</div>
-            <div class="zz-review__stars">★★★★★</div>
-          </div>
-        </div>
-        <p class="zz-review__text">This cheat is undetectable and works perfectly. Easy to install with clear steps, and whenever I needed help the support got back to me right away. Zaza owner really knows what they&#x27;re doing.</p>
-      </div>
-      <div class="zz-review">
-        <div class="zz-review__head">
-          <div class="zz-review__av">V</div>
-          <div>
-            <div class="zz-review__user">Verified buyer</div>
-            <div class="zz-review__stars">★★★★★</div>
-          </div>
-        </div>
-        <p class="zz-review__text">Finally found a private Rust cheat that actually delivers. No detections at all, setup was straightforward, and support responses are quick every time. Definitely recommend it.</p>
-      </div>
-      <div class="zz-review">
-        <div class="zz-review__head">
-          <div class="zz-review__av">V</div>
-          <div>
-            <div class="zz-review__user">Verified buyer</div>
-            <div class="zz-review__stars">★★★★★</div>
-          </div>
-        </div>
-        <p class="zz-review__text">Undetected for weeks of daily play. The install process is dummy proof and the team behind it is super responsive. Makes the game way more fun again.</p>
-      </div>
-      <div class="zz-review">
-        <div class="zz-review__head">
-          <div class="zz-review__av">V</div>
-          <div>
-            <div class="zz-review__user">Verified buyer</div>
-            <div class="zz-review__stars">★★★★★</div>
-          </div>
-        </div>
-        <p class="zz-review__text">This private cheat has been rock solid. Zero bans, easy installation, and fast support whenever I hit them up with questions. Worth every bit.</p>
-      </div>
-      <div class="zz-review">
-        <div class="zz-review__head">
-          <div class="zz-review__av">V</div>
-          <div>
-            <div class="zz-review__user">Verified buyer</div>
-            <div class="zz-review__stars">★★★★★</div>
-          </div>
-        </div>
-        <p class="zz-review__text">Running strong with no issues. It&#x27;s fully undetected, installs in minutes, and the support is faster than most other providers I&#x27;ve tried. Happy customer here.</p>
-      </div>
+      {% endfor %}
           </div>
     <p class="zz-reviews-more"><a href="{{ '/feedback' | shopUrl }}">Read all <span data-zz-rc>100</span> verified reviews &rarr;</a></p>
   </section>

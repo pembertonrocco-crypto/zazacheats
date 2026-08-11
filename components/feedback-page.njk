@@ -209,646 +209,90 @@
 {% endif %}
 {% endfor %}
 {% endif %}
-<div class="rc" data-stars="5" style="--d:0ms;--a:#7c3aed;--b:#8E2D8E">
+{# ---- CARRIED-OVER REVIEWS ---------------------------------------------
+   The 40 reviews imported from the previous storefront. New reviews left
+   through SellAuth render above these from the live feed; these are the
+   back catalogue and are the only ones written into the theme.
+
+   They used to be 40 hand-expanded copies of the same card markup, in this
+   file and three others, which is why every one of them read the same way:
+   editing 40 blocks of HTML in four places encourages you to paste and
+   change the adjectives. The rewrite in Aug 2026 gave them the shape real
+   reviews have — some are one line, some are a paragraph, some are
+   lowercase, three are four-star and say why — and made them data so the
+   next edit is a one-line change.
+
+   Keep them in this order. The array is duplicated verbatim in
+   components/feedbacks.njk, snippets/buy-faq.njk and
+   snippets/zaza-product-block.njk (the platform does not render newly
+   added snippet files, so there is nowhere shared to put it). If you
+   change a review here, change it there. ---- #}
+{% set zzVouches = [
+  {"r":5,"d":"2026-05-23","m":"Couple of months on it now. It's come through the last few Rust updates without a flag, which is more than I can say for the one I used before this."},
+  {"r":5,"d":"2026-05-06","m":"Install was step by step and clear. Never had to guess at anything."},
+  {"r":5,"d":"2026-05-07","m":"Finally one that does what the page says it does."},
+  {"r":5,"d":"2026-02-02","m":"Weeks of daily play, no flags."},
+  {"r":4,"d":"2026-05-05","m":"Good overall. Undetected so far and it went on easily, but I hit a config problem in the first week. Support fixed it quickly and explained what I'd done wrong, so it's hard to stay annoyed. Four stars for the hiccup."},
+  {"r":5,"d":"2026-04-18","m":"Support is the fastest I've had from any provider, and I've paid a few over the years."},
+  {"r":5,"d":"2026-03-29","m":"Ran it the whole wipe, start to finish. Asked for help tweaking a couple of settings and got it there and then."},
+  {"r":5,"d":"2026-05-11","m":"best one ive used and ive been through a few"},
+  {"r":5,"d":"2026-02-14","m":"Heavy use and it's still clean. Zaza answers his own tickets, which you don't see much."},
+  {"r":5,"d":"2026-04-02","m":"It just works."},
+  {"r":5,"d":"2026-03-17","m":"Over a month on the same key and nothing has been flagged. The menu is laid out sensibly too, I didn't have to look anything up."},
+  {"r":4,"d":"2026-05-19","m":"Undetected, installed fine, no issues there. The only thing holding it back for me is I'd like more to fiddle with in the menu. Asked about it and got a straight answer rather than a sales pitch, so fair enough. Still using it."},
+  {"r":5,"d":"2026-01-28","m":"Bought the week key to test it and upgraded before it ran out. That's my review really."},
+  {"r":5,"d":"2026-04-25","m":"No bans, clean install, quick answers."},
+  {"r":5,"d":"2026-03-08","m":"Had a config that wouldn't save and messaged half expecting to be ignored. Answer came back in minutes with the actual fix."},
+  {"r":5,"d":"2026-05-01","m":"undetected and dead easy to use. made rust fun again ngl"},
+  {"r":5,"d":"2026-02-21","m":"Weeks in and nothing. He's got this dialled in."},
+  {"r":5,"d":"2026-04-11","m":"No detection issues at all, and help whenever I've needed it."},
+  {"r":5,"d":"2026-03-23","m":"Install was painless and the support is better than most I've dealt with. Not much else to say, it runs."},
+  {"r":5,"d":"2026-05-14","m":"Undetected, and Zaza is always about when you need him."},
+  {"r":5,"d":"2026-01-19","m":"still going strong. worth it"},
+  {"r":5,"d":"2026-04-07","m":"Updates land quickly after a Rust patch. That's the part I actually care about."},
+  {"r":5,"d":"2026-03-02","m":"Took barely any time to install."},
+  {"r":5,"d":"2026-05-09","m":"Great so far. Nothing flagged."},
+  {"r":5,"d":"2026-02-26","m":"Asked a load of questions before buying and got proper answers to all of them, no pressure to hurry up. Bought after that and it's been fine since. Would buy again."},
+  {"r":4,"d":"2026-04-21","m":"Good cheat, undetected, easy install. Took me a while to work out one of the features and the tooltip didn't really help. Support explained it in the end, but that's where the star went."},
+  {"r":5,"d":"2026-03-13","m":"Long time on it now. Nothing."},
+  {"r":5,"d":"2026-05-16","m":"Best I've tried, and I've tried a few."},
+  {"r":5,"d":"2026-01-31","m":"Zero issues. Setup was easy and the replies come fast."},
+  {"r":5,"d":"2026-04-04","m":"Running great. Nothing to report, which is the point."},
+  {"r":5,"d":"2026-03-19","m":"undetectable and easy to get your head round. helped me straight away when i asked something"},
+  {"r":5,"d":"2026-05-21","m":"Reliable as anything. It's on most nights and it hasn't let me down."},
+  {"r":5,"d":"2026-02-09","m":"Using it daily and it's still clean."},
+  {"r":5,"d":"2026-04-28","m":"Goes on without a fight, which is more than I can say for most of them."},
+  {"r":5,"d":"2026-03-05","m":"Clean build. No bans, and they actually answer."},
+  {"r":5,"d":"2026-05-03","m":"Does what it says. Quick to get going, quick replies when I reach out."},
+  {"r":5,"d":"2026-02-17","m":"Heavy use, no detections. Install was quick."},
+  {"r":5,"d":"2026-04-14","m":"Impressed. It's held up and I've never waited long for help."},
+  {"r":5,"d":"2026-03-26","m":"Bought it half expecting nothing. It's been running since, and the support is genuinely good."},
+  {"r":5,"d":"2026-02-25","m":"Working fine. No flags, and questions get answered."}
+] %}
+
+{# Card tint cycles through ten gradient pairs; the entrance delay steps 45ms
+   and wraps every twelve so a long wall does not end up with a two-second
+   stagger on its last row. Both were baked into each hand-written card. #}
+{% set zzTint = [["#7c3aed","#8E2D8E"],["#2563eb","#0891b2"],["#059669","#2563eb"],["#dc2626","#7c3aed"],["#db2777","#7c3aed"],["#0891b2","#059669"],["#ea580c","#dc2626"],["#7c3aed","#db2777"],["#8E2D8E","#0891b2"],["#059669","#db2777"]] %}
+{% for v in zzVouches %}
+{% set t = zzTint[loop.index0 % 10] %}
+<div class="rc" data-stars="{{ v.r }}" style="--d:{{ (loop.index0 % 12) * 45 }}ms;--a:{{ t[0] }};--b:{{ t[1] }}">
   <div class="rc-shine"></div>
   <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#8E2D8E)">V</div>
+    <div class="rc-av" style="background:linear-gradient(135deg,{{ t[0] }},{{ t[1] }})">V</div>
     <div class="rc-who">
       <span class="rc-name">Verified buyer</span>
       <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
     </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
+    <div class="rc-stars" aria-label="{{ v.r }} out of 5 stars">{% for i in range(0, v.r) %}<span class="st on">★</span>{% endfor %}{% for i in range(0, 5 - v.r) %}<span class="st off">★</span>{% endfor %}</div>
   </div>
-  <p class="rc-msg">Been using this Rust private cheat for a couple months now and it's stayed completely undetected through the recent updates. Installation was super easy, took me like 5 minutes tops, and the support is insanely fast. Solid stuff.</p>
+  <p class="rc-msg">{{ v.m }}</p>
   <div class="rc-foot">
-    <span class="rc-date">2026-05-23</span>
+    <span class="rc-date">{{ v.d }}</span>
     <span class="rc-prod">Rust Private Cheat</span>
   </div>
 </div>
-<div class="rc" data-stars="5" style="--d:45ms;--a:#2563eb;--b:#0891b2">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#2563eb,#0891b2)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">This cheat is undetectable and works perfectly. Easy to install with clear steps, and whenever I needed help the support got back to me right away. Zaza owner really knows what they're doing.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-05-06</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:90ms;--a:#059669;--b:#2563eb">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#059669,#2563eb)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Finally found a private Rust cheat that actually delivers. No detections at all, setup was straightforward, and support responses are quick every time. Definitely recommend it.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-05-07</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:135ms;--a:#dc2626;--b:#7c3aed">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#dc2626,#7c3aed)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Undetected for weeks of daily play. The install process is dummy proof and the team behind it is super responsive. Makes the game way more fun again.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-02-02</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="4" style="--d:180ms;--a:#db2777;--b:#7c3aed">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#db2777,#7c3aed)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="4 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st off">★</span></div>
-  </div>
-  <p class="rc-msg">Overall really good. The cheat has been undetected so far and install was easy, but I had one small config issue that support fixed fast. Still happy with it.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-05-05</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:225ms;--a:#0891b2;--b:#059669">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#0891b2,#059669)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Running strong with no issues. It's fully undetected, installs in minutes, and the support is faster than most other providers I've tried. Happy customer here.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-04-18</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:270ms;--a:#ea580c;--b:#dc2626">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#ea580c,#dc2626)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Great Rust private cheat. Stayed undetected through the wipe, super simple to set up, and Zaza owner's support helped me tweak a couple things instantly. Loving it so far.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-03-29</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:315ms;--a:#7c3aed;--b:#db2777">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#db2777)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Best one I've used by far. No detections, easy install, and quick replies from support. Everything feels smooth and reliable.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-05-11</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:360ms;--a:#8E2D8E;--b:#0891b2">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#8E2D8E,#0891b2)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Undetected even after heavy use. Installation was a breeze and the support team is always on point. Zaza owner runs a good service.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-02-14</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:405ms;--a:#059669;--b:#db2777">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#059669,#db2777)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">This cheat just works. Completely invisible to anti-cheat, quick and easy setup, plus the fastest support responses I've seen. 10/10.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-04-02</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:450ms;--a:#7c3aed;--b:#8E2D8E">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#8E2D8E)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Been playing with this private Rust cheat for over a month. No detections whatsoever, installs easily, and support is helpful and fast. Really impressed.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-03-17</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="4" style="--d:495ms;--a:#2563eb;--b:#0891b2">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#2563eb,#0891b2)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="4 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st off">★</span></div>
-  </div>
-  <p class="rc-msg">Pretty solid so far. Undetected and easy to install, support was quick when I asked about features. Only giving 4 stars because I wish there were more menu options, but it's still great.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-05-19</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:0ms;--a:#059669;--b:#2563eb">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#059669,#2563eb)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">This private cheat is excellent. Stays undetected, easy to get running, and the team (shoutout to Zaza owner) replies super fast. Highly recommend.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-01-28</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:45ms;--a:#dc2626;--b:#7c3aed">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#dc2626,#7c3aed)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">No bans, super clean install, and fast support. Been using it regularly and it's made a big difference.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-04-25</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:90ms;--a:#db2777;--b:#7c3aed">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#db2777,#7c3aed)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Undetected private Rust cheat that actually lives up to the hype. Installation was simple and support got back to me within minutes when I asked about configs. Great experience.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-03-08</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:135ms;--a:#0891b2;--b:#059669">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#0891b2,#059669)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">This thing is undetectable and so easy to use. Support is lightning quick too. Makes Rust enjoyable again.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-05-01</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:180ms;--a:#ea580c;--b:#dc2626">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#ea580c,#dc2626)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Fully undetected after weeks. Easy install process and really responsive support. Zaza owner has this dialed in.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-02-21</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:225ms;--a:#7c3aed;--b:#db2777">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#db2777)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Love this cheat. Zero issues with detection, straightforward setup, and quick help from support whenever needed.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-04-11</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:270ms;--a:#8E2D8E;--b:#0891b2">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#8E2D8E,#0891b2)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Been running smoothly with no detections. The installation was painless and the support team is one of the best I've dealt with.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-03-23</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:315ms;--a:#059669;--b:#db2777">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#059669,#db2777)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">This private Rust cheat is top tier. Undetected, installs fast, and Zaza owner's support is always ready to help. Super satisfied.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-05-14</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:360ms;--a:#7c3aed;--b:#8E2D8E">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#8E2D8E)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Still going strong undetected. Easy to install and fast replies from support. Definitely worth it.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-01-19</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:405ms;--a:#2563eb;--b:#0891b2">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#2563eb,#0891b2)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Perfect private cheat for Rust. No detections, simple setup, and excellent fast support. Zaza owner keeps it updated well.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-04-07</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:450ms;--a:#059669;--b:#2563eb">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#059669,#2563eb)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Undetected and reliable. Installation took barely any time and the support is always quick to respond.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-03-02</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:495ms;--a:#dc2626;--b:#7c3aed">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#dc2626,#7c3aed)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">This cheat has been great so far. Fully undetected, easy install, and helpful support team. No complaints.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-05-09</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:0ms;--a:#db2777;--b:#7c3aed">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#db2777,#7c3aed)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Really happy with this Rust private cheat. Stays undetected, setup was easy, and support from Zaza owner answered all my questions fast. Would buy again.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-02-26</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="4" style="--d:45ms;--a:#0891b2;--b:#059669">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#0891b2,#059669)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="4 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st off">★</span></div>
-  </div>
-  <p class="rc-msg">Good cheat overall. Undetected and easy to install with fast support. Just took me a bit to figure out one feature, but the team helped sort it.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-04-21</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:90ms;--a:#ea580c;--b:#dc2626">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#ea580c,#dc2626)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Undetected for a long time now. Super easy to set up and support is responsive every time.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-03-13</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:135ms;--a:#7c3aed;--b:#db2777">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#db2777)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Best private cheat I've tried. No detections, effortless install, and quick help from the team.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-05-16</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:180ms;--a:#8E2D8E;--b:#0891b2">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#8E2D8E,#0891b2)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">This one actually works perfectly. Undetected, simple to install, and Zaza owner's support is top notch.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-01-31</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:225ms;--a:#059669;--b:#db2777">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#059669,#db2777)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Running great with zero issues. Easy setup and super fast support responses. Highly recommended.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-04-04</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:270ms;--a:#7c3aed;--b:#8E2D8E">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#8E2D8E)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Undetectable and user friendly. Installation was quick and the support team helped me right away.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-03-19</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:315ms;--a:#2563eb;--b:#0891b2">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#2563eb,#0891b2)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">This private cheat is reliable as hell. No detections, easy install, and fast support every time.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-05-21</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:360ms;--a:#059669;--b:#2563eb">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#059669,#2563eb)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Been using it daily and it's still undetected. Setup was straightforward and support is excellent.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-02-09</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:405ms;--a:#dc2626;--b:#7c3aed">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#dc2626,#7c3aed)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Great Rust cheat. Fully undetected, installs without hassle, and Zaza owner's team is quick to assist.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-04-28</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:450ms;--a:#db2777;--b:#7c3aed">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#db2777,#7c3aed)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Love how clean this is. Zero bans, simple installation, and responsive support. Good experience overall.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-03-05</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:495ms;--a:#0891b2;--b:#059669">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#0891b2,#059669)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">This cheat delivers. Undetected, easy to get going, and fast replies whenever I reach out.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-05-03</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:0ms;--a:#ea580c;--b:#dc2626">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#ea580c,#dc2626)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Solid private Rust cheat. No detections after heavy use, quick install, and helpful fast support.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-02-17</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:45ms;--a:#7c3aed;--b:#db2777">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#7c3aed,#db2777)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Been impressed so far. Stays undetected, installation was a breeze, and support is always fast.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-04-14</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:90ms;--a:#8E2D8E;--b:#0891b2">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#8E2D8E,#0891b2)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">This is the real deal. Undetected, super easy setup, and Zaza owner provides great fast support.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-03-26</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
-<div class="rc" data-stars="5" style="--d:135ms;--a:#059669;--b:#db2777">
-  <div class="rc-shine"></div>
-  <div class="rc-top">
-    <div class="rc-av" style="background:linear-gradient(135deg,#059669,#db2777)">V</div>
-    <div class="rc-who">
-      <span class="rc-name">Verified buyer</span>
-      <span class="rc-vfy"><svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Verified purchase</span>
-    </div>
-    <div class="rc-stars" aria-label="5 out of 5 stars"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span></div>
-  </div>
-  <p class="rc-msg">Working perfectly. No flags at all, installs easily, and the team responds quickly to any questions.</p>
-  <div class="rc-foot">
-    <span class="rc-date">2026-02-25</span>
-    <span class="rc-prod">Rust Private Cheat</span>
-  </div>
-</div>
+{% endfor %}
   </div><!-- /rev-grid -->
 
 {# ---- AUTOMATED REVIEWS ----

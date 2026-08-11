@@ -693,6 +693,20 @@
 </script>
 
 <style>
+/* The two summary rows below the subtotal are toggled with the `hidden`
+   property from the bundle-discount script. That did nothing: they also carry
+   Bootstrap's .d-flex, which is `display:flex !important`, and !important in
+   an author stylesheet beats the UA's plain `[hidden]{display:none}`. So on
+   every cart, including an empty one, the panel showed a "🎁 Bundle discount
+   (applies at checkout)" line with no amount next to it and a "You pay" line
+   with no total — the two rows a buyer looks at hardest before paying, blank.
+
+   Scoped to these two ids rather than a blanket [hidden] override, because a
+   global one would silently change how every other d-* element on the page
+   behaves. */
+#zz-cartdisc[hidden],
+#zz-carttotal[hidden]{display:none!important}
+
 .zzup{display:flex;align-items:center;gap:14px;margin-top:14px;padding:14px 16px;border-radius:12px;border:1px solid rgba(var(--cl-accent-rgb,191,64,191),.35);background:linear-gradient(150deg,rgba(16,11,34,.85),rgba(26,12,44,.85))}
 .zzup[hidden]{display:none}
 .zzup__icon{font-size:1.5rem;flex-shrink:0;filter:drop-shadow(0 0 8px rgba(var(--cl-accent-rgb,191,64,191),.7))}

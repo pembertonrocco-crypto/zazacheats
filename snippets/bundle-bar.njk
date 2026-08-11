@@ -58,20 +58,35 @@
   bar.hidden=false;
 
   /* The theme's navbar (.nb-wrapper) is position:fixed !important; top:0
-     !important — it floats over anything above it in the header. While the
+     !important, so it floats over anything above it in the header. While the
      bar is visible we push the nav down by the bar's on-screen height,
      synced to scroll so the nav returns to top:0 exactly as the bar scrolls
      away. Inline style with the 'important' priority outranks the
-     stylesheet's !important. */
-  var nav=document.querySelector('.nb-wrapper');
+     stylesheet's !important.
+
+     The lookup has to be lazy. This script is inline in the body and runs the
+     moment the parser reaches it — and master.njk renders this snippet at
+     line 443, the navbar at 445. So .nb-wrapper did not exist yet, the one
+     querySelector at load returned null, offsetNav() hit its `if(!nav)
+     return`, and the scroll and resize handlers closed over that same null
+     forever. The offset never applied on any page: the fixed navbar sat on
+     top of the bar and covered its bottom 26px, cutting the offer text and
+     the Claim button in half. Resolving the element per call fixes it
+     wherever the snippet ends up in the header. */
+  var nav=null;
+  function theNav(){
+    if(!nav||!nav.isConnected) nav=document.querySelector('.nb-wrapper');
+    return nav;
+  }
   var ticking=false;
 
   function offsetNav(){
-    if(!nav) return;
-    if(bar.hidden){ nav.style.removeProperty('top'); return; }
+    var n=theNav();
+    if(!n) return;
+    if(bar.hidden){ n.style.removeProperty('top'); return; }
     var rect=bar.getBoundingClientRect();
     var visible=Math.max(0,rect.bottom);        // bar bottom relative to viewport
-    nav.style.setProperty('top',visible+'px','important');
+    n.style.setProperty('top',visible+'px','important');
   }
   function onScroll(){
     if(ticking) return;
@@ -79,14 +94,20 @@
     requestAnimationFrame(function(){ offsetNav(); ticking=false; });
   }
 
+  /* Once now in case the navbar is already parsed, and again on
+     DOMContentLoaded for the ordering above, which is the real case. */
   offsetNav();
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',offsetNav);
+  }
   window.addEventListener('scroll',onScroll,{passive:true});
   window.addEventListener('resize',onScroll,{passive:true});
 
   var x=bar.querySelector('[data-zzbar-close]');
   if(x) x.addEventListener('click',function(){
     bar.hidden=true;
-    if(nav) nav.style.removeProperty('top');
+    var n=theNav();
+    if(n) n.style.removeProperty('top');
     try{ localStorage.setItem(KEY,'1'); }catch(e){}
   });
 })();

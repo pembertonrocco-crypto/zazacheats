@@ -60,14 +60,22 @@ context in `tools/fixtures.js`, then asserts:
   render-blocking
 
 `tools/mobile.js` renders the same pages, opens them in headless Chromium at
-375 / 393 / 768px with the real CSS applied, and measures what markup alone
-cannot tell you: horizontal overflow, computed tap-target sizes, and input
-font sizes. It found every touch fix listed below. Two things about it:
+320 / 375 / 393 / 768px with the real CSS applied, and measures what markup
+alone cannot tell you: horizontal overflow, computed tap-target sizes, and
+input font sizes. It found every touch fix listed below. Three things about
+it:
+
+- **320 comes first, and stays.** The suite used to start at 375, so nothing
+  narrower had ever been measured — and 320 is where flex items with the
+  default `min-width: auto` give up. The homepage scrolled sideways there,
+  the buy box clipped its own prices, and the promo bar ellipsised its offer
+  down to two characters, all invisible at 375. Anything that survives 320
+  survives the rest.
 
 - It blocks third-party CSS so runs are offline and deterministic, which
   means anything Bootstrap sizes (`.btn`, `.form-control`) is skipped — those
   are not the theme's to fix.
-- All three viewport profiles run with `hasTouch: true`. A tablet is a coarse
+- All four viewport profiles run with `hasTouch: true`. A tablet is a coarse
   pointer too; gating that on width made the 768px run report every
   `(pointer:coarse)` rule as missing.
 
@@ -80,7 +88,42 @@ platform's filters (`assetUrl`, `shopUrl`, `hex_to_rgb`, …) and its two custom
 tags (`render_component`, `render_snippet`). When the platform adds a filter,
 stub it there or the render fails locally while working fine in production.
 
+Those two tags **forward keyword arguments**, and must keep doing so. They
+did not until Aug 2026: `parseSignature` collected them but `run()` only
+declared `(context, name)`, so `{% render_snippet "status-badge.njk",
+pname=product.name %}` rendered with `pname` undefined. Every snippet that
+takes arguments — `status-badge`, `feedback-card`, `product-form`,
+`zaza-nfa-block`, `pagination` — was being rendered blank or half-empty, so
+the checks were quietly passing over them.
+
 ## Performance decisions
+
+**Nothing animates at 60fps, and nothing animates off-screen.** Three rules,
+all measured rather than guessed:
+
+- The two full-viewport fixed canvases (`snippets/polish.njk`'s atmosphere
+  engine, `snippets/esp-field.njk`) run at **30fps**, paced by a timer that
+  schedules the next `requestAnimationFrame`. Do not "fix" this by taking
+  every rAF and returning early on the odd frames — that still wakes the main
+  thread 60 times a second to decide to do nothing. Both are also
+  desktop-only (`pointer: fine`): their content is deliberately biased to the
+  screen edges to stay off the reading column, and a phone has no margin
+  outside that column.
+- Anything that pauses on tab-hide must **cancel** its rAF, not re-schedule
+  and skip. Re-scheduling holds a callback the browser still has to consider.
+- The animation warden in `assets/script.src.js` pauses **any** CSS animation
+  with infinite iterations while its element is off-screen. It finds them via
+  `document.getAnimations()` plus a bubbling `animationstart` listener, so
+  nothing needs to be registered with it. One-shot entrance animations have
+  finite iterations and are left alone, which is what makes it safe to apply
+  blind. It replaced a hand-written list of six class names that matched none
+  of the fourteen off-screen animations actually running on the homepage.
+
+**No polling for state changes.** The cart summary and the sticky mobile buy
+bar used `setInterval` at 600-700ms to notice that Alpine had re-rendered.
+Both use a `MutationObserver` on the node they care about, coalesced through
+rAF. If you need to react to Alpine, observe it; do not ask it twice a second
+forever.
 
 **Everything above the fold paints immediately.** The scroll-reveal effect
 hides `.components > *` at `opacity:0`, and the first section of every page is

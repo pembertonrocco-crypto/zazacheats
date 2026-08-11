@@ -149,7 +149,25 @@
 
 <script>
 /* First-visit-only reveal. Flag set on open so refreshes never re-nag; errs
-   toward NOT showing if localStorage is unavailable. */
+   toward NOT showing if localStorage is unavailable.
+
+   WHEN it opens changed. It used to fire on a 1100ms timer from page load,
+   which meant a first-time visitor landing on the product page got a
+   full-screen modal and a confetti burst over the buy box before they had
+   read the product name, let alone the price. The one thing they came for
+   was behind a dialog about a different thing.
+
+   It now waits for a signal that the visitor has actually looked at the
+   offer first:
+     · they scroll past the buy box (they have seen the price and moved on), or
+     · desktop only: the cursor leaves via the top edge, after a fair dwell.
+   Whichever comes first, once per visitor.
+
+   Explicit requests are unchanged and still open straight away: ?bundle=1,
+   which is how the sitewide bundle bar links in. Someone who just clicked
+   "FREE NFA BUNDLE" is asking for it, so they get it immediately, and they
+   are now the only ones who get the confetti. Landing on a product page is
+   not a request for confetti. */
 (function(){
   var pop=document.getElementById('zz-bundle-popup');
   if(!pop) return;
@@ -211,15 +229,50 @@
     }catch(e){}
   }
 
-  setTimeout(function(){
+  var opened=false;
+  function open(celebrate){
+    if(opened) return;
+    opened=true;
     /* A storage failure must not swallow a popup the visitor explicitly asked
        for; it only suppresses the unprompted first-visit reveal. */
     try{ localStorage.setItem(KEY,'1'); }catch(e){ if(!forced) return; }
     pop.hidden=false;
-    confetti();
+    if(celebrate) confetti();
     document.addEventListener('keydown',onKey);
     var x=pop.querySelector('.zzp__x'); if(x) x.focus();
-  }, forced ? 250 : 1100);
+  }
+
+  if(forced){
+    setTimeout(function(){ open(true); }, 250);
+  } else {
+    /* Trigger 1 — the buy box has scrolled out of the top of the viewport.
+       .pf-form is the variant picker and Buy button; if it is not on the
+       page there is nothing to be polite about, so fall back to a scroll
+       depth that clears any reasonable buy box. */
+    var buy=document.querySelector('.pf-form,.pp-buy,.zz-sticky');
+    var onScroll=function(){
+      var past = buy
+        ? buy.getBoundingClientRect().bottom < 0
+        : (window.pageYOffset||document.documentElement.scrollTop) > window.innerHeight*1.2;
+      if(past){ cleanup(); open(false); }
+    };
+    /* Trigger 2 — desktop exit intent. Same rule the scratch card used:
+       only when leaving through the top edge, and never on a bounce. */
+    var t0=Date.now();
+    var onExit=function(e){
+      if(e.clientY>0||e.relatedTarget) return;
+      if(Date.now()-t0<6000) return;
+      cleanup(); open(false);
+    };
+    function cleanup(){
+      window.removeEventListener('scroll',onScroll);
+      document.removeEventListener('mouseout',onExit);
+    }
+    window.addEventListener('scroll',onScroll,{passive:true});
+    if(window.matchMedia&&window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+      document.addEventListener('mouseout',onExit);
+    }
+  }
 
   Array.prototype.forEach.call(pop.querySelectorAll('[data-zzp-close]'),function(el){
     el.addEventListener('click',close);

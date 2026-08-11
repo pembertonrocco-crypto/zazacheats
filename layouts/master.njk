@@ -454,7 +454,18 @@
       {% if templateName != 'maintenance' %}
         {% render_component "footer" %}
         {% render_snippet "customer-login-modal.njk" %}
-        {% render_snippet "scratch-card-popup.njk" %}
+
+        {# scratch-card-popup.njk is NOT rendered. Its promotion ended on
+           12 July 2026 (ZZ_SC_DEADLINE inside the file), and the popup
+           checks that deadline before opening — so since that date it has
+           shipped ~40KB of HTML, CSS and canvas JS to every visitor on
+           every page in order to decide, every time, not to appear.
+
+           To run the promotion again: set a new ZZ_SC_DEADLINE, make the
+           matching coupon in the SellAuth dashboard with the same expiry,
+           and restore the render_snippet line here. Do not restore it
+           without moving the deadline first, or you ship the weight
+           without the offer. #}
       {% endif %}
     </div>
 

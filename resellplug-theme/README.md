@@ -55,7 +55,24 @@ Someone who has watched one video will not send money, but they will join a
 group — and the group is where the paid tier actually gets sold.
 
 Product and collection pages now end with the FAQ and the free-group CTA, so
-a visitor who is not ready to buy has somewhere to go other than back.
+a visitor who is not ready to buy has somewhere to go other than back. So do
+the cart and the 404 page — both were dead ends.
+
+**Link previews.** `og:image` only ever rendered when Shopify had set
+`page_image`, which it does on product, collection and article pages and not
+on the homepage. So the one URL that gets pasted into group chats and TikTok
+bios previewed as a bare line of text while `twitter:card` claimed
+`summary_large_image`. `snippets/meta-tags.liquid` now falls back to
+**Theme settings → Default share image**, and emits `twitter:image` and
+`og:image:alt` alongside it. Upload a 1200×630 image with the store name and
+the free-group offer on it.
+
+**Structured data.** The Organization and WebSite JSON-LD lived in Dawn's
+`header.liquid` — disabled on this store, so neither had been reaching
+Google. Both now render from `rp-header`, and `sameAs` lists the community
+and vouches channels. Dawn's version printed every social setting whether set
+or not, so an untouched store published an array of nulls; this one only
+lists links that exist.
 
 ## Setting it up
 
@@ -138,12 +155,41 @@ needs to override the theme's background any more. Dawn's own sections
 
 ## Checking changes
 
-There is no build step. To sanity-check edits before uploading:
+There is no build step. Two checks, neither of which needs Shopify:
 
 ```bash
-python3 tools/check.py     # JSON, {% schema %} blocks, tag balance, wiring
+python3 tools/check.py      # JSON, {% schema %} blocks, tag balance, wiring
+python3 tools/render.py     # renders every rp-* section through real Liquid
+pip install python-liquid   # the one dependency, for render.py only
 ```
+
+`check.py` is structural: it catches a template naming a section that does
+not exist, or setting an id the section's schema never declares — Shopify
+drops both silently, which is how a page ends up rendering blank.
+
+`render.py` actually evaluates the Liquid against a mock context and asserts
+on the HTML: JSON-LD parses and carries `@context`/`@type`, no `{{ }}` is
+left unrendered, no empty `href`, no `target="_blank"` without `rel`, and
+only the hero emits an `<h1>`. Shopify's filters and tags are stubbed at the
+top of the file — when a section starts using one that isn't there, add it,
+or the render fails locally while working fine in production.
+
+It has already earned its keep. Three things it caught that reading the code
+did not:
+
+- `{% for product in products limit: section.settings.limit %}` — `limit` is
+  a keyword in the `for` tag's own argument list, so a setting named `limit`
+  cannot be read there. Dawn calls its equivalents `products_to_show` and
+  `post_limit` for exactly this reason; so does this theme now.
+- `{% if a != blank and a > b %}` does not guard anything. Liquid evaluates
+  `and`/`or` **right to left**, so the comparison runs first and still gets
+  handed the nil. The sale-badge tests are nested and computed once into an
+  `on_sale` boolean instead.
+- `!= blank` against nil is not consistent between Liquid implementations.
+  Plain truthiness is, and is what those guards use.
 
 The design itself was measured in headless Chromium at 393px and 1280px:
 no horizontal overflow, hero CTA above the fold on a phone, sticky bar 67px
-and publishing its own height so it never covers the footer.
+and publishing its own height so it never covers the footer. That pass found
+the FAQ accordion never opening, a header that wrapped to two lines on a
+phone, and a sticky bar eating 94px.

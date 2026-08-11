@@ -15,6 +15,16 @@
 {%- liquid
   assign paid = section.settings.product
   assign variant = paid.selected_or_first_available_variant
+
+  # Nested rather than "A and B": Liquid evaluates and/or right-to-left, so a
+  # same-line blank guard would still hand nil to the ">". Plain
+  # truthiness, not "!= blank", which is not portable against nil.
+  assign on_sale = false
+  if variant.compare_at_price
+    if variant.compare_at_price > variant.price
+      assign on_sale = true
+    endif
+  endif
 -%}
 
 <div class="rp-section" id="{{ section.settings.anchor | default: 'join' | handle }}">
@@ -68,7 +78,7 @@
           {%- if paid != blank -%}
             {{ variant.price | money }}
             <small>
-              {%- if variant.compare_at_price > variant.price -%}
+              {%- if on_sale -%}
                 was {{ variant.compare_at_price | money }} ·
               {%- endif -%}
               {{ section.settings.paid_price_note | escape }}

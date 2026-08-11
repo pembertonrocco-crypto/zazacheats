@@ -9,6 +9,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 python3 tools/check.py
+python3 tools/render.py
 
 OUT="${1:-../resellplug-theme.zip}"
 rm -f "$OUT"

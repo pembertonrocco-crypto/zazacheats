@@ -20,6 +20,12 @@
 {%- liquid
   assign collection = collections[section.settings.collection]
   assign products = collection.products
+
+  # Held in its own variable because "limit" is a keyword in the for tag's
+  # argument list, so a setting called section.settings.limit cannot be read
+  # there. Dawn names its equivalents products_to_show / post_limit for the
+  # same reason.
+  assign products_to_show = section.settings.products_to_show
 -%}
 
 <div class="rp-section" id="{{ section.settings.anchor | default: 'suppliers' | handle }}">
@@ -36,15 +42,28 @@
 
     {%- if products.size > 0 -%}
       <div class="rp-products">
-        {%- for product in products limit: section.settings.limit -%}
+        {%- for product in products limit: products_to_show -%}
           {%- liquid
             assign variant = product.selected_or_first_available_variant
             assign form_id = 'rp-buy-' | append: section.id | append: '-' | append: product.id
             assign dialog_id = 'rp-dialog-' | append: section.id | append: '-' | append: product.id
             assign media_alt = product.featured_image.alt | default: product.title
+
+            # compare_at_price is nil on any product that is not discounted,
+            # and Liquid evaluates "A and B" right-to-left — so guarding the
+            # comparison with "!= blank and ..." on the same line does not
+            # stop nil reaching the ">". Nested, once, into a boolean — and the
+            # outer test is plain truthiness, because "!= blank" against nil is
+            # not consistent between Liquid implementations.
+            assign on_sale = false
+            if product.compare_at_price
+              if product.compare_at_price > product.price
+                assign on_sale = true
+              endif
+            endif
           -%}
           <div class="rp-product">
-            {%- if product.compare_at_price > product.price -%}
+            {%- if on_sale -%}
               <span class="rp-product__badge">Sale</span>
             {%- endif -%}
 
@@ -70,7 +89,7 @@
 
             <p class="rp-product__price">
               <span class="rp-product__now">{{ variant.price | money }}</span>
-              {%- if product.compare_at_price > product.price -%}
+              {%- if on_sale -%}
                 <span class="rp-product__was">{{ product.compare_at_price | money }}</span>
               {%- endif -%}
             </p>
@@ -144,7 +163,7 @@
       "default": "homepage",
       "info": "The part of the collection's URL after /collections/."
     },
-    { "type": "range", "id": "limit", "label": "Products to show", "min": 4, "max": 24, "step": 2, "default": 12 },
+    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 4, "max": 24, "step": 2, "default": 12 },
     { "type": "text", "id": "button_label", "label": "Button text", "default": "Get access" },
     { "type": "checkbox", "id": "show_details", "label": "Show \"Details\" link", "default": true },
     { "type": "text", "id": "anchor", "label": "Anchor id", "default": "suppliers" }

@@ -365,10 +365,10 @@
         "heading": "Lifetime access to premium suppliers",
         "subheading": "Every supplier here has been ordered from and checked personally. Buy once, keep the contacts forever.",
         "collection": "homepage",
-        "limit": 12,
         "button_label": "Get access",
         "show_details": true,
-        "anchor": "suppliers"
+        "anchor": "suppliers",
+        "products_to_show": 12
       }
     },
     "rp_faq": {

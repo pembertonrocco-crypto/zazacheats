@@ -63,6 +63,19 @@
         "id": "rp_stat_suppliers",
         "label": "Suppliers in the vault",
         "default": "20+"
+      },
+      {
+        "type": "header",
+        "content": "Link preview"
+      },
+      {
+        "type": "paragraph",
+        "content": "Shown when someone pastes your link into Telegram, WhatsApp, Discord or a TikTok bio. Use a 1200x630 image with the store name and the free-group offer on it."
+      },
+      {
+        "type": "image_picker",
+        "id": "rp_share_image",
+        "label": "Default share image"
       }
     ]
   },

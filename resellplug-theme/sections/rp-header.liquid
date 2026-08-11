@@ -95,6 +95,68 @@
   </div>
 </header>
 
+{%- comment -%}
+  Organization and WebSite structured data.
+
+  Both used to live in Dawn's header.liquid, which is disabled on this store —
+  so neither had been reaching Google. They belong on whichever section is
+  actually rendering the site header, which is now this one.
+
+  Dawn's version printed every social setting into sameAs whether it was set
+  or not, so an untouched store published an array of nulls. This one only
+  lists links that exist, and includes the community and vouches channels:
+  they are where the brand actually lives, more than any of the stock social
+  fields.
+{%- endcomment -%}
+
+{%- liquid
+  # Liquid has no array literal, so the candidates are joined into one string
+  # and split back out. Blank settings collapse to empty entries and are
+  # dropped, then the whole array goes through | json — building the JSON by
+  # hand with comma bookkeeping is where trailing-comma bugs come from.
+  assign candidates = settings.rp_tiktok_url | append: ',' | append: settings.rp_group_url | append: ',' | append: settings.rp_vouches_url | append: ',' | append: settings.social_tiktok_link | append: ',' | append: settings.social_instagram_link | append: ',' | append: settings.social_youtube_link | append: ',' | append: settings.social_twitter_link | append: ',' | append: settings.social_facebook_link
+
+  assign candidate_list = candidates | split: ','
+  assign kept = ''
+  for link in candidate_list
+    assign trimmed = link | strip
+    if trimmed != blank
+      assign kept = kept | append: ',' | append: trimmed
+    endif
+  endfor
+  assign same_as = kept | remove_first: ',' | split: ','
+-%}
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": {{ shop.name | json }},
+    {% if settings.logo %}
+      "logo": {{ settings.logo | image_url: width: 500 | prepend: "https:" | json }},
+    {% endif %}
+    "sameAs": {{ same_as | json }},
+    "url": {{ request.origin | json }}
+  }
+</script>
+
+{%- if request.page_type == 'index' -%}
+  {%- assign search_target = request.origin | append: routes.search_url | append: '?q={search_term_string}' -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": {{ shop.name | json }},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {{ search_target | json }},
+        "query-input": "required name=search_term_string"
+      },
+      "url": {{ request.origin | json }}
+    }
+  </script>
+{%- endif -%}
+
 {% schema %}
 {
   "name": "RP · Header",

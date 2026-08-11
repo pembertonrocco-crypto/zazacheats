@@ -1,1 +1,25 @@
-{"sections":{"main":{"type":"main-404","settings":{}}},"order":["main"]}
+{
+  "sections": {
+    "main": {
+      "type": "main-404",
+      "settings": {}
+    },
+    "rp_cta": {
+      "type": "rp-cta",
+      "settings": {
+        "eyebrow": "Wrong turn",
+        "heading": "That page has gone — the free group hasn't",
+        "subheading": "Free supplier drops, straight answers, and every member's order posted as it lands.",
+        "cta_label": "",
+        "secondary_label": "Read the vouches",
+        "secondary_link": "",
+        "reassure": "Free forever · leave whenever you like",
+        "anchor": "join-now"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "rp_cta"
+  ]
+}

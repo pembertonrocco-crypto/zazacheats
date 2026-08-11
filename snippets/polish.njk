@@ -22,7 +22,7 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
 
 /* skip link — invisible until focused, first tab stop on every page */
 .zz-skip{position:fixed;top:-60px;left:16px;z-index:2000;padding:10px 18px;border-radius:10px;
-  background:#BF40BF;color:#fff;font-weight:800;font-size:.85rem;text-decoration:none;
+  background:#BF40BF;color:#fff;font-weight:700;font-size:.85rem;text-decoration:none;
   transition:top .25s ease;box-shadow:0 12px 30px -8px rgba(0,0,0,.8)}
 /* :focus as well as :focus-visible — a skip link is reached by Tab, but
    programmatic focus (and some AT) sets :focus only, and a skip link that
@@ -48,7 +48,7 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
    gets consistent tactile feedback ===== */
 @media (prefers-reduced-motion: no-preference){
   a[class*="btn"],button[class*="btn"],a[class*="cta"],button[class*="cta"],
-  a[class*="__go"],.pf-discord,.scs-discord,.scs-status,a[class*="link"]{
+  a[class*="__go"],.scs-discord,.scs-status,a[class*="link"]{
     transition-property:transform,box-shadow,background,border-color,color,opacity;
     transition-duration:.22s;transition-timing-function:cubic-bezier(.16,1,.3,1)}
   a[class*="btn"]:active,button[class*="btn"]:active,
@@ -683,6 +683,15 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
 <script>
 (function(){
   var KEY='zzRev8', TTL=43200000; /* 12h */
+  /* Separate, session-scoped: "this visit has already asked /feedback". */
+  var SKEY='zzRev8seen';
+
+  function sessionChecked(){
+    try{ return !!sessionStorage.getItem(SKEY); }catch(e){ return false; }
+  }
+  function markChecked(){
+    try{ sessionStorage.setItem(SKEY,'1'); }catch(e){}
+  }
 
   function store(t,a){
     var v=JSON.stringify({t:t,a:a,at:Date.now()});
@@ -777,7 +786,10 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
   /* ---- on /feedback we ARE the source: publish for every other page ---- */
   if(document.querySelector('meta[name="zz-review-total"]')){
     var st=totalOf(document),sa=avgOf(document);
-    if(st){store(st,sa);schema(st,sa);}   /* its own counts are rendered server-side */
+    /* Reading it here is better than any iframe could manage, so this counts
+       as the visit's check — the next page will paint this number with no
+       hidden load at all. */
+    if(st){store(st,sa);schema(st,sa);markChecked();}   /* rendered server-side */
     return;
   }
 
@@ -789,25 +801,54 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
   });
   if(!hasUi&&!hasSchema)return;
 
-  /* The server-rendered seed is a FLOOR. feedback-page.njk warns that SellAuth
-     sometimes hands /feedback a data-starved render, which would compute a
-     total well below the truth — and a 12h sitewide cache would then spread it
-     everywhere. Review totals only grow, so anything under the seed is a bad
-     render: ignore it and keep what the page already says. */
+  /* The seed is a sanity floor, not an exact one.
+
+     feedback-page.njk warns that SellAuth sometimes hands /feedback a
+     data-starved render, which computes a total far below the truth — and a
+     sitewide cache would then spread it everywhere. That is the thing worth
+     rejecting.
+
+     It used to reject anything at all below the seed, which quietly made the
+     hand-maintained seed authoritative over the page that actually counts the
+     reviews. Set it one higher than reality — an easy thing to do, since it is
+     typed in by a human reading a dashboard — and every real total is refused
+     forever, freezing the wrong number on every page with no way to recover
+     except editing nine files again.
+
+     A starved render is not marginally low, it is catastrophically low: 12
+     against a real 78 in the case on record. So the floor is proportional.
+     Anything within sight of the seed is believed, and the page that can
+     actually count wins; anything near-empty is discarded. Self-healing in
+     both directions. */
   var seed=0;
   document.querySelectorAll('[data-zz-rc]').forEach(function(el){
     var v=parseInt((el.textContent||'').replace(/\D/g,''),10);
     if(v>seed)seed=v;
   });
-  function trust(t){ return t&&t>=seed; }
+  function trust(t){ return !!t && t>=Math.floor(seed*0.6); }
 
-  /* paint the cache first (no flash for anyone who's been here in the last
-     12h), then revalidate only once it's actually stale */
+  /* Stale-while-revalidate.
+
+     Paint whatever we already know instantly so there is no flash, and then
+     go and check anyway. The old code returned right here whenever the cached
+     total was under 12 hours old — so a phone that synced once in the morning
+     kept repainting that morning's number for the rest of the day while new
+     reviews landed, and the only way to see the real figure was to open
+     /feedback itself. That is the "mobile still says 90" report, and it was
+     the cache doing exactly what it was told.
+
+     The throttle is now per *visit* rather than per 12 hours. One hidden load
+     of /feedback per session, torn down the moment the meta tag is readable,
+     is cheap; being a day behind on the one number the page uses as social
+     proof is not. Repeat page views inside the same visit still come straight
+     off the cache and cost nothing.
+
+     Note markChecked() is only called once a refresh actually succeeds, so a
+     failed or challenged load retries on the next page view instead of
+     writing the visit off. */
   var c=recall();
-  if(c&&trust(c.t)){
-    apply(c.t,c.a||0);
-    if((Date.now()-c.at)<TTL)return;
-  }
+  if(c&&trust(c.t)) apply(c.t,c.a||0);
+  if(sessionChecked() && c && trust(c.t) && (Date.now()-c.at)<TTL) return;
 
   function refresh(){
     var f=document.createElement('iframe'),done=false;
@@ -823,7 +864,14 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
       try{f.contentWindow&&f.contentWindow.stop();}catch(e){}
       try{f.remove();}catch(e){}
     }
-    var iv=setInterval(function(){
+    /* Read the frame. Called both by the poll and by the frame's own load
+       event, because the poll is not reliable on its own: on desktop the
+       120ms interval starves behind the ESP canvas and marquee rAF loops
+       (the same saturation documented above, where rIC sat for 18s), and the
+       20s budget could expire before a single tick got through. The load
+       event fires off the frame itself, so it survives a busy parent. */
+    function read(){
+      if(done)return;
       var d;
       try{d=f.contentDocument;}catch(e){finish();return;}   /* navigated off-origin */
       if(!d)return;
@@ -831,19 +879,43 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
       if(!t)return;                                         /* still the challenge page */
       if(!trust(t)){finish();return;}                       /* starved render — keep the seed */
       var a=avgOf(d);
-      apply(t,a);store(t,a);finish();
-    },120);
+      apply(t,a);store(t,a);markChecked();finish();
+    }
+    var iv=setInterval(read,120);
+    f.addEventListener('load',read);
     var to=setTimeout(finish,20000);      /* never cleared — the seeds just stay */
     f.src='{{ "/feedback" | shopUrl }}';
     document.body.appendChild(f);
   }
 
-  /* never compete with the page the visitor actually asked for.
+  /* Never compete with the page the visitor actually asked for — but never
+     be skipped by it either.
+
      (Deliberately a plain timer, not requestIdleCallback — measured on the live
      product page, rIC sat on the callback for 18s behind the marquee/canvas
-     rAF loops even with a 4s timeout. A fixed delay after load is predictable.) */
-  function later(){ setTimeout(refresh,1200); }
+     rAF loops even with a 4s timeout. A fixed delay is predictable.)
+
+     This used to hang solely off `load`. On desktop that is the one event most
+     likely to arrive late or never: the ESP canvas and the CDN import of
+     Locomotive smooth-scroll both run only for fine pointers, and a single
+     stalled subresource pins `load` indefinitely. The seeds then survived
+     forever, which is exactly how the site showed 78 on a desktop while a
+     phone — where the canvas never starts — showed the real 90.
+
+     So: whichever of DOMContentLoaded or load lands first wins, and a hard
+     backstop timer covers the case where neither ever fires. `once` guards the
+     three racing paths down to a single refresh. */
+  var started=false;
+  function later(){
+    if(started)return;started=true;
+    setTimeout(refresh,1200);
+  }
   if(document.readyState==='complete')later();
-  else window.addEventListener('load',later);
+  else {
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',later);
+    else later();
+    window.addEventListener('load',later);
+    setTimeout(later,8000);             /* backstop: load may never come */
+  }
 })();
 </script>

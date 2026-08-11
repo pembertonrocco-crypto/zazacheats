@@ -41,12 +41,11 @@
       A private-only Rust build with instant key delivery, a clean loader, and an actively
       maintained feature set.
     </p>
-    <div class="zz-trust">
-      <div class="zz-trust__item">⚡ INSTANT DELIVERY</div>
-      <div class="zz-trust__item">🛡️ 24H+ DOWNTIME COVERED</div>
-      <div class="zz-trust__item">🟢 DATED STATUS PAGE</div>
-      <div class="zz-trust__item">🔑 LOADER + KEY</div>
-    </div>
+    {# The emoji trust strip that sat here — INSTANT DELIVERY / 24H+ DOWNTIME
+       COVERED / DATED STATUS PAGE / LOADER + KEY — restated the .pf-trust row
+       in the buy box one screen above, in the same shouty caps as the injected
+       .ppx-trust bar that has also gone. This is the features section; it
+       should sell the features, not repeat the checkout reassurance. #}
   </section>
 
   {# ---------- DELIVERY STRIP (compact) ---------- #}
@@ -81,7 +80,7 @@
     <h3 class="zz-h2">What customers say</h3>
     <div class="zz-reviews-stat">
       <span class="zz-reviews-stat__stars" data-zz-rstars>★★★★★</span>
-      <span class="zz-reviews-stat__txt"><span data-zz-rc>78</span> reviews · <span data-zz-ravg>{% if shop.average_rating and shop.average_rating > 0 %}{{ helpers.numbers.formatDecimal(shop.average_rating) }}{% else %}5.0{% endif %}</span> average</span>
+      <span class="zz-reviews-stat__txt"><span data-zz-rc>100</span> reviews · <span data-zz-ravg>{% if shop.average_rating and shop.average_rating > 0 %}{{ helpers.numbers.formatDecimal(shop.average_rating) }}{% else %}5.0{% endif %}</span> average</span>
     </div>
 
     <div class="zz-grid zz-grid--3 zz-reviews-grid">
@@ -146,7 +145,7 @@
         <p class="zz-review__text">Running strong with no issues. It&#x27;s fully undetected, installs in minutes, and the support is faster than most other providers I&#x27;ve tried. Happy customer here.</p>
       </div>
           </div>
-    <p class="zz-reviews-more"><a href="{{ '/feedback' | shopUrl }}">Read all <span data-zz-rc>78</span> verified reviews &rarr;</a></p>
+    <p class="zz-reviews-more"><a href="{{ '/feedback' | shopUrl }}">Read all <span data-zz-rc>100</span> verified reviews &rarr;</a></p>
   </section>
 
   {# ---------- CLOSING CTA ---------- #}
@@ -201,12 +200,12 @@
 @media(min-width:768px){.zz-fl{grid-template-columns:1fr 1fr}}
 .zz-fl__cat{padding:16px 18px;border-radius:14px;border:1px solid rgba(191,64,191,.16);background:rgba(255,255,255,.02)}
 .zz-fl__head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
-.zz-fl__tag{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;font-weight:800;letter-spacing:.12em;padding:4px 9px;border-radius:6px}
+.zz-fl__tag{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.72rem;font-weight:700;letter-spacing:.12em;padding:4px 9px;border-radius:6px}
 .zz-fl__tag--esp{color:#d76bff;background:rgba(191,64,191,.12);border:1px solid rgba(191,64,191,.35)}
 .zz-fl__tag--aim{color:#f87171;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.32)}
 .zz-fl__tag--world{color:#4ade80;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3)}
 .zz-fl__tag--misc{color:#7dd3fc;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.3)}
-.zz-fl__count{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.62rem;letter-spacing:.1em;color:rgba(200,215,240,.5);text-transform:uppercase}
+.zz-fl__count{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.62rem;letter-spacing:.1em;color:rgba(200,215,240,.5);text-transform:uppercase}
 .zz-fl__list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:6px 14px}
 @media(min-width:520px){.zz-fl__list{grid-template-columns:1fr 1fr}}
 .zz-fl__list li{position:relative;padding-left:16px;font-size:.84rem;line-height:1.4;color:rgba(205,218,242,.85)}
@@ -221,6 +220,6 @@
 .zzd .zz-eyebrow{margin-top:2px}
 .zzd .zz-h2{font-size:clamp(1.15rem,2.6vw,1.5rem)}
 .zz-reviews-more{margin:14px 0 0;text-align:center}
-.zz-reviews-more a{font-size:.85rem;font-weight:600;color:#d98ad9;text-decoration:none}
+.zz-reviews-more a{font-size:.85rem;font-weight:500;color:#d98ad9;text-decoration:none}
 .zz-reviews-more a:hover{text-decoration:underline}
 </style>

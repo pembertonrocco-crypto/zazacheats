@@ -75,11 +75,12 @@
 .zzp__x{position:absolute;top:10px;right:12px;width:32px;height:32px;border:none;border-radius:8px;background:rgba(255,255,255,.06);color:rgba(220,230,250,.7);font-size:1.15rem;line-height:1;cursor:pointer;z-index:2;transition:background .15s,color .15s}
 .zzp__x:hover{background:rgba(255,255,255,.14);color:#fff}
 
-.zzp__ribbon{display:inline-flex;align-items:center;gap:8px;margin:0 0 12px;font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;font-weight:700;color:#0a0714;padding:6px 12px;border-radius:99px;background:linear-gradient(90deg,#4ade80,#a3e635);box-shadow:0 4px 18px -6px rgba(74,222,128,.8)}
+.zzp__ribbon{display:inline-flex;align-items:center;gap:8px;margin:0 0 12px;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.62rem;letter-spacing:.18em;font-weight:700;color:#0a0714;padding:6px 12px;border-radius:99px;background:linear-gradient(90deg,#4ade80,#a3e635);box-shadow:0 4px 18px -6px rgba(74,222,128,.8)}
 .zzp__gift{font-size:.9rem;animation:zzp-bounce 2.4s ease-in-out infinite}
 @keyframes zzp-bounce{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-3px) rotate(4deg)}}
 
-.zzp__title{margin:0 0 4px;font-size:1.55rem;line-height:1.15;font-weight:900;color:#fff;letter-spacing:-.015em}
+/* Clash Display tops out at 700 on Fontshare; 900 was synthetic */
+.zzp__title{margin:0 0 4px;font-size:1.55rem;line-height:1.15;font-weight:700;color:#fff;letter-spacing:-.015em}
 .zzp__big{font-size:1.9rem;background:linear-gradient(90deg,#4ade80,#facc15);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 14px rgba(74,222,128,.45))}
 .zzp__sub{margin:0 0 16px;font-size:.82rem;color:rgba(200,215,240,.6)}
 
@@ -94,22 +95,22 @@
 .zzp__b--legend:hover{border-color:rgba(250,204,21,.7)}
 .zzp__b-main{padding:11px 14px;flex:1}
 .zzp__b-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}
-.zzp__b-key{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.12em;font-weight:700;color:#fff}
-.zzp__tag{font-family:'JetBrains Mono',monospace;font-size:.54rem;letter-spacing:.1em;font-weight:700;padding:3px 8px;border-radius:99px}
+.zzp__b-key{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.62rem;letter-spacing:.12em;font-weight:700;color:#fff}
+.zzp__tag{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.54rem;letter-spacing:.1em;font-weight:700;padding:3px 8px;border-radius:99px}
 .zzp__tag--rare{color:#c4b5fd;border:1px solid rgba(124,58,237,.5);background:rgba(124,58,237,.12)}
 .zzp__tag--legend{color:#fde047;border:1px solid rgba(250,204,21,.5);background:rgba(250,204,21,.1);box-shadow:0 0 14px -4px rgba(250,204,21,.6)}
 .zzp__b-what{margin:0 0 3px;font-size:.86rem;color:rgba(235,242,255,.95)}
-.zzp__b-what strong{color:#4ade80;font-weight:800}
+.zzp__b-what strong{color:#4ade80;font-weight:700}
 .zzp__b--legend .zzp__b-what strong{color:#fde047}
-.zzp__chip{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.06em;padding:2px 7px;margin-left:4px;border-radius:6px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(220,230,250,.8);vertical-align:1px}
+.zzp__chip{display:inline-block;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.58rem;letter-spacing:.06em;padding:2px 7px;margin-left:4px;border-radius:6px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(220,230,250,.8);vertical-align:1px}
 .zzp__chip--gold{border-color:rgba(250,204,21,.45);background:rgba(250,204,21,.08);color:#fde047}
-.zzp__val{color:#4ade80;font-weight:800}
-.zzp__worth{display:inline-block;margin-left:5px;font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:800;color:#4ade80;vertical-align:1px}
-.zzp__worth s{color:rgba(200,215,240,.45);font-weight:600;margin-right:3px}
+.zzp__val{color:#4ade80;font-weight:700}
+.zzp__worth{display:inline-block;margin-left:5px;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.62rem;font-weight:700;color:#4ade80;vertical-align:1px}
+.zzp__worth s{color:rgba(200,215,240,.45);font-weight:500;margin-right:3px}
 .zzp__worth--gold{color:#fde047}
 .zzp__b-extra{margin:0;font-size:.7rem;line-height:1.45;color:rgba(200,215,240,.55)}
 .zzp__b[data-zzp-add]{cursor:pointer}
-.zzp__b-add{display:inline-block;margin-top:5px;font-size:.68rem;font-weight:800;color:var(--cl-accent,#BF40BF)}
+.zzp__b-add{display:inline-block;margin-top:5px;font-size:.68rem;font-weight:700;color:var(--cl-accent,#BF40BF)}
 .zzp__b--legend .zzp__b-add{color:#fde047}
 .zzp__b.zzp--done{border-color:rgba(34,197,94,.6)!important;background:rgba(34,197,94,.08)!important}
 .zzp__b.zzp--done .zzp__b-add{color:#4ade80}
@@ -153,9 +154,18 @@
   var pop=document.getElementById('zz-bundle-popup');
   if(!pop) return;
   var KEY='zzb_popup_seen';
+
+  /* ?bundle=1 forces the popup open even for a repeat visitor. The site-wide
+     bundle bar used to deep-link to #zz-bundles, the on-page block that no
+     longer exists; the popup is the offer's only home now, so the bar needs a
+     way back in. Deliberately ignores the seen-flag: someone who just clicked
+     "FREE NFA BUNDLE" is asking for it. */
+  var forced=false;
+  try{ forced=/[?&]bundle=1(&|$)/.test(location.search); }catch(e){}
+
   var seen;
-  try{ seen=localStorage.getItem(KEY); }catch(e){ return; }
-  if(seen) return;
+  try{ seen=localStorage.getItem(KEY); }catch(e){ if(!forced) return; }
+  if(seen && !forced) return;
 
   function close(){
     pop.hidden=true;
@@ -202,12 +212,14 @@
   }
 
   setTimeout(function(){
-    try{ localStorage.setItem(KEY,'1'); }catch(e){ return; }
+    /* A storage failure must not swallow a popup the visitor explicitly asked
+       for; it only suppresses the unprompted first-visit reveal. */
+    try{ localStorage.setItem(KEY,'1'); }catch(e){ if(!forced) return; }
     pop.hidden=false;
     confetti();
     document.addEventListener('keydown',onKey);
     var x=pop.querySelector('.zzp__x'); if(x) x.focus();
-  },1100);
+  }, forced ? 250 : 1100);
 
   Array.prototype.forEach.call(pop.querySelectorAll('[data-zzp-close]'),function(el){
     el.addEventListener('click',close);
@@ -278,9 +290,28 @@
     return false;
   }
 
-  function toBlock(){
+  /* Fallback when the cart add can't complete. This used to scroll to
+     #zz-bundles, the on-page bundle block — which no longer exists, so it
+     would have quietly closed the popup and done nothing at all. Now it lands
+     them on the buy box with the right key already selected, which is the
+     thing the block existed to do. */
+  function toBlock(kind){
     close();
-    var target=document.getElementById('zz-bundles');
+    var variant=null;
+    try{
+      var labels=(kind==='month')?['1 Month Key','1 Month']:['Lifetime Key','Lifetime'];
+      var buttons=document.querySelectorAll('.pf-variant');
+      for(var i=0;i<buttons.length;i++){
+        var text=(buttons[i].textContent||'').trim();
+        for(var j=0;j<labels.length;j++){
+          if(text.indexOf(labels[j])>-1){ variant=buttons[i]; break; }
+        }
+        if(variant) break;
+      }
+    }catch(e){}
+    if(variant) variant.click();
+
+    var target=document.getElementById('zz-buybox');
     if(target) target.scrollIntoView({behavior:'smooth',block:'center'});
   }
 
@@ -291,7 +322,7 @@
       // the confirmation. A brief ✓ beat first so the click feels received.
       setTimeout(function(){ window.location.href='/cart'; },550);
     }else{
-      toBlock();
+      toBlock(kind);
     }
   }
 

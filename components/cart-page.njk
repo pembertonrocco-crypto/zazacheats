@@ -142,7 +142,7 @@
         </div>
         <div class="col-12 col-lg-4">
           <div class="d-flex flex-column gap-4 p-4 border rounded form">
-            <form @submit.prevent="window.location.href='/pay'">
+            <form @submit.prevent="goToPay()">
               <div class="pb-2 border-bottom">
                 <label class="form-label">Your Order</label>
                 <div class="d-flex justify-content-between">
@@ -225,7 +225,7 @@
                 font-size:.72rem;color:rgba(200,215,240,.55)}
               .cart-trust span,.cart-trust a{display:inline-flex;align-items:center;gap:6px}
               .cart-trust svg{opacity:.7}
-              .cart-trust a{color:rgba(192,132,252,.85);text-decoration:none;font-weight:600}
+              .cart-trust a{color:rgba(192,132,252,.85);text-decoration:none;font-weight:500}
               .cart-trust a:hover{color:#e0b3ff;text-decoration:underline}
               .cart-policies{margin:8px 0 0;text-align:center;font-size:.7rem;color:rgba(200,215,240,.68)}
               .cart-policies a{color:rgba(200,215,240,.75);text-decoration:none;border-bottom:1px solid rgba(200,215,240,.25);
@@ -234,9 +234,9 @@
               .cart-code{margin-top:14px;display:flex;align-items:center;gap:10px;padding:10px 12px;
                 border:1px solid rgba(234,179,8,.3);border-radius:12px;background:rgba(234,179,8,.06)}
               .cart-code__txt{flex:1;font-size:.76rem;line-height:1.45;color:rgba(240,230,200,.85)}
-              .cart-code__txt b{color:#fbbf24;font-weight:800;letter-spacing:.04em}
+              .cart-code__txt b{color:#fbbf24;font-weight:700;letter-spacing:.04em}
               .cart-code__copy{flex-shrink:0;padding:.42rem .8rem;border-radius:9px;border:1px solid rgba(234,179,8,.4);
-                background:rgba(234,179,8,.12);color:#fbbf24;font-size:.72rem;font-weight:800;cursor:pointer;
+                background:rgba(234,179,8,.12);color:#fbbf24;font-size:.72rem;font-weight:700;cursor:pointer;
                 transition:background .2s,border-color .2s}
               .cart-code__copy:hover{background:rgba(234,179,8,.22);border-color:rgba(234,179,8,.7)}
               .cart-code__copy.is-done{color:#4ade80;border-color:rgba(34,197,94,.5);background:rgba(34,197,94,.1)}
@@ -247,7 +247,7 @@
               .cart-pair__ico{flex-shrink:0;font-size:1.05rem}
               .cart-pair__txt{flex:1;font-size:.74rem;line-height:1.5;color:rgba(200,215,240,.65)}
               .cart-pair__txt b{color:#fff}
-              .cart-pair__cta{flex-shrink:0;font-size:.76rem;font-weight:800;color:#c084fc}
+              .cart-pair__cta{flex-shrink:0;font-size:.76rem;font-weight:700;color:#c084fc}
               </style>
               <script>
               /* Scratch-code reminder: shows ONLY when this visitor holds a real,
@@ -353,6 +353,56 @@
         } finally {
           this.fullCartLoading = false;
         }
+      },
+
+      {#— Hand /pay the prices we already have before navigating.
+
+          /pay reads `zz_pay_snapshot` from localStorage to paint real line
+          items and a real total on arrival, then refreshes against the cart
+          API. Buy Now has always written it (product-form.njk); the cart
+          never did, so cart buyers landed on the degraded fallback — "2 items
+          in your order", subtotal and total both "—" — until the API round
+          trip returned, and saw no price at all if it failed. Same journey,
+          same information.
+
+          `fullCart` comes straight from SellAuth's /v1/cart response, so
+          nothing here is invented; we only forward what the cart just
+          rendered. Addons stay nested exactly as the API returns them, so the
+          snapshot and the later refresh describe the order identically and no
+          figure moves under the buyer.
+
+          Storage failures must never block a checkout: on private-mode or
+          quota errors we fall through to the navigation and /pay simply
+          hydrates from the API as it does today. —#}
+      goToPay: function () {
+        try {
+          const snapshot = (this.fullCart || []).map((item) => ({
+            product: {
+              id: item.product.id,
+              name: item.product.name,
+              image_urls: item.product.image_urls,
+              image_url: item.product.image_url,
+              currency: item.product.currency,
+            },
+            variant: { name: item.variant.name, price: item.variant.price },
+            quantity: item.quantity,
+            addons: (item.addons || []).map((addon) => ({
+              product: {
+                name: addon.product.name,
+                image_urls: addon.product.image_urls,
+                image_url: addon.product.image_url,
+                currency: addon.product.currency,
+              },
+              variant: { name: addon.variant.name, price: addon.variant.price },
+            })),
+          }));
+          if (snapshot.length > 0) {
+            localStorage.setItem('zz_pay_snapshot', JSON.stringify(snapshot));
+          }
+        } catch (error) {
+          /* no snapshot — /pay falls back to hydrating from the API */
+        }
+        window.location.href = '{{ '/pay' | shopUrl }}';
       },
 
       getAvailableVolumeDiscount: function (index) {
@@ -647,10 +697,10 @@
 .zzup[hidden]{display:none}
 .zzup__icon{font-size:1.5rem;flex-shrink:0;filter:drop-shadow(0 0 8px rgba(var(--cl-accent-rgb,191,64,191),.7))}
 .zzup__body{flex:1;min-width:0}
-.zzup__t{margin:0 0 3px;font-size:.88rem;font-weight:800;color:#fff}
+.zzup__t{margin:0 0 3px;font-size:.88rem;font-weight:700;color:#fff}
 .zzup__d{margin:0;font-size:.76rem;line-height:1.45;color:rgba(200,215,240,.7)}
 .zzup__d strong{color:#4ade80}
-.zzup__btn{flex-shrink:0;border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:.78rem;color:#fff;padding:10px 15px;border-radius:9px;background:linear-gradient(135deg,var(--cl-accent,#BF40BF),#7C3AED);box-shadow:0 6px 20px -8px rgba(var(--cl-accent-rgb,191,64,191),.9);transition:transform .15s ease,filter .15s ease;white-space:nowrap}
+.zzup__btn{flex-shrink:0;border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:.78rem;color:#fff;padding:10px 15px;border-radius:9px;background:linear-gradient(135deg,var(--cl-accent,#BF40BF),#7C3AED);box-shadow:0 6px 20px -8px rgba(var(--cl-accent-rgb,191,64,191),.9);transition:transform .15s ease,filter .15s ease;white-space:nowrap}
 .zzup__btn:hover{transform:translateY(-1px);filter:brightness(1.12)}
 .zzup__btn.zzup--done{background:linear-gradient(135deg,#22c55e,#16a34a)}
 @media (max-width:560px){.zzup{flex-wrap:wrap}.zzup__btn{width:100%}}

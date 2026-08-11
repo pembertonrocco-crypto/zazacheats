@@ -1,6 +1,6 @@
 .section-title,
 .section-title h2 {
-  font-family: 'Satoshi', sans-serif;
+  font-family:var(--zz-sans);
   font-size: clamp(2rem, 3.5vw, 3.25rem);
   font-weight: 700;
   line-height: 1.1;
@@ -18,7 +18,7 @@
 
 .section-subtitle,
 .section-subtitle p {
-  font-family: 'Satoshi', sans-serif;
+  font-family:var(--zz-sans);
   font-size: clamp(0.875rem, 1.2vw, 1rem);
   font-weight: 400;
   line-height: 1.6;
@@ -38,50 +38,54 @@
 /* ===== zz product-block shared styles (extracted from zaza-product-block.njk) ===== */
 .zz{--v:#BF40BF;--b:#7C3AED;--g:#22c55e;--a:#eab308;--r:#ef4444;
   --panel:#0c0e1c;--void:#06070f;--edge:#1b1f3a;--ink:#e7ecff;--mut:rgba(231,236,255,.6);
-  color:var(--ink);font-family:'Satoshi','Inter',system-ui,sans-serif;max-width:1100px;margin:0 auto}
+  color:var(--ink);font-family:var(--zz-sans);max-width:1100px;margin:0 auto}
 .zz *{box-sizing:border-box}
-.zz-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--v);font-size:.8rem;letter-spacing:.18em;margin:0 0 .5rem}
-.zz-h1{font-size:clamp(1.9rem,5vw,3rem);font-weight:800;line-height:1.06;letter-spacing:-.02em;margin:.2rem 0 0}
-.zz-h2{font-size:clamp(1.4rem,3.4vw,2rem);font-weight:800;margin:.2rem 0 0;letter-spacing:-.01em}
-.zz-h3{font-size:1.4rem;font-weight:800;margin:0}
+.zz-eyebrow{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;color:var(--v);font-size:.8rem;letter-spacing:.18em;margin:0 0 .5rem}
+.zz-h1{font-size:clamp(1.9rem,5vw,3rem);font-weight:700;line-height:1.06;letter-spacing:-.02em;margin:.2rem 0 0}
+.zz-h2{font-size:clamp(1.4rem,3.4vw,2rem);font-weight:700;margin:.2rem 0 0;letter-spacing:-.01em}
+.zz-h3{font-size:1.4rem;font-weight:700;margin:0}
 .zz-h4{font-size:1rem;font-weight:700;margin:.6rem 0 .2rem}
 .zz-grad{background:linear-gradient(90deg,var(--v),var(--b));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .zz-lead{color:var(--mut);font-size:1.05rem;line-height:1.7;max-width:42rem;margin:1rem 0 0}
-.zz-p{color:var(--mut);font-size:.9rem;line-height:1.5;margin:0}
+/* max-width in ch caps the wide full-bleed blocks (measured at 98-102
+   characters per line on a desktop, where prose stops being scannable) while
+   leaving the 3-column card grid alone — those columns are already narrower
+   than this, so the cap never engages. Found by tools/desktop.js. */
+.zz-p{color:var(--mut);font-size:.9rem;line-height:1.5;margin:0;max-width:74ch}
 
 .zz-hero{position:relative;overflow:hidden;border:1px solid var(--edge);background:var(--panel);
   border-radius:20px;padding:2.2rem 1.6rem;margin:0 0 1.4rem}
 .zz-hero__glow{position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:36rem;height:18rem;
   background:radial-gradient(circle,rgba(191,64,191,.22),transparent 70%);filter:blur(60px);pointer-events:none}
 .zz-badges{display:flex;flex-wrap:wrap;gap:.5rem;position:relative}
-.zz-chip{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.06em;color:var(--mut);
+.zz-chip{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.7rem;letter-spacing:.06em;color:var(--mut);
   border:1px solid var(--edge);background:var(--void);border-radius:999px;padding:.32rem .7rem;display:inline-flex;align-items:center;gap:.4rem}
 .zz-chip--green{color:var(--g);border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.08)}
 .zz-chip--link{text-decoration:none;cursor:pointer;transition:border-color .2s,background .2s}
 .zz-chip--link:hover{border-color:rgba(34,197,94,.6);background:rgba(34,197,94,.14);color:var(--g)}
 .zz-dot{width:6px;height:6px;border-radius:50%;background:var(--g);animation:zzdp 1.6s ease-in-out infinite}
 @keyframes zzdp{0%,100%{opacity:1}50%{opacity:.4}}
-.zz-trust{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin-top:1.4rem}
-.zz-trust__item{font-family:'JetBrains Mono',monospace;font-size:.68rem;text-align:center;
-  border:1px solid var(--edge);background:rgba(12,14,28,.7);border-radius:10px;padding:.55rem}
+/* .zz-trust / .zz-trust__item removed: the emoji trust strips in
+   zaza-product-block and zaza-nfa-block were the only users, and both were
+   dropped for repeating the buy box's .pf-trust row. */
 
 .zz-block{border:1px solid var(--edge);background:rgba(12,14,28,.45);border-radius:20px;padding:1.8rem 1.6rem;margin:0 0 1.4rem}
 .zz-grid{display:grid;gap:.8rem;margin-top:1.4rem}
 .zz-grid--3{grid-template-columns:repeat(3,1fr)}
 .zz-card{border:1px solid var(--edge);background:var(--void);border-radius:16px;padding:1.4rem}
-.zz-num{font-family:'JetBrains Mono',monospace;color:var(--v);font-size:1.3rem}
+.zz-num{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;color:var(--v);font-size:1.3rem}
 .zz-ico{font-size:1.5rem}
 
 .zz-table-wrap{margin-top:1.4rem;border:1px solid var(--edge);border-radius:16px;overflow:hidden}
 .zz-table{width:100%;border-collapse:collapse;font-size:.88rem}
-.zz-table th{background:var(--panel);text-align:center;padding:.9rem;font-family:'JetBrains Mono',monospace;
+.zz-table th{background:var(--panel);text-align:center;padding:.9rem;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;
   font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--mut)}
 .zz-table th:first-child{text-align:left}
 .zz-th-accent{color:var(--v)!important}
 .zz-table td{padding:.9rem;text-align:center;border-top:1px solid var(--edge);color:var(--mut)}
 .zz-table td:first-child{text-align:left;color:var(--ink)}
 .zz-table tbody tr:nth-child(odd){background:rgba(6,7,15,.4)}
-.zz-good{color:var(--g)!important;font-weight:600}
+.zz-good{color:var(--g)!important;font-weight:500}
 .zz-bad{color:var(--r)!important}
 .zz-mut{color:rgba(231,236,255,.45)!important}
 
@@ -90,12 +94,12 @@
 .zz-reviews-stat{display:inline-flex;align-items:center;gap:10px;margin-top:1rem;padding:.5rem .9rem;
   border:1px solid rgba(234,179,8,.22);background:rgba(234,179,8,.06);border-radius:999px}
 .zz-reviews-stat__stars{color:var(--a);font-size:.9rem;letter-spacing:1px}
-.zz-reviews-stat__txt{font-size:.82rem;color:var(--mut);font-weight:600}
+.zz-reviews-stat__txt{font-size:.82rem;color:var(--mut);font-weight:500}
 .zz-reviews-grid{margin-top:1.4rem}
 .zz-review__head{display:flex;align-items:center;gap:.7rem}
 .zz-review__av{width:36px;height:36px;border-radius:50%;background:rgba(191,64,191,.2);color:var(--v);
   display:grid;place-items:center;font-weight:700}
-.zz-review__user{font-weight:600;font-size:.85rem}
+.zz-review__user{font-weight:500;font-size:.85rem}
 .zz-review__stars{color:var(--a);font-size:.78rem}
 .zz-review__text{color:var(--mut);font-size:.88rem;line-height:1.5;margin:.8rem 0 0}
 
@@ -103,7 +107,7 @@
 .zz-faq__item{border:1px solid var(--edge);background:var(--void);border-radius:12px;overflow:hidden;transition:border-color .25s}
 .zz-faq__item[open]{border-color:rgba(191,64,191,.35)}
 .zz-faq__q{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;list-style:none;
-  padding:1rem 1.2rem;font-weight:600;font-size:.95rem;color:var(--ink);transition:color .2s}
+  padding:1rem 1.2rem;font-weight:500;font-size:.95rem;color:var(--ink);transition:color .2s}
 .zz-faq__q::-webkit-details-marker{display:none}
 .zz-faq__q:hover{color:#fff}
 .zz-faq__plus{position:relative;width:14px;height:14px;flex-shrink:0}
@@ -132,7 +136,7 @@
   animation:zzCtaShine 3.4s ease-in-out infinite;pointer-events:none}
 @keyframes zzCtaShine{0%{left:-60%}55%{left:150%}100%{left:150%}}
 .zz-cta__btn:hover::after{animation-duration:1.1s}
-.zz-cta__meta{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:rgba(231,236,255,.45);margin:.8rem 0 0}
+.zz-cta__meta{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.7rem;color:rgba(231,236,255,.45);margin:.8rem 0 0}
 
 @media (max-width:760px){
   .zz-grid--3{grid-template-columns:1fr}
@@ -166,7 +170,7 @@
    pressure secondary, honest microcopy only. ===== */
 .zznx{display:flex;flex-direction:column;align-items:center;gap:12px;
   margin:38px auto 0;max-width:640px;padding:0 18px;text-align:center;position:relative;z-index:2}
-.zznx__line{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.12em;
+.zznx__line{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.72rem;letter-spacing:.12em;
   text-transform:uppercase;color:rgba(231,236,255,.5)}
 .zznx__line strong{color:rgba(255,255,255,.9);font-weight:700}
 .zznx__row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
@@ -187,7 +191,7 @@
 
 /* products grid under-strip */
 .zzps{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;
-  margin:26px auto 0;font-family:'JetBrains Mono',monospace;font-size:.7rem;
+  margin:26px auto 0;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.7rem;
   letter-spacing:.1em;color:rgba(231,236,255,.55);position:relative;z-index:2}
 .zzps__i{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .zzps__d{width:3px;height:3px;border-radius:50%;background:rgba(var(--cl-accent-rgb,191,64,191),.6)}

@@ -92,7 +92,7 @@
 .zz-sc{--v:#BF40BF;--b:#7C3AED;--g:#22c55e;--a:#eab308;
   --panel:#0c0e1c;--void:#06070f;--edge:#1b1f3a;--ink:#e7ecff;--mut:rgba(231,236,255,.6);
   position:fixed;inset:0;z-index:1090;display:none;align-items:center;justify-content:center;
-  padding:16px;font-family:'Satoshi','Inter',system-ui,sans-serif}
+  padding:16px;font-family:var(--zz-sans)}
 .zz-sc.is-open{display:flex}
 .zz-sc *{box-sizing:border-box}
 
@@ -126,9 +126,9 @@
   border-radius:10px;font-size:20px;line-height:1;cursor:pointer;transition:.2s}
 .zz-sc__x:hover{color:#fff;border-color:rgba(191,64,191,.4);background:rgba(191,64,191,.12)}
 
-.zz-sc__eyebrow{position:relative;font-family:'JetBrains Mono',ui-monospace,monospace;
+.zz-sc__eyebrow{position:relative;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;
   color:var(--v);font-size:.66rem;letter-spacing:.22em;margin:0 0 .5rem}
-.zz-sc__title{position:relative;font-size:1.7rem;font-weight:800;letter-spacing:-.02em;
+.zz-sc__title{position:relative;font-size:1.7rem;font-weight:700;letter-spacing:-.02em;
   line-height:1.1;margin:0;color:var(--ink)}
 .zz-sc__grad{background:linear-gradient(90deg,var(--v),var(--b));
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
@@ -156,13 +156,13 @@
   filter:blur(14px);opacity:0;transition:opacity .6s ease .15s}
 .zz-sc__card.is-revealed .zz-sc__prize-glow{opacity:1}
 
-.zz-sc__prize-tag{position:relative;font-family:'JetBrains Mono',monospace;font-size:.6rem;
+.zz-sc__prize-tag{position:relative;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.6rem;
   letter-spacing:.26em;color:rgba(231,236,255,.65)}
 .zz-sc__prize-amt{position:relative;font-size:4.1rem;font-weight:900;line-height:.95;letter-spacing:-.04em;
   background:linear-gradient(180deg,#ffffff,#f0c8ff 55%,var(--v));
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
   filter:drop-shadow(0 4px 22px rgba(191,64,191,.55))}
-.zz-sc__prize-lbl{position:relative;font-family:'JetBrains Mono',monospace;font-size:.62rem;
+.zz-sc__prize-lbl{position:relative;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.62rem;
   letter-spacing:.3em;color:rgba(231,236,255,.7)}
 
 /* one-time diagonal light sweep on reveal */
@@ -176,7 +176,7 @@
 .zz-sc__card.is-revealed .zz-sc__canvas{opacity:0;transition:opacity .5s ease;pointer-events:none}
 .zz-sc__hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:3;
   display:inline-flex;align-items:center;gap:6px;pointer-events:none;
-  font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.1em;
+  font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.72rem;letter-spacing:.1em;
   color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.6);animation:zzscHint 1.8s ease-in-out infinite}
 .zz-sc__card.is-revealed .zz-sc__hint{display:none}
 @keyframes zzscHint{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-4px)}}
@@ -189,25 +189,25 @@
   border-radius:50%;background:#0a0c1a;transform:translateY(-50%)}
 .zz-sc__perf::before{left:-11px}.zz-sc__perf::after{right:-11px}
 .zz-sc__stub{padding:18px 20px 20px}
-.zz-sc__claim-lead{margin:0 0 .7rem;font-size:.8rem;font-weight:600;color:rgba(231,236,255,.8)}
+.zz-sc__claim-lead{margin:0 0 .7rem;font-size:.8rem;font-weight:500;color:rgba(231,236,255,.8)}
 
 .zz-sc__code{display:flex;align-items:center;justify-content:space-between;gap:0;
   border:1.5px dashed rgba(191,64,191,.55);border-radius:12px;overflow:hidden;
   background:rgba(191,64,191,.08);max-width:280px;margin:0 auto;
   animation:zzscCodePulse 2.4s ease-in-out infinite}
 @keyframes zzscCodePulse{0%,100%{box-shadow:0 0 0 0 rgba(191,64,191,0)}50%{box-shadow:0 0 18px 1px rgba(191,64,191,.3)}}
-.zz-sc__code-val{flex:1;padding:.8rem 1rem;font-family:'JetBrains Mono',monospace;
-  font-size:1.15rem;font-weight:800;letter-spacing:.14em;color:#fff;white-space:nowrap;text-align:left}
+.zz-sc__code-val{flex:1;padding:.8rem 1rem;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;
+  font-size:1.15rem;font-weight:700;letter-spacing:.14em;color:#fff;white-space:nowrap;text-align:left}
 .zz-sc__copy{display:inline-flex;align-items:center;gap:6px;padding:.8rem 1rem;border:0;
   border-left:1.5px dashed rgba(191,64,191,.55);background:rgba(191,64,191,.18);color:#fff;
-  font-family:'JetBrains Mono',monospace;font-size:.74rem;font-weight:700;cursor:pointer;transition:.2s}
+  font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.74rem;font-weight:700;cursor:pointer;transition:.2s}
 .zz-sc__copy:hover{background:rgba(191,64,191,.32)}
 .zz-sc__copy.is-done{color:var(--g);background:rgba(34,197,94,.18)}
 
 .zz-sc__cta{position:relative;display:flex;align-items:center;justify-content:center;gap:9px;
   margin:1rem auto 0;max-width:280px;padding:.95rem 1.5rem;overflow:hidden;
   background:linear-gradient(135deg,var(--v),var(--b));border-radius:13px;color:#fff;
-  font-weight:800;font-size:1rem;text-decoration:none;
+  font-weight:700;font-size:1rem;text-decoration:none;
   box-shadow:0 14px 34px -10px rgba(191,64,191,.75);
   transition:filter .25s,transform .25s,box-shadow .25s}
 .zz-sc__cta:hover{filter:brightness(1.08);transform:translateY(-2px);color:#fff;
@@ -235,10 +235,10 @@
   background:linear-gradient(180deg,rgba(234,179,8,.14),rgba(234,179,8,.05));
   border:1px solid rgba(234,179,8,.28);
   box-shadow:0 6px 16px -8px rgba(234,179,8,.4),inset 0 1px 0 rgba(255,255,255,.06)}
-.zz-sc__tile-num{font-family:'JetBrains Mono',monospace;font-size:1.45rem;font-weight:800;
+.zz-sc__tile-num{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:1.45rem;font-weight:700;
   line-height:1;color:#fff;font-variant-numeric:tabular-nums;
   text-shadow:0 0 14px rgba(234,179,8,.45)}
-.zz-sc__tile-lbl{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.16em;
+.zz-sc__tile-lbl{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.52rem;letter-spacing:.16em;
   color:rgba(242,201,76,.85)}
 .zz-sc__tile--sec .zz-sc__tile-num{animation:zzscTick 1s steps(1) infinite}
 @keyframes zzscTick{0%,100%{opacity:1}50%{opacity:.82}}
@@ -263,15 +263,15 @@
 .zz-sc__urgency{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:10px;
   margin:-6px auto 14px;padding:7px 14px;max-width:fit-content;border-radius:999px;
   border:1px solid rgba(234,179,8,.35);background:linear-gradient(90deg,rgba(234,179,8,.12),rgba(234,179,8,.05));
-  font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.66rem;letter-spacing:.1em;color:#fbbf24;
+  font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.66rem;letter-spacing:.1em;color:#fbbf24;
   animation:zzscUrgIn .5s .15s cubic-bezier(.16,1,.3,1) both}
 @keyframes zzscUrgIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 .zz-sc__urgency-dot{width:7px;height:7px;border-radius:50%;background:#fbbf24;flex-shrink:0;
   box-shadow:0 0 8px rgba(251,191,36,.9);animation:zzscUrgPulse 1.4s ease-in-out infinite}
 @keyframes zzscUrgPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.75)}}
-.zz-sc__urgency-txt b{color:#fff;font-weight:800}
+.zz-sc__urgency-txt b{color:#fff;font-weight:700}
 .zz-sc__urgency-count{padding:2px 8px;border-radius:7px;background:rgba(0,0,0,.35);
-  border:1px solid rgba(234,179,8,.25);color:#fff;font-weight:800;font-variant-numeric:tabular-nums;min-width:88px;text-align:center}
+  border:1px solid rgba(234,179,8,.25);color:#fff;font-weight:700;font-variant-numeric:tabular-nums;min-width:88px;text-align:center}
 .zz-sc__urgency--soon{border-color:rgba(234,88,12,.5);color:#fb923c;
   background:linear-gradient(90deg,rgba(234,88,12,.16),rgba(234,88,12,.06))}
 .zz-sc__urgency--soon .zz-sc__urgency-dot{background:#fb923c;box-shadow:0 0 8px rgba(251,146,60,.9)}
@@ -284,7 +284,7 @@
 /* expiry chip printed on the ticket face */
 .zz-sc__prize-exp{margin-top:7px;padding:3px 10px;border-radius:999px;
   border:1px solid rgba(234,179,8,.35);background:rgba(234,179,8,.1);
-  font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.56rem;letter-spacing:.16em;color:#fbbf24}
+  font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.56rem;letter-spacing:.16em;color:#fbbf24}
 
 /* CTA heartbeat — slow, stronger under 24h */
 .zz-sc__cta{animation:zzscHeart 2.8s ease-in-out infinite}
@@ -476,7 +476,7 @@
       try {
         ctx.save();
         ctx.translate(cw/2,ch/2); ctx.rotate(-0.32);
-        ctx.font='800 20px "JetBrains Mono", ui-monospace, monospace';
+        ctx.font='700 20px ui-monospace, monospace';
         ctx.fillStyle='rgba(255,255,255,0.05)'; ctx.textAlign='center';
         for(var ry=-ch; ry<ch; ry+=32){
           for(var rx=-cw; rx<cw; rx+=128){ ctx.fillText('ZAZA', rx, ry); }

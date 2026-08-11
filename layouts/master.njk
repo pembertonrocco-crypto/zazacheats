@@ -56,6 +56,27 @@
         --cl-border: {{ global.properties.primary_border_color }};
         --cl-border-rgb: {{ global.properties.primary_border_color | hex_to_rgb }};
         --bs-font-sans-serif: '{{ (global.properties.font if global.properties.font else 'Poppins') }}', sans-serif;
+
+        /* ---- type system ----
+           Three roles, defined once. Before this the stacks were written out
+           by hand in ~250 places across 34 files, which is why they had
+           drifted into eight different spellings of the same thing.
+
+           --zz-alt replaces JetBrains Mono. That face was named in 187
+           declarations — every eyebrow, label, badge, price and stat — and was
+           never actually loaded by any link on the page, so all of it fell
+           back to whatever the OS calls "monospace": Courier New on a lot of
+           Windows machines. A storefront whose labels render in Courier does
+           not read as a premium product, and that, far more than the choice of
+           typeface, is what made the site feel generated.
+           The replacement is the same family as the body text, set in small
+           uppercase with wide tracking — how Apple and Rolex set their eyebrow
+           and spec labels. Where the mono was doing real work, holding digits
+           in place so a counter does not jitter as it ticks, tabular-nums does
+           that job properly and without changing the typeface. */
+        --zz-sans: 'Satoshi','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+        --zz-display: 'Clash Display','Satoshi','Inter',system-ui,sans-serif;
+        --zz-alt: 'Satoshi','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
         --cl-snow: {{ (global.properties.snow_color if global.properties.snow_color else '#ffffff') | hex_to_rgb }};
 
         --product-card-image-aspect-ratio: {{ (global.properties.product_card_image_aspect_ratio if global.properties.product_card_image_aspect_ratio else '16/9') }};
@@ -64,6 +85,21 @@
         --blog-card-image-aspect-ratio: {{ (global.properties.blog_card_image_aspect_ratio if global.properties.blog_card_image_aspect_ratio else '16/9') }};
         --product-image-fit: {{ (global.properties.product_image_fit if global.properties.product_image_fit else 'cover') }};
         --group-image-fit: {{ (global.properties.group_image_fit if global.properties.group_image_fit else 'cover') }};
+      }
+
+      /* Anything that does not name a face inherits from here. Without this it
+         inherited Bootstrap's --bs-font-sans-serif, i.e. the dashboard font
+         (Poppins) — so the buy box's labels and variant names were set in
+         Poppins while the headings were Clash Display and the eyebrows were
+         Satoshi. Three unrelated typefaces inside one card is most of what
+         reads as unconsidered. One family for text, one for display, and the
+         dashboard font stays on as a fallback rather than the default. */
+      body {
+        font-family: var(--zz-sans);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        /* the display face is set tight; give body copy room to breathe */
+        letter-spacing: -0.005em;
       }
 
       {% if global.properties.smooth_scroll !== false %}
@@ -92,7 +128,16 @@
 
     {# preconnects for these origins are hoisted to the top of <head> #}
     <link href="https://fonts.googleapis.com/css2?family={{ (global.properties.font if global.properties.font else 'Poppins') | replace(" ", "+") }}:wght@400;500;600;700&display=swap" rel="stylesheet" id="theme-font">
-    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&f[]=clash-display@600,700&display=swap" rel="stylesheet">
+    {# Every weight the stylesheets actually ask for, so the browser never has
+       to fake one. Satoshi was loaded at 400/500/700 only while the theme
+       asked for 800 in 146 places and 600 in 83 — so most of the bold on the
+       site, including the price and the buy button, was synthetic: the browser
+       smearing the 700 wider. Synthetic bold is the single most recognisable
+       "cheap web page" tell, and no amount of restyling survives it.
+       Satoshi ships 300/400/500/700/900 and nothing between, so the CSS is
+       normalised to those five rather than requesting weights that cannot
+       exist. #}
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
     {# non-blocking: every above-the-fold icon (navbar, hero, buy buttons) is inline
        SVG — Font Awesome only decorates labels further down, so it can load async
        without any visible above-fold flash. ~33KB gzip off the critical path. #}
@@ -195,8 +240,8 @@
       /* display type: headings step up to Clash Display */
       h1,h2,.zz-h1,.zz-h2,.hero-title,.af-title,.fbq__title,.dl-title,
       .rev-title,.zs-title,.af-h2,.zz-sc__title{
-        font-family:'Clash Display','Satoshi','Inter',system-ui,sans-serif!important;
-        letter-spacing:-.025em;font-weight:600}
+        font-family:var(--zz-display)!important;
+        letter-spacing:-.025em;font-weight:500}
       h1 b,h1 strong,h2 b,h2 strong{font-weight:700}
       body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
 
@@ -260,12 +305,22 @@
         .rev-sort,.faq-search__input{display:block;line-height:1.2}
 
         /* computed display:inline-block — needs a box to apply height to */
-        .bfq__review-link{min-height:44px;display:inline-flex;align-items:center}
+        /* .pf-addon__btn measured 57x31: it is the add-on's only control and
+           sits mid-purchase, but no fixture rendered an add-on until now, so
+           the mobile suite had never once measured it. */
+        .bfq__review-link,.pf-addon__btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
 
         /* Standalone links with no class of their own, reached via their
-           wrapper. Each is a real CTA, not a link inside a sentence. */
-        .zz-reviews-more a,.cart-trust a,#rev-q{
+           wrapper. Each is a real CTA, not a link inside a sentence.
+           .pf-trust a joined them when the buy box's five trailing blocks
+           merged into one row: Refund policy and Terms had been links inside a
+           sentence in .pf-policies, and became standalone targets. */
+        .zz-reviews-more a,.cart-trust a,.pf-trust a,#rev-q{
           min-height:44px;display:inline-flex;align-items:center}
+        /* "Terms" is 33px of text, and the status link shrinks to its 13px
+           icon for any product without a badge, so both need the width too.
+           Centred, or the short labels sit against the left edge of the box. */
+        .pf-trust a{min-width:44px;justify-content:center}
 
         /* computed display:flex / inline-flex — already centred, just grow */
         .zznx__btn,.zzbb__cta,.zs-card__cta,.tpl__link,.zs-nav__lnk,
@@ -317,7 +372,7 @@
       .zzstatus--p{--sc:234,179,8}
       .zzstatus--d{--sc:239,68,68}
       .zzstatus__chip{position:relative;display:inline-flex;align-items:center;gap:6px;padding:5px 12px;line-height:1;
-        font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;font-weight:800;letter-spacing:.07em;
+        font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:10.5px;font-weight:700;letter-spacing:.07em;
         text-transform:uppercase;color:#fff;overflow:hidden;
         background:rgba(var(--sc),.18);border:1px solid rgba(var(--sc),.6);
         -webkit-clip-path:polygon(var(--ch) 0,calc(100% - var(--ch)) 0,100% var(--ch),100% calc(100% - var(--ch)),calc(100% - var(--ch)) 100%,var(--ch) 100%,0 calc(100% - var(--ch)),0 var(--ch));
@@ -417,9 +472,7 @@
     {% endif %}
 
     {% if altcha or altcha_shop_customer %}
-      <script type="module">
-        import { Altcha } from 'https://cdn.jsdelivr.net/npm/altcha@1.2.0/+esm'
-      </script>
+      <script src="{{ 'altcha@1.5.1.min.js' | staticAsset }}" type="module"></script>
     {% elif shop.recaptcha_key %}
       <script src="https://www.google.com/recaptcha/api.js?render={{ shop.recaptcha_key }}"></script>
     {% endif %}

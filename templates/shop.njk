@@ -1,21 +1,84 @@
+{#
+  Homepage running order.
+
+  The rule here is that the offer comes before the argument for it. Previously
+  a marquee, the YouTube showcase and the full-height ESP demo were all
+  injected between the hero and the products grid, which put the only thing
+  actually for sale at y=3558 — four screens down a fourteen-screen page
+  carrying under a thousand words. A visitor had to scroll past three
+  atmosphere sections before learning what was sold or what it cost.
+
+  Now: hero, then the product, then the evidence for it, then the reviews,
+  then the second product, then questions and the closing ask.
+
+  Two title-marquees and the home-flow section are no longer rendered. The
+  marquees carried no information at all, and home-flow's "instant delivery,
+  no waiting on a human" is already said by the hero's trust row and again on
+  every product page — it was a full 1092px section restating one line.
+  Both files are left in the repo; they are simply not called.
+#}
 <div class="components">
   {% render_snippet "esp-field.njk" %}
   {% for componentId in components_order %}
     {% render_component componentId %}
-    {% if componentId == 'hero' %}
-      {% render_snippet "title-marquee.njk" %}
+
+    {# Proof follows the offer. The showcase and the ESP demo are the two
+       "see it actually working" blocks, and they read far better as an answer
+       to a price the visitor has just seen than as a preamble to it. #}
+    {% if componentId == 'products' %}
       {% render_snippet "showcase.njk" %}
       {% render_snippet "esp-demo.njk" %}
     {% endif %}
-    {% if componentId == 'products' %}
-      {% render_snippet "pair-block.njk" %}
-      {% render_snippet "title-marquee.njk" %}
-      {% render_snippet "home-flow.njk" %}
-    {% endif %}
+
+    {# After the reviews: the verifiable claim, then the second product. #}
     {% if 'feedbacks' in componentId %}
       {% render_snippet "trust-pledge.njk" %}
+      {% render_snippet "pair-block.njk" %}
     {% endif %}
   {% endfor %}
 </div>
 {% render_snippet "home-buybar.njk" %}
 {% render_snippet "waypoint-rail.njk" %}
+
+<style>
+/* ── Homepage rhythm ──────────────────────────────────────────────────────
+   Measured before this existed: 1604px of the homepage was pure section
+   padding on desktop, and every block landed within ~100px of 1100px tall
+   whatever it contained — the reviews section was 1060px around 654px of
+   content, the closing CTA 980px around 263px. Uniform full-screen sections
+   read as slow rather than spacious, because the eye gets no signal about
+   which parts matter.
+
+   One scale, applied to the top-level blocks only, so each section is as tall
+   as the thing inside it. The hero is excluded: its 900px min-height is a
+   deliberate full-viewport opening.
+
+   Longhands, not the `padding` shorthand — several of these sections set
+   horizontal padding in the same rule and it must survive. */
+.components > *:not(.hero) {
+  padding-top: 72px;
+  padding-bottom: 72px;
+}
+
+/* The closing CTA's own rule already sets its bottom spacing and the card
+   carries generous internal padding; adding the rhythm on top double-spaced
+   it. */
+.components > .cta-section {
+  padding-top: 0;
+  padding-bottom: 56px;
+}
+
+@media (max-width: 768px) {
+  /* 128px of top padding on a 393px-wide screen is a third of a viewport
+     spent on nothing. The comparison and FAQ sections were doing exactly
+     that — their padding never had a mobile step at all. */
+  .components > *:not(.hero) {
+    padding-top: 44px;
+    padding-bottom: 44px;
+  }
+  .components > .cta-section {
+    padding-top: 0;
+    padding-bottom: 36px;
+  }
+}
+</style>

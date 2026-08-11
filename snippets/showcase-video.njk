@@ -66,36 +66,10 @@
       </button>
     </div>
 
-    {# ---------- ESSENTIALS STRIP ---------- #}
-    <div class="zaza-essentials">
-      <div class="zaza-ess">
-        <span class="zaza-ess__ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          </svg>
-        </span>
-        <h3 class="zaza-ess__h">Your main stays safe</h3>
-        <p class="zaza-ess__p">Bans land here, not on the account you actually play on.</p>
-      </div>
-      <div class="zaza-ess">
-        <span class="zaza-ess__ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M13 2 3 14h9l-1 8 10-12h-9z"/>
-          </svg>
-        </span>
-        <h3 class="zaza-ess__h">Instant delivery</h3>
-        <p class="zaza-ess__p">Credentials in your dashboard the second payment clears.</p>
-      </div>
-      <div class="zaza-ess">
-        <span class="zaza-ess__ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/>
-          </svg>
-        </span>
-        <h3 class="zaza-ess__h">Real playtime hours</h3>
-        <p class="zaza-ess__p">Aged accounts, not freshly-made smurfs. Pick a tier above.</p>
-      </div>
-    </div>
+    {# The essentials strip that sat here — "Your main stays safe" / "Instant
+       delivery" / "Real playtime hours" — is gone. zaza-nfa-block.njk now
+       renders above this section and makes all three points properly, so
+       keeping both restated them twice on one page. #}
 
     {# ---------- WARRANTY COMPARE ---------- #}
     <div class="zaza-warranty-compare">
@@ -159,8 +133,8 @@
 
   .zaza-showcase--nfa .zaza-showcase__eyebrow{
     display:inline-flex;align-items:center;gap:.6rem;margin:0 0 1.15rem;
-    font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;
-    font-size:.72rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;
+    font-family:var(--zz-alt);font-variant-numeric:tabular-nums;
+    font-size:.72rem;font-weight:500;letter-spacing:.24em;text-transform:uppercase;
     color:var(--zs-accent);
     padding:.45rem 1rem;border-radius:999px;
     background:rgba(var(--zs-accent-rgb),.1);
@@ -171,7 +145,7 @@
 
   .zaza-showcase--nfa .zaza-showcase__title{
     margin:0 0 .8rem;line-height:1.05;
-    font-family:'Satoshi','Poppins',system-ui,sans-serif;
+    font-family:var(--zz-sans);
     font-weight:700;letter-spacing:-.02em;
     font-size:clamp(1.9rem,3.6vw,2.7rem);
     color:var(--zs-text-on,#fff);
@@ -186,42 +160,7 @@
     font-size:clamp(.95rem,1.9vw,1.05rem);line-height:1.55;
     color:rgba(var(--zs-text),.7);
   }
-  .zaza-showcase--nfa .zaza-showcase__sub b{color:var(--zs-text);font-weight:600;}
-
-  /* ---- ESSENTIALS STRIP ---- */
-  .zaza-showcase--nfa .zaza-essentials{
-    width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;
-    margin:clamp(1.6rem,3vw,2.2rem) 0 1.4rem;
-    text-align:left;
-  }
-  .zaza-showcase--nfa .zaza-ess{
-    padding:1.1rem 1.1rem 1.2rem;
-    background:rgba(255,255,255,.025);
-    border:1px solid rgba(var(--zs-text),.08);
-    border-radius:12px;
-    transition:border-color .2s ease, background .2s ease;
-  }
-  .zaza-showcase--nfa .zaza-ess:hover{
-    border-color:rgba(var(--zs-accent-rgb),.4);
-    background:rgba(var(--zs-accent-rgb),.04);
-  }
-  .zaza-showcase--nfa .zaza-ess__ico{
-    display:inline-flex;align-items:center;justify-content:center;
-    width:36px;height:36px;border-radius:8px;
-    color:var(--zs-accent);
-    background:rgba(var(--zs-accent-rgb),.13);
-    border:1px solid rgba(var(--zs-accent-rgb),.28);
-    margin-bottom:.7rem;
-  }
-  .zaza-showcase--nfa .zaza-ess__h{
-    margin:0 0 .25rem;font-size:1rem;font-weight:600;letter-spacing:-.01em;
-    color:var(--zs-text);
-    font-family:'Satoshi','Poppins',sans-serif;
-  }
-  .zaza-showcase--nfa .zaza-ess__p{
-    margin:0;font-size:.85rem;line-height:1.55;
-    color:rgba(var(--zs-text),.6);
-  }
+  .zaza-showcase--nfa .zaza-showcase__sub b{color:var(--zs-text);font-weight:500;}
 
   /* ---- WARRANTY COMPARE ---- */
   .zaza-showcase--nfa .zaza-warranty-compare{
@@ -246,7 +185,7 @@
   }
   .zaza-showcase--nfa .zaza-wc__tag{
     display:inline-flex;align-items:center;gap:.4rem;align-self:flex-start;
-    font-family:'JetBrains Mono',ui-monospace,monospace;
+    font-family:var(--zz-alt);font-variant-numeric:tabular-nums;
     font-size:.65rem;font-weight:700;letter-spacing:.14em;
     color:#34d058;
     padding:.32rem .55rem;border-radius:5px;
@@ -265,8 +204,8 @@
   }
   .zaza-showcase--nfa .zaza-wc__big{
     margin:.2rem 0 .15rem;
-    font-family:'Satoshi','Poppins',sans-serif;
-    font-size:1.15rem;font-weight:600;letter-spacing:-.01em;
+    font-family:var(--zz-sans);
+    font-size:1.15rem;font-weight:500;letter-spacing:-.01em;
     color:var(--zs-text);
   }
   .zaza-showcase--nfa .zaza-wc__big b{font-weight:700;}
@@ -282,7 +221,6 @@
   }
 
   @media (max-width:720px){
-    .zaza-showcase--nfa .zaza-essentials{grid-template-columns:1fr;gap:.7rem;}
     .zaza-showcase--nfa .zaza-warranty-compare{
       grid-template-columns:1fr;
     }
@@ -335,7 +273,7 @@
   .zaza-showcase--nfa .zaza-showcase__hint{
     position:absolute;left:50%;bottom:1.15rem;transform:translateX(-50%);
     display:inline-flex;align-items:center;gap:.5rem;
-    font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#fff;
+    font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#fff;
     padding:.45rem .9rem;border-radius:999px;background:rgba(8,11,24,.6);
     backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.16);
     transition:transform .35s cubic-bezier(.16,1,.3,1),opacity .35s ease;
@@ -412,8 +350,8 @@
           if(frame.querySelector('.zsv-error')) return;
           var err=document.createElement('div');
           err.className='zsv-error';
-          err.style.cssText='position:absolute;inset:2px;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1.5rem;background:rgba(8,11,24,.92);color:#fff;border-radius:18px;font-family:\"JetBrains Mono\",monospace;font-size:.82rem;line-height:1.6;';
-          err.innerHTML='<div style="font-weight:600;margin-bottom:.6rem;color:#ff6b6b;">Video failed to load</div><div style="opacity:.7;word-break:break-all;max-width:90%;">'+src+'</div>';
+          err.style.cssText='position:absolute;inset:2px;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1.5rem;background:rgba(8,11,24,.92);color:#fff;border-radius:18px;font-family:var(--zz-alt);font-size:.82rem;line-height:1.6;';
+          err.innerHTML='<div style="font-weight:500;margin-bottom:.6rem;color:#ff6b6b;">Video failed to load</div><div style="opacity:.7;word-break:break-all;max-width:90%;">'+src+'</div>';
           frame.appendChild(err);
         }
         source.addEventListener('error',showError);

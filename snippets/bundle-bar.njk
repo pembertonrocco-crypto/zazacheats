@@ -7,7 +7,10 @@
    Static HTML, no template vars, safe under strict mode.
    ========================================================================= #}
 <div class="zzbar" id="zz-bundle-bar" hidden>
-  <a class="zzbar__link" href="/product/zaza-rust-private-cheat#zz-bundles">
+  {# ?bundle=1 re-opens the bundle popup, which is where the offer lives now.
+     This used to deep-link to #zz-bundles, the on-page block that has been
+     removed — the anchor would have gone nowhere. #}
+  <a class="zzbar__link" href="/product/zaza-rust-private-cheat?bundle=1">
     <span class="zzbar__gift" aria-hidden="true">🎁</span>
     <span class="zzbar__text">
       <strong class="zzbar__free">FREE NFA BUNDLE</strong>
@@ -29,11 +32,11 @@
 .zzbar__gift{font-size:1rem;flex-shrink:0;animation:zzbar-bounce 2.4s ease-in-out infinite}
 @keyframes zzbar-bounce{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-2px) rotate(5deg)}}
 .zzbar__text{display:flex;align-items:center;gap:7px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.zzbar__free{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.12em;font-weight:800;color:#0a0714;background:linear-gradient(90deg,#4ade80,#a3e635);padding:3px 9px;border-radius:99px;flex-shrink:0;box-shadow:0 0 16px -4px rgba(74,222,128,.9)}
+.zzbar__free{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.66rem;letter-spacing:.12em;font-weight:700;color:#0a0714;background:linear-gradient(90deg,#4ade80,#a3e635);padding:3px 9px;border-radius:99px;flex-shrink:0;box-shadow:0 0 16px -4px rgba(74,222,128,.9)}
 .zzbar__sep{color:rgba(220,230,250,.4);flex-shrink:0}
 .zzbar__desc{color:rgba(225,233,250,.9);overflow:hidden;text-overflow:ellipsis}
-.zzbar__desc strong{color:#4ade80;font-weight:800}
-.zzbar__cta{flex-shrink:0;font-weight:800;font-size:.74rem;color:#fff;padding:6px 13px;border-radius:8px;background:linear-gradient(135deg,var(--cl-accent,#BF40BF),#7C3AED);box-shadow:0 4px 16px -6px rgba(var(--cl-accent-rgb,191,64,191),.9);transition:transform .15s ease,filter .15s ease}
+.zzbar__desc strong{color:#4ade80;font-weight:700}
+.zzbar__cta{flex-shrink:0;font-weight:700;font-size:.74rem;color:#fff;padding:6px 13px;border-radius:8px;background:linear-gradient(135deg,var(--cl-accent,#BF40BF),#7C3AED);box-shadow:0 4px 16px -6px rgba(var(--cl-accent-rgb,191,64,191),.9);transition:transform .15s ease,filter .15s ease}
 .zzbar__link:hover .zzbar__cta{transform:translateY(-1px);filter:brightness(1.12)}
 .zzbar__x{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;border:none;border-radius:7px;background:rgba(255,255,255,.06);color:rgba(220,230,250,.6);font-size:1.05rem;line-height:1;cursor:pointer;transition:background .15s,color .15s}
 .zzbar__x:hover{background:rgba(255,255,255,.14);color:#fff}

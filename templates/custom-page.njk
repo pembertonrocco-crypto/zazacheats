@@ -91,7 +91,7 @@
   --edge:rgba(191,64,191,.14);--panel:rgba(12,15,30,.62);--void:#06070f;
   position:relative;width:100%;min-height:100vh;overflow:hidden;
   background:radial-gradient(130% 90% at 50% -10%,#0d1130 0%,#06070f 58%);
-  font-family:'Satoshi','Inter',system-ui,sans-serif;color:var(--ink)}
+  font-family:var(--zz-sans);color:var(--ink)}
 .dl-page *{box-sizing:border-box}
 .dl-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 .dl-bg__grid{position:absolute;inset:-2px;
@@ -107,8 +107,8 @@
 @keyframes dlRise{to{opacity:1;transform:translateY(0)}}
 
 .dl-head{text-align:center;margin-bottom:36px}
-.dl-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--v);font-size:.74rem;letter-spacing:.22em;margin:0}
-.dl-title{font-size:clamp(2.2rem,6vw,3.4rem);font-weight:800;letter-spacing:-.03em;margin:.45rem 0 0;
+.dl-eyebrow{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;color:var(--v);font-size:.74rem;letter-spacing:.22em;margin:0}
+.dl-title{font-size:clamp(2.2rem,6vw,3.4rem);font-weight:700;letter-spacing:-.03em;margin:.45rem 0 0;
   background:linear-gradient(135deg,#fff,#a8c4ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .dl-subtitle{color:var(--mut);font-size:1.02rem;margin:.55rem 0 0}
 
@@ -120,7 +120,7 @@
 .dl-ico{font-size:1.6rem}
 .dl-h2{font-size:1.2rem;font-weight:700;letter-spacing:-.01em;margin:0 0 14px;display:flex;align-items:center;gap:10px}
 .dl-card__head .dl-h2{margin:0}
-.dl-step{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;font-size:.85rem;font-weight:800;
+.dl-step{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;font-size:.85rem;font-weight:700;
   background:rgba(191,64,191,.16);border:1px solid rgba(191,64,191,.3);color:#c7b8ff;flex-shrink:0}
 .dl-step--warn{background:rgba(234,179,8,.14);border-color:rgba(234,179,8,.3);color:#fbe08a}
 .dl-muted{color:var(--mut);font-size:.9rem;margin:0}
@@ -132,7 +132,7 @@
   background:linear-gradient(135deg,var(--v),var(--b));color:#fff;font-weight:700;font-size:1rem;text-decoration:none;
   box-shadow:0 12px 32px -10px rgba(191,64,191,.8);transition:filter .25s,transform .25s,gap .25s}
 .dl-btn:hover{filter:brightness(1.1);transform:translateY(-2px);gap:13px}
-.dl-fine{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:rgba(200,215,240,.5);margin:14px 0 0}
+.dl-fine{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.74rem;color:rgba(200,215,240,.5);margin:14px 0 0}
 
 .dl-list{margin:0;padding-left:0;list-style:none;counter-reset:dl}
 .dl-list li{position:relative;padding:10px 0 10px 38px;color:var(--mut);font-size:.94rem;line-height:1.55;
@@ -140,16 +140,16 @@
 .dl-list li:first-child{border-top:none}
 .dl-list li strong{color:#fff}
 .dl-list li::before{counter-increment:dl;content:counter(dl);position:absolute;left:0;top:10px;
-  width:24px;height:24px;display:grid;place-items:center;border-radius:7px;font-size:.78rem;font-weight:800;
+  width:24px;height:24px;display:grid;place-items:center;border-radius:7px;font-size:.78rem;font-weight:700;
   background:rgba(191,64,191,.16);border:1px solid rgba(191,64,191,.3);color:#c7b8ff}
 .dl-key{margin-top:16px;padding:12px 16px;border-radius:10px;background:rgba(191,64,191,.08);
   border:1px solid rgba(191,64,191,.18);font-size:.9rem;color:var(--mut)}
-.dl-key kbd{font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+.dl-key kbd{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
   border-radius:5px;padding:2px 7px;color:#fff;font-size:.82rem}
 
 .dl-err{padding:14px 0;border-top:1px solid rgba(255,255,255,.05)}
 .dl-err:first-of-type{border-top:none;padding-top:0}
-.dl-err__t{font-family:'JetBrains Mono',monospace;font-size:.92rem;font-weight:700;color:#fff;margin:0 0 6px}
+.dl-err__t{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.92rem;font-weight:700;color:#fff;margin:0 0 6px}
 .dl-p a{color:#a8c4ff;text-decoration:none}
 .dl-p a:hover{color:#fff;text-decoration:underline}
 
@@ -432,7 +432,7 @@
   --ink:#eaf0ff;--mut:rgba(200,215,240,.62);--edge:rgba(191,64,191,.14);--panel:rgba(12,15,30,.62);
   position:relative;width:100%;min-height:100vh;overflow:hidden;
   background:radial-gradient(130% 90% at 50% -10%,#0d1130 0%,#06070f 58%);
-  font-family:'Satoshi','Inter',system-ui,sans-serif;color:var(--ink)}
+  font-family:var(--zz-sans);color:var(--ink)}
 .af-page *{box-sizing:border-box}
 
 
@@ -452,14 +452,14 @@
 @keyframes afRise{to{opacity:1;transform:translateY(0)}}
 
 .af-head{text-align:center;margin-bottom:64px}
-.af-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--v);font-size:.74rem;letter-spacing:.22em;margin:0}
-.af-title{font-size:clamp(2.4rem,6.5vw,3.8rem);font-weight:800;letter-spacing:-.03em;margin:.45rem 0 0;
+.af-eyebrow{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;color:var(--v);font-size:.74rem;letter-spacing:.22em;margin:0}
+.af-title{font-size:clamp(2.4rem,6.5vw,3.8rem);font-weight:700;letter-spacing:-.03em;margin:.45rem 0 0;
   background:linear-gradient(135deg,#fff,#a8c4ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .af-subtitle{color:var(--mut);font-size:1.06rem;line-height:1.65;max-width:620px;margin:.8rem auto 0}
-.af-subtitle strong{font-weight:800}
+.af-subtitle strong{font-weight:700}
 .af-hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
 .af-hero-chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
-.af-chip{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.14em;
+.af-chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.68rem;letter-spacing:.14em;
   color:rgba(200,215,240,.7);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:7px 13px;background:rgba(255,255,255,.03)}
 .af-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:afPulse 2s infinite}
 @keyframes afPulse{0%,100%{opacity:1}50%{opacity:.45}}
@@ -473,7 +473,7 @@
 .af-btn--big{padding:16px 34px;font-size:1.08rem}
 
 .af-section{margin-bottom:72px}
-.af-h2{font-size:clamp(1.5rem,3.4vw,2rem);font-weight:800;letter-spacing:-.02em;margin:0 0 8px}
+.af-h2{font-size:clamp(1.5rem,3.4vw,2rem);font-weight:700;letter-spacing:-.02em;margin:0 0 8px}
 .af-lead{color:var(--mut);font-size:.98rem;margin:0 0 26px}
 
 /* ---- tiers ---- */
@@ -484,14 +484,14 @@
 .af-tier--hot{border-color:rgba(34,197,94,.4);background:linear-gradient(160deg,rgba(34,197,94,.1),rgba(12,15,30,.62))}
 .af-tier--hot:hover{border-color:rgba(34,197,94,.65)}
 .af-tier__badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);white-space:nowrap;
-  font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.16em;font-weight:800;color:#052e13;
+  font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.62rem;letter-spacing:.16em;font-weight:700;color:#052e13;
   background:linear-gradient(135deg,#4ade80,var(--g));border-radius:999px;padding:5px 12px;box-shadow:0 6px 18px -6px rgba(34,197,94,.8)}
-.af-tier__name{font-family:'JetBrains Mono',monospace;font-size:.76rem;letter-spacing:.18em;color:var(--mut);margin:0 0 10px;text-transform:uppercase}
-.af-tier__pct{font-size:2.9rem;font-weight:800;letter-spacing:-.04em;margin:0;line-height:1;color:#fff}
+.af-tier__name{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.76rem;letter-spacing:.18em;color:var(--mut);margin:0 0 10px;text-transform:uppercase}
+.af-tier__pct{font-size:2.9rem;font-weight:700;letter-spacing:-.04em;margin:0;line-height:1;color:#fff}
 .af-tier__pct span{font-size:1.4rem;color:var(--mut)}
 .af-tier--hot .af-tier__pct{color:var(--g)}
 .af-tier__per{font-weight:700;font-size:.95rem;color:#fff;margin:12px 0 2px}
-.af-tier__note{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:rgba(200,215,240,.65);margin:0}
+.af-tier__note{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.72rem;color:rgba(200,215,240,.65);margin:0}
 
 /* ---- earnings math ---- */
 .af-math{border:1px solid var(--edge);border-radius:18px;background:var(--panel);backdrop-filter:blur(14px);padding:10px 26px}
@@ -500,28 +500,28 @@
 .af-math__calc{color:var(--mut);font-size:.96rem;white-space:nowrap}
 .af-math__calc em{font-style:normal;color:var(--v);font-weight:700;padding:0 2px}
 .af-math__line{flex:1;border-bottom:1px dashed rgba(255,255,255,.12);transform:translateY(-4px)}
-.af-math__total{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1.05rem;color:#fff;white-space:nowrap}
+.af-math__total{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-weight:700;font-size:1.05rem;color:#fff;white-space:nowrap}
 .af-math__row--sum .af-math__calc{color:#fff;font-weight:700}
 .af-math__row--sum .af-math__total{font-size:1.3rem}
-.af-fine{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:rgba(200,215,240,.65);margin:12px 4px 0}
+.af-fine{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.72rem;color:rgba(200,215,240,.65);margin:12px 4px 0}
 
 /* ---- steps ---- */
 .af-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .af-step{border:1px solid var(--edge);border-radius:18px;padding:26px 24px;background:var(--panel);backdrop-filter:blur(14px)}
-.af-step__num{font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:800;color:#c7b8ff;
+.af-step__num{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.8rem;font-weight:700;color:#c7b8ff;
   display:inline-grid;place-items:center;width:34px;height:34px;border-radius:9px;
   background:rgba(191,64,191,.16);border:1px solid rgba(191,64,191,.3)}
 .af-step__t{font-size:1.08rem;font-weight:700;margin:14px 0 8px}
 .af-step__p{color:var(--mut);font-size:.92rem;line-height:1.6;margin:0}
 .af-step__p a{color:#a8c4ff;text-decoration:none}
 .af-step__p a:hover{color:#fff;text-decoration:underline}
-.af-step__p code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:rgba(255,255,255,.07);
+.af-step__p code{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.8rem;background:rgba(255,255,255,.07);
   border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:2px 6px;color:#fff;word-break:break-all}
 
 /* ---- leaderboard ---- */
 .af-lb-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:26px}
 .af-lb-head .af-lead{margin-bottom:0}
-.af-lb-live{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:.68rem;
+.af-lb-live{display:inline-flex;align-items:center;gap:8px;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.68rem;
   letter-spacing:.14em;color:#86efac;border:1px solid rgba(34,197,94,.3);background:rgba(34,197,94,.08);border-radius:999px;padding:8px 14px}
 .af-podium{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:12px;align-items:end;margin-bottom:14px}
 .af-podium__spot{position:relative;border-radius:18px;padding:26px 18px 22px;text-align:center;
@@ -530,22 +530,22 @@
 .af-podium__spot--2{border-color:rgba(148,163,184,.35);background:linear-gradient(160deg,rgba(148,163,184,.09),rgba(12,15,30,.62))}
 .af-podium__spot--3{border-color:rgba(217,119,6,.35);background:linear-gradient(160deg,rgba(217,119,6,.09),rgba(12,15,30,.62))}
 .af-podium__rank{position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:30px;height:30px;border-radius:50%;
-  display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-weight:800;font-size:.88rem;color:#06070f}
+  display:grid;place-items:center;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-weight:700;font-size:.88rem;color:#06070f}
 .af-podium__spot--1 .af-podium__rank{background:linear-gradient(135deg,#fde047,var(--gold));box-shadow:0 6px 18px -4px rgba(234,179,8,.7)}
 .af-podium__spot--2 .af-podium__rank{background:linear-gradient(135deg,#e2e8f0,var(--silver))}
 .af-podium__spot--3 .af-podium__rank{background:linear-gradient(135deg,#fbbf24,var(--bronze))}
-.af-podium__name{font-weight:800;font-size:1.15rem;margin:6px 0 4px;color:#fff}
+.af-podium__name{font-weight:700;font-size:1.15rem;margin:6px 0 4px;color:#fff}
 .af-podium__spot--1 .af-podium__name{font-size:1.3rem}
-.af-podium__name--open{color:rgba(200,215,240,.4);font-style:italic;font-weight:600}
-.af-podium__amt{font-family:'JetBrains Mono',monospace;font-weight:800;color:var(--g);margin:0;font-size:1.02rem}
+.af-podium__name--open{color:rgba(200,215,240,.4);font-style:italic;font-weight:500}
+.af-podium__amt{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-weight:700;color:var(--g);margin:0;font-size:1.02rem}
 .af-podium__amt--open{color:rgba(200,215,240,.35);font-weight:500;font-size:.82rem}
 .af-lb-table{border:1px solid var(--edge);border-radius:16px;background:var(--panel);backdrop-filter:blur(14px);overflow:hidden}
 .af-lb-row{display:flex;align-items:center;gap:16px;padding:14px 22px;border-top:1px solid rgba(255,255,255,.05)}
 .af-lb-row:first-child{border-top:none}
-.af-lb-row__rank{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:.85rem;color:var(--mut);width:26px}
+.af-lb-row__rank{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-weight:700;font-size:.85rem;color:var(--mut);width:26px}
 .af-lb-row__name{flex:1;font-weight:700;color:#fff}
 .af-lb-row--open .af-lb-row__name{color:rgba(200,215,240,.35);font-weight:500;font-style:italic}
-.af-lb-row__amt{font-family:'JetBrains Mono',monospace;font-weight:800;color:var(--g)}
+.af-lb-row__amt{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-weight:700;color:var(--g)}
 .af-lb-row--open .af-lb-row__amt{color:rgba(200,215,240,.3)}
 .af-lb-pitch{text-align:center;color:var(--mut);font-size:.92rem;margin:18px 0 0}
 .af-lb-pitch a{color:#a8c4ff;text-decoration:none;font-weight:700}
@@ -554,13 +554,13 @@
 /* ---- rules ---- */
 .af-rules{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .af-rule{border:1px solid var(--edge);border-radius:18px;padding:24px;background:var(--panel);backdrop-filter:blur(14px)}
-.af-rule__t{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700;color:#fff;margin:0 0 8px}
+.af-rule__t{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.9rem;font-weight:700;color:#fff;margin:0 0 8px}
 .af-rule__p{color:var(--mut);font-size:.92rem;line-height:1.6;margin:0}
 
 /* ---- final cta ---- */
 .af-cta{text-align:center;border:1px solid rgba(191,64,191,.3);border-radius:22px;padding:52px 28px;
   background:linear-gradient(135deg,rgba(191,64,191,.12),rgba(124,58,237,.05));backdrop-filter:blur(14px)}
-.af-cta__t{font-size:clamp(1.5rem,3.6vw,2.1rem);font-weight:800;letter-spacing:-.02em;margin:0 0 8px}
+.af-cta__t{font-size:clamp(1.5rem,3.6vw,2.1rem);font-weight:700;letter-spacing:-.02em;margin:0 0 8px}
 .af-cta__p{color:var(--mut);margin:0 0 24px}
 
 @media (max-width:860px){
@@ -606,16 +606,16 @@
     .zzco{--v:#BF40BF;--b:#7C3AED;--acc:#c084fc;--g:#22c55e;--a:#eab308;--r:#ef4444;
       --panel:#0c0e1c;--void:#06070f;--edge:#1b1f3a;--edge2:#262b4d;
       --ink:#e7ecff;--mut:rgba(231,236,255,.62);--mut2:rgba(231,236,255,.4);
-      font-family:'Satoshi','Inter',system-ui,sans-serif;color:var(--ink);
+      font-family:var(--zz-sans);color:var(--ink);
       padding:6rem 0 4rem}
     .zzco *{box-sizing:border-box}
     .zzco__grid{display:grid;grid-template-columns:1fr;gap:1.4rem;max-width:1040px;margin:0 auto}
     @media (min-width:900px){.zzco__grid{grid-template-columns:minmax(0,1fr) 1.1fr;align-items:start}}
 
     /* ---------- summary ---------- */
-    .zzco__eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;letter-spacing:.2em;
+    .zzco__eyebrow{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.7rem;letter-spacing:.2em;
       text-transform:uppercase;color:var(--mut);margin:0 0 .4rem}
-    .zzco__amount{font-size:clamp(2rem,4vw,2.8rem);font-weight:800;letter-spacing:-.03em;margin:0 0 1.4rem;line-height:1;
+    .zzco__amount{font-size:clamp(2rem,4vw,2.8rem);font-weight:700;letter-spacing:-.03em;margin:0 0 1.4rem;line-height:1;
       background:linear-gradient(178deg,#fff 0%,#fff 55%,#ecddff 80%,#c77dff 100%);
       -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;min-height:1px}
     .zzco__card{border:1px solid var(--edge);border-radius:16px;overflow:hidden;
@@ -627,28 +627,33 @@
     .zzco__lbody{min-width:0;flex:1}
     .zzco__lname{font-weight:700;font-size:.9rem}
     .zzco__lvar{font-size:.74rem;color:var(--mut);margin-top:.1rem}
-    .zzco__lqty{font-family:'JetBrains Mono',monospace;font-size:.64rem;color:var(--mut2);border:1px solid var(--edge2);
+    .zzco__lqty{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.64rem;color:var(--mut2);border:1px solid var(--edge2);
       border-radius:5px;padding:.05rem .3rem;margin-left:.35rem}
-    .zzco__lprice{margin-left:auto;font-weight:800;font-size:.9rem;white-space:nowrap}
+    .zzco__lprice{margin-left:auto;font-weight:700;font-size:.9rem;white-space:nowrap}
+    /* addon rows sit under their parent key: no thumbnail, indented to the
+       width of one so they read as part of the item above, not a separate buy */
+    .zzco__line--addon{padding:0 1rem .85rem calc(1rem + 60px + 1rem);margin-top:-.5rem}
+    .zzco__line--addon .zzco__lname{font-weight:500;font-size:.82rem;color:var(--mut)}
+    .zzco__line--addon .zzco__lprice{font-weight:700;font-size:.82rem;color:var(--mut)}
     .zzco__totals{padding:.3rem 1rem 1rem}
     .zzco__trow{display:flex;justify-content:space-between;font-size:.84rem;color:var(--mut);padding:.35rem 0}
     .zzco__trow--save{color:#4ade80}
-    .zzco__trow--grand{border-top:1px solid var(--edge);margin-top:.25rem;padding-top:.7rem;color:#fff;font-weight:800;font-size:1.02rem}
+    .zzco__trow--grand{border-top:1px solid var(--edge);margin-top:.25rem;padding-top:.7rem;color:#fff;font-weight:700;font-size:1.02rem}
 
     /* what happens next — removes post-click uncertainty */
     .zzco__next{margin-top:1rem;border:1px solid var(--edge);border-radius:14px;padding:.9rem 1rem;
       background:rgba(12,14,28,.5)}
-    .zzco__next h4{margin:0 0 .6rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.16em;
+    .zzco__next h4{margin:0 0 .6rem;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.66rem;letter-spacing:.16em;
       text-transform:uppercase;color:var(--mut)}
     .zzco__step{display:flex;gap:.6rem;align-items:flex-start;font-size:.78rem;padding:.22rem 0}
     .zzco__step b{flex-shrink:0;width:17px;height:17px;border-radius:50%;display:grid;place-items:center;
-      font-size:.6rem;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--v),var(--b));margin-top:1px}
+      font-size:.6rem;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--v),var(--b));margin-top:1px}
     .zzco__step span{color:var(--ink);opacity:.82}
 
     /* ---------- form ---------- */
     .zzco__form{border:1px solid var(--edge);border-radius:20px;padding:1.6rem;position:relative;overflow:hidden;
       background:linear-gradient(160deg,rgba(18,20,40,.9),rgba(6,7,15,.92))}
-    .zzco__legend{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+    .zzco__legend{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
       color:var(--mut);margin:1.4rem 0 .7rem}
     .zzco__legend:first-child{margin-top:0}
     .zzco__field{border:1px solid var(--edge2);border-radius:12px;background:var(--void);padding:.65rem .9rem;
@@ -685,15 +690,21 @@
     .zzco__pbody{min-width:0;position:relative}
     .zzco__pname{font-size:.8rem;font-weight:700;line-height:1.15}
     .zzco__pvia{font-size:.64rem;color:var(--mut2)}
-    .zzco__badge{margin-left:auto;position:relative;font-family:'JetBrains Mono',monospace;font-size:.64rem;font-weight:700;
+    .zzco__badge{margin-left:auto;position:relative;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.64rem;font-weight:700;
       border-radius:999px;padding:.14rem .48rem;white-space:nowrap}
     .zzco__badge--off{color:#4ade80;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3)}
     .zzco__badge--fee{color:#fbbf24;background:rgba(234,179,8,.12);border:1px solid rgba(234,179,8,.32)}
 
-    .zzco__tos{display:flex;align-items:center;gap:.55rem;margin:1.4rem 0 1rem;font-size:.8rem;color:var(--mut)}
-    .zzco__tos input{width:17px;height:17px;accent-color:var(--v)}
-    .zzco__tos a{color:var(--acc);text-decoration:none}
-    .zzco__btn{width:100%;border:0;cursor:pointer;color:#fff;font-weight:800;font-size:.98rem;padding:1rem;border-radius:14px;
+    /* consent sits under the button now, not behind a required tickbox */
+    .zzco__consent{margin:.7rem 0 0;text-align:center;font-size:.72rem;line-height:1.5;color:var(--mut2)}
+    .zzco__consent a{color:var(--mut);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.18)}
+    .zzco__consent a:hover{color:#fff;border-color:var(--acc)}
+    /* the button is always pressable; this only softens it while something
+       upstream is still missing, so it reads as "not yet" rather than broken */
+    .zzco__btn.is-waiting{opacity:.72}
+    /* the removed terms checkbox used to supply the gap above the button */
+    .zzco__btn{width:100%;border:0;cursor:pointer;color:#fff;font-weight:700;font-size:.98rem;padding:1rem;border-radius:14px;
+      margin-top:1.4rem;
       display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
       background:linear-gradient(135deg,var(--v),var(--b));box-shadow:0 16px 38px -12px rgba(191,64,191,.85);
       transition:transform .15s,filter .15s}
@@ -760,16 +771,30 @@
 
         <p class="zzco__legend">Payment</p>
         <div class="zzco__pays" id="zzco-pays"></div>
+        {# Crypto is preselected because it's the cheapest option, which means the
+           card tile is no longer the first thing read. Say so plainly, or a card
+           buyer can scan the list and assume cards aren't offered. #}
+        <p class="zzco__hint">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.7"/></svg>
+          Prefer card, Apple Pay or PayPal? Pick it above &mdash; a flat 60&cent; processing fee is added, whatever the order size.
+        </p>
 
-        <label class="zzco__tos">
-          <input type="checkbox" id="zzco-tos" />
-          I have read and agree to Zaza Cheats's <a href="{{ '/terms-of-service' | shopUrl }}" target="_blank" rel="noopener">Terms of Service</a>.
-        </label>
-
-        <button type="button" class="zzco__btn" id="zzco-pay" disabled>
+        {# Consent moved out of a required checkbox and into the button itself.
+           The tickbox was a mandatory extra click that held the Pay button
+           disabled with nothing on screen saying why — and it is not what the
+           payment industry does: Apple, Shopify and Stripe Checkout all bind
+           consent to the act of paying and state the terms beside the button.
+           The links are unchanged and still open in a new tab, so nothing is
+           harder to read than it was before. #}
+        <button type="button" class="zzco__btn" id="zzco-pay">
           <span class="zzco__spin"></span>
           <span id="zzco-pay-label">Proceed to Payment &rarr;</span>
         </button>
+        <p class="zzco__consent">
+          By continuing you agree to our
+          <a href="{{ '/terms-of-service' | shopUrl }}" target="_blank" rel="noopener">Terms of Service</a>
+          and <a href="{{ '/refund-policy' | shopUrl }}" target="_blank" rel="noopener">Refund Policy</a>.
+        </p>
         <div class="zzco__err" id="zzco-err"></div>
         <p class="zzco__note">You'll confirm the exact amount with your provider before paying.</p>
 
@@ -794,10 +819,19 @@
   /* ===================== CONFIG ===================== */
   var CHECKOUT_WORKER = 'https://nfa-sellauth-bridge-production.up.railway.app/checkout';
 
-  /* Vibrant brand-coloured tiles. `pct` mirrors the real dashboard fee/discount
-     and is display-only — SellAuth calculates the binding amount server-side. */
+  /* Vibrant brand-coloured tiles. `pct` (percentage) and `flat` (fixed amount)
+     mirror the real dashboard fee/discount and are display-only — SellAuth
+     calculates the binding amount server-side.
+
+     Card is a FLAT $0.60, not a percentage. That distinction matters to the
+     buyer: on a $1.00 NFA account a 5% fee was 5 cents and on a $199 lifetime
+     key it was ten dollars, so the same tile meant wildly different things
+     depending on what was in the cart. A flat fee is the same sentence every
+     time. It also means card stops being the most expensive option on small
+     orders and starts being the cheapest, which the ordering below picks up
+     on its own because it sorts on real money, not on a percentage. */
   var PAYMENT_METHODS = [
-    { id: '195134', name: 'Cards, Apple Pay, PayPal', via: 'via Shopify', badge: '+5%', badgeType: 'fee', pct: 5,
+    { id: '195134', name: 'Cards, Apple Pay, PayPal', via: 'via Shopify', badge: '+$0.60', badgeType: 'fee', flat: 0.60,
       ico: 'linear-gradient(135deg,#6366f1,#a855f7)', ring: '#8b5cf6', tint: 'rgba(139,92,246,.25)',
       svg: '<svg viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="3" fill="#ffffff" fill-opacity=".95"/><rect x="2" y="8.4" width="20" height="2.6" fill="#312e81"/><circle cx="15.2" cy="15.1" r="2.4" fill="#eb001b"/><circle cx="18.2" cy="15.1" r="2.4" fill="#f79e1b" fill-opacity=".92"/><rect x="4.6" y="14.2" width="5" height="1.8" rx=".9" fill="#94a3b8"/></svg>' },
     { id: '194378', name: 'Litecoin', via: 'via Litecoin Network', badge: '-5%', badgeType: 'off', pct: -5,
@@ -817,7 +851,7 @@
      scope, so we read them here instead. */
   var SHOP_ID = window.shopId;
 
-  var state = { cart: [], full: [], currency: 'USD', method: null, pct: 0, subtotal: 0, havePrices: false };
+  var state = { cart: [], full: [], currency: 'USD', method: null, sel: null, subtotal: 0, havePrices: false };
 
   var $ = function(id){ return document.getElementById(id); };
 
@@ -832,6 +866,43 @@
   function affiliate(){
     try { return localStorage.getItem('affiliate') || ''; } catch(e){ return ''; }
   }
+
+  /* The scratch-card prize, if this visitor still holds an unexpired one.
+
+     scratch-card-popup.njk writes `zz_sc_claim` through its setC() helper, and
+     the cart page reads it back to promise "your scratch code is still active
+     — apply it at checkout". Checkout never read it, so the code the site had
+     just promised had to be remembered or re-copied by hand. This mirrors that
+     file's getC(): a localStorage {v, exp} envelope where `v` is itself the
+     JSON string {code, pct}, falling back to a plain cookie value when
+     localStorage is unavailable — the same two-tier storage setC() writes.
+
+     Expiry is enforced here as well as at write time: the popup caps the claim
+     at the real drop deadline, and honouring that means a dead code can never
+     be silently pre-filled into the box. */
+  function scratchClaim(){
+    var raw = null;
+    try {
+      raw = window.localStorage.getItem('zz_sc_claim');
+      if (raw !== null){
+        var o = JSON.parse(raw);
+        if (o && o.exp && Date.now() > o.exp){
+          window.localStorage.removeItem('zz_sc_claim');
+          return null;
+        }
+        raw = o ? o.v : null;
+      }
+    } catch(e){ raw = null; }
+    if (raw == null){
+      try { raw = (typeof Cookies !== 'undefined') ? Cookies.get('zz_sc_claim') : null; } catch(e){ return null; }
+    }
+    if (!raw) return null;
+    try {
+      var claim = JSON.parse(raw);
+      return (claim && claim.code) ? claim : null;
+    } catch(e){ return null; }
+  }
+
   /* Snapshot written by the cart / Buy Now button — same shape as fullCart. */
   function readSnapshot(){
     try {
@@ -840,10 +911,39 @@
     } catch(e){ return null; }
   }
 
+  /* Cheapest method first, and preselected.
+     The buyer has just come from a product page showing an exact total. If we
+     open on the card tile (+5%) that total visibly jumps the moment they land
+     here, which is the classic unexpected-cost abandonment. Sorting by `pct`
+     ascending puts the -5% crypto tiles at the top, so the headline amount
+     opens on the discounted figure and any change from here is a choice they
+     made. Sorting by the real `pct` rather than hardcoding an index means the
+     day a fee changes in the dashboard, this still picks the cheapest.
+     Array.prototype.sort is stable in every browser we support, so the three
+     crypto tiles keep their existing relative order. */
+  /* What this method actually adds to (or takes off) the current subtotal, in
+     money. Percentage and flat fees are not comparable as raw numbers — a
+     `pct` of 5 and a `flat` of 0.60 are the same figure on a $12 order and
+     nothing alike on a $1 one — so everything that ranks or displays a fee
+     goes through here. */
+  function adjustmentOf(m, sub){
+    if (!m) return 0;
+    if (typeof m.flat === 'number') return m.flat;
+    return (sub || 0) * ((m.pct || 0) / 100);
+  }
+
+  function orderedMethods(){
+    var sub = state.subtotal || 0;
+    return PAYMENT_METHODS.slice().sort(function(a, b){
+      return adjustmentOf(a, sub) - adjustmentOf(b, sub);
+    });
+  }
+
   function renderPays(){
     var wrap = $('zzco-pays');
     wrap.innerHTML = '';
-    PAYMENT_METHODS.forEach(function(m, i){
+    var methods = orderedMethods();
+    methods.forEach(function(m, i){
       var el = document.createElement('div');
       el.className = 'zzco__pay' + (i === 0 ? ' is-sel' : '');
       el.style.setProperty('--ring', m.ring);
@@ -855,7 +955,7 @@
         (m.badge ? '<span class="zzco__badge zzco__badge--' + m.badgeType + '">' + m.badge + '</span>' : '');
       el.addEventListener('click', function(){
         state.method = m.id;
-        state.pct = m.pct || 0;
+        state.sel = m;
         [].forEach.call(wrap.children, function(c){ c.classList.remove('is-sel'); });
         el.classList.add('is-sel');
         renderTotals();
@@ -863,9 +963,9 @@
       });
       wrap.appendChild(el);
     });
-    if (PAYMENT_METHODS[0]){
-      state.method = PAYMENT_METHODS[0].id;
-      state.pct = PAYMENT_METHODS[0].pct || 0;
+    if (methods[0]){
+      state.method = methods[0].id;
+      state.sel = methods[0];
     }
   }
 
@@ -878,14 +978,16 @@
       return;
     }
     var sub = state.subtotal;
-    var adj = sub * (state.pct / 100);
+    var adj = adjustmentOf(state.sel, sub);
     var total = sub + adj;
     $('zzco-subtotal').textContent = money(sub, state.currency);
     var row = $('zzco-saverow');
-    if (state.pct !== 0){
+    if (adj !== 0){
       row.style.display = 'flex';
-      row.style.color = state.pct < 0 ? '#4ade80' : '#fbbf24';
-      $('zzco-savelabel').textContent = state.pct < 0 ? 'Crypto discount (est.)' : 'Card fee (est.)';
+      row.style.color = adj < 0 ? '#4ade80' : '#fbbf24';
+      /* The card fee is a fixed amount now, so it is not an estimate — say the
+         exact figure. Only the crypto side still moves with the subtotal. */
+      $('zzco-savelabel').textContent = adj < 0 ? 'Crypto discount (est.)' : 'Card fee';
       $('zzco-save').textContent = (adj < 0 ? '\u2212' : '+') + money(Math.abs(adj), state.currency);
     } else {
       row.style.display = 'none';
@@ -964,6 +1066,34 @@
       row.appendChild(body);
       row.appendChild(pr);
       lines.appendChild(row);
+
+      /* Addons ride nested inside their parent item in the cart API's
+         response, so summing only the top level silently under-counts every
+         bundled order — the buyer would see a total that excludes the NFA
+         account they just added. Billed once each, matching how the cart page
+         totals them (quantity applies to the parent key, not the addon). */
+      var addons = (it.addons && it.addons.length) ? it.addons : [];
+      addons.forEach(function(ad){
+        var adPrice = (ad.variant && ad.variant.price) || 0;
+        sub += adPrice;
+
+        var adRow = document.createElement('div');
+        adRow.className = 'zzco__line zzco__line--addon';
+
+        var adBody = document.createElement('div');
+        adBody.className = 'zzco__lbody';
+        adBody.innerHTML =
+          '<div class="zzco__lname">+ ' + (ad.product ? ad.product.name : 'Addon') + '</div>' +
+          '<div class="zzco__lvar">' + (ad.variant ? ad.variant.name : '') + '</div>';
+
+        var adPr = document.createElement('div');
+        adPr.className = 'zzco__lprice';
+        adPr.textContent = money(adPrice, (ad.product && ad.product.currency) || cur);
+
+        adRow.appendChild(adBody);
+        adRow.appendChild(adPr);
+        lines.appendChild(adRow);
+      });
     });
     if (state.full[0] && state.full[0].product){
       state.currency = state.full[0].product.currency || state.currency;
@@ -1036,9 +1166,26 @@
 
   function emailOk(){ return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test($('zzco-email').value.trim()); }
 
+  /* What is still missing, in the order a buyer fills the form. Returns null
+     when the order can actually be placed. */
+  function blocker(){
+    if (!state.cart.length) return { msg: 'Your cart is empty.', focus: null };
+    if (!$('zzco-email').value.trim()) return { msg: 'Enter the e-mail address your key should go to.', focus: 'zzco-email' };
+    if (!emailOk()) return { msg: "That e-mail doesn't look right — check it before we send your key there.", focus: 'zzco-email' };
+    if (!state.method) return { msg: 'Choose how you want to pay.', focus: null };
+    return null;
+  }
+
+  /* The button used to sit disabled until four separate conditions were all
+     satisfied, with nothing on screen saying which one was outstanding — a
+     buyer who missed the terms tickbox just saw a dead button and no reason.
+     It stays clickable now and says what is missing when pressed, which is
+     both kinder and one fewer thing to get right before anything responds. */
   function refreshBtn(){
-    var ok = state.cart.length && state.method && $('zzco-tos').checked && emailOk();
-    $('zzco-pay').disabled = !ok;
+    $('zzco-pay').disabled = false;
+    var b = blocker();
+    $('zzco-pay').setAttribute('aria-disabled', b ? 'true' : 'false');
+    $('zzco-pay').classList[b ? 'add' : 'remove']('is-waiting');
   }
 
   function showErr(msg){
@@ -1050,6 +1197,17 @@
   async function pay(){
     var btn = $('zzco-pay');
     if (btn.disabled) return;
+
+    var b = blocker();
+    if (b){
+      showErr(b.msg);
+      if (b.focus){
+        var f = $(b.focus);
+        if (f){ f.focus(); $('zzco-emailwrap').classList.add('is-bad'); }
+      }
+      return;
+    }
+
     btn.disabled = true;
     btn.classList.add('is-loading');
     $('zzco-pay-label').textContent = 'Creating checkout...';
@@ -1107,48 +1265,86 @@
     em.addEventListener('blur', function(){
       if (em.value.trim() && !emailOk()) $('zzco-emailwrap').classList.add('is-bad');
     });
-    $('zzco-tos').addEventListener('change', refreshBtn);
     $('zzco-pay').addEventListener('click', pay);
-    $('zzco-coupon-apply').addEventListener('click', function(){
-      var b = $('zzco-coupon-apply');
-      if ($('zzco-coupon').value.trim()){ b.textContent = 'Added'; b.classList.add('is-on'); }
-      else { b.textContent = 'Apply'; b.classList.remove('is-on'); }
-    });
 
-    /* v81 — coupon-model affiliates.
-       Every affiliate code is also a live 5%-off coupon. If the buyer
-       arrived through ?a=CODE we drop that code straight into the coupon
-       box so link traffic gets the same discount as people who were told
-       the code by name. We never overwrite a coupon they typed themselves,
-       and we don't stack: whichever code is in the box is the one sent.
-       The server still validates it — this is convenience, not authority. */
+    /* ---- Coupon box: prefill it, and say honestly what will happen ----
+
+       Two codes can be waiting for a buyer by the time they reach checkout:
+
+       - a scratch-card prize (`zz_sc_claim`), worth up to 10%, which the cart
+         page has already told them is "still active — apply it at checkout";
+       - an affiliate code (v81: every affiliate code is also a live 5%-off
+         coupon), so link traffic gets the same discount as people who were
+         told the code by name.
+
+       Only one can ride along — `payload.coupon` is a single string and the
+       codes don't stack — so precedence is: whatever the buyer typed, then the
+       scratch prize, then the affiliate code. Scratch outranks affiliate
+       because it's worth more and because we promised it by name one page ago.
+       Preferring it costs the referrer nothing: pay() sends `payload.affiliate`
+       separately from `payload.coupon`, so attribution survives either way.
+
+       We can't verify a code here — validation lives in the checkout worker,
+       which isn't part of this theme — so the copy never claims a discount has
+       already come off. It says the code travels with the order and lands at
+       the payment step, which is what actually happens. Claiming a discount
+       the totals don't show is how a buyer stops trusting every other number
+       on the page. */
     (function(){
       var note = $('zzco-coupon-note');
       var box  = $('zzco-coupon');
-      var aff  = affiliate();
+      var btn  = $('zzco-coupon-apply');
       if (!note || !box) return;
 
-      if (box.value.trim()) return;          // buyer typed one already
-      if (!aff) return;                      // no referral in play
+      var claim = scratchClaim();
+      var aff   = affiliate();
 
-      box.value = aff.toUpperCase();
-      var b = $('zzco-coupon-apply');
-      if (b){ b.textContent = 'Added'; b.classList.add('is-on'); }
-      note.hidden = false;
-      note.textContent = 'Referral code ' + box.value + ' applied \u2014 5% off your cheat key.';
+      /* The code we put there ourselves, and how to describe it while it is
+         still the one in the box. */
+      var prefill = null;
+      if (claim && claim.code){
+        var sc = String(claim.code).toUpperCase();
+        prefill = {
+          code: sc,
+          text: 'Scratch code ' + sc + ' added \u2014 ' +
+                (claim.pct ? claim.pct + '% off, applied' : 'applied') + ' at the payment step.'
+        };
+      } else if (aff){
+        prefill = {
+          code: aff.toUpperCase(),
+          text: 'Referral code ' + aff.toUpperCase() + ' added \u2014 5% off, applied at the payment step.'
+        };
+      }
 
-      /* If they clear or change it, stop claiming the discount is on. */
-      box.addEventListener('input', function(){
+      function setOn(on){
+        if (!btn) return;
+        btn.textContent = on ? 'Added' : 'Apply';
+        btn.classList[on ? 'add' : 'remove']('is-on');
+      }
+
+      function describe(){
         var v = box.value.trim();
-        if (!v){ note.hidden = true; return; }
-        if (v.toUpperCase() === aff.toUpperCase()){
-          note.hidden = false; note.classList.remove('is-warn');
-          note.textContent = 'Referral code ' + v.toUpperCase() + ' applied \u2014 5% off your cheat key.';
+        if (!v){ note.hidden = true; note.classList.remove('is-warn'); setOn(false); return; }
+        setOn(true);
+        note.hidden = false;
+        if (prefill && v.toUpperCase() === prefill.code){
+          note.classList.remove('is-warn');
+          note.textContent = prefill.text;
+        } else if (prefill){
+          note.classList.add('is-warn');
+          note.textContent = 'Using ' + v + ' instead of your saved code \u2014 we\u2019ll check it at the payment step.';
         } else {
-          note.hidden = false; note.classList.add('is-warn');
-          note.textContent = 'Using ' + v + ' instead of your referral code.';
+          note.classList.remove('is-warn');
+          note.textContent = 'Code ' + v + ' will be applied at the payment step.';
         }
-      });
+      }
+
+      /* Never overwrite a code the buyer typed themselves. */
+      if (prefill && !box.value.trim()) box.value = prefill.code;
+
+      describe();
+      box.addEventListener('input', describe);
+      if (btn) btn.addEventListener('click', describe);
     })();
     refreshBtn();
     if (!em.value) em.focus();
@@ -1290,7 +1486,7 @@
     <!-- PROOF -->
     <section class="wu-proof wu-rise" style="--d:.32s">
       <div class="wu-proof__item">
-        <p class="wu-proof__n"><span data-zz-rc>78</span></p>
+        <p class="wu-proof__n"><span data-zz-rc>100</span></p>
         <p class="wu-proof__l">verified reviews</p>
       </div>
       <div class="wu-proof__item">
@@ -1341,7 +1537,7 @@
   --edge:rgba(191,64,191,.14);--panel:rgba(12,15,30,.62);
   position:relative;width:100%;overflow:hidden;
   background:radial-gradient(130% 90% at 50% -10%,#0d1130 0%,#06070f 58%);
-  font-family:'Satoshi','Inter',system-ui,sans-serif;color:var(--ink)}
+  font-family:var(--zz-sans);color:var(--ink)}
 .wu-page *{box-sizing:border-box}
 .wu-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 .wu-bg__grid{position:absolute;inset:-2px;
@@ -1357,8 +1553,8 @@
 @keyframes wuRise{to{opacity:1;transform:translateY(0)}}
 
 .wu-head{text-align:center;margin-bottom:40px}
-.wu-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--v);font-size:.74rem;letter-spacing:.22em;margin:0}
-.wu-title{font-size:clamp(2.2rem,6vw,3.6rem);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:.5rem 0 0;
+.wu-eyebrow{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;color:var(--v);font-size:.74rem;letter-spacing:.22em;margin:0}
+.wu-title{font-size:clamp(2.2rem,6vw,3.6rem);font-weight:700;letter-spacing:-.03em;line-height:1.05;margin:.5rem 0 0;
   background:linear-gradient(135deg,#fff,#a8c4ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .wu-sub{color:var(--mut);font-size:1.02rem;line-height:1.6;max-width:620px;margin:1rem auto 0}
 .wu-sub em{font-style:normal;color:#e6b3ff}
@@ -1367,11 +1563,11 @@
 .wu-vs{border:1px solid var(--edge);border-radius:18px;padding:24px 22px;background:var(--panel);backdrop-filter:blur(14px)}
 .wu-vs--bad{border-color:rgba(239,68,68,.24);background:linear-gradient(160deg,rgba(239,68,68,.07),rgba(12,15,30,.62))}
 .wu-vs--good{border-color:rgba(34,197,94,.26);background:linear-gradient(160deg,rgba(34,197,94,.07),rgba(12,15,30,.62))}
-.wu-vs__tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;
+.wu-vs__tag{display:inline-block;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;
   padding:4px 10px;border-radius:6px;margin:0 0 14px}
 .wu-vs__tag--bad{color:#f87171;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.32)}
 .wu-vs__tag--good{color:#4ade80;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3)}
-.wu-vs__num{font-size:clamp(2rem,5vw,2.8rem);font-weight:800;letter-spacing:-.03em;margin:0;line-height:1}
+.wu-vs__num{font-size:clamp(2rem,5vw,2.8rem);font-weight:700;letter-spacing:-.03em;margin:0;line-height:1}
 .wu-vs--bad .wu-vs__num{color:#fca5a5}
 .wu-vs--good .wu-vs__num{color:#86efac}
 .wu-vs__num span{opacity:.55}
@@ -1386,23 +1582,23 @@
 .wu-vs--bad .wu-vs__list li::before{content:"\2715";color:rgba(239,68,68,.8)}
 .wu-vs--good .wu-vs__list li::before{content:"\2713";color:rgba(34,197,94,.85)}
 .wu-vs__mid{display:grid;place-items:center;padding:0 14px}
-.wu-vs__mid span{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.14em;color:rgba(200,215,240,.4);
+.wu-vs__mid span{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.7rem;letter-spacing:.14em;color:rgba(200,215,240,.4);
   border:1px solid rgba(255,255,255,.08);border-radius:99px;padding:8px 10px;background:rgba(12,15,30,.7)}
 
 .wu-card{border:1px solid var(--edge);border-radius:18px;padding:26px;background:var(--panel);backdrop-filter:blur(14px);margin-bottom:18px}
 .wu-card--warn{border-color:rgba(234,179,8,.26);background:linear-gradient(135deg,rgba(234,179,8,.06),transparent)}
-.wu-kicker{font-family:'JetBrains Mono',monospace;color:var(--v);font-size:.66rem;letter-spacing:.2em;margin:0 0 6px}
+.wu-kicker{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;color:var(--v);font-size:.66rem;letter-spacing:.2em;margin:0 0 6px}
 .wu-kicker--center{text-align:center;margin-top:26px}
-.wu-h2{font-size:clamp(1.25rem,3vw,1.7rem);font-weight:800;letter-spacing:-.02em;margin:0 0 14px}
+.wu-h2{font-size:clamp(1.25rem,3vw,1.7rem);font-weight:700;letter-spacing:-.02em;margin:0 0 14px}
 .wu-h2 em{font-style:normal;color:#e6b3ff}
 .wu-h2--center{text-align:center;margin-bottom:20px}
 .wu-h2--sm{font-size:1.15rem;display:flex;align-items:center;gap:10px}
-.wu-warn{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;font-size:.85rem;font-weight:800;flex-shrink:0;
+.wu-warn{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;font-size:.85rem;font-weight:700;flex-shrink:0;
   background:rgba(234,179,8,.14);border:1px solid rgba(234,179,8,.3);color:#fbe08a}
 .wu-p{color:var(--mut);font-size:.94rem;line-height:1.65;margin:0}
 .wu-p strong{color:#fff}
 .wu-mb{margin-bottom:16px}
-.wu-note{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:rgba(200,215,240,.45);margin:16px 0 0;
+.wu-note{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.75rem;color:rgba(200,215,240,.45);margin:16px 0 0;
   padding-top:14px;border-top:1px solid rgba(255,255,255,.06)}
 .wu-page a{color:#a8c4ff;text-decoration:none}
 .wu-page a:hover{color:#fff;text-decoration:underline}
@@ -1412,16 +1608,16 @@
 .wu-list li:first-child{border-top:none}
 .wu-list li strong{color:#fff}
 .wu-list li::before{counter-increment:wu;content:counter(wu);position:absolute;left:0;top:12px;
-  width:26px;height:26px;display:grid;place-items:center;border-radius:8px;font-size:.78rem;font-weight:800;
+  width:26px;height:26px;display:grid;place-items:center;border-radius:8px;font-size:.78rem;font-weight:700;
   background:rgba(191,64,191,.16);border:1px solid rgba(191,64,191,.3);color:#c7b8ff}
 
 .wu-tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .wu-table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:520px}
 .wu-table th,.wu-table td{padding:12px 14px;text-align:left;border-top:1px solid rgba(255,255,255,.055);vertical-align:top}
-.wu-table thead th{border-top:none;font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;
-  color:rgba(200,215,240,.5);font-weight:600}
+.wu-table thead th{border-top:none;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(200,215,240,.5);font-weight:500}
 .wu-table thead .wu-th--good{color:#4ade80}
-.wu-table tbody th{font-weight:600;color:#fff;width:26%}
+.wu-table tbody th{font-weight:500;color:#fff;width:26%}
 .wu-table td{color:rgba(205,218,242,.72)}
 .wu-table .wu-td--good{color:#d7e6ff;background:rgba(34,197,94,.045)}
 
@@ -1435,19 +1631,19 @@
 
 .wu-proof{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
 .wu-proof__item{border:1px solid var(--edge);border-radius:14px;padding:18px 14px;background:var(--panel);text-align:center}
-.wu-proof__n{font-size:1.6rem;font-weight:800;margin:0;letter-spacing:-.02em;
+.wu-proof__n{font-size:1.6rem;font-weight:700;margin:0;letter-spacing:-.02em;
   background:linear-gradient(135deg,#fff,#c7b8ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .wu-proof__l{font-size:.76rem;color:rgba(200,215,240,.55);margin:6px 0 0;line-height:1.35}
 
 .wu-cta{text-align:center;border:1px solid rgba(191,64,191,.3);border-radius:18px;padding:34px 24px;
   background:linear-gradient(135deg,rgba(191,64,191,.1),rgba(124,58,237,.04))}
-.wu-cta__t{font-size:1.4rem;font-weight:800;margin:0;letter-spacing:-.02em}
+.wu-cta__t{font-size:1.4rem;font-weight:700;margin:0;letter-spacing:-.02em}
 .wu-cta__p{color:var(--mut);font-size:.94rem;margin:.5rem 0 20px}
 .wu-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border-radius:12px;
   background:linear-gradient(135deg,var(--v),var(--b));color:#fff;font-weight:700;font-size:1rem;text-decoration:none;
   box-shadow:0 12px 32px -10px rgba(191,64,191,.8);transition:filter .25s,transform .25s,gap .25s}
 .wu-btn:hover{filter:brightness(1.1);transform:translateY(-2px);gap:13px;color:#fff;text-decoration:none}
-.wu-cta__f{font-family:'JetBrains Mono',monospace;font-size:.76rem;color:rgba(200,215,240,.45);margin:18px 0 0}
+.wu-cta__f{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.76rem;color:rgba(200,215,240,.45);margin:18px 0 0}
 
 .wu-faqlead{text-align:center;color:rgba(200,215,240,.5);font-size:.9rem;margin:44px 0 0}
 .wu-components{background:radial-gradient(120% 80% at 50% 0%,#0a0d24 0%,#06070f 60%)}

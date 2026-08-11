@@ -890,17 +890,17 @@ function snow(config = {}) {
   if (window.__zzArcade) return;
   window.__zzArcade = true;
 
-  var USERS = ['xR***st','Gh0st_**','val****z','sn1p******','Ksa***','pr0****r',
-    'z***yy','toxic****','ripp***','frost***','n0****py','aim****d','w1nt***',
-    'dr***o','sh****w','mavr***','lu***s','b1g****','qu***x','ze***h'];
-  var KF_ITEMS = [
-    { ico: '🔑', txt: '1 Month key', w: 4 },
-    { ico: '🔑', txt: '1 Week key', w: 5 },
-    { ico: '👑', txt: 'Lifetime key', w: 2 },
-    { ico: '🔑', txt: '1 Day key', w: 3 },
-    { ico: '⭐', txt: '5★ review', w: 3 },
-    { ico: '🛡', txt: '30d undetected', w: 2 }
-  ];
+  /* The killfeed's purchase lines are gone, for the same reason the live
+     activity toast and the "147 players online now" strip went.
+
+     It rendered "xR***st ▸ 🔑 1 Month key" every 18-34 seconds, picked by
+     Math.random() from a list of 20 invented censored usernames and six
+     invented events. The game-HUD styling does not change what a visitor
+     reads it as: someone just bought a 1 Month key. Nobody had.
+
+     What survives is the part that was always honest — the rank-ups, which
+     describe how long *this* visitor has been on the site and claim nothing
+     about anyone else. They still use the same feed renderer. */
   var RANKS = [
     { at: 45,  name: 'REGULAR',  sub: 'browsing like a pro' },
     { at: 150, name: 'TRUSTED',  sub: 'the lobby respects you' },
@@ -912,13 +912,9 @@ function snow(config = {}) {
     '👀 Still undetected. Still here.'
   ];
 
+  /* pickW (weighted choice) went with the killfeed's invented purchase lines;
+     the two survivors below pick uniformly from fixed copy. */
   function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
-  function pickW(list) {
-    var t = 0, i; for (i = 0; i < list.length; i++) t += list[i].w;
-    var r = Math.random() * t;
-    for (i = 0; i < list.length; i++) { r -= list[i].w; if (r <= 0) return list[i]; }
-    return list[0];
-  }
 
   function boot() {
     if (!document.body) return;
@@ -982,23 +978,6 @@ function snow(config = {}) {
         setTimeout(function () { if (row.parentNode) row.parentNode.removeChild(row); }, 500);
       }, rank ? 6200 : 4600);
     }
-
-    function feedLine() {
-      var it = pickW(KF_ITEMS);
-      push('<span class="zzkf__user">' + pick(USERS) + '</span>' +
-           '<span class="zzkf__arrow">▸</span>' +
-           '<span class="zzkf__ico">' + it.ico + '</span>' +
-           '<span class="zzkf__item">' + it.txt + '</span>');
-    }
-
-    var next;
-    function loop() {
-      next = setTimeout(function () {
-        if (!document.hidden) feedLine();
-        loop();
-      }, 18000 + Math.random() * 16000);
-    }
-    setTimeout(function () { if (!document.hidden) feedLine(); loop(); }, 9000);
 
     /* session rank-ups (cosmetic progression; persists across pages) */
     var t0 = Date.now();
@@ -1407,64 +1386,29 @@ function snow(config = {}) {
     }
   } catch (e) {}
 
-  /* ---- 2. rotating CTA vouches on product pages ---- */
-  var QUOTES = [
-    { u: 'frost***',  q: 'key was on my screen before my card popup even closed' },
-    { u: 'aim****d',  q: 'been running it 3 months, zero issues, support answers fast' },
-    { u: 'n0****py',  q: 'setup took 5 minutes with the guide, works first try' },
-    { u: 'w1nt***',   q: 'cheapest week key I found that actually stays up' },
-    { u: 'sh****w',   q: 'renewed twice now, status page is always accurate' },
-    { u: 'qu***x',    q: 'instant delivery is real, timed it at 11 seconds' }
-  ];
+  /* ---- 2. rotating CTA vouches on product pages: REMOVED ----
 
-  function boot() {
-    if (!/\/product\//.test(location.pathname)) return;
-    var anchor = document.querySelector('.pf-checkout-info');
-    if (!anchor || document.getElementById('zz-vq')) return;
-    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+     This widget never rendered. It anchored itself with
+     document.querySelector('.pf-checkout-info') and bailed when that
+     returned null, and no template in this theme has ever created a
+     .pf-checkout-info element. That selector is the only place the string
+     appears anywhere in the repo.
 
-    var css = '';
-    css += '.zzvq{display:flex;align-items:flex-start;gap:9px;margin-top:10px;padding:10px 13px;border-radius:11px;background:rgba(242,193,78,.05);border:1px solid rgba(242,193,78,.2);font-family:var(--zz-sans)"Inter",system-ui,sans-serif;overflow:hidden}';
-    css += '.zzvq__stars{flex:none;font-size:.72rem;letter-spacing:.08em;color:#f2c14e;text-shadow:0 0 12px rgba(242,193,78,.4);padding-top:2px}';
-    css += '.zzvq__body{min-width:0;transition:opacity .45s ease}';
-    css += '.zzvq--fade .zzvq__body{opacity:0}';
-    css += '.zzvq__q{display:block;font-size:.8rem;line-height:1.45;color:rgba(224,232,255,.85);font-style:italic}';
-    css += '.zzvq__u{display:block;margin-top:2px;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.64rem;letter-spacing:.06em;color:rgba(200,215,240,.55)}';
-    css += '.zzvq__u b{color:#e6b3ff;font-weight:700}';
-    css += '.zzvq__u .zzvq__ok{color:#4ade80}';
-    var s = document.createElement('style');
-    s.textContent = css;
-    document.head.appendChild(s);
+     So the six testimonials it rotated were dead code rather than something
+     visitors saw: six sentences nobody said, credited to six invented
+     usernames, under a green "verified purchase" badge, on an 8-second
+     rotation. Dead or not, that is not code to leave sitting next to a Buy
+     button.
 
-    var idx = Math.floor(Math.random() * QUOTES.length);
-    var box = document.createElement('div');
-    box.className = 'zzvq'; box.id = 'zz-vq';
-    box.innerHTML = '<span class="zzvq__stars">★★★★★</span><span class="zzvq__body">' +
-      '<span class="zzvq__q"></span><span class="zzvq__u"></span></span>';
-    anchor.parentNode.insertBefore(box, anchor.nextSibling);
+     Deliberately not resurrected with the real reviews either. The product
+     page already shows the carried-over ones in buy-faq.njk and
+     zaza-product-block.njk, so a third rotating copy beside the button
+     would just be quotes the visitor had scrolled past a moment earlier.
 
-    var qEl = box.querySelector('.zzvq__q'), uEl = box.querySelector('.zzvq__u');
-    function show(i) {
-      var it = QUOTES[i];
-      qEl.textContent = '“' + it.q + '”';
-      uEl.innerHTML = '— <b>' + it.u + '</b> · <span class="zzvq__ok">✓ verified purchase</span>';
-    }
-    show(idx);
-    if (!reduce) {
-      setInterval(function () {
-        if (document.hidden) return;
-        box.classList.add('zzvq--fade');
-        setTimeout(function () {
-          idx = (idx + 1) % QUOTES.length;
-          show(idx);
-          box.classList.remove('zzvq--fade');
-        }, 460);
-      }, 8000);
-    }
-  }
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
+     The DOMContentLoaded boot() that used to sit here went with it — the
+     vouches were the only thing it started. The currency cleanup above runs
+     synchronously on purpose, so that appCurrency.init() sees clean state
+     before Alpine reads it. ---- */
 })();
 
 /* =============================================================================

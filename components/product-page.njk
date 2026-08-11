@@ -1311,14 +1311,33 @@
       pair={href:'/product/zaza-rust-private-cheat',tag:'PAIRS WITH',t:'Zaza Private Cheat \u2014 keys from $4.99',
         d:'Private build, ~100 players on an average day. Run it on this account and keep your main untouched.'};
     }
-    if(pair){
+    /* The anchor is resolved, not assumed.
+
+       This line used to read `trust.parentNode.insertBefore(a, trust.nextSibling)`
+       and `trust` did not exist: it had been the emoji trust bar described in
+       the comment above, and when that was deleted the variable went with it
+       while the line that used it stayed. So on any URL containing
+       "zaza-rust-private-cheat" or "rust-nfa" \u2014 i.e. both real product pages,
+       every visit \u2014 `pair` was truthy and this threw a ReferenceError.
+
+       It threw from inside this IIFE, which meant everything below it in the
+       same function never ran: the sticky mobile buy bar and the gallery
+       lightbox. Neither had worked in production. It never showed up in
+       testing because the harness serves /.render/product.html, whose path
+       matches neither product slug, so `pair` stayed null and the line was
+       never reached.
+
+       Anchored after the .pf-trust strip the comment refers to, falling back
+       to the actions block, and skipped entirely if neither is present. */
+    var anchor=document.querySelector('.pf-trust')||actions;
+    if(pair&&anchor&&anchor.parentNode){
       var a=document.createElement('a');
       a.className='ppx-pair';a.href=pair.href;
       a.innerHTML='<span class="ppx-pair__tag">'+pair.tag+'</span>'+
         '<span class="ppx-pair__t">'+pair.t+'</span>'+
         '<span class="ppx-pair__d">'+pair.d+'</span>'+
         '<span class="ppx-pair__go">View product \u2192</span>';
-      trust.parentNode.insertBefore(a,trust.nextSibling);
+      anchor.parentNode.insertBefore(a,anchor.nextSibling);
     }
   }
 

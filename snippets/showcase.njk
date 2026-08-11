@@ -119,7 +119,12 @@
     margin:0 0 1.05rem;line-height:.92;
     font-family:var(--zz-sans);
     font-weight:700;letter-spacing:-.025em;
-    font-size:clamp(3.4rem,12vw,7.5rem);
+    /* The 3.4rem floor is wider than a 320px screen: at that width 12vw is
+       38px, so the clamp minimum wins and "Showcase" renders 6px past the
+       edge, where the section clips rather than scrolls and the last glyph
+       loses its tail. The floor has to come down below the width where it
+       stops being a floor and starts being an overflow. */
+    font-size:clamp(2.75rem,12vw,7.5rem);
   }
   .zaza-showcase__title-fill{
     position:relative;display:inline-block;

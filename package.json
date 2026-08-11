@@ -5,6 +5,7 @@
   "description": "Zaza Cheats SellAuth storefront theme (Nunjucks). Tooling only — the platform renders these templates server-side.",
   "scripts": {
     "build:js": "terser assets/script.src.js -c -m -o assets/script.js",
+    "package": "npm run build:js && node tools/check.js && node tools/package.js",
     "check": "node tools/check.js",
     "check:html": "node tools/check.js --html",
     "mobile": "node tools/mobile.js",

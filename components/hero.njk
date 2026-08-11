@@ -634,6 +634,29 @@ html.zz-motion .hero-scrollcue { animation: heroRise .8s cubic-bezier(.22,1,.36,
   .hero-trust__sep { display: none; }
 }
 
+/* The homepage scrolled sideways on a 320px screen — iPhone SE 1st gen,
+   iPhone 5/5S, and any Android at that width, plus anyone browsing at 320
+   because they have the page split-screened.
+
+   .hero-inner is a flex item with the default min-width:auto, so it refuses
+   to shrink below the widest unbreakable thing inside it. That was the ghost
+   CTA: "Ask Us Anything on Discord" carries white-space:nowrap and needs
+   291px, which with the hero's 2x20px padding makes 331px in a 320px
+   viewport. Because .hero-inner is centred with `margin: 0 auto`, the auto
+   margins split the 11px of negative space and hung it 5px off each edge —
+   which is why the whole document scrolled while every child still measured
+   a tidy 291px.
+
+   Same class of bug, and the same fix, as the product buy box: min-width:0
+   lets the flex item shrink. The button is then allowed to wrap onto two
+   lines at this width rather than being clipped, which is what it should do
+   on a screen this narrow anyway. Above 380px nothing changes: the label
+   fits on one line and white-space:nowrap still applies. */
+@media (max-width: 380px) {
+  .hero-inner { min-width: 0; }
+  .hero-btn { white-space: normal; padding-left: 1.4rem; padding-right: 1.4rem; }
+}
+
 /* ===== cinematic hero background: slow Ken Burns drift, heavy grade ===== */
 .hero-bg{position:absolute;inset:0;overflow:hidden}
 .hero-bg__img{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;

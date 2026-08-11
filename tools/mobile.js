@@ -25,7 +25,15 @@ const { chromium } = require('playwright');
 
 const OUT = path.join(ROOT, '.render');
 
+/* 320 is first on purpose. It is the narrowest width still worth supporting
+   (iPhone SE 1st gen, iPhone 5/5S, older Androids, and anyone running the
+   browser in a split-screen pane), and it is where flex items with the
+   default min-width:auto give up — the homepage scrolled sideways there for
+   as long as this suite has existed, because the suite started at 375 and
+   the overflow only appears below ~331px of content width. Anything that
+   survives 320 survives the rest. */
 const VIEWPORTS = [
+  { name: 'iPhone SE (1st gen)', width: 320, height: 568, dpr: 2 },
   { name: 'iPhone SE', width: 375, height: 667, dpr: 2 },
   { name: 'iPhone 14 Pro', width: 393, height: 852, dpr: 3 },
   { name: 'iPad mini', width: 768, height: 1024, dpr: 2 },

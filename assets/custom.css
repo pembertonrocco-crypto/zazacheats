@@ -194,6 +194,14 @@
   margin:26px auto 0;font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.7rem;
   letter-spacing:.1em;color:rgba(231,236,255,.55);position:relative;z-index:2}
 .zzps__i{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+/* "24H+ DOWNTIME = TIME ADDED TO YOUR KEY" is 6px too wide for a 320px screen
+   with nowrap on, and the strip clips rather than scrolls, so the line lost
+   its last characters. Letting these wrap below 380px costs a second line and
+   keeps the sentence. */
+@media (max-width:380px){
+  .zzps{gap:8px 10px;letter-spacing:.06em}
+  .zzps__i{white-space:normal;text-align:center}
+}
 .zzps__d{width:3px;height:3px;border-radius:50%;background:rgba(var(--cl-accent-rgb,191,64,191),.6)}
 
 /* footer final CTA line */

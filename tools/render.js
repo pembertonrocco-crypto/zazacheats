@@ -31,7 +31,31 @@ function makeIncludeTag(tagName, dir) {
       parser.advanceAfterBlockEnd(tok.value);
       return new nodes.CallExtension(this, 'run', args);
     }
+    /* Keyword arguments are forwarded.
+     *
+     * They used to be silently dropped: parseSignature collects them, but run()
+     * only declared (context, name), so a call like
+     *
+     *   {% render_snippet "status-badge.njk", pname=product.name, pid=product.id %}
+     *
+     * rendered with pname and pid undefined. status-badge.njk only emits a
+     * badge for a product it recognises, so it emitted nothing, and the
+     * product page's status link came out as an anchor containing one
+     * aria-hidden icon and no text — an unlabelled link in every audit, on a
+     * page where the badge is fine in production. Every snippet that takes
+     * arguments was affected the same way: feedback-card.njk (feedback=fb),
+     * product-form.njk and zaza-nfa-block.njk (product=product),
+     * pagination.njk (paginator=…). None of them were really being tested.
+     *
+     * Nunjucks passes keyword args as a final hash argument when the
+     * signature has one, so the last argument is the kwargs object. */
     run(context, name) {
+      const kwargs =
+        arguments.length > 2 && arguments[arguments.length - 1] &&
+        arguments[arguments.length - 1].__keywords
+          ? arguments[arguments.length - 1]
+          : null;
+
       if (!name) return new nunjucks.runtime.SafeString('');
       const file = String(name).endsWith('.njk') ? String(name) : `${name}.njk`;
       const full = path.join(ROOT, dir, file);
@@ -45,6 +69,11 @@ function makeIncludeTag(tagName, dir) {
       const ctx = Object.assign({}, context.getVariables(), {
         componentId: String(name).replace(/\.njk$/, ''),
       });
+      if (kwargs) {
+        for (const k of Object.keys(kwargs)) {
+          if (k !== '__keywords') ctx[k] = kwargs[k];
+        }
+      }
       return new nunjucks.runtime.SafeString(env.render(`${dir}/${file}`, ctx));
     }
   };

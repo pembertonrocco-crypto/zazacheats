@@ -46,6 +46,16 @@
   .zzbar__text::after{content:'up to $12.50 of NFAs free';color:rgba(225,233,250,.9);font-size:.72rem}
   .zzbar__cta{padding:5px 10px;font-size:.68rem}
 }
+/* Below ~380px even the shortened line does not fit beside the pill and the
+   Claim button, and .zzbar__text ellipsises it — the bar read
+   "🎁 FREE NFA BUNDLE  up …  Claim →" on a 320px screen, which says nothing
+   and looks broken. Drop the supplementary line entirely at that width: the
+   pill and the button together still say what the offer is and where to get
+   it, and the detail is one tap away in the popup. */
+@media (max-width:380px){
+  .zzbar__text::after{content:none}
+  .zzbar__link{gap:8px;padding-left:8px}
+}
 @media (prefers-reduced-motion:reduce){.zzbar,.zzbar::after,.zzbar__gift{animation:none}}
 </style>
 

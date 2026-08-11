@@ -170,13 +170,19 @@
   <div class="pf-section">
     <p class="pf-label">Quantity</p>
     <div class="pf-qty">
+      {# Both buttons hold nothing but an icon, so without aria-label a screen
+         reader announced the pair as "button" and "button" with no way to
+         tell which one adds and which one removes. The icons themselves are
+         decorative once the button is named, hence aria-hidden. The number
+         input is labelled by the "Quantity" heading above it. #}
       <button
         @click="changeQuantity(quantity - 1)"
         type="button"
         class="pf-qty__btn"
+        aria-label="Decrease quantity"
         :disabled="outOfStock || quantity <= minQuantity"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true" focusable="false">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15"/>
         </svg>
       </button>
@@ -184,6 +190,7 @@
         type="number"
         class="pf-qty__input"
         name="quantity"
+        aria-label="Quantity"
         x-model.number="quantity"
         :min="minQuantity"
         :max="maxQuantity"
@@ -193,9 +200,10 @@
         @click="changeQuantity(quantity + 1)"
         type="button"
         class="pf-qty__btn"
+        aria-label="Increase quantity"
         :disabled="outOfStock || quantity >= maxQuantity"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true" focusable="false">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
         </svg>
       </button>
@@ -772,6 +780,26 @@
     align-items: flex-end;
     gap: 2px;
     margin-left: auto;
+  }
+
+  /* At 320px the variant row ran 30px past the screen and was clipped, so the
+     right-hand edge of every price column — the price itself on the widest
+     rows — was sliced off. Same cause as the buy-box overflow fixed at 375px:
+     flex items default to min-width:auto and refuse to shrink below their
+     widest unbreakable child, and this column holds three of them stacked
+     (the price, the "≈ $1.67 / day" anchor, and the "Save 67% vs daily"
+     chip), all white-space:nowrap.
+
+     min-width:0 lets both columns shrink, the savings chip is allowed to take
+     two lines at this width, and the type steps down slightly so the row has
+     somewhere to give. Nothing here applies above 380px. */
+  @media (max-width: 380px) {
+    .pf-variant { padding: 13px 12px; gap: 8px; }
+    .pf-variant__meta,
+    .pf-variant__right { min-width: 0; }
+    .pf-variant__name { font-size: 14px; }
+    .pf-variant__price { font-size: 19px; }
+    .pf-variant__save { white-space: normal; text-align: right; line-height: 1.25; }
   }
 
   /* price as naked display numerals — premium goods don't put prices in boxes */

@@ -1,8 +1,15 @@
 # Resell Plug UK — conversion rebuild
 
-Shopify theme (Dawn 15.4.1) for the Resell Plug store, rebuilt around one
-job: turn a TikTok viewer into a member of the free Telegram community, and
-sell the private community to the people who stay.
+Shopify theme (Dawn 15.4.1) for the Resell Plug store.
+
+**The positioning:** this is not a supplier-list shop. Every competitor sells
+a recycled list and goes quiet, which is why nobody scales off one. This one
+sells access to someone who has ordered from what he sells and answers you
+afterwards — a fixer, not a vendor. The homepage title says exactly that, and
+the *Why I'm not like the other plugs* section is the argument for it.
+
+The free Telegram community is a side goal — members and views — so it lives
+in the nav, the link tiles and the footer, never in a hero.
 
 ## What was wrong
 
@@ -45,6 +52,9 @@ gone — see *Honest numbers* below.
 | How it works | `rp-steps` | Makes step one look trivial |
 | Proof | `angels-proof-slider` | Members' screenshots (all 20 carried over) |
 | Who runs this | `rp-founder` | A face and a name — the one thing a scam page never has |
+| Featured | `rp-featured` | The page title and the flagship product |
+| Why different | `rp-value` | The mentor argument against the competition |
+| Links | `rp-linkhub` | Community, vouches, TikTok, Linktree |
 | Free vs private | `rp-ladder` | Sells the paid tier without hiding the free one |
 | Products | `rp-products` | The supplier vault |
 | FAQ | `rp-faq` | Kills the scam objection first, then the rest |
@@ -250,3 +260,42 @@ no horizontal overflow, hero CTA above the fold on a phone, sticky bar 67px
 and publishing its own height so it never covers the footer. That pass found
 the FAQ accordion never opening, a header that wrapped to two lines on a
 phone, and a sticky bar eating 94px.
+
+
+## Proof is the site's main argument
+
+It sits second on the homepage, directly under the title, because in this
+niche the objection is never "what is it" — it is "is this real". The
+screenshots render at 380px on a phone and 480px on desktop: a 300px chat
+screenshot is a grey smudge, and a smudge proves nothing.
+
+`angels-proof-slider` has two layouts. **Scrolling strip** for a page with
+other things on it; **full grid** for `/pages/vouches`, where someone has
+arrived specifically to scrutinise the evidence and a marquee they cannot
+pause is the wrong shape.
+
+## Uniform product cards
+
+Dawn's grids shipped with `image_ratio: "adapt"`, which makes every card take
+its own image's aspect ratio — so a tall screenshot and a square logo in the
+same row produced visibly different card sizes. Every grid is `square` now,
+on the collection page, search and related products. The homepage grid was
+already fixed at 1:1 with `object-fit: cover`.
+
+If cards ever look uneven again, that setting is the first thing to check.
+
+## The fold, on a phone
+
+Most traffic is mobile, so the buy button's position is measured rather than
+eyeballed. Square product images and source order originally put it **1089px
+down an 852px screen**. Three changes brought it to ~717px:
+
+- the featured image is a 2:1 crop under 750px — these are digital products,
+  the image is a cover, and its height is purely distance between the visitor
+  and the button
+- price and buy button jump above the feature list on mobile; the list still
+  gets read, just after the decision is available
+- tighter title margins and a smaller `h1` floor
+
+Verified at 393x852 and 360x780: button above the fold on both, no horizontal
+overflow, no tap target under 44px, exactly one `h1`.

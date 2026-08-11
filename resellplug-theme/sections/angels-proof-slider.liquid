@@ -30,7 +30,37 @@
     {%- endif -%}
   </div>
 
-  {%- if section.blocks.size > 0 -%}
+  {%- if section.blocks.size == 0 -%}
+    <div class="rp-wrap rp-center">
+      <p class="rp-body">Add screenshots to this section in the theme editor.</p>
+    </div>
+
+  {%- elsif section.settings.layout == 'grid' -%}
+    {%- comment -%}
+      A dedicated page wants all of them at once and wants them readable —
+      a marquee you cannot pause is the wrong shape for the page someone
+      opens specifically to scrutinise the evidence.
+    {%- endcomment -%}
+    <div class="rp-wrap">
+      <div class="rp-proof-grid">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.image != blank -%}
+            {{
+              block.settings.image
+              | image_url: width: 640
+              | image_tag:
+                loading: 'lazy',
+                widths: '260, 400, 640',
+                sizes: '(min-width: 990px) 300px, (min-width: 750px) 45vw, 90vw',
+                class: 'rp-proof-grid__img',
+                alt: block.settings.alt | default: section.settings.default_alt
+            }}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+  {%- else -%}
     <div class="rp-proof" style="--rp-proof-speed: {{ section.settings.speed }}s">
       <div class="rp-proof__track">
         {%- for pass in (1..2) -%}
@@ -52,10 +82,6 @@
           </div>
         {%- endfor -%}
       </div>
-    </div>
-  {%- else -%}
-    <div class="rp-wrap rp-center">
-      <p class="rp-body">Add screenshots to this section in the theme editor.</p>
     </div>
   {%- endif -%}
 
@@ -97,6 +123,23 @@
       "id": "subheading",
       "label": "Sub-heading",
       "default": "Every screenshot below was posted by a member. The vouches channel is public — go and read it before you buy anything."
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "default": "marquee",
+      "info": "Marquee for a strip on a busy page; grid for a page that is only about the proof.",
+      "options": [
+        {
+          "value": "marquee",
+          "label": "Scrolling strip"
+        },
+        {
+          "value": "grid",
+          "label": "Full grid"
+        }
+      ]
     },
     {
       "type": "range",

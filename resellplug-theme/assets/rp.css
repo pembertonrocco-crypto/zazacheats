@@ -574,13 +574,26 @@ html {
 
 /* The title sits above the product rather than beside it: on a phone a
    two-column hero pushes the buy button off the first screen, and the buy
-   button is the whole point of this section. */
+   button is the whole point of this section.
+
+   The margins here are tight on purpose. Measured on a 393px screen, the
+   title, the positioning line and the product image between them decide
+   whether the buy button clears the fold — it lands at ~760px against an
+   852px viewport, with enough slack that a longer title or a 360px phone
+   does not push it under. */
 .rp-featured__intro {
   max-width: 760px;
-  margin: 0 0 26px;
+  margin: 0 0 18px;
 }
 
-.rp-featured__intro .rp-h1 { font-size: clamp(1.75rem, 7vw, 3.25rem); }
+.rp-featured__intro .rp-eyebrow { margin-bottom: 12px; }
+.rp-featured__intro .rp-h1 { margin-bottom: 12px; }
+
+@media (min-width: 750px) {
+  .rp-featured__intro { margin-bottom: 26px; }
+}
+
+.rp-featured__intro .rp-h1 { font-size: clamp(1.5rem, 6.6vw, 3.25rem); }
 .rp-featured__intro .rp-lede { margin-bottom: 0; }
 
 .rp-featured__card {
@@ -606,9 +619,16 @@ html {
   border-radius: 14px;
   overflow: hidden;
   background: var(--rp-surface-2);
-  /* Wider than tall on a phone. A square here costs ~110px of vertical space
-     that the buy button then has to be scrolled past. */
-  aspect-ratio: 4 / 3;
+  /* A wide crop on a phone. These are digital products — the image is a
+     cover, not something anyone inspects — and every pixel of its height is
+     a pixel between the visitor and the buy button. Square on a phone put
+     that button 1089px down an 852px screen; this puts it at ~700px, and
+     still clears the fold on a 360x780 handset. */
+  aspect-ratio: 2 / 1;
+}
+
+@media (min-width: 750px) {
+  .rp-featured__media { aspect-ratio: 4 / 3; }
 }
 
 @media (min-width: 990px) {
@@ -1412,3 +1432,36 @@ body { padding-bottom: var(--rp-stickybar); }
 /* Long unbroken strings — a pasted supplier URL, a Telegram handle — are
    what actually break a product description on a 393px screen. */
 .rp-rte { overflow-wrap: anywhere; }
+
+/* Proof, enlarged.
+
+   Social proof is the site's main argument, so the screenshots are sized to
+   be actually readable rather than decorative — a 300px-tall chat screenshot
+   on a phone is a grey smudge, and a smudge proves nothing. */
+.rp-proof__img { height: 380px; }
+
+@media (min-width: 750px) {
+  .rp-proof__img { height: 480px; }
+}
+
+.rp-proof-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+@media (min-width: 750px) {
+  .rp-proof-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 990px) {
+  .rp-proof-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.rp-proof-grid__img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--rp-line);
+  display: block;
+}

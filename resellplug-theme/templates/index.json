@@ -3,19 +3,19 @@
     "rp_featured": {
       "type": "rp-featured",
       "settings": {
-        "eyebrow": "Two years of receipts",
-        "heading": "Two years trading. 220 in the group. Every supplier tested first.",
-        "heading_accent": "tested first",
-        "subheading": "Real UK reselling suppliers, ordered from and checked by me before anything goes on sale. Instant delivery, and the vouches are public.",
-        "tag": "Best seller",
+        "eyebrow": "2 years · 220 in the group · 22 inside",
+        "heading": "Where resellers' problems actually get solved",
+        "heading_accent": "actually get solved",
+        "subheading": "I'm not another plug flogging recycled supplier lists. I sell what's working right now, I've ordered from all of it myself, and I'm on the other end of a message when you get stuck.",
+        "tag": "The one to start with",
         "product": "",
         "product_title": "",
-        "pitch": "The one that gets you everything — the full vault, the winning products and me on the other end of a message.",
+        "pitch": "Direct access to me, the suppliers I'm actually using, and help with the part everyone quits at — scaling it.",
         "price_note": "one-off · lifetime access",
         "cta_label": "Get instant access",
-        "details_label": "See everything included",
+        "details_label": "What's inside",
         "reassure_1": "Delivered instantly",
-        "reassure_2": "Vouches are public",
+        "reassure_2": "Two years of public vouches",
         "show_stats": true,
         "stat_1_label": "Years trading",
         "stat_2_label": "In the free group",
@@ -26,13 +26,13 @@
         "p1": {
           "type": "point",
           "settings": {
-            "text": "Every supplier I use, with contacts and full catalogues"
+            "text": "Me on the other end of a message when you're stuck"
           }
         },
         "p2": {
           "type": "point",
           "settings": {
-            "text": "Winning products posted before they blow up"
+            "text": "The suppliers I'm ordering from right now, not a 2023 list"
           }
         },
         "p3": {
@@ -40,49 +40,29 @@
           "settings": {
             "text": "The full agent and shipping walkthrough"
           }
-        },
-        "p4": {
-          "type": "point",
-          "settings": {
-            "text": "Message me directly when you're stuck"
-          }
         }
       },
       "block_order": [
         "p1",
         "p2",
-        "p3",
-        "p4"
+        "p3"
       ]
-    },
-    "rp_products": {
-      "type": "rp-products",
-      "settings": {
-        "eyebrow": "The vault",
-        "heading": "Every supplier, one payment each",
-        "subheading": "Buy once and the contacts are yours for good. Tap any one to see exactly what's inside.",
-        "collection": "homepage",
-        "products_to_show": 12,
-        "button_label": "Get access",
-        "show_details": true,
-        "anchor": "suppliers",
-        "tone": "raised"
-      }
     },
     "rp_proof": {
       "type": "angels-proof-slider",
       "settings": {
         "eyebrow": "Receipts",
         "title": "Two years of members' orders",
-        "subheading": "Every screenshot was posted by a real member. The vouches channel is public — go and read the lot.",
+        "subheading": "Posted by members as their parcels landed. Nothing staged, nothing removed — and the channel it comes from is public.",
         "speed": 45,
         "default_alt": "Screenshot of a member's order posted in the community chat",
         "anchor": "proof",
-        "show_cta": false,
+        "show_cta": true,
         "cta_label": "",
         "vouches_label": "Read every vouch",
         "vouches_link": "",
-        "tone": "flat"
+        "tone": "raised",
+        "layout": "marquee"
       },
       "blocks": {
         "image_Y89hqt": {
@@ -230,18 +210,74 @@
         "image_NNQi4f"
       ]
     },
+    "rp_value": {
+      "type": "rp-value",
+      "blocks": {
+        "v1": {
+          "type": "item",
+          "settings": {
+            "icon": "bolt",
+            "title": "What's working now",
+            "text": "Not a recycled list from two years ago. These are the suppliers I'm ordering from this month, and anything that stops performing comes off the site."
+          }
+        },
+        "v2": {
+          "type": "item",
+          "settings": {
+            "icon": "shield",
+            "title": "Tested before you see it",
+            "text": "I've placed the order, seen the quality and timed the shipping. Nothing goes up on someone else's word."
+          }
+        },
+        "v3": {
+          "type": "item",
+          "settings": {
+            "icon": "message",
+            "title": "You get me, not a PDF",
+            "text": "Stuck on agents, customs, or which product to run? Message me. Scaling is where people quit, and that's the part I actually help with."
+          }
+        }
+      },
+      "block_order": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "settings": {
+        "eyebrow": "The difference",
+        "heading": "Why I'm not like the other plugs",
+        "subheading": "Most of them sell you a list and disappear. That's the whole business model, and it's why nobody scales off it.",
+        "anchor": "why",
+        "show_cta": false,
+        "tone": "flat"
+      }
+    },
+    "rp_products": {
+      "type": "rp-products",
+      "settings": {
+        "eyebrow": "The vault",
+        "heading": "Suppliers I'm actually using",
+        "subheading": "Buy once and the contacts are yours for good. Every one has been ordered from before it went on sale.",
+        "collection": "homepage",
+        "products_to_show": 12,
+        "button_label": "Get access",
+        "show_details": true,
+        "anchor": "suppliers",
+        "tone": "raised"
+      }
+    },
     "rp_founder": {
       "type": "rp-founder",
       "settings": {
-        "eyebrow": "Who runs this",
-        "heading": "I'm not an anonymous plug",
-        "text": "<p>I started reselling from my bedroom with one supplier and about £40. Everything I post in the group is something I've ordered myself first — if I haven't used it, it doesn't go in.</p><p>I'm on TikTok every week with my face on camera. If any of this were a scam, that's a strange way to run it.</p>",
+        "eyebrow": "Who you're dealing with",
+        "heading": "I'm the one you message when it goes wrong",
+        "text": "<p>I started two years ago from my bedroom with one supplier and about £40. I've made every mistake this business has to offer — wrong agent, wrong product, stock stuck in customs for six weeks — which is why I'm useful when it happens to you.</p><p>I'd rather have 22 people in the private chat who are actually scaling than 500 who bought a list and gave up. That's the whole point of the group.</p>",
         "name": "",
-        "role": "Founder, Resell Plug UK",
+        "role": "Resell Plug UK",
         "cta_label": "",
         "tiktok_label": "Watch me on TikTok",
         "tiktok_link": "",
-        "tone": "raised",
+        "tone": "flat",
         "anchor": "who"
       }
     },
@@ -253,9 +289,16 @@
         "show_cta": false,
         "cta_text": "",
         "cta_label": "",
-        "tone": "flat"
+        "tone": "raised"
       },
       "blocks": {
+        "q0": {
+          "type": "qa",
+          "settings": {
+            "question": "How are you different from every other plug?",
+            "answer": "<p>Two things. I've ordered from everything I sell, so I can tell you what the quality and the shipping are actually like rather than repeating a claim. And you can message me afterwards — most of them sell you a list and go quiet, which is why people buy one and never scale.</p>"
+          }
+        },
         "q1": {
           "type": "qa",
           "settings": {
@@ -300,6 +343,7 @@
         }
       },
       "block_order": [
+        "q0",
         "q1",
         "q2",
         "q3",
@@ -308,80 +352,18 @@
         "q6"
       ]
     },
-    "rp_linkhub": {
-      "type": "rp-linkhub",
-      "settings": {
-        "eyebrow": "Everywhere else",
-        "heading": "Find me off the site",
-        "subheading": "The vouches channel is public — read it before you buy anything. The community chat is free to join.",
-        "anchor": "links",
-        "tone": "raised"
-      },
-      "blocks": {
-        "l1": {
-          "type": "link",
-          "settings": {
-            "preset": "vouches",
-            "title": "Vouches channel",
-            "text": "Every order members have posted. Public, nothing to join.",
-            "link": "",
-            "icon": "star",
-            "highlight": true
-          }
-        },
-        "l2": {
-          "type": "link",
-          "settings": {
-            "preset": "group",
-            "title": "Free community chat",
-            "text": "220 UK resellers. Free, and nothing is asked of you.",
-            "link": "",
-            "icon": "telegram",
-            "highlight": false
-          }
-        },
-        "l3": {
-          "type": "link",
-          "settings": {
-            "preset": "tiktok",
-            "title": "TikTok",
-            "text": "Where most of this starts.",
-            "link": "",
-            "icon": "tiktok",
-            "highlight": false
-          }
-        },
-        "l4": {
-          "type": "link",
-          "settings": {
-            "preset": "linktree",
-            "title": "All my links",
-            "text": "Every account in one place.",
-            "link": "",
-            "icon": "users",
-            "highlight": false
-          }
-        }
-      },
-      "block_order": [
-        "l1",
-        "l2",
-        "l3",
-        "l4"
-      ]
-    },
     "rp_cta": {
       "type": "rp-cta",
       "settings": {
         "eyebrow": "Ready when you are",
-        "heading": "Pick your supplier and get started",
-        "subheading": "Everything is delivered the second you pay, and every list has been ordered from before it went on sale.",
+        "heading": "Stop guessing which supplier is real",
+        "subheading": "Pick one, get it instantly, and message me when you hit the first snag.",
         "primary_link": "/collections/all",
-        "primary_label": "Shop the suppliers",
+        "primary_label": "See the suppliers",
         "cta_label": "",
         "secondary_label": "Read the vouches",
         "secondary_link": "",
-        "reassure": "Instant delivery · every supplier tested first",
+        "reassure": "Instant delivery · every supplier ordered from first",
         "anchor": "buy",
         "tone": "flat"
       }
@@ -389,11 +371,11 @@
   },
   "order": [
     "rp_featured",
-    "rp_products",
     "rp_proof",
+    "rp_value",
+    "rp_products",
     "rp_founder",
     "rp_faq",
-    "rp_linkhub",
     "rp_cta"
   ]
 }

@@ -12,7 +12,7 @@
       "settings": {
         "eyebrow": "Receipts",
         "title": "Every vouch, two years' worth",
-        "subheading": "Posted by members as their orders landed. Nothing here is staged and nothing has been removed.",
+        "subheading": "Posted by members as their orders landed. Nothing staged and nothing removed.",
         "speed": 55,
         "default_alt": "Screenshot of a member's order posted in the community chat",
         "anchor": "proof",
@@ -20,7 +20,8 @@
         "cta_label": "",
         "vouches_label": "Read the live channel",
         "vouches_link": "",
-        "tone": "flat"
+        "tone": "flat",
+        "layout": "grid"
       },
       "blocks": {
         "image_Y89hqt": {

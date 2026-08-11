@@ -137,12 +137,23 @@ def check_wiring():
 
 
 def check_funnel_links():
-    """Every join button reads settings.rp_group_url. If it is blank the CTA
-    renders as a disabled placeholder, which is worth failing loudly on."""
+    """Every CTA and link tile on the site reads one of these. A blank one
+    renders as a dead tile or a disabled placeholder button."""
     data = json.load(open('config/settings_data.json', encoding='utf-8'))
     current = data.get('current', {})
-    if not current.get('rp_group_url'):
-        errors.append('config/settings_data.json: rp_group_url is empty — every join button is dead')
+    required = {
+        'rp_group_url': 'the free community button',
+        'rp_vouches_url': 'the "read the vouches" buttons',
+        'rp_tiktok_url': 'the TikTok tile and the founder section',
+        'rp_linktree_url': 'the Linktree tile',
+    }
+    for key, used_by in required.items():
+        if not current.get(key):
+            errors.append(f'config/settings_data.json: {key} is empty — {used_by} will not render')
+
+    for key in ('rp_stat_members', 'rp_stat_private', 'rp_stat_years'):
+        if not current.get(key):
+            errors.append(f'config/settings_data.json: {key} is empty — it prints as a blank number')
 
 
 check_json_parses()

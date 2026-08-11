@@ -18,8 +18,8 @@
         "reassure_2": "Vouches are public",
         "show_stats": true,
         "stat_1_label": "Years trading",
-        "stat_2_label": "In the community",
-        "stat_3_label": "Vouches posted",
+        "stat_2_label": "In the free group",
+        "stat_3_label": "In the private GC",
         "tone": "flat"
       },
       "blocks": {

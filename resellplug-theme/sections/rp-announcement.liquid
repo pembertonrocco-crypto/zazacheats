@@ -29,6 +29,7 @@
               assign text = text | replace: '{vouches}', settings.rp_stat_vouches
               assign text = text | replace: '{suppliers}', settings.rp_stat_suppliers
               assign text = text | replace: '{years}', settings.rp_stat_years
+              assign text = text | replace: '{private}', settings.rp_stat_private
             -%}
             <span class="rp-ticker__item" {% if forloop.parentloop.first %}{{ block.shopify_attributes }}{% endif %}>
               {%- if block.settings.emoji != blank -%}
@@ -51,7 +52,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Type {members}, {vouches}, {suppliers} or {years} in any line and the number from Theme settings drops in. Only claim what you can screenshot."
+      "content": "Type {members}, {private}, {vouches}, {suppliers} or {years} in any line and the number from Theme settings drops in. Only claim what you can screenshot."
     },
     {
       "type": "range",

@@ -55,8 +55,14 @@
       {
         "type": "text",
         "id": "rp_stat_members",
-        "label": "Free community members",
+        "label": "Members in the free public group",
         "default": "1,200+"
+      },
+      {
+        "type": "text",
+        "id": "rp_stat_private",
+        "label": "Resellers in the private GC",
+        "default": "22"
       },
       {
         "type": "text",

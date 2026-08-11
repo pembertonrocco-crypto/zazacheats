@@ -102,7 +102,7 @@
     "social_facebook_link": "",
     "social_instagram_link": "",
     "social_youtube_link": "",
-    "social_tiktok_link": "",
+    "social_tiktok_link": "https://www.tiktok.com/@resellplug.uk",
     "social_twitter_link": "",
     "social_snapchat_link": "",
     "social_pinterest_link": "",
@@ -192,11 +192,13 @@
     "rp_group_url": "https://t.me/repsreselling",
     "rp_group_platform": "Telegram",
     "rp_vouches_url": "https://t.me/resellplugvouches",
-    "rp_tiktok_url": "",
+    "rp_tiktok_url": "https://www.tiktok.com/@resellplug.uk",
     "rp_stat_members": "220",
     "rp_stat_vouches": "112",
     "rp_stat_suppliers": "20+",
-    "rp_stat_years": "2"
+    "rp_stat_years": "2",
+    "rp_linktree_url": "https://linktr.ee/reselIplug",
+    "rp_stat_private": "22"
   },
   "presets": {
     "Dawn": {

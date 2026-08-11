@@ -24,24 +24,24 @@
         "t3": {
           "type": "item",
           "settings": {
-            "emoji": "✅",
-            "text": "{vouches} vouches posted",
+            "emoji": "💬",
+            "text": "{members} in the free group",
             "highlight": true
           }
         },
         "t4": {
           "type": "item",
           "settings": {
-            "emoji": "⚡",
-            "text": "Instant delivery on every order",
+            "emoji": "🔒",
+            "text": "{private} resellers inside the private GC",
             "highlight": true
           }
         },
         "t5": {
           "type": "item",
           "settings": {
-            "emoji": "💬",
-            "text": "{members} in the free community",
+            "emoji": "⚡",
+            "text": "Instant delivery on every order",
             "highlight": true
           }
         }

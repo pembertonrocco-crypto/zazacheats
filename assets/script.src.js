@@ -669,41 +669,37 @@ function snow(config = {}) {
   document.head.appendChild(style);
 }
 /* =============================================================================
-   ZAZA CHEATS — sitewide enhancement layer (conversion + on-brand HUD).
-   Self-contained: injects its own CSS + DOM. Paste at the very end of script.js.
-   Disabled under prefers-reduced-motion. Edit ZZ_ENH to tune copy / data.
+   ZAZA CHEATS — sitewide on-brand HUD layer.
+   Self-contained: injects its own CSS + DOM. Disabled under
+   prefers-reduced-motion.
+
+   REMOVED, deliberately — do not reinstate:
+
+   1. A "live activity" toast that popped up every ~20 seconds claiming
+      things like "val****z from Warsaw, PL activated a 1 Month key ·
+      LIVE · just now". Every part of it was invented on the spot by
+      Math.random() from three hardcoded arrays: 22 fake censored
+      usernames, 20 cities, 8 actions. Nobody had bought anything. It
+      carried a green "verified activation" shield and a LIVE tag.
+
+   2. A stat strip above the footer reading "147 players online now" with
+      a pulsing green dot, plus "632+ keys delivered" and "~12s avg.
+      delivery time" — four hardcoded integers that counted up on scroll
+      as though they were being measured. The 147 never changed.
+
+   Both are why a storefront reads as a template rather than a shop
+   someone runs. A visitor who leaves the tab open for a minute sees the
+   same "live" city twice, and everything else on the page becomes
+   suspect with it — including the parts that are true. This store has
+   real proof to point at: 100 verified reviews on the platform's own
+   feedback system, a dated public status log, and SellAuth's genuine
+   latest-orders feed (which product-page.njk already renders, from real
+   order data). Those stayed; the invented ones went.
    ============================================================================= */
 ;(function () {
   'use strict';
   if (window.__zzEnhanced) return;
   window.__zzEnhanced = true;
-
-  var ZZ_ENH = {
-    productUrl: '/product/zaza-rust-private-cheat',
-    stats: [
-      { n: 147,  pre: '', suf: '',  label: 'players online now', green: false, pulse: true },
-      { n: 632, pre: '', suf: '+', label: 'keys delivered',      green: false, pulse: false },
-      { n: 12,   pre: '~', suf: 's', label: 'avg. delivery time',  green: false, pulse: false },
-      { text: 'Never', label: 'last detection', green: true, pulse: false }
-    ],
-    users: ['xR***st','Gh0st_**','val****z','sn1p******','Ksa***','pr0****r','z***yy',
-      'toxic****','ripp***','frost***','n0****py','aim****d','w1nt***','dr***o',
-      'sh****w','mavr***','lu***s','b1g****','qu***x','ze***h','r***vn','p***le'],
-    where: ['London, UK','Berlin, DE','Warsaw, PL','Austin, US','Toronto, CA',
-      'Sydney, AU','Amsterdam, NL','Paris, FR','Madrid, ES','Oslo, NO',
-      'Dublin, IE','Prague, CZ','Miami, US','Manchester, UK','Denver, US',
-      'Stockholm, SE','Lisbon, PT','Vienna, AT','Helsinki, FI','Seattle, US'],
-    actions: [
-      { t: 'activated a <b>1 Month key</b>', w: 4 },
-      { t: 'activated a <b>1 Week key</b>', w: 5 },
-      { t: 'grabbed a <b>Lifetime key</b>', w: 3 },
-      { t: 'started a <b>1 Day key</b>', w: 3 },
-      { t: 'renewed their <b>1 Month key</b>', w: 3 },
-      { t: 'left a <b>5&#9733; review</b>', w: 3 },
-      { t: 'joined the <b>Discord</b>', w: 2 },
-      { t: 'passed <b>30 days undetected</b>', w: 2 }
-    ]
-  };
 
   function boot() {
     var doc = document, body = doc.body;
@@ -715,55 +711,13 @@ function snow(config = {}) {
     injectStyles(doc);
     if (isMaint) return;
 
-    try { buildStats(doc, reduce); } catch (e) {}
-    try { buildFeed(doc, reduce); } catch (e) {}
     try { buildHud(doc, reduce); } catch (e) {}
     try { buildKonami(doc, reduce); } catch (e) {}
-  }
-
-  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
-  function pickW(list) {
-    var total = 0, i;
-    for (i = 0; i < list.length; i++) total += list[i].w;
-    var r = Math.random() * total;
-    for (i = 0; i < list.length; i++) { r -= list[i].w; if (r <= 0) return list[i]; }
-    return list[0];
   }
 
   function injectStyles(doc) {
     if (doc.getElementById('zz-enh-styles')) return;
     var css = "";
-    css += ".zzst{max-width:960px;margin:56px auto 8px;padding:0 16px;font-family:var(--zz-sans)'Inter',system-ui,sans-serif}";
-    css += ".zzst__inner{display:flex;align-items:stretch;justify-content:center;gap:6px;flex-wrap:wrap;padding:20px 18px;border-radius:18px;background:linear-gradient(180deg,rgba(191,64,191,.06),rgba(255,255,255,.015));border:1px solid rgba(191,64,191,.18);box-shadow:0 20px 50px -30px rgba(191,64,191,.6),inset 0 1px 0 rgba(255,255,255,.04)}";
-    css += ".zzst__item{flex:1;min-width:150px;display:flex;flex-direction:column;align-items:center;gap:5px;padding:6px 10px;position:relative;text-align:center}";
-    css += ".zzst__pulse{position:absolute;top:8px;right:calc(50% - 46px);width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.9);animation:zzstPulse 1.8s ease-in-out infinite}";
-    css += "@keyframes zzstPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.82)}}";
-    css += ".zzst__num{font-size:clamp(1.7rem,3.4vw,2.35rem);font-weight:700;letter-spacing:-.02em;line-height:1;color:#fff;font-variant-numeric:tabular-nums;background:linear-gradient(180deg,#ffffff,#e0b3ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 12px rgba(191,64,191,.35))}";
-    css += ".zzst__num--g{background:linear-gradient(180deg,#eafff2,#4ade80);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 12px rgba(34,197,94,.35))}";
-    css += ".zzst__lbl{font-size:.72rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:rgba(200,215,240,.55)}";
-    css += ".zzst__div{width:1px;align-self:center;height:38px;flex-shrink:0;background:linear-gradient(180deg,transparent,rgba(191,64,191,.35),transparent)}";
-    css += "@media(max-width:620px){.zzst__inner{gap:0}.zzst__item{flex:1 1 45%;min-width:45%;padding:12px 8px}.zzst__num{max-width:100%;font-size:clamp(1.35rem,6.4vw,2.1rem)}.zzst__div{display:none}.zzst__pulse{right:calc(50% - 40px)}}";
-    css += ".zzla{position:fixed;left:18px;bottom:18px;z-index:960;width:320px;max-width:calc(100vw - 36px);pointer-events:none;font-family:var(--zz-sans)'Inter',system-ui,sans-serif;display:none}";
-    css += "@media(min-width:769px){.zzla{display:block}}";
-    css += ".zzla__card{pointer-events:auto;position:relative;overflow:hidden;display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:14px;background:linear-gradient(180deg,rgba(12,16,38,.94),rgba(7,10,26,.94));border:1px solid rgba(191,64,191,.28);box-shadow:0 18px 44px -16px rgba(0,0,0,.8),0 0 22px -10px rgba(191,64,191,.5),inset 0 1px 0 rgba(255,255,255,.05);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);cursor:pointer;opacity:0;transform:translateY(14px) scale(.98);transition:opacity .4s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1)}";
-    css += ".zzla.zzla--show .zzla__card{opacity:1;transform:translateY(0) scale(1)}";
-    css += ".zzla__scan{position:absolute;top:0;left:0;right:0;height:1px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(191,64,191,.9),transparent);opacity:0}";
-    css += ".zzla.zzla--show .zzla__scan{animation:zzlaScan 1.1s ease-out}";
-    css += "@keyframes zzlaScan{0%{opacity:.9;transform:translateY(0)}100%{opacity:0;transform:translateY(64px)}}";
-    css += ".zzla__avatar{flex-shrink:0;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-weight:700;font-size:1rem;color:#fff;background:linear-gradient(135deg,#BF40BF,#7C3AED);box-shadow:0 6px 16px -6px rgba(191,64,191,.8),inset 0 1px 0 rgba(255,255,255,.25);text-transform:uppercase}";
-    css += ".zzla__body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}";
-    css += ".zzla__line{display:flex;align-items:center;gap:6px;min-width:0}";
-    css += ".zzla__dot{flex-shrink:0;width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.9)}";
-    css += ".zzla__user{font-size:.82rem;font-weight:700;color:#fff;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}";
-    css += ".zzla__verified{flex-shrink:0;display:inline-flex;line-height:0}";
-    css += ".zzla__action{font-size:.78rem;color:rgba(214,224,255,.72);line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}";
-    css += ".zzla__action b{color:#e6b3ff;font-weight:700}";
-    css += ".zzla__foot{display:flex;align-items:center;gap:6px;margin-top:1px}";
-    css += ".zzla__tag{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.56rem;font-weight:700;letter-spacing:.14em;color:#4ade80;padding:2px 6px;border-radius:5px;line-height:1;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.28)}";
-    css += ".zzla__where,.zzla__time{font-family:var(--zz-alt);font-variant-numeric:tabular-nums;font-size:.62rem;color:rgba(200,215,240,.5);white-space:nowrap}";
-    css += ".zzla__sep{color:rgba(200,215,240,.3);font-size:.62rem}";
-    css += ".zzla__x{position:absolute;top:7px;right:7px;width:20px;height:20px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);cursor:pointer;opacity:0;transition:opacity .2s,color .2s,background .2s}";
-    css += ".zzla__card:hover .zzla__x{opacity:1}.zzla__x:hover{color:#fff;background:rgba(255,255,255,.12)}";
     css += ".zzhud{position:fixed;inset:0;z-index:2147483000;pointer-events:none;color:#e8b3ff;opacity:0;transition:opacity .3s ease;display:none}";
     css += ".zzhud.zzhud--on{opacity:1}";
     css += "@media(hover:hover) and (pointer:fine) and (min-width:900px){.zzhud{display:block}}";
@@ -784,148 +738,12 @@ function snow(config = {}) {
     css += ".zzgod__scan{position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,rgba(216,107,255,.9),transparent);box-shadow:0 0 14px rgba(191,64,191,.9)}";
     css += ".zzgod.zzgod--on .zzgod__scan{animation:zzgodScan 1s linear infinite}";
     css += "@keyframes zzgodScan{from{transform:translateY(0)}to{transform:translateY(100vh)}}";
-    css += "@media(prefers-reduced-motion:reduce){.zzhud,.zzgod{display:none!important}.zzla__scan{display:none}.zzla__card{transition:opacity .2s ease}.zzla.zzla--show .zzla__card{transform:none}}";
+    css += "@media(prefers-reduced-motion:reduce){.zzhud,.zzgod{display:none!important}}";
 
     var st = doc.createElement('style');
     st.id = 'zz-enh-styles';
     st.appendChild(doc.createTextNode(css));
     doc.head.appendChild(st);
-  }
-
-  function buildStats(doc, reduce) {
-    if (doc.querySelector('.zzst')) return;
-    var sec = doc.createElement('section');
-    sec.className = 'zzst';
-    sec.setAttribute('aria-label', 'Store stats');
-    var html = '<div class="zzst__inner">';
-    for (var i = 0; i < ZZ_ENH.stats.length; i++) {
-      var s = ZZ_ENH.stats[i];
-      if (i > 0) html += '<span class="zzst__div" aria-hidden="true"></span>';
-      if (s.text) {
-        html += '<div class="zzst__item">' +
-          (s.pulse ? '<span class="zzst__pulse" aria-hidden="true"></span>' : '') +
-          '<span class="zzst__num' + (s.green ? ' zzst__num--g' : '') + '">' + s.text + '</span>' +
-          '<span class="zzst__lbl">' + s.label + '</span></div>';
-        continue;
-      }
-      html += '<div class="zzst__item">' +
-        (s.pulse ? '<span class="zzst__pulse" aria-hidden="true"></span>' : '') +
-        '<span class="zzst__num' + (s.green ? ' zzst__num--g' : '') + '" data-zzst="' + s.n +
-        '" data-pre="' + s.pre + '" data-suf="' + s.suf + '">' + s.pre + s.n + s.suf + '</span>' +
-        '<span class="zzst__lbl">' + s.label + '</span></div>';
-    }
-    html += '</div>';
-    sec.innerHTML = html;
-
-    var anchor = doc.querySelector('footer, [class*="footer"]');
-    if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(sec, anchor);
-    else (doc.querySelector('main#zz-main') || doc.querySelector('.components') || doc.body).appendChild(sec);
-
-    var nums = sec.querySelectorAll('.zzst__num[data-zzst]');
-    function render(el, v) {
-      el.textContent = (el.getAttribute('data-pre') || '') + v.toLocaleString('en-US') + (el.getAttribute('data-suf') || '');
-    }
-    function run(el) {
-      var target = parseInt(el.getAttribute('data-zzst'), 10) || 0;
-      if (reduce) { render(el, target); return; }
-      var startT = null;
-      (function step(ts) {
-        if (!startT) startT = ts;
-        var p = Math.min((ts - startT) / 1400, 1);
-        render(el, Math.round(target * (1 - Math.pow(1 - p, 3))));
-        if (p < 1) requestAnimationFrame(step); else render(el, target);
-      })(0);
-    }
-    if (!('IntersectionObserver' in window)) {
-      for (var k = 0; k < nums.length; k++) run(nums[k]);
-      return;
-    }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) { run(en.target); io.unobserve(en.target); } });
-    }, { threshold: 0.4 });
-    for (var j = 0; j < nums.length; j++) io.observe(nums[j]);
-  }
-
-  function buildFeed(doc, reduce) {
-    var KEY = 'zz-live-dismissed';
-    try { if (sessionStorage.getItem(KEY)) return; } catch (e) {}
-    if (doc.getElementById('zz-live')) return;
-
-    var root = doc.createElement('div');
-    root.className = 'zzla';
-    root.id = 'zz-live';
-    root.setAttribute('aria-hidden', 'true');
-    root.hidden = true;
-    root.innerHTML =
-      '<div class="zzla__card" role="status">' +
-      '<span class="zzla__scan" aria-hidden="true"></span>' +
-      '<span class="zzla__avatar" data-zzla-av aria-hidden="true">R</span>' +
-      '<div class="zzla__body"><div class="zzla__line">' +
-      '<span class="zzla__dot" aria-hidden="true"></span>' +
-      '<span class="zzla__user" data-zzla-user>Someone</span>' +
-      '<span class="zzla__verified" title="Verified activation" aria-label="Verified">' +
-      '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.5l7 3v5.2c0 4.3-2.9 7.9-7 9.3-4.1-1.4-7-5-7-9.3V5.5l7-3z" fill="rgba(34,197,94,.18)" stroke="#22c55e" stroke-width="1.6"/><path d="M8.6 12.2l2.4 2.4 4.6-4.8" stroke="#22c55e" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>' +
-      '<div class="zzla__action" data-zzla-action>activated a key</div>' +
-      '<div class="zzla__foot"><span class="zzla__tag">LIVE</span>' +
-      '<span class="zzla__where" data-zzla-where>&mdash;</span>' +
-      '<span class="zzla__sep" aria-hidden="true">&middot;</span>' +
-      '<span class="zzla__time" data-zzla-time>just now</span></div></div>' +
-      '<button type="button" class="zzla__x" data-zzla-close aria-label="Dismiss activity feed">' +
-      '<svg width="11" height="11" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>';
-    doc.body.appendChild(root);
-
-    var mqShow = window.matchMedia('(min-width:769px)');
-    var card = root.querySelector('.zzla__card');
-    var elUser = root.querySelector('[data-zzla-user]');
-    var elAv = root.querySelector('[data-zzla-av]');
-    var elAction = root.querySelector('[data-zzla-action]');
-    var elWhere = root.querySelector('[data-zzla-where]');
-    var elTime = root.querySelector('[data-zzla-time]');
-    var btnClose = root.querySelector('[data-zzla-close]');
-    var TIMES = ['just now', '1 min ago', '2 min ago', '3 min ago', '5 min ago', '7 min ago', '9 min ago'];
-    var showT = null, hideT = null, loopT = null, visible = false;
-
-    function fill() {
-      var u = pick(ZZ_ENH.users);
-      elUser.textContent = u;
-      elAv.textContent = (u.replace(/[^a-z0-9]/gi, '')[0] || 'R');
-      elAction.innerHTML = pickW(ZZ_ENH.actions).t;
-      elWhere.textContent = pick(ZZ_ENH.where);
-      elTime.textContent = (Math.random() < 0.45 ? 'just now' : pick(TIMES));
-    }
-    function show() {
-      if (!mqShow.matches) return schedule();
-      fill();
-      root.hidden = false;
-      void card.offsetWidth;
-      root.classList.add('zzla--show');
-      visible = true;
-      hideT = setTimeout(hide, reduce ? 9000 : 6200);
-    }
-    function hide() { root.classList.remove('zzla--show'); visible = false; schedule(); }
-    function schedule() {
-      clearTimeout(loopT);
-      var gap = reduce ? (22000 + Math.random() * 12000) : (15000 + Math.random() * 11000);
-      loopT = setTimeout(show, gap);
-    }
-    card.addEventListener('mouseenter', function () { clearTimeout(hideT); });
-    card.addEventListener('mouseleave', function () { if (visible) hideT = setTimeout(hide, 2600); });
-    card.addEventListener('click', function (e) {
-      if (e.target.closest('[data-zzla-close]')) return;
-      if (ZZ_ENH.productUrl) window.location.href = ZZ_ENH.productUrl;
-    });
-    btnClose.addEventListener('click', function (e) {
-      e.stopPropagation();
-      clearTimeout(showT); clearTimeout(hideT); clearTimeout(loopT);
-      root.classList.remove('zzla--show');
-      setTimeout(function () { root.hidden = true; }, 300);
-      try { sessionStorage.setItem(KEY, '1'); } catch (err) {}
-    });
-    document.addEventListener('visibilitychange', function () {
-      if (document.hidden) { clearTimeout(showT); clearTimeout(hideT); clearTimeout(loopT); }
-      else if (!visible) { schedule(); }
-    });
-    showT = setTimeout(show, reduce ? 4000 : 2200);
   }
 
   function buildHud(doc, reduce) {
@@ -955,7 +773,27 @@ function snow(config = {}) {
     var x = -100, y = -100, spin = 0, lx = -100, ly = -100, lw = 0, lh = 0,
       tx = -100, ty = -100, tw = 0, th = 0, locked = null, shown = false;
 
+    /* The loop only runs while there is something to animate.
+
+       It used to call requestAnimationFrame unconditionally from page load
+       and never stop: on every desktop page, forever, it wrote four custom
+       properties and advanced a rotation by 0.6deg a frame whether or not
+       the cursor had ever moved, whether or not the HUD was visible, and
+       whether or not the tab was in the foreground. That is a style
+       recalculation every 16ms for an overlay nobody is looking at, and it
+       is the kind of thing that shows up as input latency on the buy
+       button rather than as anything you can see.
+
+       Now it starts on the first real pointer move and parks itself once
+       the crosshair is hidden and the reticle has finished easing onto its
+       target — i.e. once consecutive frames would be identical. Any
+       pointermove wakes it again. */
+    var running = false;
     function setT(el) { var r = el.getBoundingClientRect(), p = 6; tx = r.left - p; ty = r.top - p; tw = r.width + p * 2; th = r.height + p * 2; }
+    function settled() {
+      return Math.abs(tx - lx) < 0.5 && Math.abs(ty - ly) < 0.5 &&
+             Math.abs(tw - lw) < 0.5 && Math.abs(th - lh) < 0.5;
+    }
     function loop() {
       hud.style.setProperty('--x', x + 'px');
       hud.style.setProperty('--y', y + 'px');
@@ -968,12 +806,16 @@ function snow(config = {}) {
         hud.style.setProperty('--w', lw + 'px');
         hud.style.setProperty('--h', lh + 'px');
       }
+      /* Nothing visible and nothing still easing: stop until woken. */
+      if (!shown && (!locked || settled())) { running = false; return; }
       requestAnimationFrame(loop);
     }
+    function wake() { if (!running) { running = true; requestAnimationFrame(loop); } }
     document.addEventListener('pointermove', function (e) {
       if (e.pointerType === 'touch') return;
       x = e.clientX; y = e.clientY;
       if (!shown) { shown = true; hud.classList.add('zzhud--on'); }
+      wake();
       var t = e.target.closest ? e.target.closest(SEL) : null;
       if (t) {
         if (t !== locked) {
@@ -985,8 +827,7 @@ function snow(config = {}) {
       } else if (locked) { locked = null; hud.classList.remove('zzhud--locked'); }
     }, { passive: true });
     document.addEventListener('mouseleave', function () { hud.classList.remove('zzhud--on'); shown = false; });
-    window.addEventListener('scroll', function () { if (locked) setT(locked); }, { passive: true });
-    requestAnimationFrame(loop);
+    window.addEventListener('scroll', function () { if (locked) { setT(locked); wake(); } }, { passive: true });
   }
 
   function buildKonami(doc, reduce) {
@@ -1648,7 +1489,7 @@ function snow(config = {}) {
   function warden() {
     if (!('IntersectionObserver' in window)) return;
     var SEL = '.zz-neon,.zzstatus__chip,.zzstatus__ring,.zzstatus__sweep,' +
-              '.zzst__pulse,.zzvw__dot,.pc__esp-scan';
+              '.zzvw__dot,.pc__esp-scan';
     var seen = typeof WeakSet === 'function' ? new WeakSet() : null;
     var tracked = [];
     var io = new IntersectionObserver(function (entries) {
@@ -1897,9 +1738,6 @@ function snow(config = {}) {
 /* =============================================================================
    ZAZA v9 — fixed-UI harmony pass. Nine layers of enhancements had started
    colliding in the viewport corners; this resolves every overlap:
-   · bottom-left: purchase feed (.zzla, bottom:18) was covering the [B]/[INS]
-     hotkey chips (.zwr-hotkey, same spot) → feed lifts to 70px on the
-     desktops where chips render (≥1200px).
    · bottom-right: cart/resume toast (.zzct, bottom:16) was sitting on the
      back-to-top (20px) and quick-buy (72px) buttons → toast lifts to 130px
      on ≥769px where those buttons exist.
@@ -1917,7 +1755,6 @@ function snow(config = {}) {
   window.__zzV9 = true;
 
   var css = '';
-  css += '@media(min-width:1200px){.zzla{bottom:70px}}';
   css += '@media(min-width:769px){.zzct{bottom:130px}}';
   css += '@media(max-width:768px){body:has(.ppx-bar) .zzct,body:has(.zzbb:not([hidden])) .zzct{bottom:calc(104px + env(safe-area-inset-bottom,0px))}}';
   var s = document.createElement('style');

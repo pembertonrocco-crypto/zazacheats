@@ -36,7 +36,13 @@ npm test               # both suites
 npm run check          # renders all 13 templates and asserts against the HTML
 npm run check:html     # same, plus writes the rendered HTML to .render/
 npm run mobile         # real layout measurement in headless Chromium
+npm run build:js       # assets/script.src.js -> assets/script.js
 ```
+
+**`assets/script.js` is a build artifact.** It is `assets/script.src.js` run
+through terser, and it is the file the layout actually loads. Editing the
+source alone changes nothing on the site; run `npm run build:js` or the edit
+does not ship.
 
 `tools/check.js` renders every template through the layout against the mock
 context in `tools/fixtures.js`, then asserts:
@@ -150,6 +156,34 @@ on document order.
 - Contact address: `support@zazacheats.net`. Do not reintroduce a personal
   Gmail; it appears in the footer, terms, trust pledge, buy FAQ and the
   Organization JSON-LD.
+- The 40 carried-over reviews: the `zzVouches` array at the top of the
+  review block in `components/feedbacks.njk`. The same array is duplicated
+  in `components/feedback-page.njk` and `snippets/zaza-product-block.njk`,
+  and two of them are quoted as static HTML in `snippets/buy-faq.njk` and
+  `snippets/store-conversion-strip.njk`. Change one, change all five —
+  there is nowhere shared to put it, because a newly added snippet file
+  does not render (see the platform quirk above). Reviews left through
+  SellAuth after a purchase are separate: they come from the live feed and
+  render above these automatically.
+
+## Nothing on this site may be invented
+
+The store has real evidence and does not need manufactured evidence. This
+is a rule about the theme, not a style preference, and three things were
+removed in August 2026 for breaking it:
+
+- a "live activity" toast that generated a fake username, city and purchase
+  from `Math.random()` every 20 seconds and labelled it LIVE and verified
+- a footer stat strip whose "147 players online now" was a literal in
+  `script.src.js`, animated on scroll as though it were being measured
+- a review provenance line claiming the 40 imported reviews were carried
+  over "word-for-word" after they had been re-typed
+
+What is allowed is what can be checked: the platform's own feedback count
+and average, the dated status log, SellAuth's real `latestOrders` feed
+(which `components/product-page.njk` renders), and the published refund and
+downtime terms. If a number cannot be traced to one of those, it does not
+go on the page.
 
 ## Not in this repo
 

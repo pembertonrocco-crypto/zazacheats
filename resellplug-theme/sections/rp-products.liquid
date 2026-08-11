@@ -28,7 +28,7 @@
   assign products_to_show = section.settings.products_to_show
 -%}
 
-<div class="rp-section" id="{{ section.settings.anchor | default: 'suppliers' | handle }}">
+<div class="rp-section rp-section--{{ section.settings.tone | default: 'flat' }}" id="{{ section.settings.anchor | default: 'suppliers' | handle }}">
   <div class="rp-wrap">
     <div class="rp-center">
       {%- if section.settings.eyebrow != blank -%}
@@ -143,7 +143,12 @@
   "name": "RP · Products",
   "tag": "section",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Paid access" },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Paid access"
+    },
     {
       "type": "text",
       "id": "heading",
@@ -163,11 +168,55 @@
       "default": "homepage",
       "info": "The part of the collection's URL after /collections/."
     },
-    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 4, "max": 24, "step": 2, "default": 12 },
-    { "type": "text", "id": "button_label", "label": "Button text", "default": "Get access" },
-    { "type": "checkbox", "id": "show_details", "label": "Show \"Details\" link", "default": true },
-    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "suppliers" }
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button text",
+      "default": "Get access"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_details",
+      "label": "Show \"Details\" link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor id",
+      "default": "suppliers"
+    },
+    {
+      "type": "select",
+      "id": "tone",
+      "label": "Background",
+      "default": "flat",
+      "info": "Alternate this down the page so the sections read as separate ideas.",
+      "options": [
+        {
+          "value": "flat",
+          "label": "Black"
+        },
+        {
+          "value": "raised",
+          "label": "Raised"
+        }
+      ]
+    }
   ],
-  "presets": [{ "name": "RP · Products" }]
+  "presets": [
+    {
+      "name": "RP · Products"
+    }
+  ]
 }
 {% endschema %}

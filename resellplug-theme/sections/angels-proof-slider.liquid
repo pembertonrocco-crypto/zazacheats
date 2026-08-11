@@ -19,7 +19,7 @@
 {{ 'rp.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'rp.js' | asset_url }}" defer></script>
 
-<div class="rp-section" id="{{ section.settings.anchor | default: 'proof' | handle }}">
+<div class="rp-section rp-section--{{ section.settings.tone | default: 'flat' }}" id="{{ section.settings.anchor | default: 'proof' | handle }}">
   <div class="rp-wrap rp-center">
     {%- if section.settings.eyebrow != blank -%}
       <p class="rp-eyebrow">{{ section.settings.eyebrow | escape }}</p>
@@ -80,7 +80,12 @@
   "name": "RP · Proof slider",
   "tag": "section",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Receipts" },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Receipts"
+    },
     {
       "type": "text",
       "id": "title",
@@ -110,16 +115,55 @@
       "label": "Image description",
       "default": "Screenshot of a member's order posted in the community chat"
     },
-    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "proof" },
-    { "type": "header", "content": "Buttons" },
-    { "type": "checkbox", "id": "show_cta", "label": "Show buttons", "default": true },
-    { "type": "text", "id": "cta_label", "label": "Join button text" },
-    { "type": "text", "id": "vouches_label", "label": "Vouches button text", "default": "Read every vouch" },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor id",
+      "default": "proof"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show buttons",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Join button text"
+    },
+    {
+      "type": "text",
+      "id": "vouches_label",
+      "label": "Vouches button text",
+      "default": "Read every vouch"
+    },
     {
       "type": "url",
       "id": "vouches_link",
       "label": "Vouches link",
       "info": "Leave blank to use the vouches link from Theme settings."
+    },
+    {
+      "type": "select",
+      "id": "tone",
+      "label": "Background",
+      "default": "flat",
+      "info": "Alternate this down the page so the sections read as separate ideas.",
+      "options": [
+        {
+          "value": "flat",
+          "label": "Black"
+        },
+        {
+          "value": "raised",
+          "label": "Raised"
+        }
+      ]
     }
   ],
   "blocks": [
@@ -127,7 +171,11 @@
       "type": "image",
       "name": "Proof image",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Screenshot" },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Screenshot"
+        },
         {
           "type": "text",
           "id": "alt",
@@ -137,6 +185,10 @@
       ]
     }
   ],
-  "presets": [{ "name": "RP · Proof slider" }]
+  "presets": [
+    {
+      "name": "RP · Proof slider"
+    }
+  ]
 }
 {% endschema %}

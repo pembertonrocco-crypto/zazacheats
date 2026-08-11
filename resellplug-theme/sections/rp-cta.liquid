@@ -9,7 +9,7 @@
 
 {{ 'rp.css' | asset_url | stylesheet_tag }}
 
-<div class="rp-section" id="{{ section.settings.anchor | default: 'join-now' | handle }}">
+<div class="rp-section rp-section--{{ section.settings.tone | default: 'flat' }}" id="{{ section.settings.anchor | default: 'join-now' | handle }}">
   <div class="rp-wrap rp-wrap--narrow rp-center">
     {%- if section.settings.eyebrow != blank -%}
       <p class="rp-eyebrow">{{ section.settings.eyebrow | escape }}</p>
@@ -43,7 +43,12 @@
   "name": "RP · Final CTA",
   "tag": "section",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Last thing" },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Last thing"
+    },
     {
       "type": "text",
       "id": "heading",
@@ -56,17 +61,57 @@
       "label": "Sub-heading",
       "default": "You don't have to buy anything today. Come in, read what's already been posted, and decide from there."
     },
-    { "type": "text", "id": "cta_label", "label": "Button text" },
-    { "type": "text", "id": "secondary_label", "label": "Second button text", "default": "Don't trust it? Read the vouches" },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button text"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Second button text",
+      "default": "Don't trust it? Read the vouches"
+    },
     {
       "type": "url",
       "id": "secondary_link",
       "label": "Second button link",
       "info": "Leave blank to use the vouches link from Theme settings."
     },
-    { "type": "text", "id": "reassure", "label": "Line under the buttons", "default": "Free forever · leave whenever you like" },
-    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "join-now" }
+    {
+      "type": "text",
+      "id": "reassure",
+      "label": "Line under the buttons",
+      "default": "Free forever · leave whenever you like"
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor id",
+      "default": "join-now"
+    },
+    {
+      "type": "select",
+      "id": "tone",
+      "label": "Background",
+      "default": "flat",
+      "info": "Alternate this down the page so the sections read as separate ideas.",
+      "options": [
+        {
+          "value": "flat",
+          "label": "Black"
+        },
+        {
+          "value": "raised",
+          "label": "Raised"
+        }
+      ]
+    }
   ],
-  "presets": [{ "name": "RP · Final CTA" }]
+  "presets": [
+    {
+      "name": "RP · Final CTA"
+    }
+  ]
 }
 {% endschema %}

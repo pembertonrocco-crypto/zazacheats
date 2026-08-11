@@ -28,7 +28,29 @@
   endif
 -%}
 
-<div class="rp-hero" data-rp-sticky-after>
+{%- comment -%}
+  With no image the hero centres itself instead of leaving an empty box beside
+  the headline — see .rp-hero--solo. The placeholder only ever shows in the
+  theme editor, where it is an instruction; on the live site it would just
+  look like a broken image.
+{%- endcomment -%}
+{%- liquid
+  assign has_media = false
+  if section.settings.show_media
+    if section.settings.image != blank
+      assign has_media = true
+    elsif request.design_mode
+      assign has_media = true
+    endif
+  endif
+
+  assign hero_class = 'rp-hero rp-hero--solo'
+  if has_media
+    assign hero_class = 'rp-hero'
+  endif
+-%}
+
+<div class="{{ hero_class }}" data-rp-sticky-after>
   <div class="rp-hero__inner">
     <div class="rp-hero__body">
       {%- if section.settings.show_welcome -%}
@@ -88,7 +110,7 @@
       {%- endif -%}
     </div>
 
-    {%- if section.settings.show_media -%}
+    {%- if has_media -%}
       <div class="rp-hero__media">
         {%- if section.settings.image != blank -%}
           {{

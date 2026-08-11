@@ -27,7 +27,7 @@
   endif
 -%}
 
-<div class="rp-section" id="{{ section.settings.anchor | default: 'join' | handle }}">
+<div class="rp-section rp-section--{{ section.settings.tone | default: 'flat' }}" id="{{ section.settings.anchor | default: 'join' | handle }}">
   <div class="rp-wrap rp-wrap--narrow">
     <div class="rp-center">
       {%- if section.settings.eyebrow != blank -%}
@@ -132,28 +132,74 @@
   "name": "RP · Free vs private",
   "tag": "section",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Two ways in" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Start free. Upgrade if it's working." },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Two ways in"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Start free. Upgrade if it's working."
+    },
     {
       "type": "textarea",
       "id": "subheading",
       "label": "Sub-heading",
       "default": "The free group is not a trial that runs out. It's the same chat, forever. The private community is for people who want the whole vault and me on hand."
     },
-    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "join" },
-    { "type": "header", "content": "Free column" },
-    { "type": "text", "id": "free_tag", "label": "Tag", "default": "Free" },
-    { "type": "text", "id": "free_title", "label": "Title", "default": "The public community" },
-    { "type": "text", "id": "free_price", "label": "Price", "default": "£0" },
-    { "type": "text", "id": "free_price_note", "label": "Price note", "default": "forever" },
-    { "type": "header", "content": "Paid column" },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor id",
+      "default": "join"
+    },
+    {
+      "type": "header",
+      "content": "Free column"
+    },
+    {
+      "type": "text",
+      "id": "free_tag",
+      "label": "Tag",
+      "default": "Free"
+    },
+    {
+      "type": "text",
+      "id": "free_title",
+      "label": "Title",
+      "default": "The public community"
+    },
+    {
+      "type": "text",
+      "id": "free_price",
+      "label": "Price",
+      "default": "£0"
+    },
+    {
+      "type": "text",
+      "id": "free_price_note",
+      "label": "Price note",
+      "default": "forever"
+    },
+    {
+      "type": "header",
+      "content": "Paid column"
+    },
     {
       "type": "product",
       "id": "product",
       "label": "Private community product",
       "info": "Price, stock and checkout all come from this product."
     },
-    { "type": "text", "id": "paid_tag", "label": "Tag", "default": "Private" },
+    {
+      "type": "text",
+      "id": "paid_tag",
+      "label": "Tag",
+      "default": "Private"
+    },
     {
       "type": "text",
       "id": "paid_title",
@@ -161,13 +207,40 @@
       "info": "Leave blank to use the product title.",
       "default": "The private community"
     },
-    { "type": "text", "id": "paid_price_note", "label": "Price note", "default": "one-off, lifetime" },
-    { "type": "text", "id": "paid_cta", "label": "Button text", "default": "Get instant access" },
+    {
+      "type": "text",
+      "id": "paid_price_note",
+      "label": "Price note",
+      "default": "one-off, lifetime"
+    },
+    {
+      "type": "text",
+      "id": "paid_cta",
+      "label": "Button text",
+      "default": "Get instant access"
+    },
     {
       "type": "text",
       "id": "paid_reassure",
       "label": "Line under the button",
       "default": "Invite link sent the second you pay"
+    },
+    {
+      "type": "select",
+      "id": "tone",
+      "label": "Background",
+      "default": "flat",
+      "info": "Alternate this down the page so the sections read as separate ideas.",
+      "options": [
+        {
+          "value": "flat",
+          "label": "Black"
+        },
+        {
+          "value": "raised",
+          "label": "Raised"
+        }
+      ]
     }
   ],
   "blocks": [
@@ -175,7 +248,11 @@
       "type": "free_item",
       "name": "Free column line",
       "settings": [
-        { "type": "text", "id": "text", "label": "Text" },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        },
         {
           "type": "checkbox",
           "id": "included",
@@ -188,23 +265,84 @@
     {
       "type": "paid_item",
       "name": "Paid column line",
-      "settings": [{ "type": "text", "id": "text", "label": "Text" }]
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
     }
   ],
   "presets": [
     {
       "name": "RP · Free vs private",
       "blocks": [
-        { "type": "free_item", "settings": { "text": "Free suppliers posted in the chat", "included": true } },
-        { "type": "free_item", "settings": { "text": "Ask questions, get answers from members", "included": true } },
-        { "type": "free_item", "settings": { "text": "See every vouch and haul as it's posted", "included": true } },
-        { "type": "free_item", "settings": { "text": "The full supplier vault", "included": false } },
-        { "type": "free_item", "settings": { "text": "Direct access to me", "included": false } },
-        { "type": "paid_item", "settings": { "text": "Everything in the free group" } },
-        { "type": "paid_item", "settings": { "text": "The full supplier vault, with contacts and catalogues" } },
-        { "type": "paid_item", "settings": { "text": "Winning products posted before they blow up" } },
-        { "type": "paid_item", "settings": { "text": "The full agent + shipping walkthrough" } },
-        { "type": "paid_item", "settings": { "text": "Message me directly when you're stuck" } }
+        {
+          "type": "free_item",
+          "settings": {
+            "text": "Free suppliers posted in the chat",
+            "included": true
+          }
+        },
+        {
+          "type": "free_item",
+          "settings": {
+            "text": "Ask questions, get answers from members",
+            "included": true
+          }
+        },
+        {
+          "type": "free_item",
+          "settings": {
+            "text": "See every vouch and haul as it's posted",
+            "included": true
+          }
+        },
+        {
+          "type": "free_item",
+          "settings": {
+            "text": "The full supplier vault",
+            "included": false
+          }
+        },
+        {
+          "type": "free_item",
+          "settings": {
+            "text": "Direct access to me",
+            "included": false
+          }
+        },
+        {
+          "type": "paid_item",
+          "settings": {
+            "text": "Everything in the free group"
+          }
+        },
+        {
+          "type": "paid_item",
+          "settings": {
+            "text": "The full supplier vault, with contacts and catalogues"
+          }
+        },
+        {
+          "type": "paid_item",
+          "settings": {
+            "text": "Winning products posted before they blow up"
+          }
+        },
+        {
+          "type": "paid_item",
+          "settings": {
+            "text": "The full agent + shipping walkthrough"
+          }
+        },
+        {
+          "type": "paid_item",
+          "settings": {
+            "text": "Message me directly when you're stuck"
+          }
+        }
       ]
     }
   ]

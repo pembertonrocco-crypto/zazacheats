@@ -53,6 +53,28 @@
 
 .rp-section--tight { padding: 32px 0; }
 
+/* Section tones.
+
+   A long page of identical pure-black sections reads as one undifferentiated
+   wall and the eye stops registering where one idea ends and the next
+   begins. Alternating a raised surface gives the scroll a rhythm without
+   introducing a second colour. */
+.rp-section--flat { background: var(--rp-bg); }
+
+.rp-section--raised {
+  background: var(--rp-surface);
+  border-top: 1px solid var(--rp-line);
+  border-bottom: 1px solid var(--rp-line);
+}
+
+/* Cards sitting on a raised section need to step up again, or they vanish. */
+.rp-section--raised .rp-card,
+.rp-section--raised .rp-tier,
+.rp-section--raised .rp-product {
+  background: var(--rp-surface-2);
+  border-color: var(--rp-line-strong);
+}
+
 /* The header is sticky, so an in-page jump would otherwise land with the
    section heading hidden underneath it. */
 html {
@@ -414,6 +436,28 @@ html {
   .rp-hero__inner { grid-template-columns: 1.05fr 0.95fr; align-items: center; gap: 48px; }
 }
 
+/* No image: centre the whole thing rather than leaving a placeholder box on
+   a live site. A hero that is deliberately one centred column reads as a
+   design decision; a hero with an empty grey rectangle next to it reads as
+   broken, and this is the first thing a visitor from TikTok ever sees. */
+.rp-hero--solo .rp-hero__inner {
+  grid-template-columns: 1fr;
+  max-width: 840px;
+  text-align: center;
+  justify-items: center;
+}
+
+.rp-hero--solo .rp-lede { margin-left: auto; margin-right: auto; }
+.rp-hero--solo .rp-actions { justify-content: center; align-self: stretch; }
+.rp-hero--solo .rp-reassure { justify-content: center; }
+.rp-hero--solo .rp-hero__stats { width: 100%; }
+.rp-hero--solo .rp-hero__welcome { justify-content: center; }
+.rp-hero--solo::before { inset: -30% 10% 55% 10%; }
+
+@media (min-width: 990px) {
+  .rp-hero--solo .rp-actions { align-self: auto; }
+}
+
 /* The "came from TikTok?" welcome line. Makes the landing feel continuous
    with the video the visitor just watched instead of like a cold storefront. */
 .rp-hero__welcome {
@@ -540,6 +584,71 @@ html {
   display: grid;
   place-items: center;
   margin: 0 0 14px;
+}
+
+/* --------------------------------------------------------------------------
+   Founder
+   -------------------------------------------------------------------------- */
+
+.rp-founder {
+  display: grid;
+  gap: 22px;
+  justify-items: center;
+  text-align: center;
+}
+
+.rp-founder__photo {
+  width: 128px;
+  height: 128px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 2px solid var(--rp-accent);
+  flex: 0 0 auto;
+}
+
+.rp-founder__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.rp-founder__text {
+  color: var(--rp-muted);
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+
+.rp-founder__text p { margin: 0 0 12px; }
+.rp-founder__text p:last-child { margin-bottom: 0; }
+
+.rp-founder__sign {
+  margin: 0 0 22px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.rp-founder__sign small {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--rp-muted);
+}
+
+@media (min-width: 750px) {
+  .rp-founder {
+    grid-template-columns: 200px 1fr;
+    gap: 36px;
+    align-items: start;
+    justify-items: start;
+    text-align: left;
+  }
+
+  .rp-founder__photo { width: 200px; height: 200px; }
+  .rp-founder .rp-lede { margin-left: 0; }
 }
 
 /* --------------------------------------------------------------------------

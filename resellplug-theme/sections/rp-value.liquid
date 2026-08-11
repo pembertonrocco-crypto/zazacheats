@@ -9,7 +9,7 @@
 
 {{ 'rp.css' | asset_url | stylesheet_tag }}
 
-<div class="rp-section" id="{{ section.settings.anchor | default: 'free' | handle }}">
+<div class="rp-section rp-section--{{ section.settings.tone | default: 'flat' }}" id="{{ section.settings.anchor | default: 'free' | handle }}">
   <div class="rp-wrap">
     <div class="rp-center">
       {%- if section.settings.eyebrow != blank -%}
@@ -49,7 +49,12 @@
   "tag": "section",
   "max_blocks": 6,
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Inside the free group" },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Inside the free group"
+    },
     {
       "type": "text",
       "id": "heading",
@@ -62,8 +67,35 @@
       "label": "Sub-heading",
       "default": "No upsell wall. Join, read, ask, take what's useful. Most members never pay for anything."
     },
-    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "free" },
-    { "type": "checkbox", "id": "show_cta", "label": "Show join button", "default": true }
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor id",
+      "default": "free"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show join button",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "tone",
+      "label": "Background",
+      "default": "flat",
+      "info": "Alternate this down the page so the sections read as separate ideas.",
+      "options": [
+        {
+          "value": "flat",
+          "label": "Black"
+        },
+        {
+          "value": "raised",
+          "label": "Raised"
+        }
+      ]
+    }
   ],
   "blocks": [
     {
@@ -76,16 +108,42 @@
           "label": "Icon",
           "default": "box",
           "options": [
-            { "value": "box", "label": "Box" },
-            { "value": "message", "label": "Chat" },
-            { "value": "star", "label": "Star" },
-            { "value": "users", "label": "People" },
-            { "value": "bolt", "label": "Lightning" },
-            { "value": "shield", "label": "Shield" },
-            { "value": "lock", "label": "Lock" }
+            {
+              "value": "box",
+              "label": "Box"
+            },
+            {
+              "value": "message",
+              "label": "Chat"
+            },
+            {
+              "value": "star",
+              "label": "Star"
+            },
+            {
+              "value": "users",
+              "label": "People"
+            },
+            {
+              "value": "bolt",
+              "label": "Lightning"
+            },
+            {
+              "value": "shield",
+              "label": "Shield"
+            },
+            {
+              "value": "lock",
+              "label": "Lock"
+            }
           ]
         },
-        { "type": "text", "id": "title", "label": "Title", "default": "Free supplier drops" },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Free supplier drops"
+        },
         {
           "type": "textarea",
           "id": "text",

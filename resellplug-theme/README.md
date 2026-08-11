@@ -44,6 +44,7 @@ gone — see *Honest numbers* below.
 | What's free | `rp-value` | What actually lands in the chat |
 | How it works | `rp-steps` | Makes step one look trivial |
 | Proof | `angels-proof-slider` | Members' screenshots (all 20 carried over) |
+| Who runs this | `rp-founder` | A face and a name — the one thing a scam page never has |
 | Free vs private | `rp-ladder` | Sells the paid tier without hiding the free one |
 | Products | `rp-products` | The supplier vault |
 | FAQ | `rp-faq` | Kills the scam objection first, then the rest |
@@ -74,6 +75,45 @@ and vouches channels. Dawn's version printed every social setting whether set
 or not, so an untouched store published an array of nulls; this one only
 lists links that exist.
 
+## The bio link: `/pages/free`
+
+`templates/page.free.json` is a second landing page with **no product grid
+and no paid tier**. Hero, what's free, proof, who runs this, four questions,
+join. Every action on it goes to the same place.
+
+That is what belongs in your TikTok bio. The homepage has to serve people who
+arrived to buy as well as people who arrived from a video, so it carries a
+supplier grid and a price comparison; this one carries one decision. Set it
+up once:
+
+1. **Online Store → Pages → Add page.** Title it whatever you like — *Free
+   community* works.
+2. In **Theme template** on the right, pick **free**.
+3. Save, then put `yourstore.com/pages/free` in your TikTok bio.
+
+Leave the homepage as the link you give people who ask what you sell.
+
+## Knowing what works
+
+Every join button carries `data-rp-cta` naming the section it sits in
+(`hero`, `sticky`, `proof`, `founder`, `faq`…), and clicking one fires two
+neutral signals:
+
+- a `window.dataLayer` push of `rp_cta_click` — Google Tag Manager reads this
+  with no extra code
+- a `rp:cta` DOM event on `document`, for anything else
+
+No third-party script is loaded and nothing personal is collected. If you
+have neither GTM nor a listener, both are silent no-ops. Without this there
+is no way to know which section sends people to the group, because the click
+leaves for Telegram and Shopify's analytics never see it.
+
+To watch it live, open the site, press F12, and paste into the console:
+
+```js
+document.addEventListener('rp:cta', (e) => console.log(e.detail));
+```
+
 ## Setting it up
 
 1. Shopify admin → **Online Store → Themes → Add theme → Upload zip**.
@@ -87,8 +127,10 @@ lists links that exist.
    homepage → *RP · Free vs private* → **Private community product** and pick
    the real product. Until you do, that column shows a placeholder price.
 6. Homepage → *RP · Hero* → **Image**: upload a screenshot of the group chat,
-   a delivered haul, or a payout. The hero has a visible empty state until
-   you do.
+   a delivered haul, or a payout. Without one the hero centres itself and
+   still looks deliberate, so this is an upgrade rather than a blocker.
+7. Homepage → *RP · Who runs this*: add your photo and your name. This is the
+   highest-value box on the list — see below.
 
 ### The one setting that matters most
 
@@ -107,16 +149,31 @@ work.
 The site is built to sit in the middle of this, not at the end of it:
 
 ```
-TikTok video  →  bio link (this site)  →  free Telegram  →  private community
+TikTok video  →  /pages/free  →  free Telegram  →  private community
+                     ↑
+      homepage, for people who ask what you sell
 ```
 
 Two things follow from that, and they are the reason the homepage is shaped
 the way it is:
 
-- **The bio link should be the homepage**, not a product page. The homepage
-  is the only page that explains what this is before it asks for anything.
+- **The bio link should be `/pages/free`**, never a product page. It is the
+  only page with exactly one thing to do on it.
 - **Send video traffic to a claim, not a catalogue.** If a video is about one
   supplier, `/#suppliers` still lands on the hero first — that is deliberate.
+
+## Why there is a face on the page
+
+Every other section answers "is this a scam" with other people's
+screenshots. `rp-founder` answers it with a person, and it is the only
+section that does. In a niche where the default assumption is that the seller
+is anonymous and will disappear, a name, a photo and a link to the TikTok
+account are the cheapest trust available — and the one thing a scam page
+almost never has, because a scammer will not attach an identity to it.
+
+The TikTok link earns its place twice: someone who arrived from a video can
+confirm it is the same person, and someone who arrived from a forwarded link
+can go and watch the videos.
 
 ## Honest numbers
 

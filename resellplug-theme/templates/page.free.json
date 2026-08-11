@@ -1,0 +1,314 @@
+{
+  "sections": {
+    "hero": {
+      "type": "rp-hero",
+      "settings": {
+        "show_welcome": true,
+        "welcome_text": "Came from TikTok? You're in the right place.",
+        "eyebrow": "Free to join · No card needed",
+        "heading": "Join the free UK reselling community",
+        "heading_accent": "free",
+        "subheading": "Free supplier drops, straight answers when you're stuck, and members' orders posted as they land. Nothing to pay, ever.",
+        "cta_label": "",
+        "secondary_label": "See the proof",
+        "secondary_link": "#proof",
+        "reassure_1": "Free forever",
+        "reassure_2": "No email needed",
+        "reassure_3": "Leave any time",
+        "show_stats": true,
+        "stat_1_label": "In the free group",
+        "stat_2_label": "Vouches posted",
+        "stat_3_label": "Suppliers shared",
+        "show_media": true,
+        "image_alt": "Screenshot of the free reselling community chat"
+      }
+    },
+    "value": {
+      "type": "rp-value",
+      "settings": {
+        "eyebrow": "Inside the free group",
+        "heading": "What you get for £0",
+        "subheading": "No upsell wall. Join, read, ask, take what's useful.",
+        "anchor": "free",
+        "show_cta": false,
+        "tone": "raised"
+      },
+      "blocks": {
+        "v1": {
+          "type": "item",
+          "settings": {
+            "icon": "box",
+            "title": "Free supplier drops",
+            "text": "Suppliers I've ordered from myself, posted in the chat for nothing. No paywall, no DM-me-for-the-link."
+          }
+        },
+        "v2": {
+          "type": "item",
+          "settings": {
+            "icon": "message",
+            "title": "Ask anything",
+            "text": "Stuck on agents, shipping or what to run? Ask. Me and the members who've already done it will answer."
+          }
+        },
+        "v3": {
+          "type": "item",
+          "settings": {
+            "icon": "star",
+            "title": "See every order land",
+            "text": "Members post their hauls as they arrive, so you can judge this before spending a penny."
+          }
+        }
+      },
+      "block_order": [
+        "v1",
+        "v2",
+        "v3"
+      ]
+    },
+    "proof": {
+      "type": "angels-proof-slider",
+      "settings": {
+        "eyebrow": "Receipts",
+        "title": "Members' orders, straight from the chat",
+        "subheading": "Every screenshot was posted by a member. The vouches channel is public — read it before you decide.",
+        "speed": 45,
+        "default_alt": "Screenshot of a member's order posted in the community chat",
+        "anchor": "proof",
+        "show_cta": true,
+        "cta_label": "",
+        "vouches_label": "Read every vouch",
+        "vouches_link": "",
+        "tone": "flat"
+      },
+      "blocks": {
+        "image_Y89hqt": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-23-21.jpg"
+          }
+        },
+        "image_xLTbT7": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-06-17.jpg"
+          }
+        },
+        "image_MjeiHE": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-05-59.jpg"
+          }
+        },
+        "image_jMxX6Q": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-05-46.jpg"
+          }
+        },
+        "image_VMwN3K": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-05-30.jpg"
+          }
+        },
+        "image_JbAUnh": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-05-15.jpg"
+          }
+        },
+        "image_c3F3X8": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-04-45.jpg"
+          }
+        },
+        "image_7NUg76": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-04-27.jpg"
+          }
+        },
+        "image_VjaJzF": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-48.jpg"
+          }
+        },
+        "image_HmknpK": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-44.jpg"
+          }
+        },
+        "image_x3kAFb": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-40.jpg"
+          }
+        },
+        "image_ytM9gc": {
+          "type": "image",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-38.jpg"
+          }
+        },
+        "image_mJDBCP": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-35.jpg"
+          }
+        },
+        "image_iz7qtQ": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-32.jpg"
+          }
+        },
+        "image_KbBdQH": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-29.jpg"
+          }
+        },
+        "image_YfFBCn": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-25.jpg"
+          }
+        },
+        "image_N4TzdE": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-20.jpg"
+          }
+        },
+        "image_eWWDXb": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-17.jpg"
+          }
+        },
+        "image_XznA4b": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/photo_2026-02-24_23-01-10.jpg"
+          }
+        },
+        "image_NNQi4f": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/142099a3-330e-4204-bf04-19b4546e4146.webp"
+          }
+        }
+      },
+      "block_order": [
+        "image_Y89hqt",
+        "image_xLTbT7",
+        "image_MjeiHE",
+        "image_jMxX6Q",
+        "image_VMwN3K",
+        "image_JbAUnh",
+        "image_c3F3X8",
+        "image_7NUg76",
+        "image_VjaJzF",
+        "image_HmknpK",
+        "image_x3kAFb",
+        "image_ytM9gc",
+        "image_mJDBCP",
+        "image_iz7qtQ",
+        "image_KbBdQH",
+        "image_YfFBCn",
+        "image_N4TzdE",
+        "image_eWWDXb",
+        "image_XznA4b",
+        "image_NNQi4f"
+      ]
+    },
+    "founder": {
+      "type": "rp-founder",
+      "settings": {
+        "eyebrow": "Who runs this",
+        "heading": "I'm not an anonymous plug",
+        "text": "<p>I started reselling from my bedroom with one supplier and about £40. Everything I post in the group is something I've ordered myself first — if I haven't used it, it doesn't go in.</p><p>I'm on TikTok every week with my face on camera. If any of this were a scam, that's a strange way to run it.</p>",
+        "name": "",
+        "role": "Founder, Resell Plug UK",
+        "cta_label": "",
+        "tiktok_label": "Watch me on TikTok",
+        "tiktok_link": "",
+        "tone": "raised",
+        "anchor": "who"
+      }
+    },
+    "faq": {
+      "type": "rp-faq",
+      "settings": {
+        "heading": "Before you join",
+        "anchor": "faq",
+        "show_cta": false,
+        "cta_text": "",
+        "cta_label": "",
+        "tone": "flat"
+      },
+      "blocks": {
+        "q1": {
+          "type": "qa",
+          "settings": {
+            "question": "Is it actually free?",
+            "answer": "<p>Yes. No card, no email, no trial that runs out. If you never buy anything that's completely fine — most members don't.</p>"
+          }
+        },
+        "q2": {
+          "type": "qa",
+          "settings": {
+            "question": "How do I know this isn't a scam?",
+            "answer": "<p>Don't take my word for it. The vouches channel is public and open right now, before you spend anything. Join the free group and watch it for a week.</p>"
+          }
+        },
+        "q3": {
+          "type": "qa",
+          "settings": {
+            "question": "I've never resold anything. Is this for me?",
+            "answer": "<p>Yes — that's most of the group. You don't need stock, a company, or money up front to learn how it works.</p>"
+          }
+        },
+        "q4": {
+          "type": "qa",
+          "settings": {
+            "question": "What happens after I join?",
+            "answer": "<p>Nothing is asked of you. You land in the chat, you can read the whole history, and you take what's useful. No DM, no pitch.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4"
+      ]
+    },
+    "cta": {
+      "type": "rp-cta",
+      "settings": {
+        "eyebrow": "That's it",
+        "heading": "The free group is one tap away",
+        "subheading": "Come in, read what's already been posted, decide from there.",
+        "cta_label": "",
+        "secondary_label": "Read the vouches first",
+        "secondary_link": "",
+        "reassure": "Free forever · leave whenever you like",
+        "anchor": "join-now",
+        "tone": "raised"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "value",
+    "proof",
+    "founder",
+    "faq",
+    "cta"
+  ]
+}

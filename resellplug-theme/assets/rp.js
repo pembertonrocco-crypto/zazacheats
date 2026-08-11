@@ -182,6 +182,46 @@
     });
   }
 
+  /* ---------------------------------------------------------------------
+     CTA tracking
+
+     Every join button carries data-rp-cta with the section that rendered it.
+     Without this there is no way to answer the only question that matters
+     when tuning the page — which section is actually sending people to the
+     group — because the click leaves for Telegram and Shopify's analytics
+     never see it.
+
+     No third-party script is loaded here and nothing personal is collected.
+     Two neutral signals go out and whatever you already have installed can
+     listen: a dataLayer push (Google Tag Manager reads this natively) and a
+     DOM event on document. If neither is present, both are no-ops.
+     --------------------------------------------------------------------- */
+
+  function initTracking() {
+    document.addEventListener(
+      'click',
+      function (event) {
+        var link = event.target.closest('[data-rp-cta]');
+        if (!link) return;
+
+        var detail = {
+          source: link.getAttribute('data-rp-cta'),
+          href: link.getAttribute('href') || '',
+          text: (link.textContent || '').trim().slice(0, 80),
+          path: window.location.pathname,
+        };
+
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: 'rp_cta_click', rp: detail });
+
+        document.dispatchEvent(new CustomEvent('rp:cta', { detail: detail }));
+      },
+      // Capture phase: the click navigates away, and a bubbling listener can
+      // lose the race with the unload on a slow phone.
+      true
+    );
+  }
+
   function init(root) {
     initFaq(root);
     initMarquees(root);
@@ -192,11 +232,13 @@
       init(document);
       initDialogs(document);
       initSticky();
+      initTracking();
     });
   } else {
     init(document);
     initDialogs(document);
     initSticky();
+    initTracking();
   }
 
   // The theme editor re-renders one section at a time; re-bind inside it.

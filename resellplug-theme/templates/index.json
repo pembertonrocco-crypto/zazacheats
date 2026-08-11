@@ -61,7 +61,8 @@
         "heading": "What you get for £0",
         "subheading": "No upsell wall. Join, read, ask, take what's useful. Most members never pay for anything.",
         "anchor": "free",
-        "show_cta": true
+        "show_cta": true,
+        "tone": "raised"
       }
     },
     "rp_steps": {
@@ -97,7 +98,8 @@
       "settings": {
         "heading": "How it works",
         "subheading": "Three steps. The first one takes about ten seconds and costs nothing.",
-        "anchor": "how"
+        "anchor": "how",
+        "tone": "flat"
       }
     },
     "rp_proof": {
@@ -257,7 +259,8 @@
         "show_cta": true,
         "cta_label": "",
         "vouches_label": "Read every vouch",
-        "vouches_link": ""
+        "vouches_link": "",
+        "tone": "raised"
       }
     },
     "rp_ladder": {
@@ -355,7 +358,8 @@
         "paid_title": "The private community",
         "paid_price_note": "one-off, lifetime",
         "paid_cta": "Get instant access",
-        "paid_reassure": "Invite link sent the second you pay"
+        "paid_reassure": "Invite link sent the second you pay",
+        "tone": "flat"
       }
     },
     "rp_products": {
@@ -368,7 +372,8 @@
         "button_label": "Get access",
         "show_details": true,
         "anchor": "suppliers",
-        "products_to_show": 12
+        "products_to_show": 12,
+        "tone": "raised"
       }
     },
     "rp_faq": {
@@ -430,7 +435,8 @@
         "anchor": "faq",
         "show_cta": true,
         "cta_text": "Still not sure? Come and read the chat before you decide.",
-        "cta_label": ""
+        "cta_label": "",
+        "tone": "flat"
       }
     },
     "rp_cta": {
@@ -443,7 +449,23 @@
         "secondary_label": "Don't trust it? Read the vouches",
         "secondary_link": "",
         "reassure": "Free forever · leave whenever you like",
-        "anchor": "join-now"
+        "anchor": "join-now",
+        "tone": "raised"
+      }
+    },
+    "rp_founder": {
+      "type": "rp-founder",
+      "settings": {
+        "eyebrow": "Who runs this",
+        "heading": "I'm not an anonymous plug",
+        "text": "<p>I started reselling from my bedroom with one supplier and about £40. Everything I post in the group is something I've ordered myself first — if I haven't used it, it doesn't go in.</p><p>I'm on TikTok every week with my face on camera. If any of this were a scam, that's a strange way to run it.</p>",
+        "name": "",
+        "role": "Founder, Resell Plug UK",
+        "cta_label": "",
+        "tiktok_label": "Watch me on TikTok",
+        "tiktok_link": "",
+        "tone": "flat",
+        "anchor": "who"
       }
     }
   },
@@ -452,6 +474,7 @@
     "rp_value",
     "rp_steps",
     "rp_proof",
+    "rp_founder",
     "rp_ladder",
     "rp_products",
     "rp_faq",

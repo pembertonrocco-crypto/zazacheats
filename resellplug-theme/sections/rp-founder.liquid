@@ -1,0 +1,118 @@
+{%- comment -%}
+  "Who is actually running this."
+
+  The site's whole objection is trust, and every other section answers it
+  with other people's screenshots. None of them answer it with a person. In a
+  niche where the default assumption is that the seller is anonymous and will
+  vanish, putting a face, a name and a TikTok link on the page is the single
+  cheapest trust signal available — and it is the one thing a scam page
+  almost never has, because a scammer will not attach an identity to it.
+
+  The TikTok link matters twice over: a visitor who came from a video can
+  confirm this is the same person, and one who came from a shared link can go
+  and watch the videos.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign tone = section.settings.tone | default: 'flat'
+  assign tiktok = section.settings.tiktok_link | default: settings.rp_tiktok_url
+-%}
+
+<div class="rp-section rp-section--{{ tone }}" id="{{ section.settings.anchor | default: 'who' | handle }}">
+  <div class="rp-wrap rp-wrap--narrow">
+    <div class="rp-founder">
+      {%- if section.settings.image != blank -%}
+        <div class="rp-founder__photo">
+          {{
+            section.settings.image
+            | image_url: width: 480
+            | image_tag:
+              loading: 'lazy',
+              widths: '160, 240, 480',
+              sizes: '(min-width: 750px) 200px, 128px',
+              alt: section.settings.name
+          }}
+        </div>
+      {%- endif -%}
+
+      <div class="rp-founder__body">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="rp-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+
+        <h2 class="rp-h2">{{ section.settings.heading | escape }}</h2>
+
+        {%- if section.settings.text != blank -%}
+          <div class="rp-founder__text">{{ section.settings.text }}</div>
+        {%- endif -%}
+
+        {%- if section.settings.name != blank -%}
+          <p class="rp-founder__sign">
+            <span>{{ section.settings.name | escape }}</span>
+            {%- if section.settings.role != blank -%}
+              <small>{{ section.settings.role | escape }}</small>
+            {%- endif -%}
+          </p>
+        {%- endif -%}
+
+        <div class="rp-actions">
+          {% render 'rp-group-button', label: section.settings.cta_label, source: 'founder' %}
+
+          {%- if tiktok != blank -%}
+            <a class="rp-btn rp-btn--ghost" href="{{ tiktok }}" target="_blank" rel="noopener" data-rp-cta="tiktok">
+              {% render 'rp-icon', icon: 'tiktok', size: 18 %}
+              <span>{{ section.settings.tiktok_label | escape }}</span>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "RP · Who runs this",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Every other section proves this works with other people's screenshots. This one proves there is a real person behind it — which is the thing a scam page never has."
+    },
+    { "type": "image_picker", "id": "image", "label": "Your photo" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Who runs this" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "I'm not an anonymous plug" },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Your story",
+      "default": "<p>I started reselling from my bedroom with one supplier and about £40. Everything I post in the group is something I've ordered myself first — if I haven't used it, it doesn't go in.</p><p>I'm on TikTok every week with my face on camera. If any of this were a scam, that's a strange way to run it.</p>",
+      "info": "Keep it short and specific. Where you started, what you actually do, why the free group exists."
+    },
+    { "type": "text", "id": "name", "label": "Your name" },
+    { "type": "text", "id": "role", "label": "Under your name", "default": "Founder, Resell Plug UK" },
+    { "type": "text", "id": "cta_label", "label": "Join button text" },
+    { "type": "text", "id": "tiktok_label", "label": "TikTok button text", "default": "Watch me on TikTok" },
+    {
+      "type": "url",
+      "id": "tiktok_link",
+      "label": "TikTok link",
+      "info": "Leave blank to use the TikTok link from Theme settings."
+    },
+    {
+      "type": "select",
+      "id": "tone",
+      "label": "Background",
+      "default": "raised",
+      "options": [
+        { "value": "flat", "label": "Black" },
+        { "value": "raised", "label": "Raised" }
+      ]
+    },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "who" }
+  ],
+  "presets": [{ "name": "RP · Who runs this" }]
+}
+{% endschema %}

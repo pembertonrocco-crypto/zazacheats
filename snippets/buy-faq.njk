@@ -1,8 +1,21 @@
 {#
   buy-faq.njk — Pre-purchase objection handling for the product page.
-  IMPORTANT (SellAuth Nunjucks constraint): everything here is static HTML.
-  No {% set %} arrays, no {% for %} over synthetic data.
-  Reviews below are real reviews copied verbatim from components/feedbacks.njk.
+
+  This file is static HTML because it only shows two reviews and eight
+  questions, so a loop would cost more than it saves. It is NOT static
+  because of a platform limit: the header used to claim "SellAuth Nunjucks
+  constraint: no {% set %} arrays, no {% for %} over synthetic data", and
+  that is not true. Stock SellAuth components ship {% set %} with both
+  array and object literals — see the aspectClassMap in
+  components/video-gallery.njk, salesCountHoursLabelMap in
+  components/product-page.njk, and the statusLabelMap in
+  templates/customer-tickets.njk — and components/feedbacks.njk now loops
+  the review array the same way. The real constraint is the one in the
+  README: a newly added .njk *snippet file* does not get rendered, so new
+  work has to live in a file that is already being included.
+
+  The two reviews below are quoted verbatim from the zzVouches array in
+  components/feedbacks.njk. Change them there and here together.
 #}
 
 <section class="bfq">
@@ -15,7 +28,7 @@
     {
       "@type": "Question",
       "name": "What exactly do I get after paying?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Your loader download and serial key are issued automatically the moment payment clears — shown on screen and saved to your account. Run the loader, enter your key, and you're in-game." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Your loader download and serial key are issued automatically the moment payment clears, shown on screen and saved to your account. Run the loader, enter your key, and you're in-game." }
     },
     {
       "@type": "Question",
@@ -96,7 +109,7 @@
           <svg class="bfq__chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </summary>
         <div class="bfq__a">
-          <p>Your loader download and serial key are issued automatically the moment payment clears — shown on screen and saved to your account. No waiting on a human, no manual delivery. Run the loader, enter your key, and you're in-game.</p>
+          <p>Your loader download and serial key are issued automatically the moment payment clears, shown on screen and saved to your account. No waiting on a human, no manual delivery. Run the loader, enter your key, and you're in-game.</p>
         </div>
       </details>
 
@@ -106,7 +119,7 @@
           <svg class="bfq__chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </summary>
         <div class="bfq__a">
-          <p>Check the live status badge at the top of this page and our <a href="/status">status page</a> — we keep it updated so you can see the current state of the build before you buy, not after.</p>
+          <p>Check the live status badge at the top of this page and our <a href="/status">status page</a>. We keep it updated so you can see the current state of the build before you buy, not after.</p>
         </div>
       </details>
 
@@ -126,7 +139,7 @@
           <svg class="bfq__chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </summary>
         <div class="bfq__a">
-          <p>Checkout is handled by an automated payment system — you'll see all available payment options on the next step after hitting Buy Now. Your order and key are tied to your email, so you can always recover your purchase.</p>
+          <p>Checkout is handled by an automated payment system, and you'll see all available payment options on the next step after hitting Buy Now. Your order and key are tied to your email, so you can always recover your purchase.</p>
         </div>
       </details>
 
@@ -136,7 +149,7 @@
           <svg class="bfq__chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </summary>
         <div class="bfq__a">
-          <p>It takes about two minutes even if it's your first time. Hit Buy Now, pick a crypto option at checkout, and you'll be shown an exact amount and a wallet address (with a QR code). Send that amount from any exchange app or wallet — Coinbase, Kraken, Binance, whatever you already use — and the order completes automatically once the payment confirms. Your key is then shown on screen and saved to your account, same as a card purchase. If your card gets declined, crypto is the reliable fallback: no bank in the middle to block it.</p>
+          <p>It takes about two minutes even if it's your first time. Hit Buy Now, pick a crypto option at checkout, and you'll be shown an exact amount and a wallet address (with a QR code). Send that amount from any exchange app or wallet (Coinbase, Kraken, Binance, whatever you already use) and the order completes automatically once the payment confirms. Your key is then shown on screen and saved to your account, same as a card purchase. If your card gets declined, crypto is the reliable fallback: no bank in the middle to block it.</p>
         </div>
       </details>
 
@@ -146,7 +159,7 @@
           <svg class="bfq__chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </summary>
         <div class="bfq__a">
-          <p>Grab the shortest key duration listed above. It's priced so you can test everything yourself — the loader, the features, the support — before committing to a longer key. Most long-key customers started exactly that way. And if you have questions first, ask on <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener">Discord</a> before spending anything.</p>
+          <p>Grab the shortest key duration listed above. It's priced so you can test everything yourself, the loader and the features and the support, before committing to a longer key. Most long-key customers started exactly that way. And if you have questions first, ask on <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener">Discord</a> before spending anything.</p>
         </div>
       </details>
 
@@ -156,7 +169,7 @@
           <svg class="bfq__chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </summary>
         <div class="bfq__a">
-          <p>Full details are in our <a href="/refund-policy">refund policy</a>. If something's genuinely wrong on our end, talk to us on <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener" >Discord</a> first — most issues get resolved without needing a refund at all.</p>
+          <p>Full details are in our <a href="/refund-policy">refund policy</a>. If something's genuinely wrong on our end, talk to us on <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener" >Discord</a> first. Most issues get resolved without needing a refund at all.</p>
         </div>
       </details>
 
@@ -166,7 +179,7 @@
           <svg class="bfq__chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </summary>
         <div class="bfq__a">
-          <p>Join our <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener" >Discord</a> and ask — you can see the community and get a real answer before spending anything. You can also email <a href="mailto:support@zazacheats.net">support@zazacheats.net</a>.</p>
+          <p>Join our <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener" >Discord</a> and ask. You can see the community and get a real answer before spending anything. You can also email <a href="mailto:support@zazacheats.net">support@zazacheats.net</a>.</p>
         </div>
       </details>
     </div>

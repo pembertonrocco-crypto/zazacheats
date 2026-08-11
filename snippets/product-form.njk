@@ -18,7 +18,7 @@
         <span class="pf-price-block__each">/ each</span>
       </span>
     </div>
-    <p class="pf-price-block__sub"><span class="pf-price-block__tick" aria-hidden="true">✓</span> One-time payment — instant automatic delivery</p>
+    <p class="pf-price-block__sub"><span class="pf-price-block__tick" aria-hidden="true">✓</span> One-time payment, instant automatic delivery</p>
   </div>
 
   {% if product.variants.length > 1 %}
@@ -41,7 +41,7 @@
     {% if product.path == 'rust-nfa' %}
     <p class="pf-label">Choose your tier<span class="pf-label__hint">— every account includes the 6-hour replacement warranty</span></p>
     {% elif product.path == 'zaza-rust-private-cheat' %}
-    <p class="pf-label">Choose your access<span class="pf-label__hint">— every key unlocks every feature</span></p>
+    <p class="pf-label">Choose your access<span class="pf-label__hint">every key unlocks every feature</span></p>
     {% else %}
     <p class="pf-label">Choose an option</p>
     {% endif %}
@@ -287,7 +287,7 @@
   <div x-cloak x-show="buyNowError" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
     <div class="pf-error-box" role="alert">
       <span x-text="buyNowError"></span>
-      <span class="pf-error-box__fallback">Still stuck? <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener">Message us on Discord</a> — we answer fast, or try again in a minute.</span>
+      <span class="pf-error-box__fallback">Still stuck? <a href="https://discord.gg/zazacheats" target="_blank" rel="noopener">Message us on Discord</a>. We answer fast, or try again in a minute.</span>
     </div>
   </div>
 

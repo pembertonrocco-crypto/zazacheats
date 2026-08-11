@@ -49,27 +49,27 @@
                     "type": "faq",
                     "properties": {
                         "title": "Frequently Asked Questions",
-                        "subtitle": "Got questions? We've got answers. Here's everything you need to know about getting started with {{ shop.name }}.",
+                        "subtitle": "The five we get asked most, before anyone hands over money. Anything not covered here, ask in the Discord and you'll get a straight answer.",
                         "items": [
                             {
                                 "question": "What payment methods do you accept?",
-                                "answer": "We accept a variety of payment methods including credit\/debit cards, cryptocurrency, and more. Available options will be shown at checkout."
+                                "answer": "Card (Visa and Mastercard), Apple Pay, Google Pay, and crypto: Bitcoin, Ethereum or Litecoin. It is all handled at checkout, and we never see or store your card details. Crypto is no slower than card. The order completes on confirmation and the key appears the same way."
                             },
                             {
                                 "question": "How do I contact support?",
-                                "answer": "You can reach us through our Discord server or by opening a ticket. We typically respond within  10 minutes if we are online!"
+                                "answer": "Discord is fastest and it is where most things get sorted: discord.gg\/zazacheats. You can also open a ticket from the customer portal, or email support@zazacheats.net. Replies usually land inside ten minutes while we are awake. We answer questions from people who have not bought anything yet, so ask before you buy rather than after."
                             },
                             {
                                 "question": "Are your products safe to use?",
-                                "answer": "Yes. Every product we sell is tested before listing. We have a status page (Locate at the top of the homepage) where you can see if our products are either Undetected, Updating or Detected."
+                                "answer": "Nobody honest will promise you a cheat that can never be detected, so we do not. What we do instead is publish the build's current state on the status page, linked at the top of every page, marked Undetected, Updating or Detected, alongside a dated log of every change we have ever made to it. Read it before you buy. If the build goes down for 24 hours or more, that time is added back onto your key."
                             },
                             {
                                 "question": "Do you offer any discounts?",
-                                "answer": "We occasionally run promotions and sales. Follow our socials or join our Discord to stay updated on any deals."
+                                "answer": "The longer keys are the discount. A month key works out far cheaper per day than buying a day key thirty times over, and the lifetime key stops the maths entirely. Past that we run the occasional sale, announced in the Discord and nowhere else. There is no permanent coupon to hunt for, so do not waste your time looking for one."
                             },
                             {
-                                "question": "Can I use the product on multiple PC's?",
-                                "answer": "Each purchase is licensed for a single PC HWID. We do this to prevent abuse of key sharing to ensure it is fair for all our users and to keep our detection rate low."
+                                "question": "Can I use the product on multiple PCs?",
+                                "answer": "One key, one PC. The licence locks to that machine's HWID the first time you run the loader. That is what stops a single key being passed around a friend group, which is how a private build stops being private and ends up detected. If you genuinely change machine, new build or dead motherboard, open a ticket and we will reset the HWID for you."
                             }
                         ],
                         "background": "primary"

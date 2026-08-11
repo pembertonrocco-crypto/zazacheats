@@ -37,12 +37,20 @@ npm run check          # renders all 13 templates and asserts against the HTML
 npm run check:html     # same, plus writes the rendered HTML to .render/
 npm run mobile         # real layout measurement in headless Chromium
 npm run build:js       # assets/script.src.js -> assets/script.js
+npm run package        # build + check, then zazacheats-theme.zip to upload
 ```
 
 **`assets/script.js` is a build artifact.** It is `assets/script.src.js` run
 through terser, and it is the file the layout actually loads. Editing the
 source alone changes nothing on the site; run `npm run build:js` or the edit
 does not ship.
+
+**`npm run package`** rebuilds the bundle, runs the checks, and only then
+writes `zazacheats-theme.zip`, so a zip cannot be built from a tree that does
+not render. The archive deliberately mirrors the shape of the export SellAuth
+produces — every file both in the directory tree and flattened into the
+archive root. See the header of `tools/package.js` for why the flat half is
+lossy and why it is kept anyway.
 
 `tools/check.js` renders every template through the layout against the mock
 context in `tools/fixtures.js`, then asserts:

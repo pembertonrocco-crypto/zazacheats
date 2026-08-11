@@ -277,6 +277,14 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
   'use strict';
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+  /* Desktop only, for the reason already established for esp-field.njk in the
+     README: this is a full-viewport fixed canvas whose orbs are deliberately
+     anchored to the edges so they stay off the reading column. A phone has no
+     margin outside that column, so on a touch device the whole effect is a
+     continuous main-thread repaint underneath content that covers it. The
+     `mob` branches below still exist for narrow desktop windows. */
+  if(!(window.matchMedia && window.matchMedia('(pointer: fine)').matches)) return;
+
   var lite = false;
   try{
     var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
@@ -524,16 +532,37 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
     ctx.fillRect(0, sweepY, W, 1);
   }
 
+  /* Frame budget. Nothing this engine draws moves fast enough to need 60fps:
+     the orbs drift on 0.04-0.10Hz Lissajous curves, the grid advances with
+     scroll, the embers float. At 30 the picture is identical and the loop
+     costs half as much — and this canvas is full-viewport, position:fixed and
+     mix-blend-mode:screen, so every frame it does draw makes the compositor
+     re-blend the entire screen behind whatever the visitor is actually
+     reading. That is the single largest source of continuous main-thread work
+     on the site; it was measured at 56-59 rAF callbacks per second on every
+     page, including the cart, while the visitor sat still.
+
+     The cap is paced with a timer rather than by taking every rAF and
+     returning early on the odd ones. Early-return still wakes the main
+     thread 60 times a second to decide to do nothing; scheduling the next
+     rAF from a setTimeout means the browser genuinely gets the frame off. */
+  var FRAME_MS = 33;                          /* ~30fps */
+  var rafId = null, tid = null;
+
   function frame(now){
-    requestAnimationFrame(frame);
+    rafId = null;
     if(!running) { last = now; return; }
     var dt = clamp((now - last) / 1000, 0.001, 0.05);
     last = now;
     t += dt;
 
-    /* self-degrade if frames run slow for a while */
+    /* Self-degrade if frames run slow for a while. Threshold raised from 36ms
+       to 60ms with the 30fps cap: a healthy capped frame is ~33ms, so the old
+       trigger now means "running exactly as intended" and would have dropped
+       every desktop to low quality on the first slow frame. 60ms is under
+       17fps, which is genuinely struggling. */
     ema += (dt * 1000 - ema) * 0.04;
-    if(ema > 36 && quality > 0.6){ quality = 0.6; build(); ema = 16; }
+    if(ema > 60 && quality > 0.6){ quality = 0.6; build(); ema = FRAME_MS; }
 
     /* scroll velocity (px/s, smoothed) */
     var sy = window.scrollY || 0;
@@ -557,6 +586,7 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
       drawTracers(dt, gA);
       drawSweep(dt, gA);
     }
+    schedule();
   }
 
   var rsz;
@@ -564,10 +594,33 @@ html{scrollbar-color:rgba(191,64,191,.45) #0a0c1a}
     clearTimeout(rsz);
     rsz = setTimeout(build, 150);
   }, {passive:true});
-  document.addEventListener('visibilitychange', function(){ running = !document.hidden; });
+
+  /* A hidden tab used to keep the rAF chain alive and just skip the drawing,
+     which leaves the engine holding a callback the browser has to keep
+     considering. Cancel it outright and start a fresh one on return. */
+  function schedule(){
+    if(!running || tid !== null || rafId !== null) return;
+    tid = setTimeout(function(){
+      tid = null;
+      rafId = requestAnimationFrame(frame);
+    }, FRAME_MS);
+  }
+  function start(){
+    if(rafId !== null || tid !== null) return;
+    last = performance.now();
+    rafId = requestAnimationFrame(frame);
+  }
+  function stop(){
+    if(rafId !== null){ cancelAnimationFrame(rafId); rafId = null; }
+    if(tid !== null){ clearTimeout(tid); tid = null; }
+  }
+  document.addEventListener('visibilitychange', function(){
+    running = !document.hidden;
+    if(running) start(); else stop();
+  });
 
   build();
-  requestAnimationFrame(frame);
+  start();
 })();
 </script>
 

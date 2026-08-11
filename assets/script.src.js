@@ -1485,46 +1485,102 @@ function snow(config = {}) {
     try { warden(); } catch (e) {}
   }
 
-  /* ---- 1. ambient animation warden ---- */
+  /* ---- 1. ambient animation warden ----
+
+     Finds ambient animations instead of being told about them.
+
+     This used to pause a hand-written list of six class names. Measured on
+     the homepage after 3.5s: 28 infinite CSS animations were running and 14
+     of them were off-screen, none of which matched that list — a 563,000px²
+     spinning showcase frame, a 350,000px² reticle ring, the products glow
+     pair, the FAQ glow pair, the showcase title fill and glint, the section
+     underline. Each one keeps its element on the compositor's active list,
+     and this page has 11 on-screen backdrop-filter elements whose blur has
+     to be recomputed whenever anything behind them changes. That is why an
+     idle homepage sat at ~47% of a core with the CPU profile showing the
+     time under (program) rather than in any script: it was style, paint and
+     composite, not JavaScript.
+
+     Any CSS animation with infinite iterations is by definition decorative —
+     nothing that must finish loops forever — so the rule is simply: if it
+     loops and it is off-screen, pause it. Elements whose animation is their
+     own reveal (a one-shot entrance) have finite iterations and are left
+     alone, which is what makes this safe to apply blind.
+
+     `animationstart` bubbles to the document, so one listener catches
+     everything added later by the enhancement layers, popups and Alpine —
+     no polling and no second scan needed. */
   function warden() {
-    if (!('IntersectionObserver' in window)) return;
-    var SEL = '.zz-neon,.zzstatus__chip,.zzstatus__ring,.zzstatus__sweep,' +
-              '.zzvw__dot,.pc__esp-scan';
-    var seen = typeof WeakSet === 'function' ? new WeakSet() : null;
-    var tracked = [];
+    if (!('IntersectionObserver' in window) || !document.getAnimations) return;
+
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        en.target.style.animationPlayState = en.isIntersecting ? '' : 'paused';
-      });
-    }, { rootMargin: '80px 0px' });
-    function scan() {
-      var els = document.querySelectorAll(SEL);
-      for (var i = 0; i < els.length; i++) {
-        var el = els[i];
-        if (seen) {
-          if (seen.has(el)) continue;
-          seen.add(el);
-        } else if (el.__zzWarden) continue;
-        el.__zzWarden = 1;
-        tracked.push(el);
-        io.observe(el);
+      for (var i = 0; i < entries.length; i++) {
+        setPlay(entries[i].target, entries[i].isIntersecting && !document.hidden);
+      }
+    }, { rootMargin: '150px 0px' });
+
+    var tracked = typeof WeakSet === 'function' ? new WeakSet() : null;
+    var list = [];
+
+    function setPlay(el, on) {
+      el.__zzOn = on;
+      var anims;
+      try { anims = el.getAnimations ? el.getAnimations() : []; } catch (e) { return; }
+      for (var i = 0; i < anims.length; i++) {
+        var a = anims[i];
+        if (!a.__zzAmbient) continue;
+        try { if (on) { if (a.playState === 'paused') a.play(); } else if (a.playState === 'running') a.pause(); } catch (e) {}
       }
     }
-    scan();
-    /* second pass catches elements the enhancement layers inject after load */
-    setTimeout(scan, 3500);
-    /* hard-pause everything while the tab is hidden */
+
+    /* position:fixed elements never leave the viewport, so observing them
+       only adds work — and pausing one on a bad intersection reading would
+       freeze something the visitor is looking at (the nav, the bundle bar). */
+    function isFixed(el) {
+      for (var n = el; n && n.nodeType === 1; n = n.parentElement) {
+        var p = getComputedStyle(n).position;
+        if (p === 'fixed' || p === 'sticky') return true;
+      }
+      return false;
+    }
+
+    function adopt(a) {
+      if (!a || a.__zzAmbient) return;
+      var t;
+      try {
+        if (!a.effect || !a.effect.target) return;
+        if (a.effect.getTiming().iterations !== Infinity) return;  /* one-shot: leave it */
+        t = a.effect.target;
+      } catch (e) { return; }
+      if (t.nodeType !== 1) return;                                 /* pseudo-element */
+      a.__zzAmbient = 1;
+      if (tracked ? tracked.has(t) : t.__zzWarden) {
+        if (t.__zzOn === false) { try { a.pause(); } catch (e) {} }
+        return;
+      }
+      if (tracked) tracked.add(t); else t.__zzWarden = 1;
+      if (isFixed(t)) return;
+      list.push(t);
+      io.observe(t);
+    }
+
+    function sweep() {
+      var all;
+      try { all = document.getAnimations(); } catch (e) { return; }
+      for (var i = 0; i < all.length; i++) adopt(all[i]);
+    }
+
+    sweep();
+    document.addEventListener('animationstart', function (e) {
+      var anims;
+      try { anims = e.target.getAnimations ? e.target.getAnimations() : []; } catch (err) { return; }
+      for (var i = 0; i < anims.length; i++) adopt(anims[i]);
+    }, true);
+
     document.addEventListener('visibilitychange', function () {
       var hid = document.hidden;
-      for (var i = 0; i < tracked.length; i++) {
-        if (hid) tracked[i].style.animationPlayState = 'paused';
-      }
-      if (!hid) { io.disconnect(); io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          en.target.style.animationPlayState = en.isIntersecting ? '' : 'paused';
-        });
-      }, { rootMargin: '80px 0px' });
-        for (var j = 0; j < tracked.length; j++) io.observe(tracked[j]);
+      for (var i = 0; i < list.length; i++) {
+        setPlay(list[i], hid ? false : list[i].__zzOn !== false);
       }
     });
   }

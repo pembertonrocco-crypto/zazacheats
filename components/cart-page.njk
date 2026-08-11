@@ -686,9 +686,35 @@
     rowD.hidden=false;
   }
 
+  /* React to cart changes instead of asking every 600ms whether any happened.
+
+     The poll existed because Alpine re-renders the summary and there was no
+     obvious hook to hang off. A MutationObserver is that hook: it fires when
+     the subtotal node actually changes and costs nothing the rest of the
+     time. The old timer woke the main thread 100 times a minute, forever, on
+     a page where the cart usually changes two or three times in total — and
+     it ran in pairs, because the NFA upsell below has the same 600ms poll.
+
+     Coalesced through rAF so one Alpine re-render, which can touch several
+     nodes, results in one recompute. */
+  var pending=false;
+  function queue(){
+    if(pending) return;
+    pending=true;
+    requestAnimationFrame(function(){ pending=false; refresh(); });
+  }
+
   refresh();
-  setInterval(refresh,600);                       // cart edits re-render Alpine
   window.addEventListener('storage',refresh);     // other-tab changes
+  if(window.MutationObserver){
+    var scope=rowD.closest('form')||rowD.parentElement;
+    if(scope) new MutationObserver(queue).observe(scope,{childList:true,subtree:true,characterData:true});
+    /* The line items are what the visitor edits; the summary follows them. */
+    var items=document.querySelector('.col-12.col-lg-8')||document.getElementById('app');
+    if(items) new MutationObserver(queue).observe(items,{childList:true,subtree:true,characterData:true});
+  }else{
+    setInterval(refresh,600);                     // pre-2012 fallback
+  }
 })();
 </script>
 
@@ -780,7 +806,22 @@
     setTimeout(function(){ box.hidden=true; },1400);
   });
 
+  /* Same change as the discount rows above: watch for cart edits rather than
+     asking twice a second whether one has happened. */
+  var pending=false;
+  function queue(){
+    if(pending) return;
+    pending=true;
+    requestAnimationFrame(function(){ pending=false; refresh(); });
+  }
+
   refresh();
-  setInterval(refresh,600);
+  window.addEventListener('storage',refresh);
+  if(window.MutationObserver){
+    var items=document.querySelector('.col-12.col-lg-8')||document.getElementById('app');
+    if(items) new MutationObserver(queue).observe(items,{childList:true,subtree:true,characterData:true});
+  }else{
+    setInterval(refresh,600);
+  }
 })();
 </script>

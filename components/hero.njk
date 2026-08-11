@@ -710,21 +710,49 @@ html.zz-motion .hero-scrollcue { animation: heroRise .8s cubic-bezier(.22,1,.36,
 
 <script>
 /* Live FPS counter for the HUD watermark — a REAL measurement of this
-   browser's render loop, not a fabricated number. */
+   browser's render loop, not a fabricated number.
+
+   It only counts while it is on screen. This loop used to run for the entire
+   life of the page: a dedicated 60fps rAF chain, started at load and never
+   stopped, whose only job is to write a two-digit number into a decorative
+   corner of the hero. Once the hero scrolled away — which is the first thing
+   that happens on a fourteen-screen homepage — it went on counting frames
+   nobody could see, for as long as the tab stayed open, competing with the
+   scroll it was measuring. An IntersectionObserver on the element itself
+   costs nothing and is exactly the right signal: no observer support, or a
+   hidden tab, and it simply stops. */
 (function(){
   var el = document.getElementById('hero-hud-fps');
   if(!el) return;
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ el.textContent='60'; return; }
-  var frames = 0, last = performance.now();
+
+  var frames = 0, last = performance.now(), rafId = null;
   function loop(now){
     frames++;
     if(now - last >= 1000){
       el.textContent = Math.min(999, Math.round(frames * 1000 / (now - last)));
       frames = 0; last = now;
     }
-    requestAnimationFrame(loop);
+    rafId = requestAnimationFrame(loop);
   }
-  requestAnimationFrame(loop);
+  function start(){
+    if(rafId === null && !document.hidden){ frames = 0; last = performance.now(); rafId = requestAnimationFrame(loop); }
+  }
+  function stop(){
+    if(rafId !== null){ cancelAnimationFrame(rafId); rafId = null; }
+  }
+
+  var onScreen = true;
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(entries){
+      onScreen = entries[0].isIntersecting;
+      if(onScreen) start(); else stop();
+    }, {rootMargin: '80px'}).observe(el);
+  }
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden || !onScreen) stop(); else start();
+  });
+  start();
 })();
 </script>
 

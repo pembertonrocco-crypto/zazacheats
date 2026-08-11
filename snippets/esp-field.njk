@@ -97,21 +97,67 @@
     ctx.fillRect(x - 6, y + h * (1 - b.hp), 2.5, h * b.hp);
   }
 
-  function frame(){
-    if(!running){ requestAnimationFrame(frame); return; }
-    t += 0.016;
+  /* Time-based, and capped at ~30fps.
+
+     Two things were wrong with the old loop. It advanced by a hardcoded
+     `t += 0.016` and a fixed `b.x += b.vx` per *frame*, so the drift was tied
+     to refresh rate: on a 120Hz or 144Hz monitor — which a Rust player is
+     more likely than most to own — the whole field moved at two or three
+     times the intended speed, and on a struggling machine it crawled. It is
+     now driven by elapsed time, so it looks the same everywhere.
+
+     And when the tab went to the background it kept re-scheduling itself just
+     to return early, holding a callback alive for a canvas nobody could see.
+     It now cancels and restarts.
+
+     30fps is deliberate. The boxes drift upward at 0.05-0.16px per frame;
+     there is no motion here that 60fps resolves and 30fps does not, and this
+     canvas is fixed and full-viewport, so every frame costs a full-screen
+     clear and repaint.
+
+     The cap is paced with a timer rather than by taking every rAF and
+     returning early: early-return still wakes the main thread 60 times a
+     second to decide to do nothing. */
+  var FRAME_MS = 33;
+  var rafId = null, tid = null, last = 0;
+
+  function frame(now){
+    rafId = null;
+    var dt = (now - last) / 1000;
+    if(dt > 0.25) dt = 1 / 30;                 /* returned from a pause */
+    last = now;
+    t += dt;
     ctx.clearRect(0, 0, W, H);
+    /* vx/vy are per-60fps-frame units, so scale by dt*60 to keep the tuning. */
+    var k = dt * 60;
     for(var i = 0; i < boxes.length; i++){
       var b = boxes[i];
-      b.x += b.vx; b.y += b.vy;
+      b.x += b.vx * k; b.y += b.vy * k;
       if(b.y + b.h < -30) boxes[i] = spawn(i, false);
       drawBox(boxes[i]);
     }
-    requestAnimationFrame(frame);
+    schedule();
   }
 
-  document.addEventListener('visibilitychange', function(){ running = !document.hidden; });
+  function schedule(){
+    if(!running || tid !== null || rafId !== null) return;
+    tid = setTimeout(function(){ tid = null; rafId = requestAnimationFrame(frame); }, FRAME_MS);
+  }
+  function start(){
+    if(rafId !== null || tid !== null) return;
+    last = performance.now();
+    rafId = requestAnimationFrame(frame);
+  }
+  function stop(){
+    if(rafId !== null){ cancelAnimationFrame(rafId); rafId = null; }
+    if(tid !== null){ clearTimeout(tid); tid = null; }
+  }
+
+  document.addEventListener('visibilitychange', function(){
+    running = !document.hidden;
+    if(running) start(); else stop();
+  });
   window.addEventListener('resize', function(){ size(); make(); }, {passive:true});
-  size(); make(); requestAnimationFrame(frame);
+  size(); make(); start();
 })();
 </script>

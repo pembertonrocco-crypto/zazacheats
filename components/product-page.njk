@@ -1343,7 +1343,24 @@
       barPrice.textContent=txt||'Select a key above';
       barBtn.disabled=!!realBtn.disabled;
     };
-    sync();setInterval(sync,700);
+    sync();
+    /* The sticky mobile buy bar mirrors the real buy button's price and
+       disabled state. It used to re-read both every 700ms for the life of
+       the page; both only change when Alpine re-renders the button after a
+       variant click, so watch the button instead. */
+    if(window.MutationObserver){
+      var pending=false;
+      var queue=function(){
+        if(pending) return;
+        pending=true;
+        requestAnimationFrame(function(){ pending=false; sync(); });
+      };
+      new MutationObserver(queue).observe(realBtn,{
+        childList:true, subtree:true, characterData:true, attributes:true, attributeFilter:['disabled','class']
+      });
+    }else{
+      setInterval(sync,700);
+    }
     if('IntersectionObserver' in window){
       var io=new IntersectionObserver(function(es){
         es.forEach(function(e){bar.classList.toggle('is-on',!e.isIntersecting);});

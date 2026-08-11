@@ -22,9 +22,10 @@
     "rp_sticky": {
       "type": "rp-sticky-cta",
       "settings": {
-        "title": "Free community",
-        "subtitle": "Suppliers, answers and proof — £0",
-        "cta_label": "Join free"
+        "primary_link": "/collections/all",
+        "title": "Tested suppliers",
+        "subtitle": "Instant delivery · two years of vouches",
+        "cta_label": "Shop now"
       }
     }
   },

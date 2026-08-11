@@ -9,15 +9,15 @@
           "type": "item",
           "settings": {
             "emoji": "🇬🇧",
-            "text": "UK reselling community",
+            "text": "UK reselling suppliers",
             "highlight": true
           }
         },
         "t2": {
           "type": "item",
           "settings": {
-            "emoji": "💬",
-            "text": "{members} in the free group",
+            "emoji": "🕑",
+            "text": "Trading {years} years",
             "highlight": true
           }
         },
@@ -32,16 +32,16 @@
         "t4": {
           "type": "item",
           "settings": {
-            "emoji": "📦",
-            "text": "Free suppliers dropped every week",
+            "emoji": "⚡",
+            "text": "Instant delivery on every order",
             "highlight": true
           }
         },
         "t5": {
           "type": "item",
           "settings": {
-            "emoji": "⚡",
-            "text": "Instant delivery on every order",
+            "emoji": "💬",
+            "text": "{members} in the free community",
             "highlight": true
           }
         }
@@ -63,29 +63,29 @@
         "n1": {
           "type": "link",
           "settings": {
-            "label": "Free group",
-            "link": "/#free"
+            "label": "Shop",
+            "link": "/collections/all"
           }
         },
         "n2": {
           "type": "link",
           "settings": {
-            "label": "Suppliers",
-            "link": "/#suppliers"
+            "label": "Vouches",
+            "link": "/pages/vouches"
           }
         },
         "n3": {
           "type": "link",
           "settings": {
-            "label": "Proof",
-            "link": "/#proof"
+            "label": "FAQ",
+            "link": "/pages/faq"
           }
         },
         "n4": {
           "type": "link",
           "settings": {
-            "label": "FAQ",
-            "link": "/#faq"
+            "label": "About",
+            "link": "/pages/about"
           }
         }
       },
@@ -99,8 +99,9 @@
         "logo_width": 120,
         "brand_text": "",
         "show_cta": true,
-        "cta_label": "Join free",
-        "show_cart": true
+        "cta_label": "Shop",
+        "show_cart": true,
+        "cta_link": "/collections/all"
       }
     },
     "header": {

@@ -1,0 +1,196 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 8
+      }
+    },
+    "rp_steps": {
+      "type": "rp-steps",
+      "settings": {
+        "heading": "How it works",
+        "anchor": "how",
+        "subheading": "From picking a supplier to the parcel arriving. Every step is covered in the guide that comes free with anything you buy.",
+        "tone": "flat"
+      },
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "title": "Join the free chat",
+            "text": "One tap. No email, no card, no application form. You can read the whole history before you say a word."
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "title": "Take the free drops",
+            "text": "Grab the suppliers I post, follow the free guide, and place your first test order through an agent."
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "title": "Upgrade only if you want more",
+            "text": "When the free stuff has paid for itself, the private community is there with the full vault and direct access to me."
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ]
+    },
+    "rp_faq": {
+      "type": "rp-faq",
+      "settings": {
+        "heading": "Questions people actually ask",
+        "anchor": "faq",
+        "show_cta": false,
+        "cta_text": "",
+        "cta_label": "",
+        "tone": "raised"
+      },
+      "blocks": {
+        "q1": {
+          "type": "qa",
+          "settings": {
+            "question": "Is the free group actually free?",
+            "answer": "<p>Yes. No card, no email, no trial that runs out. You join, you read, you ask, and if you never buy anything that's completely fine. The paid community exists for people who want the full vault — it isn't a wall in front of the free chat.</p>"
+          }
+        },
+        "q2": {
+          "type": "qa",
+          "settings": {
+            "question": "How do I know this isn't a scam?",
+            "answer": "<p>Fair question, and you shouldn't take my word for it. The vouches channel is public and open before you spend anything — every screenshot in it is from a real member. Join the free group first and watch it for a week. Nothing about that costs you money.</p>"
+          }
+        },
+        "q3": {
+          "type": "qa",
+          "settings": {
+            "question": "What does buying a supplier actually get me?",
+            "answer": "<p>The supplier's contact details and their full catalogue, so you can browse everything they make and order directly. It's digital — it lands the moment you pay, and you get an email link as well.</p>"
+          }
+        },
+        "q4": {
+          "type": "qa",
+          "settings": {
+            "question": "Which supplier should I start with?",
+            "answer": "<p>Depends on the niche you want to run. They've all been ordered from and checked personally, so it isn't a question of which ones are real — it's which products you want to sell. Ask in the free group and I'll point you at the right one.</p>"
+          }
+        },
+        "q5": {
+          "type": "qa",
+          "settings": {
+            "question": "Do they ship to the UK?",
+            "answer": "<p>Yes, worldwide, using an agent. The full agent walkthrough is included free with anything you buy, and the basics get posted in the free group too.</p>"
+          }
+        },
+        "q6": {
+          "type": "qa",
+          "settings": {
+            "question": "I've never resold anything before. Is this for me?",
+            "answer": "<p>Yes — that's most of the group. Start in the free chat, follow the guide, place one small test order through an agent. You don't need stock, a company, or money up front to learn how it works.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6"
+      ]
+    },
+    "rp_linkhub": {
+      "type": "rp-linkhub",
+      "settings": {
+        "eyebrow": "Everywhere else",
+        "heading": "Still stuck? Ask in the chat",
+        "subheading": "The vouches channel is public — read it before you buy anything. The community chat is free to join.",
+        "anchor": "links",
+        "tone": "flat"
+      },
+      "blocks": {
+        "l1": {
+          "type": "link",
+          "settings": {
+            "preset": "vouches",
+            "title": "Vouches channel",
+            "text": "Every order members have posted. Public, nothing to join.",
+            "link": "",
+            "icon": "star",
+            "highlight": true
+          }
+        },
+        "l2": {
+          "type": "link",
+          "settings": {
+            "preset": "group",
+            "title": "Free community chat",
+            "text": "220 UK resellers. Free, and nothing is asked of you.",
+            "link": "",
+            "icon": "telegram",
+            "highlight": false
+          }
+        },
+        "l3": {
+          "type": "link",
+          "settings": {
+            "preset": "tiktok",
+            "title": "TikTok",
+            "text": "Where most of this starts.",
+            "link": "",
+            "icon": "tiktok",
+            "highlight": false
+          }
+        },
+        "l4": {
+          "type": "link",
+          "settings": {
+            "preset": "linktree",
+            "title": "All my links",
+            "text": "Every account in one place.",
+            "link": "",
+            "icon": "users",
+            "highlight": false
+          }
+        }
+      },
+      "block_order": [
+        "l1",
+        "l2",
+        "l3",
+        "l4"
+      ]
+    },
+    "rp_cta": {
+      "type": "rp-cta",
+      "settings": {
+        "eyebrow": "Ready when you are",
+        "heading": "Ready to pick one?",
+        "subheading": "Every supplier list is delivered instantly and includes the agent walkthrough.",
+        "primary_link": "/collections/all",
+        "primary_label": "Shop the suppliers",
+        "cta_label": "",
+        "secondary_label": "Read the vouches",
+        "secondary_link": "",
+        "reassure": "Instant delivery · every supplier tested first",
+        "anchor": "buy",
+        "tone": "raised"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "rp_steps",
+    "rp_faq",
+    "rp_linkhub",
+    "rp_cta"
+  ]
+}

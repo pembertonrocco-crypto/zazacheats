@@ -1,86 +1,24 @@
 {
   "sections": {
-    "rp_featured": {
-      "type": "rp-featured",
+    "main": {
+      "type": "main-page",
       "settings": {
-        "eyebrow": "Two years of receipts",
-        "heading": "Two years trading. 220 in the group. Every supplier tested first.",
-        "heading_accent": "tested first",
-        "subheading": "Real UK reselling suppliers, ordered from and checked by me before anything goes on sale. Instant delivery, and the vouches are public.",
-        "tag": "Best seller",
-        "product": "",
-        "product_title": "",
-        "pitch": "The one that gets you everything — the full vault, the winning products and me on the other end of a message.",
-        "price_note": "one-off · lifetime access",
-        "cta_label": "Get instant access",
-        "details_label": "See everything included",
-        "reassure_1": "Delivered instantly",
-        "reassure_2": "Vouches are public",
-        "show_stats": true,
-        "stat_1_label": "Years trading",
-        "stat_2_label": "In the community",
-        "stat_3_label": "Vouches posted",
-        "tone": "flat"
-      },
-      "blocks": {
-        "p1": {
-          "type": "point",
-          "settings": {
-            "text": "Every supplier I use, with contacts and full catalogues"
-          }
-        },
-        "p2": {
-          "type": "point",
-          "settings": {
-            "text": "Winning products posted before they blow up"
-          }
-        },
-        "p3": {
-          "type": "point",
-          "settings": {
-            "text": "The full agent and shipping walkthrough"
-          }
-        },
-        "p4": {
-          "type": "point",
-          "settings": {
-            "text": "Message me directly when you're stuck"
-          }
-        }
-      },
-      "block_order": [
-        "p1",
-        "p2",
-        "p3",
-        "p4"
-      ]
-    },
-    "rp_products": {
-      "type": "rp-products",
-      "settings": {
-        "eyebrow": "The vault",
-        "heading": "Every supplier, one payment each",
-        "subheading": "Buy once and the contacts are yours for good. Tap any one to see exactly what's inside.",
-        "collection": "homepage",
-        "products_to_show": 12,
-        "button_label": "Get access",
-        "show_details": true,
-        "anchor": "suppliers",
-        "tone": "raised"
+        "padding_top": 28,
+        "padding_bottom": 8
       }
     },
     "rp_proof": {
       "type": "angels-proof-slider",
       "settings": {
         "eyebrow": "Receipts",
-        "title": "Two years of members' orders",
-        "subheading": "Every screenshot was posted by a real member. The vouches channel is public — go and read the lot.",
-        "speed": 45,
+        "title": "Every vouch, two years' worth",
+        "subheading": "Posted by members as their orders landed. Nothing here is staged and nothing has been removed.",
+        "speed": 55,
         "default_alt": "Screenshot of a member's order posted in the community chat",
         "anchor": "proof",
-        "show_cta": false,
+        "show_cta": true,
         "cta_label": "",
-        "vouches_label": "Read every vouch",
+        "vouches_label": "Read the live channel",
         "vouches_link": "",
         "tone": "flat"
       },
@@ -230,89 +168,11 @@
         "image_NNQi4f"
       ]
     },
-    "rp_founder": {
-      "type": "rp-founder",
-      "settings": {
-        "eyebrow": "Who runs this",
-        "heading": "I'm not an anonymous plug",
-        "text": "<p>I started reselling from my bedroom with one supplier and about £40. Everything I post in the group is something I've ordered myself first — if I haven't used it, it doesn't go in.</p><p>I'm on TikTok every week with my face on camera. If any of this were a scam, that's a strange way to run it.</p>",
-        "name": "",
-        "role": "Founder, Resell Plug UK",
-        "cta_label": "",
-        "tiktok_label": "Watch me on TikTok",
-        "tiktok_link": "",
-        "tone": "raised",
-        "anchor": "who"
-      }
-    },
-    "rp_faq": {
-      "type": "rp-faq",
-      "settings": {
-        "heading": "Before you buy",
-        "anchor": "faq",
-        "show_cta": false,
-        "cta_text": "",
-        "cta_label": "",
-        "tone": "flat"
-      },
-      "blocks": {
-        "q1": {
-          "type": "qa",
-          "settings": {
-            "question": "Is the free group actually free?",
-            "answer": "<p>Yes. No card, no email, no trial that runs out. You join, you read, you ask, and if you never buy anything that's completely fine. The paid community exists for people who want the full vault — it isn't a wall in front of the free chat.</p>"
-          }
-        },
-        "q2": {
-          "type": "qa",
-          "settings": {
-            "question": "How do I know this isn't a scam?",
-            "answer": "<p>Fair question, and you shouldn't take my word for it. The vouches channel is public and open before you spend anything — every screenshot in it is from a real member. Join the free group first and watch it for a week. Nothing about that costs you money.</p>"
-          }
-        },
-        "q3": {
-          "type": "qa",
-          "settings": {
-            "question": "What does buying a supplier actually get me?",
-            "answer": "<p>The supplier's contact details and their full catalogue, so you can browse everything they make and order directly. It's digital — it lands the moment you pay, and you get an email link as well.</p>"
-          }
-        },
-        "q4": {
-          "type": "qa",
-          "settings": {
-            "question": "Which supplier should I start with?",
-            "answer": "<p>Depends on the niche you want to run. They've all been ordered from and checked personally, so it isn't a question of which ones are real — it's which products you want to sell. Ask in the free group and I'll point you at the right one.</p>"
-          }
-        },
-        "q5": {
-          "type": "qa",
-          "settings": {
-            "question": "Do they ship to the UK?",
-            "answer": "<p>Yes, worldwide, using an agent. The full agent walkthrough is included free with anything you buy, and the basics get posted in the free group too.</p>"
-          }
-        },
-        "q6": {
-          "type": "qa",
-          "settings": {
-            "question": "I've never resold anything before. Is this for me?",
-            "answer": "<p>Yes — that's most of the group. Start in the free chat, follow the guide, place one small test order through an agent. You don't need stock, a company, or money up front to learn how it works.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "q1",
-        "q2",
-        "q3",
-        "q4",
-        "q5",
-        "q6"
-      ]
-    },
     "rp_linkhub": {
       "type": "rp-linkhub",
       "settings": {
         "eyebrow": "Everywhere else",
-        "heading": "Find me off the site",
+        "heading": "Read it yourself",
         "subheading": "The vouches channel is public — read it before you buy anything. The community chat is free to join.",
         "anchor": "links",
         "tone": "raised"
@@ -374,8 +234,8 @@
       "type": "rp-cta",
       "settings": {
         "eyebrow": "Ready when you are",
-        "heading": "Pick your supplier and get started",
-        "subheading": "Everything is delivered the second you pay, and every list has been ordered from before it went on sale.",
+        "heading": "Convinced? Here's the vault",
+        "subheading": "Every supplier on the site was ordered from before it went on sale.",
         "primary_link": "/collections/all",
         "primary_label": "Shop the suppliers",
         "cta_label": "",
@@ -388,11 +248,8 @@
     }
   },
   "order": [
-    "rp_featured",
-    "rp_products",
+    "main",
     "rp_proof",
-    "rp_founder",
-    "rp_faq",
     "rp_linkhub",
     "rp_cta"
   ]

@@ -150,6 +150,8 @@ SETTINGS = {
     'rp_tiktok_url': '',
     'rp_stat_members': '1,200+', 'rp_stat_vouches': '112', 'rp_stat_suppliers': '20+',
     'rp_share_image': Img(),
+    'rp_linktree_url': 'https://linktr.ee/example',
+    'rp_stat_years': '2',
     'logo': Img(), 'social_tiktok_link': '', 'social_instagram_link': '',
     'social_youtube_link': '', 'social_twitter_link': '', 'social_facebook_link': '',
 }
@@ -228,7 +230,7 @@ def main():
         source = re.sub(r'\{%-?\s*endform\s*-?%\}', '</form>', source)
 
         settings = defaults_from_schema(schema)
-        if path.endswith('rp-ladder.liquid'):
+        if path.endswith('rp-ladder.liquid') or path.endswith('rp-featured.liquid'):
             settings['product'] = PRODUCTS[2]
         if path.endswith('rp-hero.liquid') or path.endswith('rp-header.liquid'):
             settings['image'] = Img()
@@ -273,11 +275,17 @@ def main():
             if 'rel=' not in tag:
                 failures.append(f'{path}: target=_blank without rel — {tag[:80]}')
 
+        # Exactly one section on a page carries the <h1>. Both of these are
+        # top-of-page sections and are never used together.
+        titles = ('rp-hero.liquid', 'rp-featured.liquid')
         heads = re.findall(r'<(h[1-6])\b', html)
-        if path.endswith('rp-hero.liquid') and heads[:1] != ['h1']:
-            failures.append(f'{path}: hero should open with the page h1, got {heads[:1]}')
-        if not path.endswith('rp-hero.liquid') and 'h1' in heads:
-            failures.append(f'{path}: emits an <h1>; only the hero should')
+        is_title_section = path.endswith(titles)
+        if is_title_section and heads[:1] != ['h1']:
+            failures.append(f'{path}: should open with the page h1, got {heads[:1]}')
+        if not is_title_section and 'h1' in heads:
+            failures.append(f'{path}: emits an <h1>; only a title section should')
+        if heads.count('h1') > 1:
+            failures.append(f'{path}: emits {heads.count("h1")} h1 elements')
 
         print(f'  ok  {path}  ({len(html)} bytes)')
 

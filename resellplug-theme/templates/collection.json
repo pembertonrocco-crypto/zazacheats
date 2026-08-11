@@ -31,20 +31,86 @@
     "rp_cta": {
       "type": "rp-cta",
       "settings": {
-        "eyebrow": "Free either way",
-        "heading": "Not ready to buy? Join the free group",
-        "subheading": "Free suppliers, questions answered, and members' orders posted as they land.",
+        "eyebrow": "Ready when you are",
+        "heading": "Not sure which one?",
+        "subheading": "Ask in the free community chat and I'll point you at the right supplier for what you want to sell.",
+        "primary_link": "",
+        "primary_label": "Ask in the chat",
         "cta_label": "",
         "secondary_label": "Read the vouches",
         "secondary_link": "",
-        "reassure": "Free forever · leave whenever you like",
-        "anchor": "join-now"
+        "reassure": "Instant delivery · every supplier tested first",
+        "anchor": "buy",
+        "tone": "raised"
       }
+    },
+    "rp_linkhub": {
+      "type": "rp-linkhub",
+      "settings": {
+        "eyebrow": "Everywhere else",
+        "heading": "Find me off the site",
+        "subheading": "The vouches channel is public — read it before you buy anything. The community chat is free to join.",
+        "anchor": "links",
+        "tone": "flat"
+      },
+      "blocks": {
+        "l1": {
+          "type": "link",
+          "settings": {
+            "preset": "vouches",
+            "title": "Vouches channel",
+            "text": "Every order members have posted. Public, nothing to join.",
+            "link": "",
+            "icon": "star",
+            "highlight": true
+          }
+        },
+        "l2": {
+          "type": "link",
+          "settings": {
+            "preset": "group",
+            "title": "Free community chat",
+            "text": "220 UK resellers. Free, and nothing is asked of you.",
+            "link": "",
+            "icon": "telegram",
+            "highlight": false
+          }
+        },
+        "l3": {
+          "type": "link",
+          "settings": {
+            "preset": "tiktok",
+            "title": "TikTok",
+            "text": "Where most of this starts.",
+            "link": "",
+            "icon": "tiktok",
+            "highlight": false
+          }
+        },
+        "l4": {
+          "type": "link",
+          "settings": {
+            "preset": "linktree",
+            "title": "All my links",
+            "text": "Every account in one place.",
+            "link": "",
+            "icon": "users",
+            "highlight": false
+          }
+        }
+      },
+      "block_order": [
+        "l1",
+        "l2",
+        "l3",
+        "l4"
+      ]
     }
   },
   "order": [
     "banner",
     "product-grid",
+    "rp_linkhub",
     "rp_cta"
   ]
 }

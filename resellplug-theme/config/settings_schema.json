@@ -39,6 +39,12 @@
         "label": "TikTok profile link"
       },
       {
+        "type": "url",
+        "id": "rp_linktree_url",
+        "label": "Linktree link",
+        "info": "Your hub of every other account."
+      },
+      {
         "type": "header",
         "content": "Real numbers"
       },
@@ -63,6 +69,12 @@
         "id": "rp_stat_suppliers",
         "label": "Suppliers in the vault",
         "default": "20+"
+      },
+      {
+        "type": "text",
+        "id": "rp_stat_years",
+        "label": "Years trading",
+        "default": "2"
       },
       {
         "type": "header",

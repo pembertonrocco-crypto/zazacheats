@@ -71,7 +71,7 @@
     {%- endif -%}
 
     {%- if section.settings.show_cta -%}
-      {% render 'rp-group-button', label: section.settings.cta_label, source: 'header' %}
+      {% render 'rp-primary-button', link: section.settings.cta_link, label: section.settings.cta_label, icon: 'cart', source: 'header' %}
     {%- endif -%}
 
     {%- if section.settings.show_cart -%}
@@ -163,25 +163,67 @@
   "tag": "div",
   "max_blocks": 5,
   "settings": [
-    { "type": "image_picker", "id": "logo", "label": "Logo" },
-    { "type": "range", "id": "logo_width", "label": "Logo width", "min": 60, "max": 220, "step": 10, "unit": "px", "default": 120 },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 60,
+      "max": 220,
+      "step": 10,
+      "unit": "px",
+      "default": 120
+    },
     {
       "type": "text",
       "id": "brand_text",
       "label": "Wordmark",
       "info": "Used when no logo is set. Defaults to the store name."
     },
-    { "type": "checkbox", "id": "show_cta", "label": "Show join button", "default": true },
-    { "type": "text", "id": "cta_label", "label": "Join button text", "default": "Join free" },
-    { "type": "checkbox", "id": "show_cart", "label": "Show cart", "default": true }
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show join button",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Header button link",
+      "info": "Blank falls back to the free community link."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Join button text",
+      "default": "Shop"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart",
+      "label": "Show cart",
+      "default": true
+    }
   ],
   "blocks": [
     {
       "type": "link",
       "name": "Link",
       "settings": [
-        { "type": "text", "id": "label", "label": "Label" },
-        { "type": "url", "id": "link", "label": "Link" }
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
       ]
     }
   ],
@@ -189,10 +231,34 @@
     {
       "name": "RP · Header",
       "blocks": [
-        { "type": "link", "settings": { "label": "Free group", "link": "/#free" } },
-        { "type": "link", "settings": { "label": "Suppliers", "link": "/#suppliers" } },
-        { "type": "link", "settings": { "label": "Proof", "link": "/#proof" } },
-        { "type": "link", "settings": { "label": "FAQ", "link": "/#faq" } }
+        {
+          "type": "link",
+          "settings": {
+            "label": "Free group",
+            "link": "/#free"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Suppliers",
+            "link": "/#suppliers"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Proof",
+            "link": "/#proof"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "FAQ",
+            "link": "/#faq"
+          }
+        }
       ]
     }
   ]

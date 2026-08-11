@@ -1,84 +1,41 @@
 {
   "sections": {
-    "hero": {
-      "type": "rp-hero",
+    "main": {
+      "type": "main-page",
       "settings": {
-        "show_welcome": true,
-        "welcome_text": "Came from TikTok? You're in the right place.",
-        "eyebrow": "Free to join · No card needed",
-        "heading": "Join the free UK reselling community",
-        "heading_accent": "free",
-        "subheading": "Free supplier drops, straight answers when you're stuck, and members' orders posted as they land. Nothing to pay, ever.",
-        "cta_label": "",
-        "secondary_label": "See the proof",
-        "secondary_link": "#proof",
-        "reassure_1": "Free forever",
-        "reassure_2": "No email needed",
-        "reassure_3": "Leave any time",
-        "show_stats": true,
-        "stat_1_label": "In the free group",
-        "stat_2_label": "Vouches posted",
-        "stat_3_label": "Suppliers shared",
-        "show_media": true,
-        "image_alt": "Screenshot of the free reselling community chat"
+        "padding_top": 28,
+        "padding_bottom": 8
       }
     },
-    "value": {
-      "type": "rp-value",
+    "rp_founder": {
+      "type": "rp-founder",
       "settings": {
-        "eyebrow": "Inside the free group",
-        "heading": "What you get for £0",
-        "subheading": "No upsell wall. Join, read, ask, take what's useful.",
-        "anchor": "free",
-        "show_cta": false,
-        "tone": "raised"
-      },
-      "blocks": {
-        "v1": {
-          "type": "item",
-          "settings": {
-            "icon": "box",
-            "title": "Free supplier drops",
-            "text": "Suppliers I've ordered from myself, posted in the chat for nothing. No paywall, no DM-me-for-the-link."
-          }
-        },
-        "v2": {
-          "type": "item",
-          "settings": {
-            "icon": "message",
-            "title": "Ask anything",
-            "text": "Stuck on agents, shipping or what to run? Ask. Me and the members who've already done it will answer."
-          }
-        },
-        "v3": {
-          "type": "item",
-          "settings": {
-            "icon": "star",
-            "title": "See every order land",
-            "text": "Members post their hauls as they arrive, so you can judge this before spending a penny."
-          }
-        }
-      },
-      "block_order": [
-        "v1",
-        "v2",
-        "v3"
-      ]
+        "eyebrow": "Who runs this",
+        "heading": "I'm not an anonymous plug",
+        "text": "<p>I started reselling from my bedroom with one supplier and about £40. Everything I post in the group is something I've ordered myself first — if I haven't used it, it doesn't go in.</p><p>I'm on TikTok every week with my face on camera. If any of this were a scam, that's a strange way to run it.</p>",
+        "name": "",
+        "role": "Founder, Resell Plug UK",
+        "cta_label": "",
+        "tiktok_label": "Watch me on TikTok",
+        "tiktok_link": "",
+        "tone": "flat",
+        "anchor": "who"
+      }
     },
-    "proof": {
+    "rp_proof": {
       "type": "angels-proof-slider",
       "settings": {
         "eyebrow": "Receipts",
-        "title": "Members' orders, straight from the chat",
-        "subheading": "Every screenshot was posted by a member. The vouches channel is public — read it before you decide.",
+        "title": "Not asking you to take my word for it",
+        "subheading": "Two years of members posting what turned up. All of it is in the public vouches channel.",
         "speed": 45,
         "default_alt": "Screenshot of a member's order posted in the community chat",
         "anchor": "proof",
-        "show_cta": true,
+        "show_cta": false,
         "cta_label": "",
         "vouches_label": "Read every vouch",
         "vouches_link": "",
-        "tone": "flat"
+        "tone": "raised"
       },
       "blocks": {
         "image_Y89hqt": {
@@ -226,89 +183,90 @@
         "image_NNQi4f"
       ]
     },
-    "founder": {
-      "type": "rp-founder",
+    "rp_linkhub": {
+      "type": "rp-linkhub",
       "settings": {
-        "eyebrow": "Who runs this",
-        "heading": "I'm not an anonymous plug",
-        "text": "<p>I started reselling from my bedroom with one supplier and about £40. Everything I post in the group is something I've ordered myself first — if I haven't used it, it doesn't go in.</p><p>I'm on TikTok every week with my face on camera. If any of this were a scam, that's a strange way to run it.</p>",
-        "name": "",
-        "role": "Founder, Resell Plug UK",
-        "cta_label": "",
-        "tiktok_label": "Watch me on TikTok",
-        "tiktok_link": "",
-        "tone": "raised",
-        "anchor": "who"
-      }
-    },
-    "faq": {
-      "type": "rp-faq",
-      "settings": {
-        "heading": "Before you join",
-        "anchor": "faq",
-        "show_cta": false,
-        "cta_text": "",
-        "cta_label": "",
+        "eyebrow": "Everywhere else",
+        "heading": "Find me off the site",
+        "subheading": "The vouches channel is public — read it before you buy anything. The community chat is free to join.",
+        "anchor": "links",
         "tone": "flat"
       },
       "blocks": {
-        "q1": {
-          "type": "qa",
+        "l1": {
+          "type": "link",
           "settings": {
-            "question": "Is it actually free?",
-            "answer": "<p>Yes. No card, no email, no trial that runs out. If you never buy anything that's completely fine — most members don't.</p>"
+            "preset": "vouches",
+            "title": "Vouches channel",
+            "text": "Every order members have posted. Public, nothing to join.",
+            "link": "",
+            "icon": "star",
+            "highlight": true
           }
         },
-        "q2": {
-          "type": "qa",
+        "l2": {
+          "type": "link",
           "settings": {
-            "question": "How do I know this isn't a scam?",
-            "answer": "<p>Don't take my word for it. The vouches channel is public and open right now, before you spend anything. Join the free group and watch it for a week.</p>"
+            "preset": "group",
+            "title": "Free community chat",
+            "text": "220 UK resellers. Free, and nothing is asked of you.",
+            "link": "",
+            "icon": "telegram",
+            "highlight": false
           }
         },
-        "q3": {
-          "type": "qa",
+        "l3": {
+          "type": "link",
           "settings": {
-            "question": "I've never resold anything. Is this for me?",
-            "answer": "<p>Yes — that's most of the group. You don't need stock, a company, or money up front to learn how it works.</p>"
+            "preset": "tiktok",
+            "title": "TikTok",
+            "text": "Where most of this starts.",
+            "link": "",
+            "icon": "tiktok",
+            "highlight": false
           }
         },
-        "q4": {
-          "type": "qa",
+        "l4": {
+          "type": "link",
           "settings": {
-            "question": "What happens after I join?",
-            "answer": "<p>Nothing is asked of you. You land in the chat, you can read the whole history, and you take what's useful. No DM, no pitch.</p>"
+            "preset": "linktree",
+            "title": "All my links",
+            "text": "Every account in one place.",
+            "link": "",
+            "icon": "users",
+            "highlight": false
           }
         }
       },
       "block_order": [
-        "q1",
-        "q2",
-        "q3",
-        "q4"
+        "l1",
+        "l2",
+        "l3",
+        "l4"
       ]
     },
-    "cta": {
+    "rp_cta": {
       "type": "rp-cta",
       "settings": {
-        "eyebrow": "That's it",
-        "heading": "The free group is one tap away",
-        "subheading": "Come in, read what's already been posted, decide from there.",
+        "eyebrow": "Ready when you are",
+        "heading": "Have a look at what's on offer",
+        "subheading": "Every supplier on the site has been ordered from personally before it went on sale.",
+        "primary_link": "/collections/all",
+        "primary_label": "Shop the suppliers",
         "cta_label": "",
-        "secondary_label": "Read the vouches first",
+        "secondary_label": "Read the vouches",
         "secondary_link": "",
-        "reassure": "Free forever · leave whenever you like",
-        "anchor": "join-now",
+        "reassure": "Instant delivery · every supplier tested first",
+        "anchor": "buy",
         "tone": "raised"
       }
     }
   },
   "order": [
-    "hero",
-    "value",
-    "proof",
-    "founder",
-    "faq",
-    "cta"
+    "main",
+    "rp_founder",
+    "rp_proof",
+    "rp_linkhub",
+    "rp_cta"
   ]
 }

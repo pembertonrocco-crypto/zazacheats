@@ -22,7 +22,7 @@
     {%- endif -%}
 
     <div class="rp-actions">
-      {% render 'rp-group-button', label: section.settings.cta_label, source: 'footer-cta' %}
+      {% render 'rp-primary-button', link: section.settings.primary_link, label: section.settings.primary_label, source: 'footer-cta' %}
 
       {%- assign proof = section.settings.secondary_link | default: settings.rp_vouches_url -%}
       {%- if section.settings.secondary_label != blank and proof != blank -%}
@@ -43,6 +43,22 @@
   "name": "RP · Final CTA",
   "tag": "section",
   "settings": [
+    {
+      "type": "header",
+      "content": "Main button"
+    },
+    {
+      "type": "url",
+      "id": "primary_link",
+      "label": "Where it goes",
+      "info": "Usually the shop or your main product. Leave blank to fall back to the free community link."
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "Main button text",
+      "default": "Shop the suppliers"
+    },
     {
       "type": "text",
       "id": "eyebrow",

@@ -193,7 +193,8 @@
                 </p>
               {%- when 'description' -%}
                 {%- if product.description != blank -%}
-                  <div class="product__description rte quick-add-hidden" {{ block.shopify_attributes }}>
+                  {%- comment -%}rp-rte styles the description for this dark theme; Dawn's .rte is written for a light page.{%- endcomment -%}
+                  <div class="product__description rte rp-rte quick-add-hidden" {{ block.shopify_attributes }}>
                     {{ product.description }}
                   </div>
                 {%- endif -%}

@@ -22,7 +22,7 @@
       <strong>{{ section.settings.title | escape }}</strong>
       {{ section.settings.subtitle | escape }}
     </p>
-    {% render 'rp-group-button', label: section.settings.cta_label, source: 'sticky' %}
+    {% render 'rp-primary-button', link: section.settings.primary_link, label: section.settings.cta_label, source: 'sticky' %}
   </div>
 </div>
 
@@ -31,10 +31,35 @@
   "name": "RP · Sticky join bar",
   "tag": "aside",
   "settings": [
-    { "type": "text", "id": "title", "label": "Title", "default": "Free community" },
-    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Suppliers, answers and proof — £0" },
-    { "type": "text", "id": "cta_label", "label": "Button text", "default": "Join free" }
+    {
+      "type": "url",
+      "id": "primary_link",
+      "label": "Where the button goes",
+      "info": "Your main product or the shop. Blank falls back to the free community."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Free community"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Suppliers, answers and proof — £0"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button text",
+      "default": "Join free"
+    }
   ],
-  "presets": [{ "name": "RP · Sticky join bar" }]
+  "presets": [
+    {
+      "name": "RP · Sticky join bar"
+    }
+  ]
 }
 {% endschema %}

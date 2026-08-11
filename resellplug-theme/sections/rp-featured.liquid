@@ -1,0 +1,270 @@
+{%- comment -%}
+  Featured product — the top of the homepage.
+
+  This replaces the free-group hero. The free community is no longer the
+  offer; it is a side goal, so it sits in the nav, the footer and the link
+  hub, and the top of the site now belongs to the product that actually makes
+  money.
+
+  The section carries the page's <h1>, so the site gets a real title without
+  a separate band of copy pushing the product below the fold. Title leads
+  with the receipts — years trading and member count — because in this niche
+  the first question is never "what is it", it is "is this real".
+
+  Price, stock and checkout all come from the selected product, so there is
+  one source of truth and nothing to keep in sync by hand.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign hero = section.settings.product
+  assign variant = hero.selected_or_first_available_variant
+
+  assign on_sale = false
+  if variant.compare_at_price
+    if variant.compare_at_price > variant.price
+      assign on_sale = true
+    endif
+  endif
+
+  assign saving = 0
+  if on_sale
+    assign saving = variant.compare_at_price | minus: variant.price
+  endif
+
+  assign heading_html = section.settings.heading | escape
+  assign accent = section.settings.heading_accent | escape
+  if accent != blank
+    assign wrapped = '<span class="rp-accent">' | append: accent | append: '</span>'
+    assign heading_html = heading_html | replace: accent, wrapped
+  endif
+
+  assign media = section.settings.image | default: hero.featured_image
+-%}
+
+<div class="rp-featured rp-section--{{ section.settings.tone | default: 'flat' }}" data-rp-sticky-after>
+  <div class="rp-wrap">
+    <header class="rp-featured__intro">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rp-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+
+      <h1 class="rp-h1">{{ heading_html }}</h1>
+
+      {%- if section.settings.subheading != blank -%}
+        <p class="rp-lede">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+    </header>
+
+    <div class="rp-featured__card">
+      <div class="rp-featured__media">
+        {%- if media != blank -%}
+          {{
+            media
+            | image_url: width: 900
+            | image_tag:
+              loading: 'eager',
+              fetchpriority: 'high',
+              widths: '400, 600, 900',
+              sizes: '(min-width: 990px) 460px, 92vw',
+              alt: hero.title | default: 'Featured product'
+          }}
+        {%- else -%}
+          <div class="rp-featured__media-empty">
+            <strong>Add an image</strong>
+            Pick the product in the theme editor, or upload a cover image for it.
+          </div>
+        {%- endif -%}
+
+        {%- if on_sale -%}
+          <span class="rp-featured__save">Save {{ saving | money }}</span>
+        {%- endif -%}
+      </div>
+
+      <div class="rp-featured__body">
+        {%- if section.settings.tag != blank -%}
+          <p class="rp-tier__tag">{{ section.settings.tag | escape }}</p>
+        {%- endif -%}
+
+        <h2 class="rp-featured__name">
+          {{ section.settings.product_title | default: hero.title | escape }}
+        </h2>
+
+        {%- if section.settings.pitch != blank -%}
+          <p class="rp-featured__pitch">{{ section.settings.pitch | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.blocks.size > 0 -%}
+          <ul class="rp-tier__list">
+            {%- for block in section.blocks -%}
+              <li data-state="yes" {{ block.shopify_attributes }}>
+                {% render 'rp-icon', icon: 'check', size: 16 %}
+                <span>{{ block.settings.text | escape }}</span>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        {%- if hero != blank and variant != blank -%}
+          <p class="rp-featured__price">
+            <span class="rp-featured__now">{{ variant.price | money }}</span>
+            {%- if on_sale -%}
+              <span class="rp-product__was">{{ variant.compare_at_price | money }}</span>
+            {%- endif -%}
+            {%- if section.settings.price_note != blank -%}
+              <small>{{ section.settings.price_note | escape }}</small>
+            {%- endif -%}
+          </p>
+
+          {%- form 'product', hero, id: 'rp-featured-form', class: 'rp-featured__form' -%}
+            <input type="hidden" name="id" value="{{ variant.id }}">
+            <button
+              type="submit"
+              class="rp-btn rp-btn--primary rp-btn--block"
+              {% unless variant.available %}disabled{% endunless %}
+            >
+              {%- if variant.available -%}
+                {% render 'rp-icon', icon: 'lock', size: 18 %}
+                <span>{{ section.settings.cta_label | escape }}</span>
+              {%- else -%}
+                <span>Sold out</span>
+              {%- endif -%}
+            </button>
+          {%- endform -%}
+
+          <a class="rp-btn rp-btn--ghost rp-btn--block" href="{{ hero.url }}" style="margin-top:10px">
+            {{ section.settings.details_label | escape }}
+          </a>
+        {%- else -%}
+          <p class="rp-body">Pick the product this section should feature in the theme editor.</p>
+        {%- endif -%}
+
+        <p class="rp-reassure">
+          {%- if section.settings.reassure_1 != blank -%}
+            <span>{% render 'rp-icon', icon: 'bolt', size: 14 %}{{ section.settings.reassure_1 | escape }}</span>
+          {%- endif -%}
+          {%- if section.settings.reassure_2 != blank -%}
+            <span>{% render 'rp-icon', icon: 'shield', size: 14 %}{{ section.settings.reassure_2 | escape }}</span>
+          {%- endif -%}
+        </p>
+      </div>
+    </div>
+
+    {%- if section.settings.show_stats -%}
+      <ul class="rp-featured__stats">
+        <li>
+          <p class="rp-hero__stat-value">{{ settings.rp_stat_years }}</p>
+          <p class="rp-hero__stat-label">{{ section.settings.stat_1_label | escape }}</p>
+        </li>
+        <li>
+          <p class="rp-hero__stat-value">{{ settings.rp_stat_members }}</p>
+          <p class="rp-hero__stat-label">{{ section.settings.stat_2_label | escape }}</p>
+        </li>
+        <li>
+          <p class="rp-hero__stat-value">{{ settings.rp_stat_vouches }}</p>
+          <p class="rp-hero__stat-label">{{ section.settings.stat_3_label | escape }}</p>
+        </li>
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "RP · Featured product",
+  "tag": "section",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The top of the homepage. Carries the page title and the product you most want people to buy."
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Trusted since 2024" },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Site title",
+      "default": "Two years. 220 members. Every supplier tested first."
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Words to highlight in green",
+      "default": "tested first",
+      "info": "Must match the title exactly, including capitals."
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Line under the title",
+      "default": "Real UK reselling suppliers, checked by me before anything goes on sale. Instant delivery, and the vouches are public."
+    },
+    { "type": "header", "content": "The product" },
+    { "type": "product", "id": "product", "label": "Featured product" },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Cover image",
+      "info": "Optional. Falls back to the product's own image."
+    },
+    { "type": "text", "id": "tag", "label": "Badge", "default": "Best seller" },
+    {
+      "type": "text",
+      "id": "product_title",
+      "label": "Product name",
+      "info": "Leave blank to use the real product title."
+    },
+    {
+      "type": "textarea",
+      "id": "pitch",
+      "label": "One-line pitch",
+      "info": "The single sentence that makes someone want it. Not a feature list — the bullets below do that."
+    },
+    { "type": "text", "id": "price_note", "label": "Note next to the price", "default": "one-off · lifetime access" },
+    { "type": "text", "id": "cta_label", "label": "Buy button", "default": "Get instant access" },
+    { "type": "text", "id": "details_label", "label": "Second button", "default": "See everything included" },
+    { "type": "text", "id": "reassure_1", "label": "Reassurance 1", "default": "Delivered instantly" },
+    { "type": "text", "id": "reassure_2", "label": "Reassurance 2", "default": "Vouches are public" },
+    { "type": "header", "content": "Numbers" },
+    {
+      "type": "checkbox",
+      "id": "show_stats",
+      "label": "Show the numbers row",
+      "default": true,
+      "info": "Values come from Theme settings → Resell Plug — funnel links."
+    },
+    { "type": "text", "id": "stat_1_label", "label": "Label 1", "default": "Years trading" },
+    { "type": "text", "id": "stat_2_label", "label": "Label 2", "default": "In the community" },
+    { "type": "text", "id": "stat_3_label", "label": "Label 3", "default": "Vouches posted" },
+    {
+      "type": "select",
+      "id": "tone",
+      "label": "Background",
+      "default": "flat",
+      "options": [
+        { "value": "flat", "label": "Black" },
+        { "value": "raised", "label": "Raised" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "Included line",
+      "settings": [{ "type": "text", "id": "text", "label": "Text" }]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RP · Featured product",
+      "blocks": [
+        { "type": "point", "settings": { "text": "Every supplier I use, with contacts and catalogues" } },
+        { "type": "point", "settings": { "text": "Winning products posted before they blow up" } },
+        { "type": "point", "settings": { "text": "The full agent and shipping walkthrough" } },
+        { "type": "point", "settings": { "text": "Message me directly when you're stuck" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

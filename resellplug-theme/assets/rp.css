@@ -546,6 +546,190 @@ html {
 }
 
 /* --------------------------------------------------------------------------
+   Featured product
+   -------------------------------------------------------------------------- */
+
+.rp-featured {
+  position: relative;
+  background: var(--rp-bg);
+  color: var(--rp-text);
+  font-family: var(--rp-font);
+  padding: 32px 0 44px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.rp-featured::before {
+  content: '';
+  position: absolute;
+  inset: -25% 25% 60% -20%;
+  background: radial-gradient(closest-side, rgba(57, 255, 20, 0.12), transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+@media (min-width: 990px) {
+  .rp-featured { padding: 52px 0 64px; }
+}
+
+/* The title sits above the product rather than beside it: on a phone a
+   two-column hero pushes the buy button off the first screen, and the buy
+   button is the whole point of this section. */
+.rp-featured__intro {
+  max-width: 760px;
+  margin: 0 0 26px;
+}
+
+.rp-featured__intro .rp-h1 { font-size: clamp(1.75rem, 7vw, 3.25rem); }
+.rp-featured__intro .rp-lede { margin-bottom: 0; }
+
+.rp-featured__card {
+  display: grid;
+  gap: 20px;
+  background: var(--rp-surface);
+  border: 1px solid rgba(57, 255, 20, 0.4);
+  border-radius: 18px;
+  padding: 16px;
+}
+
+@media (min-width: 990px) {
+  .rp-featured__card {
+    grid-template-columns: 460px 1fr;
+    gap: 36px;
+    padding: 24px;
+    align-items: center;
+  }
+}
+
+.rp-featured__media {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--rp-surface-2);
+  /* Wider than tall on a phone. A square here costs ~110px of vertical space
+     that the buy button then has to be scrolled past. */
+  aspect-ratio: 4 / 3;
+}
+
+@media (min-width: 990px) {
+  .rp-featured__media { aspect-ratio: 1 / 1; }
+}
+
+/* On a phone the price and the buy button jump above the feature list.
+   Measured: leaving them in source order put the buy button 1089px down a
+   852px screen — a screen and a third of scrolling before the only thing on
+   this section that takes money. The list still gets read, but after the
+   decision is available rather than before it. */
+.rp-featured__body { display: flex; flex-direction: column; }
+.rp-featured__body > .rp-tier__tag { order: 1; }
+.rp-featured__body > .rp-featured__name { order: 2; }
+.rp-featured__body > .rp-featured__pitch { order: 3; }
+.rp-featured__body > .rp-featured__price { order: 4; }
+.rp-featured__body > .rp-featured__form { order: 5; }
+.rp-featured__body > .rp-btn--ghost { order: 6; }
+.rp-featured__body > .rp-reassure { order: 7; margin-bottom: 20px; }
+.rp-featured__body > .rp-tier__list { order: 8; margin-bottom: 0; }
+.rp-featured__body > .rp-body { order: 9; }
+
+@media (min-width: 990px) {
+  .rp-featured__body > * { order: 0; }
+  .rp-featured__body > .rp-reassure { margin-bottom: 0; }
+  .rp-featured__card .rp-tier__list { margin: 0 0 20px; }
+}
+
+.rp-featured__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.rp-featured__media-empty {
+  height: 100%;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 8px;
+  padding: 24px;
+  color: var(--rp-muted);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.rp-featured__media-empty strong {
+  display: block;
+  color: var(--rp-text);
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.rp-featured__save {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--rp-danger);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.rp-featured__name {
+  font-size: clamp(1.375rem, 5.5vw, 2rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin: 0 0 10px;
+}
+
+.rp-featured__pitch {
+  color: var(--rp-muted);
+  line-height: 1.55;
+  margin: 0 0 18px;
+}
+
+.rp-featured__card .rp-tier__list { margin: 0 0 20px; }
+
+.rp-featured__price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 16px;
+}
+
+.rp-featured__now {
+  font-size: clamp(2rem, 8vw, 2.75rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.rp-featured__price small {
+  width: 100%;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rp-muted);
+}
+
+.rp-featured__body .rp-reassure { margin-top: 14px; }
+
+.rp-featured__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 26px 0 0;
+  padding: 22px 0 0;
+  list-style: none;
+  border-top: 1px solid var(--rp-line);
+}
+
+/* --------------------------------------------------------------------------
    Steps ("how it works")
    -------------------------------------------------------------------------- */
 
@@ -1054,3 +1238,177 @@ body { padding-bottom: var(--rp-stickybar); }
   .rp-sticky { transition: none; }
   .rp-product__media img { transition: none; }
 }
+
+/* --------------------------------------------------------------------------
+   Link hub
+   -------------------------------------------------------------------------- */
+
+.rp-links {
+  display: grid;
+  gap: 12px;
+}
+
+@media (min-width: 750px) {
+  .rp-links { grid-template-columns: repeat(2, 1fr); }
+}
+
+.rp-link {
+  display: grid;
+  grid-template-columns: 44px 1fr 20px;
+  align-items: center;
+  gap: 14px;
+  min-height: 72px;
+  padding: 14px 16px;
+  background: var(--rp-surface-2);
+  border: 1px solid var(--rp-line);
+  border-radius: var(--rp-radius);
+  color: var(--rp-text);
+  text-decoration: none;
+  transition: border-color 0.12s ease, transform 0.12s ease;
+}
+
+.rp-link:hover { border-color: var(--rp-line-strong); color: var(--rp-text); }
+.rp-link:active { transform: translateY(1px); }
+
+.rp-link:focus-visible {
+  outline: 3px solid var(--rp-accent);
+  outline-offset: 3px;
+}
+
+.rp-link--highlight { border-color: rgba(57, 255, 20, 0.5); }
+
+.rp-link__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(57, 255, 20, 0.12);
+  color: var(--rp-accent);
+  display: grid;
+  place-items: center;
+}
+
+.rp-link__text { min-width: 0; }
+
+.rp-link__text strong {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.rp-link__text small {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--rp-muted);
+  line-height: 1.35;
+}
+
+.rp-link__go { color: var(--rp-muted); }
+.rp-link:hover .rp-link__go { color: var(--rp-accent); }
+
+/* --------------------------------------------------------------------------
+   Product description (the .rte Shopify wraps a description in)
+
+   Descriptions are written in the Shopify admin as rich text and land here
+   as raw HTML. Dawn styles .rte for a light page, so on this theme a
+   description with headings, lists or a blockquote came out unreadable —
+   which is most of what "the descriptions look bugged" turns out to be.
+   -------------------------------------------------------------------------- */
+
+.rp-rte { color: var(--rp-muted); line-height: 1.65; }
+.rp-rte > *:first-child { margin-top: 0; }
+.rp-rte > *:last-child { margin-bottom: 0; }
+.rp-rte p { margin: 0 0 14px; }
+
+.rp-rte h1,
+.rp-rte h2,
+.rp-rte h3,
+.rp-rte h4 {
+  color: var(--rp-text);
+  font-family: var(--rp-font);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  margin: 26px 0 10px;
+}
+
+.rp-rte h1, .rp-rte h2 { font-size: 1.125rem; }
+.rp-rte h3, .rp-rte h4 { font-size: 1rem; }
+
+.rp-rte strong, .rp-rte b { color: var(--rp-text); font-weight: 800; }
+.rp-rte em { color: var(--rp-text); }
+
+.rp-rte a {
+  color: var(--rp-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.rp-rte ul,
+.rp-rte ol { margin: 0 0 16px; padding-left: 0; list-style: none; }
+
+.rp-rte ul li,
+.rp-rte ol li {
+  position: relative;
+  padding-left: 26px;
+  margin: 0 0 9px;
+}
+
+.rp-rte ul li::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 0.62em;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--rp-accent);
+}
+
+.rp-rte ol { counter-reset: rp-rte-item; }
+
+.rp-rte ol li::before {
+  counter-increment: rp-rte-item;
+  content: counter(rp-rte-item) '.';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--rp-accent);
+  font-weight: 800;
+}
+
+.rp-rte blockquote {
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  border-left: 3px solid var(--rp-accent);
+  background: var(--rp-surface-2);
+  border-radius: 0 var(--rp-radius-sm) var(--rp-radius-sm) 0;
+  color: var(--rp-text);
+}
+
+.rp-rte img { max-width: 100%; height: auto; border-radius: var(--rp-radius-sm); }
+
+.rp-rte table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 16px;
+  font-size: 0.875rem;
+}
+
+.rp-rte th,
+.rp-rte td {
+  border: 1px solid var(--rp-line);
+  padding: 9px 11px;
+  text-align: left;
+}
+
+.rp-rte th { color: var(--rp-text); background: var(--rp-surface-2); }
+
+/* Long unbroken strings — a pasted supplier URL, a Telegram handle — are
+   what actually break a product description on a 393px screen. */
+.rp-rte { overflow-wrap: anywhere; }

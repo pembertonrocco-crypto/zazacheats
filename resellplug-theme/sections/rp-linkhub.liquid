@@ -1,0 +1,201 @@
+{%- comment -%}
+  Link hub — every place the brand exists, in one row.
+
+  This is where the free community now lives. It is no longer the site's
+  offer, so it does not get a hero or a sticky bar; it gets a clearly labelled
+  tile alongside the vouches channel, the TikTok and the Linktree, and people
+  who want it will find it.
+
+  Each tile is a block so the set can change without touching the theme.
+  The three that matter most have their links pre-filled from Theme settings,
+  so they cannot drift out of sync with the rest of the site.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+
+<div class="rp-section rp-section--{{ section.settings.tone | default: 'raised' }}" id="{{ section.settings.anchor | default: 'links' | handle }}">
+  <div class="rp-wrap">
+    <div class="rp-center">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rp-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 class="rp-h2">{{ section.settings.heading | escape }}</h2>
+      {%- if section.settings.subheading != blank -%}
+        <p class="rp-lede">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="rp-links">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign url = block.settings.link
+          case block.settings.preset
+            when 'group'
+              assign url = block.settings.link | default: settings.rp_group_url
+            when 'vouches'
+              assign url = block.settings.link | default: settings.rp_vouches_url
+            when 'tiktok'
+              assign url = block.settings.link | default: settings.rp_tiktok_url
+            when 'linktree'
+              assign url = block.settings.link | default: settings.rp_linktree_url
+          endcase
+
+          # An unset url setting comes back as nil, and neither "!= blank" nor
+          # plain truthiness reads nil-vs-empty-string the same way across
+          # Liquid implementations. Normalising to a string first and testing
+          # its size is unambiguous in both.
+          assign url = url | default: '' | strip
+        -%}
+
+        {%- if url.size > 0 -%}
+          <a
+            class="rp-link{% if block.settings.highlight %} rp-link--highlight{% endif %}"
+            href="{{ url }}"
+            target="_blank"
+            rel="noopener"
+            data-rp-cta="hub-{{ block.settings.preset | default: 'link' }}"
+            {{ block.shopify_attributes }}
+          >
+            <span class="rp-link__icon">
+              {% render 'rp-icon', icon: block.settings.icon, size: 20 %}
+            </span>
+            <span class="rp-link__text">
+              <strong>{{ block.settings.title | escape }}</strong>
+              {%- if block.settings.text != blank -%}
+                <small>{{ block.settings.text | escape }}</small>
+              {%- endif -%}
+            </span>
+            <span class="rp-link__go">{% render 'rp-icon', icon: 'arrow', size: 18 %}</span>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "RP · Links & socials",
+  "tag": "section",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Everywhere else" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Find me off the site" },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Sub-heading",
+      "default": "The vouches channel is public — read it before you buy anything. The community chat is free to join."
+    },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "links" },
+    {
+      "type": "select",
+      "id": "tone",
+      "label": "Background",
+      "default": "raised",
+      "options": [
+        { "value": "flat", "label": "Black" },
+        { "value": "raised", "label": "Raised" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        {
+          "type": "select",
+          "id": "preset",
+          "label": "What is it",
+          "default": "custom",
+          "info": "Picking one of the first four fills the link from Theme settings automatically.",
+          "options": [
+            { "value": "group", "label": "Free community chat" },
+            { "value": "vouches", "label": "Vouches channel" },
+            { "value": "tiktok", "label": "TikTok" },
+            { "value": "linktree", "label": "Linktree" },
+            { "value": "custom", "label": "Something else" }
+          ]
+        },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "text", "id": "text", "label": "Line underneath" },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Leave blank on the first four to use the Theme settings link."
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "telegram",
+          "options": [
+            { "value": "telegram", "label": "Telegram" },
+            { "value": "tiktok", "label": "TikTok" },
+            { "value": "whatsapp", "label": "WhatsApp" },
+            { "value": "discord", "label": "Discord" },
+            { "value": "star", "label": "Star" },
+            { "value": "users", "label": "People" },
+            { "value": "message", "label": "Chat" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "bolt", "label": "Lightning" }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "highlight",
+          "label": "Outline in green",
+          "default": false,
+          "info": "Use it on one tile at most, or nothing stands out."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RP · Links & socials",
+      "blocks": [
+        {
+          "type": "link",
+          "settings": {
+            "preset": "vouches",
+            "title": "Vouches channel",
+            "text": "Every order members have posted. Public, no join needed.",
+            "icon": "star",
+            "highlight": true
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "preset": "group",
+            "title": "Free community chat",
+            "text": "220 resellers. Free to join, nothing asked of you.",
+            "icon": "telegram"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "preset": "tiktok",
+            "title": "TikTok",
+            "text": "Where most of this starts.",
+            "icon": "tiktok"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "preset": "linktree",
+            "title": "All my links",
+            "text": "Every account in one place.",
+            "icon": "users"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

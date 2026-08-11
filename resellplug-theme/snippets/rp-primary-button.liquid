@@ -1,0 +1,51 @@
+{%- comment -%}
+  The primary call to action for a section.
+
+  The site's main action is buying, not joining the free chat, so sections
+  take a link of their own — usually the shop or the flagship product. When
+  no link is set the free community button is the fallback, which keeps the
+  older sections working and means a section is never left with a dead
+  primary button.
+
+  Parameters
+    link   — where it goes. Blank falls back to the free community.
+    label  — button text.
+    icon   — rp-icon name. Defaults to an arrow.
+    style  — 'primary' (default) or 'ghost'.
+    block  — true to fill the container width.
+    source — the value reported to analytics as data-rp-cta.
+{%- endcomment -%}
+
+{%- liquid
+  assign variant = 'rp-btn--primary'
+  if style == 'ghost'
+    assign variant = 'rp-btn--ghost'
+  endif
+
+  assign width_class = ''
+  if block
+    assign width_class = ' rp-btn--block'
+  endif
+
+  assign icon_name = icon | default: 'arrow'
+  assign is_external = false
+  if link contains '://'
+    unless link contains request.host
+      assign is_external = true
+    endunless
+  endif
+-%}
+
+{%- if link != blank -%}
+  <a
+    class="rp-btn {{ variant }}{{ width_class }}"
+    href="{{ link }}"
+    data-rp-cta="{{ source | default: 'primary' }}"
+    {% if is_external %}target="_blank" rel="noopener"{% endif %}
+  >
+    <span>{{ label | default: 'Shop now' | escape }}</span>
+    {% render 'rp-icon', icon: icon_name, size: 18 %}
+  </a>
+{%- else -%}
+  {% render 'rp-group-button', label: label, style: style, block: block, source: source %}
+{%- endif -%}

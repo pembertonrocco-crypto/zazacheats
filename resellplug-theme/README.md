@@ -20,6 +20,8 @@ in the nav, the link tiles and the footer. It never gets a hero.
 | `/pages/about` | `page.about.json` | Who you're dealing with |
 | `/pages/faq` | `page.faq.json` | How it works + the full question list |
 | `/pages/vouches` | `page.vouches.json` | Every proof screenshot as a grid |
+| `/blogs/news` | `blog.json` | Free guides listing |
+| a post | `article.json` | The reading page |
 
 The three `page.*` templates need a page created in **Online Store → Pages**
 with **Theme template** set to `about`, `faq` or `vouches`.

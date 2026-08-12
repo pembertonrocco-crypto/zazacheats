@@ -1,19 +1,35 @@
 {
   "sections": {
-    "main": {
-      "type": "main-blog",
+    "rp_blog": {
+      "type": "rp-blog",
       "settings": {
-        "layout": "collage",
-        "show_image": true,
-        "image_height": "medium",
-        "show_date": true,
-        "show_author": false,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "label": "Free guides",
+        "heading": "",
+        "intro": "Everything I'd tell you if you asked me in the chat — agents, shipping, what's selling, what to avoid. No email required, nothing gated.",
+        "show_featured": true,
+        "tone": "flat",
+        "per_page": 10
+      }
+    },
+    "rp_cta": {
+      "type": "rp-cta",
+      "settings": {
+        "eyebrow": "Ready when you are",
+        "heading": "Stop guessing which supplier is real",
+        "subheading": "Pick one, get it instantly, and message me when you hit the first snag.",
+        "primary_link": "/collections/all",
+        "primary_label": "See the suppliers",
+        "cta_label": "",
+        "secondary_label": "Read the vouches",
+        "secondary_link": "",
+        "reassure": "Instant delivery · every supplier ordered from first",
+        "anchor": "buy",
+        "tone": "raised"
       }
     }
   },
   "order": [
-    "main"
+    "rp_blog",
+    "rp_cta"
   ]
 }

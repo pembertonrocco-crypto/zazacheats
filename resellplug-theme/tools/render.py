@@ -163,6 +163,29 @@ BASE = {
     'routes': {'root_url': '/', 'cart_url': '/cart', 'search_url': '/search'},
     'cart': {'item_count': 2, 'currency': {'iso_code': 'GBP'}},
     'collections': {'homepage': {'products': PRODUCTS}},
+    'blog': {
+        'title': 'Guides',
+        'url': '/blogs/guides',
+        'articles': [
+            {'title': 'How to use an agent', 'url': '/blogs/guides/agents',
+             'content': '<p>' + ('word ' * 600) + '</p>',
+             'excerpt_or_content': 'Everything about agents.',
+             'excerpt': 'Everything about agents.',
+             'image': Img(alt='Agent guide'), 'author': 'Resell Plug',
+             'published_at': '2026-02-01'},
+            {'title': 'Picking a first supplier', 'url': '/blogs/guides/first',
+             'content': '<p>' + ('word ' * 300) + '</p>',
+             'excerpt_or_content': 'Where to start.', 'excerpt': 'Where to start.',
+             'image': Img(alt='Supplier guide'), 'author': 'Resell Plug',
+             'published_at': '2026-01-14'},
+        ],
+    },
+    'article': {
+        'title': 'How to use an agent', 'url': '/blogs/guides/agents',
+        'content': '<h2>Step one</h2><p>' + ('word ' * 400) + '</p>',
+        'excerpt': 'Everything about agents.', 'author': 'Resell Plug',
+        'image': Img(alt='Agent guide'), 'published_at': '2026-02-01',
+    },
     'product': PRODUCTS[0],
     'page': {'url': '/'},
     'page_image': None,
@@ -229,6 +252,12 @@ def main():
         source = re.sub(r'\{%-?\s*form\s+.*?-?%\}', '<form action="/cart/add" method="post">', source, flags=re.S)
         source = re.sub(r'\{%-?\s*endform\s*-?%\}', '</form>', source)
 
+        # {% paginate x by n %} is a platform tag. Stripping the wrapper
+        # leaves `paginate` undefined, which is exactly the state the section
+        # has to survive — so the nil guards inside it still get exercised.
+        source = re.sub(r'\{%-?\s*paginate\s+.*?-?%\}', '', source, flags=re.S)
+        source = re.sub(r'\{%-?\s*endpaginate\s*-?%\}', '', source)
+
         settings = defaults_from_schema(schema)
         if path.endswith('rp-ladder.liquid') or path.endswith('rp-featured.liquid'):
             settings['product'] = PRODUCTS[2]
@@ -291,9 +320,10 @@ def main():
             if 'rel=' not in tag:
                 failures.append(f'{path}: target=_blank without rel — {tag[:80]}')
 
-        # Exactly one section on a page carries the <h1>. Both of these are
-        # top-of-page sections and are never used together.
-        titles = ('rp-hero.liquid', 'rp-featured.liquid')
+        # Exactly one section on a page carries the <h1>. Each of these is
+        # the title section of a different template, never combined.
+        titles = ('rp-hero.liquid', 'rp-featured.liquid',
+                  'rp-blog.liquid', 'rp-article.liquid')
         heads = re.findall(r'<(h[1-6])\b', html)
         is_title_section = path.endswith(titles)
         if is_title_section and heads[:1] != ['h1']:

@@ -1,1 +1,35 @@
-{"sections":{"main":{"type":"main-article","blocks":{"featured_image":{"type":"featured_image","settings":{"image_height":"adapt"}},"title":{"type":"title","settings":{"blog_show_date":true,"blog_show_author":false}},"share":{"type":"share","settings":{"share_label":"Share"}},"content":{"type":"content","settings":{}}},"block_order":["featured_image","title","share","content"],"settings":{}}},"order":["main"]}
+{
+  "sections": {
+    "rp_article": {
+      "type": "rp-article",
+      "settings": {
+        "show_image": true,
+        "show_cta": true,
+        "cta_label_small": "While you're here",
+        "cta_text": "Every supplier on this site got a test order from me before it went on sale.",
+        "cta_button": "See the suppliers",
+        "cta_link": "/collections/all"
+      }
+    },
+    "rp_cta": {
+      "type": "rp-cta",
+      "settings": {
+        "eyebrow": "Ready when you are",
+        "heading": "Stop guessing which supplier is real",
+        "subheading": "Pick one, get it instantly, and message me when you hit the first snag.",
+        "primary_link": "/collections/all",
+        "primary_label": "See the suppliers",
+        "cta_label": "",
+        "secondary_label": "Read the vouches",
+        "secondary_link": "",
+        "reassure": "Instant delivery · every supplier ordered from first",
+        "anchor": "buy",
+        "tone": "raised"
+      }
+    }
+  },
+  "order": [
+    "rp_article",
+    "rp_cta"
+  ]
+}

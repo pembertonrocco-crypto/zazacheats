@@ -1,0 +1,192 @@
+{%- comment -%}
+  Blog listing.
+
+  Editorial rather than a card grid: the newest post runs full width with its
+  image, the rest are rows separated by hairlines. Rows read as a publication;
+  a wall of equal cards reads as a template, which is most of what makes a
+  page look generated.
+
+  Reading time is computed from the body rather than entered by hand — one
+  fewer field to forget, and it is the single most useful thing you can tell
+  someone before they commit to a guide.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+
+{%- assign per_page = section.settings.per_page | default: 10 -%}
+{%- paginate blog.articles by per_page -%}
+{%- liquid
+  assign posts = blog.articles
+  assign featured = posts.first
+-%}
+
+<div class="rp-section rp-section--{{ section.settings.tone | default: 'flat' }}">
+  <div class="rp-wrap">
+    <header class="rp-lede-block">
+      {%- if section.settings.label != blank -%}
+        <p class="rp-label">{{ section.settings.label | escape }}</p>
+      {%- endif -%}
+      <h1 class="rp-h1 rp-h1--sentence">{{ section.settings.heading | default: blog.title | escape }}</h1>
+      {%- if section.settings.intro != blank -%}
+        <p class="rp-lede">{{ section.settings.intro | escape }}</p>
+      {%- endif -%}
+    </header>
+
+    {%- if posts.size == 0 -%}
+      <p class="rp-body">Nothing posted yet.</p>
+
+    {%- else -%}
+      {%- if section.settings.show_featured and featured.image != blank -%}
+        {%- assign words = featured.content | strip_html | split: ' ' | size -%}
+        {%- assign minutes = words | divided_by: 220 | plus: 1 -%}
+        <a class="rp-post-lead" href="{{ featured.url }}">
+          <div class="rp-post-lead__media">
+            {{
+              featured.image
+              | image_url: width: 1400
+              | image_tag:
+                loading: 'eager',
+                widths: '600, 900, 1400',
+                sizes: '(min-width: 990px) 60vw, 92vw',
+                alt: featured.image.alt | default: featured.title
+            }}
+          </div>
+          <div class="rp-post-lead__body">
+            <p class="rp-post__meta">
+              <span>Latest</span>
+              <span>{{ featured.published_at | date: '%d %b %Y' }}</span>
+              <span>{{ minutes }} min read</span>
+            </p>
+            <h2 class="rp-post-lead__title">{{ featured.title | escape }}</h2>
+            {%- if featured.excerpt_or_content != blank -%}
+              <p class="rp-body">{{ featured.excerpt_or_content | strip_html | truncatewords: 34 }}</p>
+            {%- endif -%}
+            <span class="rp-post__more">Read it {% render 'rp-icon', icon: 'arrow', size: 16 %}</span>
+          </div>
+        </a>
+      {%- endif -%}
+
+      <ol class="rp-posts">
+        {%- for article in posts -%}
+          {%- if section.settings.show_featured and forloop.first and featured.image != blank -%}
+            {%- continue -%}
+          {%- endif -%}
+
+          {%- liquid
+            assign words = article.content | strip_html | split: ' ' | size
+            assign minutes = words | divided_by: 220 | plus: 1
+          -%}
+          <li class="rp-post">
+            <a class="rp-post__link" href="{{ article.url }}">
+              {%- if article.image != blank -%}
+                <div class="rp-post__thumb">
+                  {{
+                    article.image
+                    | image_url: width: 400
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '160, 260, 400',
+                      sizes: '140px',
+                      alt: article.image.alt | default: article.title
+                  }}
+                </div>
+              {%- endif -%}
+
+              <div class="rp-post__body">
+                <p class="rp-post__meta">
+                  <span>{{ article.published_at | date: '%d %b %Y' }}</span>
+                  <span>{{ minutes }} min read</span>
+                </p>
+                <h2 class="rp-post__title">{{ article.title | escape }}</h2>
+                {%- if article.excerpt_or_content != blank -%}
+                  <p class="rp-post__excerpt">
+                    {{ article.excerpt_or_content | strip_html | truncatewords: 22 }}
+                  </p>
+                {%- endif -%}
+              </div>
+
+              <span class="rp-post__arrow">{% render 'rp-icon', icon: 'arrow', size: 18 %}</span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ol>
+
+      {%- assign more_pages = false -%}
+      {%- if paginate.pages -%}
+        {%- if paginate.pages > 1 -%}
+          {%- assign more_pages = true -%}
+        {%- endif -%}
+      {%- endif -%}
+      {%- if more_pages -%}
+        <nav class="rp-pager" aria-label="Pagination">
+          {%- if paginate.previous -%}
+            <a class="rp-btn rp-btn--ghost" href="{{ paginate.previous.url }}">Newer</a>
+          {%- endif -%}
+          {%- if paginate.next -%}
+            <a class="rp-btn rp-btn--ghost" href="{{ paginate.next.url }}">Older</a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "RP · Blog listing",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label above the title",
+      "default": "Free guides"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Title",
+      "info": "Leave blank to use the blog's own name."
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Intro",
+      "default": "Everything I'd tell you if you asked me in the chat — agents, shipping, what's selling, what to avoid. No email required, nothing gated."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_featured",
+      "label": "Feature the newest post",
+      "default": true,
+      "info": "Runs the most recent post full width with its image. Needs the post to have an image."
+    },
+    {
+      "type": "select",
+      "id": "tone",
+      "label": "Background",
+      "default": "flat",
+      "options": [
+        {
+          "value": "flat",
+          "label": "Black"
+        },
+        {
+          "value": "raised",
+          "label": "Raised"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "Posts per page",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "default": 10
+    }
+  ]
+}
+{% endschema %}

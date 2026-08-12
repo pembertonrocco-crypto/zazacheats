@@ -1,0 +1,126 @@
+{%- comment -%}
+  Article.
+
+  A reading column, not a landing page. Measure is capped around 68
+  characters, the body runs at 18px with generous leading, and the accent
+  colour appears only on links and the pull-quote rule — a guide someone is
+  reading for four minutes should look like something written, not something
+  merchandised.
+
+  Dawn's own main-article is replaced rather than restyled: it wraps the body
+  in .rte and a light-theme type scale, and overriding all of that costs more
+  than rendering the fields directly.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign words = article.content | strip_html | split: ' ' | size
+  assign minutes = words | divided_by: 220 | plus: 1
+-%}
+
+<article class="rp-section rp-section--flat rp-article">
+  <div class="rp-wrap">
+    <header class="rp-article__head">
+      <p class="rp-post__meta">
+        <a href="{{ blog.url }}">{{ blog.title | escape }}</a>
+        <span>{{ article.published_at | date: '%d %B %Y' }}</span>
+        <span>{{ minutes }} min read</span>
+      </p>
+
+      <h1 class="rp-article__title">{{ article.title | escape }}</h1>
+
+      {%- if article.excerpt != blank -%}
+        <p class="rp-article__standfirst">{{ article.excerpt | strip_html }}</p>
+      {%- endif -%}
+    </header>
+
+    {%- if article.image != blank and section.settings.show_image -%}
+      <div class="rp-article__media">
+        {{
+          article.image
+          | image_url: width: 1600
+          | image_tag:
+            loading: 'eager',
+            widths: '600, 900, 1200, 1600',
+            sizes: '(min-width: 990px) 900px, 92vw',
+            alt: article.image.alt | default: article.title
+        }}
+      </div>
+    {%- endif -%}
+
+    <div class="rp-article__body rp-rte">
+      {{ article.content }}
+    </div>
+
+    {%- if section.settings.show_cta -%}
+      <aside class="rp-article__cta">
+        <p class="rp-label">{{ section.settings.cta_label_small | escape }}</p>
+        <p class="rp-article__cta-text">{{ section.settings.cta_text | escape }}</p>
+        <div class="rp-actions" style="margin-bottom:0">
+          {% render 'rp-primary-button',
+            link: section.settings.cta_link,
+            label: section.settings.cta_button,
+            source: 'article'
+          %}
+        </div>
+      </aside>
+    {%- endif -%}
+
+    <nav class="rp-article__nav">
+      {%- if blog.previous_article -%}
+        <a href="{{ blog.previous_article.url }}">
+          <span class="rp-label">Previous</span>
+          {{ blog.previous_article.title | escape }}
+        </a>
+      {%- endif -%}
+      {%- if blog.next_article -%}
+        <a href="{{ blog.next_article.url }}" class="rp-article__nav-next">
+          <span class="rp-label">Next</span>
+          {{ blog.next_article.title | escape }}
+        </a>
+      {%- endif -%}
+    </nav>
+  </div>
+</article>
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": {{ article.title | strip_html | json }},
+    "datePublished": {{ article.published_at | date: '%Y-%m-%d' | json }},
+    "author": { "@type": "Person", "name": {{ article.author | default: shop.name | json }} },
+    "publisher": { "@type": "Organization", "name": {{ shop.name | json }} },
+    "mainEntityOfPage": {{ request.origin | append: article.url | json }}
+    {%- if article.image != blank -%}
+      , "image": {{ article.image | image_url: width: 1200 | prepend: 'https:' | json }}
+    {%- endif -%}
+  }
+</script>
+
+{% schema %}
+{
+  "name": "RP · Article",
+  "tag": "section",
+  "settings": [
+    { "type": "checkbox", "id": "show_image", "label": "Show the header image", "default": true },
+    { "type": "header", "content": "Call to action at the end" },
+    { "type": "checkbox", "id": "show_cta", "label": "Show it", "default": true },
+    { "type": "text", "id": "cta_label_small", "label": "Small label", "default": "While you're here" },
+    {
+      "type": "textarea",
+      "id": "cta_text",
+      "label": "Text",
+      "default": "Every supplier on this site got a test order from me before it went on sale."
+    },
+    { "type": "text", "id": "cta_button", "label": "Button", "default": "See the suppliers" },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link",
+      "info": "Blank falls back to the free community link."
+    }
+  ]
+}
+{% endschema %}

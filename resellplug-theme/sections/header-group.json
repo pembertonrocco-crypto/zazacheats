@@ -8,41 +8,41 @@
         "t1": {
           "type": "item",
           "settings": {
-            "emoji": "🇬🇧",
+            "emoji": "",
             "text": "UK reselling suppliers",
-            "highlight": true
+            "highlight": false
           }
         },
         "t2": {
           "type": "item",
           "settings": {
-            "emoji": "🕑",
+            "emoji": "",
             "text": "Trading {years} years",
-            "highlight": true
+            "highlight": false
           }
         },
         "t3": {
           "type": "item",
           "settings": {
-            "emoji": "💬",
+            "emoji": "",
             "text": "{members} in the free group",
-            "highlight": true
+            "highlight": false
           }
         },
         "t4": {
           "type": "item",
           "settings": {
-            "emoji": "🔒",
+            "emoji": "",
             "text": "{private} resellers inside the private GC",
-            "highlight": true
+            "highlight": false
           }
         },
         "t5": {
           "type": "item",
           "settings": {
-            "emoji": "⚡",
+            "emoji": "",
             "text": "Instant delivery on every order",
-            "highlight": true
+            "highlight": false
           }
         }
       },
@@ -70,18 +70,25 @@
         "n2": {
           "type": "link",
           "settings": {
+            "label": "Guides",
+            "link": "/blogs/news"
+          }
+        },
+        "n3": {
+          "type": "link",
+          "settings": {
             "label": "Vouches",
             "link": "/pages/vouches"
           }
         },
-        "n3": {
+        "n4": {
           "type": "link",
           "settings": {
             "label": "FAQ",
             "link": "/pages/faq"
           }
         },
-        "n4": {
+        "n5": {
           "type": "link",
           "settings": {
             "label": "About",
@@ -93,7 +100,8 @@
         "n1",
         "n2",
         "n3",
-        "n4"
+        "n4",
+        "n5"
       ],
       "settings": {
         "logo_width": 120,

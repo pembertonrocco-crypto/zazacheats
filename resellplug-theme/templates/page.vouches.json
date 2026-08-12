@@ -7,21 +7,41 @@
         "padding_bottom": 8
       }
     },
+    "rp_top": {
+      "type": "rp-cta",
+      "settings": {
+        "eyebrow": "Straight from the source",
+        "heading": "The vouches channel is public",
+        "subheading": "Everything below was posted there first. Go and read it yourself — no join, no email, nothing asked of you.",
+        "primary_link": "",
+        "primary_label": "See more vouches on Telegram",
+        "cta_label": "",
+        "secondary_label": "",
+        "secondary_link": "",
+        "reassure": "Two years of orders · nothing removed",
+        "anchor": "channel",
+        "tone": "raised",
+        "primary_target": "vouches",
+        "primary_icon": "telegram"
+      }
+    },
     "rp_proof": {
       "type": "angels-proof-slider",
       "settings": {
         "eyebrow": "Receipts",
         "title": "Every vouch, two years' worth",
-        "subheading": "Posted by members as their orders landed. Nothing staged and nothing removed.",
+        "subheading": "Posted by members as their orders landed. Nothing here is staged and nothing has been removed.",
         "speed": 55,
         "default_alt": "Screenshot of a member's order posted in the community chat",
         "anchor": "proof",
         "show_cta": true,
         "cta_label": "",
-        "vouches_label": "Read the live channel",
+        "vouches_label": "See more vouches on Telegram",
         "vouches_link": "",
         "tone": "flat",
-        "layout": "grid"
+        "layout": "grid",
+        "cta_primary": "vouches",
+        "count_line": "That's {shown} of them. The channel has every one since 2024, and it's public — you don't need to join anything to read it."
       },
       "blocks": {
         "image_Y89hqt": {
@@ -234,22 +254,23 @@
     "rp_cta": {
       "type": "rp-cta",
       "settings": {
-        "eyebrow": "Ready when you are",
-        "heading": "Convinced? Here's the vault",
-        "subheading": "Every supplier on the site was ordered from before it went on sale.",
+        "eyebrow": "Convinced?",
+        "heading": "Here's what the members bought",
+        "subheading": "Every supplier on the site got a test order from me before it went on sale.",
         "primary_link": "/collections/all",
-        "primary_label": "Shop the suppliers",
+        "primary_label": "See the suppliers",
         "cta_label": "",
-        "secondary_label": "Read the vouches",
+        "secondary_label": "",
         "secondary_link": "",
         "reassure": "Instant delivery · every supplier tested first",
         "anchor": "buy",
-        "tone": "flat"
+        "tone": "raised"
       }
     }
   },
   "order": [
     "main",
+    "rp_top",
     "rp_proof",
     "rp_linkhub",
     "rp_cta"

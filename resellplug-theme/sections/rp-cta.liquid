@@ -22,7 +22,20 @@
     {%- endif -%}
 
     <div class="rp-actions">
-      {% render 'rp-primary-button', link: section.settings.primary_link, label: section.settings.primary_label, source: 'footer-cta' %}
+      {%- liquid
+        assign primary_link = section.settings.primary_link
+        assign primary_label = section.settings.primary_label
+        if section.settings.primary_target == 'vouches'
+          assign primary_link = settings.rp_vouches_url
+          assign primary_label = section.settings.primary_label | default: 'Read the vouches'
+        endif
+      -%}
+      {% render 'rp-primary-button',
+        link: primary_link,
+        label: primary_label,
+        icon: section.settings.primary_icon,
+        source: 'footer-cta'
+      %}
 
       {%- assign proof = section.settings.secondary_link | default: settings.rp_vouches_url -%}
       {%- if section.settings.secondary_label != blank and proof != blank -%}
@@ -46,6 +59,22 @@
     {
       "type": "header",
       "content": "Main button"
+    },
+    {
+      "type": "select",
+      "id": "primary_target",
+      "label": "Main button goes to",
+      "default": "link",
+      "options": [
+        {
+          "value": "link",
+          "label": "The link below"
+        },
+        {
+          "value": "vouches",
+          "label": "The vouches channel"
+        }
+      ]
     },
     {
       "type": "url",
@@ -120,6 +149,30 @@
         {
           "value": "raised",
           "label": "Raised"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "primary_icon",
+      "label": "Button icon",
+      "default": "arrow",
+      "options": [
+        {
+          "value": "arrow",
+          "label": "Arrow"
+        },
+        {
+          "value": "telegram",
+          "label": "Telegram"
+        },
+        {
+          "value": "cart",
+          "label": "Cart"
+        },
+        {
+          "value": "star",
+          "label": "Star"
         }
       ]
     }

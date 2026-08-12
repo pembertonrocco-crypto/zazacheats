@@ -85,15 +85,45 @@
   {%- endif -%}
 
   {%- if section.settings.show_cta -%}
-    <div class="rp-wrap rp-center" style="margin-top: 30px">
-      <div class="rp-actions">
-        {% render 'rp-group-button', label: section.settings.cta_label, source: 'proof' %}
+    {%- liquid
+      assign vouches = section.settings.vouches_link | default: settings.rp_vouches_url
+      assign shown = 0
+      for block in section.blocks
+        if block.settings.image != blank
+          assign shown = shown | plus: 1
+        endif
+      endfor
 
-        {%- assign vouches = section.settings.vouches_link | default: settings.rp_vouches_url -%}
-        {%- if vouches != blank -%}
-          <a class="rp-btn rp-btn--ghost" href="{{ vouches }}" target="_blank" rel="noopener">
-            {{ section.settings.vouches_label | escape }}
-          </a>
+      # replace expects strings for both arguments and shown is an integer
+      # out of the plus filter, so it is coerced rather than relied upon.
+      assign shown_text = shown | append: ''
+      assign count_line = section.settings.count_line | replace: '{shown}', shown_text
+    -%}
+
+    <div class="rp-wrap rp-center" style="margin-top: 30px">
+      {%- if count_line != blank -%}
+        <p class="rp-body" style="margin-bottom:18px">{{ count_line | escape }}</p>
+      {%- endif -%}
+
+      <div class="rp-actions">
+        {%- if section.settings.cta_primary == 'vouches' -%}
+          {%- if vouches != blank -%}
+            <a class="rp-btn rp-btn--primary" href="{{ vouches }}" target="_blank" rel="noopener"
+               data-rp-cta="proof-vouches">
+              {% render 'rp-icon', icon: 'telegram', size: 20 %}
+              <span>{{ section.settings.vouches_label | escape }}</span>
+            </a>
+          {%- endif -%}
+          {% render 'rp-group-button', label: section.settings.cta_label, style: 'ghost', source: 'proof' %}
+
+        {%- else -%}
+          {% render 'rp-group-button', label: section.settings.cta_label, source: 'proof' %}
+          {%- if vouches != blank -%}
+            <a class="rp-btn rp-btn--ghost" href="{{ vouches }}" target="_blank" rel="noopener"
+               data-rp-cta="proof-vouches">
+              {{ section.settings.vouches_label | escape }}
+            </a>
+          {%- endif -%}
         {%- endif -%}
       </div>
     </div>
@@ -172,6 +202,29 @@
       "id": "show_cta",
       "label": "Show buttons",
       "default": true
+    },
+    {
+      "type": "select",
+      "id": "cta_primary",
+      "label": "Main button",
+      "default": "community",
+      "info": "On the vouches page the channel is what someone came for, so it leads there.",
+      "options": [
+        {
+          "value": "community",
+          "label": "Free community"
+        },
+        {
+          "value": "vouches",
+          "label": "Vouches channel"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "count_line",
+      "label": "Line above the buttons",
+      "info": "Type {shown} and the number of screenshots on this page drops in automatically."
     },
     {
       "type": "text",

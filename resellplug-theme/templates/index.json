@@ -69,6 +69,21 @@
         "tone": "raised"
       }
     },
+    "rp_banner": {
+      "type": "rp-banner",
+      "settings": {
+        "alt": "Haul from a Resell Plug supplier",
+        "height": "medium",
+        "align": "left",
+        "overlay": 55,
+        "eyebrow": "",
+        "heading": "Everything here has been ordered from first",
+        "text": "Not a list someone forwarded me. I buy from these suppliers, and this is what turns up.",
+        "cta_label": "See the suppliers",
+        "cta_link": "/collections/all",
+        "anchor": "banner"
+      }
+    },
     "rp_proof": {
       "type": "angels-proof-slider",
       "settings": {
@@ -270,7 +285,115 @@
         "subheading": "Anyone can send you a supplier list. What people actually get stuck on is everything after that — and that's the part the others go quiet on.",
         "anchor": "why",
         "show_cta": false,
+        "tone": "flat"
+      }
+    },
+    "rp_gallery": {
+      "type": "rp-gallery",
+      "blocks": {
+        "g1": {
+          "type": "photo",
+          "settings": {
+            "caption": "",
+            "alt": ""
+          }
+        },
+        "g2": {
+          "type": "photo",
+          "settings": {
+            "caption": "",
+            "alt": ""
+          }
+        },
+        "g3": {
+          "type": "photo",
+          "settings": {
+            "caption": "",
+            "alt": ""
+          }
+        },
+        "g4": {
+          "type": "photo",
+          "settings": {
+            "caption": "",
+            "alt": ""
+          }
+        },
+        "g5": {
+          "type": "photo",
+          "settings": {
+            "caption": "",
+            "alt": ""
+          }
+        },
+        "g6": {
+          "type": "photo",
+          "settings": {
+            "caption": "",
+            "alt": ""
+          }
+        }
+      },
+      "block_order": [
+        "g1",
+        "g2",
+        "g3",
+        "g4",
+        "g5",
+        "g6"
+      ],
+      "settings": {
+        "eyebrow": "The goods",
+        "heading": "What actually turns up",
+        "subheading": "Hauls from the suppliers on this site, photographed as they came out of the box.",
+        "ratio": "square",
+        "columns": "3",
+        "default_alt": "Haul from a supplier on Resell Plug",
+        "cta_label": "",
+        "cta_link": "",
+        "anchor": "gallery",
         "tone": "raised"
+      }
+    },
+    "rp_split": {
+      "type": "rp-split",
+      "blocks": {
+        "s1": {
+          "type": "point",
+          "settings": {
+            "text": "Suppliers I'm ordering from this month, not a 2023 list"
+          }
+        },
+        "s2": {
+          "type": "point",
+          "settings": {
+            "text": "Quality and shipping times checked before anything goes up"
+          }
+        },
+        "s3": {
+          "type": "point",
+          "settings": {
+            "text": "Message me when it goes wrong — that's the bit that matters"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "settings": {
+        "image_side": "left",
+        "ratio": "portrait",
+        "badge": "",
+        "alt": "Stock ready to go out",
+        "eyebrow": "How I work",
+        "heading": "I order it before you ever see it",
+        "text": "<p>Every supplier on this site got a test order from me first. I've seen the quality, timed the shipping and dealt with the agent — so when you ask me what something is actually like, you get an answer rather than a guess.</p>",
+        "cta_label": "See the suppliers",
+        "cta_link": "/collections/all",
+        "anchor": "how-i-work",
+        "tone": "flat"
       }
     },
     "rp_products": {
@@ -409,8 +532,11 @@
   "order": [
     "rp_featured",
     "rp_counter",
+    "rp_banner",
     "rp_proof",
     "rp_value",
+    "rp_gallery",
+    "rp_split",
     "rp_products",
     "rp_founder",
     "rp_faq",

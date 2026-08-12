@@ -236,10 +236,23 @@ def main():
             settings['image'] = Img()
             settings['logo'] = Img()
 
+        # The photo sections hide themselves entirely without an image, so
+        # without this they would "pass" by rendering nothing at all.
+        if path.endswith(('rp-banner.liquid', 'rp-split.liquid')):
+            settings['image'] = Img()
+        if path.endswith('rp-gallery.liquid'):
+            settings['image'] = Img()
+            context_blocks_need_image = True
+
+        blocks = blocks_from_preset(schema)
+        if path.endswith('rp-gallery.liquid'):
+            for b in blocks:
+                b['settings']['image'] = Img()
+
         context = dict(BASE)
         context['section'] = {
             'id': 'test-section', 'settings': settings,
-            'blocks': blocks_from_preset(schema),
+            'blocks': blocks,
         }
 
         try:
@@ -260,6 +273,9 @@ def main():
                 continue
             if '@context' not in data or '@type' not in data:
                 failures.append(f'{path}: JSON-LD missing @context/@type')
+
+        if len(html.strip()) < 40:
+            failures.append(f'{path}: rendered essentially nothing ({len(html.strip())} bytes)')
 
         if 'Add your community link' in html:
             failures.append(f'{path}: join button fell back to its placeholder')

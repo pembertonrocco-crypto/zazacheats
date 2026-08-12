@@ -260,11 +260,29 @@
         "anchor": "buy",
         "tone": "raised"
       }
+    },
+    "rp_split": {
+      "type": "rp-split",
+      "blocks": {},
+      "settings": {
+        "image_side": "right",
+        "ratio": "square",
+        "badge": "",
+        "alt": "Stock and packaging",
+        "eyebrow": "Where it started",
+        "heading": "One supplier and about £40",
+        "text": "<p>Bedroom floor, one supplier, a test order I wasn't sure about. Two years later it's 250+ people in the free chat and a private group of resellers actually scaling.</p>",
+        "cta_label": "",
+        "cta_link": "",
+        "anchor": "story",
+        "tone": "flat"
+      }
     }
   },
   "order": [
     "main",
     "rp_founder",
+    "rp_split",
     "rp_proof",
     "rp_linkhub",
     "rp_cta"

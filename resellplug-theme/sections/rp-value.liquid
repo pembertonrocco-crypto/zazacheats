@@ -23,7 +23,20 @@
 
     <div class="rp-grid rp-grid--3">
       {%- for block in section.blocks -%}
-        <div class="rp-card" {{ block.shopify_attributes }}>
+        <div class="rp-card{% if block.settings.image != blank %} rp-card--photo{% endif %}" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            <div class="rp-card__media">
+              {{
+                block.settings.image
+                | image_url: width: 700
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '300, 500, 700',
+                  sizes: '(min-width: 750px) 33vw, 92vw',
+                  alt: block.settings.title
+              }}
+            </div>
+          {%- endif -%}
           <div class="rp-value__icon">
             {% render 'rp-icon', icon: block.settings.icon, size: 20 %}
           </div>
@@ -102,6 +115,12 @@
       "type": "item",
       "name": "Item",
       "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo",
+          "info": "Optional. A real photo above the text lifts this card a long way."
+        },
         {
           "type": "select",
           "id": "icon",

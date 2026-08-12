@@ -1673,3 +1673,282 @@ body { padding-bottom: var(--rp-stickybar); }
   text-transform: uppercase;
   color: #6d6d6d;
 }
+
+/* --------------------------------------------------------------------------
+   Photo gallery
+
+   One aspect ratio for every tile. Phone photos vary in shape far more than
+   product shots, and a grid that honours each one is exactly what made the
+   old product grid look broken.
+   -------------------------------------------------------------------------- */
+
+.rp-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+@media (min-width: 750px) {
+  .rp-gallery { gap: 14px; }
+  .rp-gallery--2 { grid-template-columns: repeat(2, 1fr); }
+  .rp-gallery--3 { grid-template-columns: repeat(3, 1fr); }
+  .rp-gallery--4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+.rp-gallery__item {
+  position: relative;
+  margin: 0;
+  border-radius: var(--rp-radius);
+  overflow: hidden;
+  background: var(--rp-surface-2);
+  border: 1px solid var(--rp-line);
+}
+
+.rp-gallery__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rp-gallery--square .rp-gallery__item { aspect-ratio: 1 / 1; }
+.rp-gallery--portrait .rp-gallery__item { aspect-ratio: 4 / 5; }
+.rp-gallery--landscape .rp-gallery__item { aspect-ratio: 4 / 3; }
+
+.rp-gallery__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 22px 12px 10px;
+  font-family: var(--rp-font);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  /* The gradient sits under the words only, so the photo stays visible. */
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+}
+
+.rp-gallery__item--empty {
+  display: grid;
+  place-items: center;
+  border-style: dashed;
+  border-color: var(--rp-line-strong);
+  color: var(--rp-muted);
+  font-family: var(--rp-font);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+  padding: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   Photo + text
+   -------------------------------------------------------------------------- */
+
+.rp-split { display: grid; gap: 24px; }
+
+@media (min-width: 990px) {
+  .rp-split {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  /* Only the desktop layout flips. On a phone the photo leads either way,
+     because the picture is what stops the scroll. */
+  .rp-split--flip .rp-split__media { order: 2; }
+  .rp-split--flip .rp-split__body { order: 1; }
+
+  .rp-split--solo { grid-template-columns: 1fr; max-width: 760px; margin: 0 auto; }
+}
+
+.rp-split__media {
+  position: relative;
+  border-radius: var(--rp-radius);
+  overflow: hidden;
+  background: var(--rp-surface-2);
+  border: 1px solid var(--rp-line);
+}
+
+.rp-split__media--portrait { aspect-ratio: 4 / 5; }
+.rp-split__media--square { aspect-ratio: 1 / 1; }
+.rp-split__media--landscape { aspect-ratio: 4 / 3; }
+
+.rp-split__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rp-split__media--empty {
+  aspect-ratio: 4 / 5;
+  display: grid;
+  place-items: center;
+  border-style: dashed;
+  border-color: var(--rp-line-strong);
+  color: var(--rp-muted);
+  font-family: var(--rp-font);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 20px;
+}
+
+.rp-split__badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--rp-accent);
+  color: var(--rp-accent-ink);
+  font-family: var(--rp-font);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.rp-split__body .rp-h2 { margin-bottom: 14px; }
+.rp-split__text { margin: 0 0 20px; }
+.rp-split__body .rp-tier__list { margin: 0 0 22px; }
+.rp-split--solo .rp-split__body { text-align: center; }
+.rp-split--solo .rp-tier__list { text-align: left; display: inline-grid; }
+
+/* --------------------------------------------------------------------------
+   Photo banner
+   -------------------------------------------------------------------------- */
+
+.rp-banner {
+  position: relative;
+  display: grid;
+  isolation: isolate;
+  background: var(--rp-surface-2);
+  font-family: var(--rp-font);
+}
+
+.rp-banner--short { min-height: 300px; }
+.rp-banner--medium { min-height: 420px; }
+.rp-banner--tall { min-height: 560px; }
+
+@media (min-width: 750px) {
+  .rp-banner--short { min-height: 340px; }
+  .rp-banner--medium { min-height: 500px; }
+  .rp-banner--tall { min-height: 680px; }
+}
+
+.rp-banner__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+/* The scrim is a gradient anchored to the text side rather than a flat wash,
+   so the middle of the photograph survives while the words still sit on
+   something solid. --rp-scrim comes from the section's overlay setting. */
+.rp-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to right,
+    rgba(5, 5, 5, calc(var(--rp-scrim, 0.55) + 0.15)) 0%,
+    rgba(5, 5, 5, var(--rp-scrim, 0.55)) 45%,
+    rgba(5, 5, 5, calc(var(--rp-scrim, 0.55) * 0.35)) 100%
+  );
+}
+
+.rp-banner--right::before {
+  background: linear-gradient(
+    to left,
+    rgba(5, 5, 5, calc(var(--rp-scrim, 0.55) + 0.15)) 0%,
+    rgba(5, 5, 5, var(--rp-scrim, 0.55)) 45%,
+    rgba(5, 5, 5, calc(var(--rp-scrim, 0.55) * 0.35)) 100%
+  );
+}
+
+.rp-banner--centre::before {
+  background: rgba(5, 5, 5, calc(var(--rp-scrim, 0.55) + 0.08));
+}
+
+/* On a phone the box spans the full width whatever the desktop alignment, so
+   a side gradient would leave one edge of the text unbacked. */
+@media (max-width: 749px) {
+  .rp-banner::before {
+    background: linear-gradient(
+      to top,
+      rgba(5, 5, 5, calc(var(--rp-scrim, 0.55) + 0.25)) 0%,
+      rgba(5, 5, 5, var(--rp-scrim, 0.55)) 60%,
+      rgba(5, 5, 5, calc(var(--rp-scrim, 0.55) * 0.6)) 100%
+    );
+  }
+}
+
+.rp-banner__inner {
+  display: grid;
+  align-items: end;
+  padding: 32px 0;
+}
+
+@media (min-width: 750px) {
+  .rp-banner__inner { align-items: center; padding: 48px 0; }
+}
+
+.rp-banner__box { max-width: 34rem; }
+
+.rp-banner--centre .rp-banner__box { margin: 0 auto; text-align: center; }
+.rp-banner--centre .rp-banner__box .rp-actions { justify-content: center; }
+
+@media (min-width: 990px) {
+  .rp-banner--right .rp-banner__box { margin-left: auto; text-align: right; }
+  .rp-banner--right .rp-banner__box .rp-actions { justify-content: flex-end; }
+}
+
+.rp-banner__heading {
+  font-size: clamp(1.5rem, 5.5vw, 2.75rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1.05;
+  color: #fff;
+  margin: 0 0 12px;
+  text-wrap: balance;
+  /* Photos are unpredictable; a shadow keeps the type legible over a bright
+     patch the scrim alone does not fully tame. */
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
+}
+
+.rp-banner__text {
+  color: #e2e2e2;
+  line-height: 1.55;
+  margin: 0 0 20px;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55);
+}
+
+/* A photo at the top of a value card. The card keeps its padding for the
+   text but the image runs to the edges, so it reads as a card with a picture
+   rather than a picture floating inside a box. */
+.rp-card--photo { padding: 0; overflow: hidden; }
+.rp-card--photo > *:not(.rp-card__media) { margin-left: 22px; margin-right: 22px; }
+.rp-card--photo > .rp-value__icon { margin-top: 18px; }
+.rp-card--photo > p:last-child { margin-bottom: 22px; }
+
+.rp-card__media {
+  aspect-ratio: 16 / 10;
+  background: var(--rp-surface-2);
+  border-bottom: 1px solid var(--rp-line);
+}
+
+.rp-card__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

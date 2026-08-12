@@ -105,11 +105,79 @@
         "l3",
         "l4"
       ]
+    },
+    "rp_gallery": {
+      "type": "rp-gallery",
+      "blocks": {
+        "g1": {
+          "type": "photo",
+          "settings": {
+            "caption": "",
+            "alt": ""
+          }
+        },
+        "g2": {
+          "type": "photo",
+          "settings": {
+            "caption": "",
+            "alt": ""
+          }
+        },
+        "g3": {
+          "type": "photo",
+          "settings": {
+            "caption": "",
+            "alt": ""
+          }
+        },
+        "g4": {
+          "type": "photo",
+          "settings": {
+            "caption": "",
+            "alt": ""
+          }
+        },
+        "g5": {
+          "type": "photo",
+          "settings": {
+            "caption": "",
+            "alt": ""
+          }
+        },
+        "g6": {
+          "type": "photo",
+          "settings": {
+            "caption": "",
+            "alt": ""
+          }
+        }
+      },
+      "block_order": [
+        "g1",
+        "g2",
+        "g3",
+        "g4",
+        "g5",
+        "g6"
+      ],
+      "settings": {
+        "eyebrow": "The goods",
+        "heading": "What members receive",
+        "subheading": "Photographed as it came out of the box.",
+        "ratio": "square",
+        "columns": "3",
+        "default_alt": "Haul from a supplier on Resell Plug",
+        "cta_label": "",
+        "cta_link": "",
+        "anchor": "gallery",
+        "tone": "raised"
+      }
     }
   },
   "order": [
     "banner",
     "product-grid",
+    "rp_gallery",
     "rp_linkhub",
     "rp_cta"
   ]

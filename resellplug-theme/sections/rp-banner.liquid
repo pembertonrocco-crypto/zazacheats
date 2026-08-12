@@ -1,0 +1,144 @@
+{%- comment -%}
+  Full-width photo banner.
+
+  A visual break between two dense sections, carrying one line and one
+  button. Use it once, maybe twice, on a page — its whole effect comes from
+  being the only full-bleed thing on the scroll.
+
+  Text over a photograph is the easiest way to make a page unreadable, so the
+  scrim is not optional and not a flat wash: it is a gradient anchored to the
+  side the text sits on, which keeps the middle of the photo visible while
+  still giving the words a solid backing. The overlay strength is adjustable
+  because a dark haul photo needs far less than a bright one.
+
+  Hidden entirely on the live site when no photo is set — a banner is the
+  photo, and an empty one is just a coloured band.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign has_image = false
+  if section.settings.image != blank
+    assign has_image = true
+  endif
+  assign align = section.settings.align | default: 'left'
+-%}
+
+{%- if has_image -%}
+  <div
+    class="rp-banner rp-banner--{{ section.settings.height }} rp-banner--{{ align }}"
+    id="{{ section.settings.anchor | default: 'banner' | handle }}"
+    style="--rp-scrim: {{ section.settings.overlay | divided_by: 100.0 }}"
+  >
+    {{
+      section.settings.image
+      | image_url: width: 2400
+      | image_tag:
+        loading: 'lazy',
+        widths: '600, 900, 1400, 1800, 2400',
+        sizes: '100vw',
+        class: 'rp-banner__img',
+        alt: section.settings.alt | default: section.settings.heading
+    }}
+
+    <div class="rp-banner__inner">
+      <div class="rp-wrap">
+        <div class="rp-banner__box">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="rp-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+
+          {%- if section.settings.heading != blank -%}
+            <p class="rp-banner__heading">{{ section.settings.heading | escape }}</p>
+          {%- endif -%}
+
+          {%- if section.settings.text != blank -%}
+            <p class="rp-banner__text">{{ section.settings.text | escape }}</p>
+          {%- endif -%}
+
+          {%- if section.settings.cta_label != blank -%}
+            <div class="rp-actions" style="margin-bottom:0">
+              {% render 'rp-primary-button',
+                link: section.settings.cta_link,
+                label: section.settings.cta_label,
+                source: 'banner'
+              %}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{%- elsif request.design_mode -%}
+  <div class="rp-section rp-section--raised">
+    <div class="rp-wrap rp-center">
+      <p class="rp-body">
+        <strong>RP · Photo banner</strong> — add a photo and this becomes a
+        full-width band. Without one it is hidden from customers.
+      </p>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "RP · Photo banner",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "A full-width photo with one line over it. Use it once on a page — the effect comes from being the only full-bleed thing on the scroll."
+    },
+    { "type": "image_picker", "id": "image", "label": "Photo" },
+    { "type": "text", "id": "alt", "label": "Image description" },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "default": "medium",
+      "options": [
+        { "value": "short", "label": "Short" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "tall", "label": "Tall" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Text position",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "centre", "label": "Centre" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "overlay",
+      "label": "Darken the photo",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 55,
+      "info": "Turn it up until the text is comfortably readable on your photo. A bright picture needs far more than a dark one."
+    },
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Everything here has been ordered from first" },
+    { "type": "textarea", "id": "text", "label": "Line underneath" },
+    { "type": "text", "id": "cta_label", "label": "Button text", "default": "See the suppliers" },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link",
+      "info": "Blank falls back to the free community link."
+    },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "banner" }
+  ],
+  "presets": [{ "name": "RP · Photo banner" }]
+}
+{% endschema %}

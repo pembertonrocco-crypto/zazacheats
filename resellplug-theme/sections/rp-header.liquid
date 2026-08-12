@@ -62,16 +62,58 @@
       {%- endif -%}
     </a>
 
+    {%- comment -%}
+      current_page marks the link for the page you are on. Knowing where you
+      are is the cheapest orientation cue there is, and without it a five-item
+      nav on a five-page site gives you nothing back.
+
+      The home link is matched on an exact '/' because every other path also
+      starts with one.
+    {%- endcomment -%}
     {%- if section.blocks.size > 0 -%}
       <nav class="rp-header__nav" aria-label="Main">
         {%- for block in section.blocks -%}
-          <a href="{{ block.settings.link }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</a>
+          {%- liquid
+            assign href = block.settings.link | default: '/'
+            assign current = false
+            if href == '/' or href == routes.root_url
+              if request.page_type == 'index'
+                assign current = true
+              endif
+            elsif request.path contains href
+              assign current = true
+            endif
+          -%}
+          <a
+            href="{{ href }}"
+            {% if current %}aria-current="page"{% endif %}
+            {{ block.shopify_attributes }}
+          >{{ block.settings.label | escape }}</a>
         {%- endfor -%}
       </nav>
     {%- endif -%}
 
     {%- if section.settings.show_cta -%}
       {% render 'rp-primary-button', link: section.settings.cta_link, label: section.settings.cta_label, icon: 'cart', source: 'header' %}
+    {%- endif -%}
+
+    {%- comment -%}
+      The menu button only exists under 990px, where the inline nav is hidden.
+      Before this the site had no navigation at all on a phone — every page
+      but the homepage was reachable only from the footer, on the device
+      nearly all the traffic arrives on.
+    {%- endcomment -%}
+    {%- if section.blocks.size > 0 -%}
+      <button
+        type="button"
+        class="rp-header__menu"
+        aria-expanded="false"
+        aria-controls="rp-drawer"
+        aria-label="Menu"
+        data-rp-menu-open
+      >
+        <span class="rp-header__bars" aria-hidden="true"><span></span><span></span></span>
+      </button>
     {%- endif -%}
 
     {%- if section.settings.show_cart -%}
@@ -94,6 +136,57 @@
     {%- endif -%}
   </div>
 </header>
+
+{%- if section.blocks.size > 0 -%}
+  <div class="rp-drawer" id="rp-drawer" data-rp-drawer hidden>
+    <div class="rp-drawer__scrim" data-rp-menu-close></div>
+
+    <div class="rp-drawer__panel" role="dialog" aria-modal="true" aria-label="Menu">
+      <div class="rp-drawer__top">
+        <span class="rp-label">Menu</span>
+        <button type="button" class="rp-drawer__close" data-rp-menu-close aria-label="Close menu">&times;</button>
+      </div>
+
+      <nav class="rp-drawer__nav" aria-label="Main">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign href = block.settings.link | default: '/'
+            assign current = false
+            if href == '/' or href == routes.root_url
+              if request.page_type == 'index'
+                assign current = true
+              endif
+            elsif request.path contains href
+              assign current = true
+            endif
+          -%}
+          <a href="{{ href }}" {% if current %}aria-current="page"{% endif %}>
+            <span>{{ block.settings.label | escape }}</span>
+            {% render 'rp-icon', icon: 'arrow', size: 16 %}
+          </a>
+        {%- endfor -%}
+      </nav>
+
+      <div class="rp-drawer__foot">
+        {% render 'rp-primary-button',
+          link: section.settings.cta_link,
+          label: section.settings.cta_label,
+          icon: 'cart',
+          block: true,
+          source: 'drawer'
+        %}
+
+        {%- if settings.rp_vouches_url != blank -%}
+          <a class="rp-btn rp-btn--ghost rp-btn--block" href="{{ settings.rp_vouches_url }}"
+             target="_blank" rel="noopener" data-rp-cta="drawer-vouches">
+            {% render 'rp-icon', icon: 'star', size: 18 %}
+            <span>Read the vouches</span>
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
 
 {%- comment -%}
   Organization and WebSite structured data.

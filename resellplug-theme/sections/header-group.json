@@ -63,15 +63,15 @@
         "n1": {
           "type": "link",
           "settings": {
-            "label": "Shop",
-            "link": "/collections/all"
+            "label": "Home",
+            "link": "/"
           }
         },
         "n2": {
           "type": "link",
           "settings": {
-            "label": "Guides",
-            "link": "/blogs/news"
+            "label": "Products",
+            "link": "/collections/all"
           }
         },
         "n3": {
@@ -84,15 +84,15 @@
         "n4": {
           "type": "link",
           "settings": {
-            "label": "FAQ",
-            "link": "/pages/faq"
+            "label": "Blog",
+            "link": "/blogs/news"
           }
         },
         "n5": {
           "type": "link",
           "settings": {
-            "label": "About",
-            "link": "/pages/about"
+            "label": "FAQ",
+            "link": "/pages/faq"
           }
         }
       },

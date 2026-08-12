@@ -27,9 +27,62 @@
         "subtitle": "Instant delivery · two years of vouches",
         "cta_label": "Shop now"
       }
+    },
+    "rp_socials": {
+      "type": "rp-footer-links",
+      "blocks": {
+        "s1": {
+          "type": "social",
+          "settings": {
+            "icon": "tiktok",
+            "label": "TikTok",
+            "preset": "tiktok",
+            "link": ""
+          }
+        },
+        "s2": {
+          "type": "social",
+          "settings": {
+            "icon": "telegram",
+            "label": "Free group",
+            "preset": "group",
+            "link": ""
+          }
+        },
+        "s3": {
+          "type": "social",
+          "settings": {
+            "icon": "star",
+            "label": "Vouches",
+            "preset": "vouches",
+            "link": ""
+          }
+        },
+        "s4": {
+          "type": "social",
+          "settings": {
+            "icon": "linktree",
+            "label": "Linktree",
+            "preset": "linktree",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "settings": {
+        "heading": "Find me everywhere else",
+        "note": "",
+        "tone": "flat"
+      }
     }
   },
   "order": [
+    "rp_socials",
     "footer",
     "rp_sticky"
   ]

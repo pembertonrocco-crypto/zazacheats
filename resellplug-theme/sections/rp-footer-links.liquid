@@ -1,0 +1,152 @@
+{%- comment -%}
+  Footer social row — the Linktree, on the site.
+
+  Sits in the footer group, so it renders on every page. This is the second
+  place the free community appears (the link tiles being the first) and the
+  only place the full set of accounts lives.
+
+  Each account is a block: pick a platform, paste the URL, done. The four
+  that the rest of the site already knows about — community, vouches, TikTok,
+  Linktree — fall back to Theme settings when their URL is left blank, so
+  they cannot end up pointing somewhere different from the buttons upstairs.
+
+  Icons are labelled. An unlabelled row of glyphs is guesswork for anyone who
+  does not recognise a logo, and this row mixes well-known marks with ones
+  that are not (Linktree, Telegram channels).
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+
+<div class="rp-social rp-section--{{ section.settings.tone | default: 'flat' }}">
+  <div class="rp-wrap">
+    {%- if section.settings.heading != blank -%}
+      <p class="rp-social__heading">{{ section.settings.heading | escape }}</p>
+    {%- endif -%}
+
+    <ul class="rp-social__row">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign url = block.settings.link
+          case block.settings.preset
+            when 'group'
+              assign url = block.settings.link | default: settings.rp_group_url
+            when 'vouches'
+              assign url = block.settings.link | default: settings.rp_vouches_url
+            when 'tiktok'
+              assign url = block.settings.link | default: settings.rp_tiktok_url
+            when 'linktree'
+              assign url = block.settings.link | default: settings.rp_linktree_url
+          endcase
+
+          # Same normalising as the link tiles: an unset url setting is nil,
+          # and nil-vs-empty-string is not read the same way by every Liquid
+          # implementation.
+          assign url = url | default: '' | strip
+          assign label = block.settings.label | default: block.settings.icon
+        -%}
+
+        {%- if url.size > 0 -%}
+          <li {{ block.shopify_attributes }}>
+            <a
+              class="rp-social__link"
+              href="{{ url }}"
+              target="_blank"
+              rel="noopener"
+              data-rp-cta="footer-{{ block.settings.preset | default: block.settings.icon }}"
+            >
+              <span class="rp-social__icon">
+                {% render 'rp-icon', icon: block.settings.icon, size: 20 %}
+              </span>
+              <span class="rp-social__label">{{ label | escape }}</span>
+            </a>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+
+    {%- if section.settings.note != blank -%}
+      <p class="rp-social__note">{{ section.settings.note | escape }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "RP · Footer socials",
+  "tag": "div",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "One block per account. Add as many as you have on your Linktree — they wrap onto as many rows as they need."
+    },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Find me everywhere else" },
+    { "type": "text", "id": "note", "label": "Line underneath" },
+    {
+      "type": "select",
+      "id": "tone",
+      "label": "Background",
+      "default": "flat",
+      "options": [
+        { "value": "flat", "label": "Black" },
+        { "value": "raised", "label": "Raised" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "social",
+      "name": "Account",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Logo",
+          "default": "globe",
+          "options": [
+            { "value": "tiktok", "label": "TikTok" },
+            { "value": "instagram", "label": "Instagram" },
+            { "value": "telegram", "label": "Telegram" },
+            { "value": "whatsapp", "label": "WhatsApp" },
+            { "value": "discord", "label": "Discord" },
+            { "value": "youtube", "label": "YouTube" },
+            { "value": "snapchat", "label": "Snapchat" },
+            { "value": "x", "label": "X / Twitter" },
+            { "value": "linktree", "label": "Linktree" },
+            { "value": "star", "label": "Vouches (star)" },
+            { "value": "mail", "label": "Email" },
+            { "value": "globe", "label": "Website" }
+          ]
+        },
+        { "type": "text", "id": "label", "label": "Label" },
+        {
+          "type": "select",
+          "id": "preset",
+          "label": "Use a saved link",
+          "default": "custom",
+          "info": "Pick one of the first four and leave the link blank to pull it from Theme settings.",
+          "options": [
+            { "value": "group", "label": "Free community chat" },
+            { "value": "vouches", "label": "Vouches channel" },
+            { "value": "tiktok", "label": "TikTok" },
+            { "value": "linktree", "label": "Linktree" },
+            { "value": "custom", "label": "Paste my own link" }
+          ]
+        },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RP · Footer socials",
+      "blocks": [
+        { "type": "social", "settings": { "icon": "tiktok", "label": "TikTok", "preset": "tiktok" } },
+        { "type": "social", "settings": { "icon": "telegram", "label": "Free group", "preset": "group" } },
+        { "type": "social", "settings": { "icon": "star", "label": "Vouches", "preset": "vouches" } },
+        { "type": "social", "settings": { "icon": "linktree", "label": "Linktree", "preset": "linktree" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

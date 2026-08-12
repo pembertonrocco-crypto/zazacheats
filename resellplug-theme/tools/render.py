@@ -335,12 +335,54 @@ def main():
 
         print(f'  ok  {path}  ({len(html)} bytes)')
 
+    failures.extend(parse_every_section(env))
+
     if failures:
         print()
         print('\n'.join(f'ERROR {f}' for f in failures))
         sys.exit(1)
 
     print('\nOK — every rp-* section renders, JSON-LD parses, no orphan Liquid.')
+
+
+# Sections that cannot be rendered here — they need a real product, cart or
+# customer — but can still be parsed. Worth doing: footer.liquid is on every
+# page and until this existed nothing checked its syntax beyond counting tags,
+# which passes happily on a mistyped filter or a malformed argument list.
+#
+# `{% style %}`, `{% form %}` and friends are Shopify platform tags with no
+# python-liquid equivalent, so they are swapped for inert HTML first.
+PLATFORM_TAGS = [
+    (r'\{%-?\s*style\s*-?%\}', '<style>'),
+    (r'\{%-?\s*endstyle\s*-?%\}', '</style>'),
+    (r'\{%-?\s*javascript\s*-?%\}', '<script>'),
+    (r'\{%-?\s*endjavascript\s*-?%\}', '</script>'),
+    (r'\{%-?\s*form\s+.*?-?%\}', '<form>'),
+    (r'\{%-?\s*endform\s*-?%\}', '</form>'),
+    (r'\{%-?\s*paginate\s+.*?-?%\}', ''),
+    (r'\{%-?\s*endpaginate\s*-?%\}', ''),
+]
+
+# featured-product.liquid calls {% render 'product-media-gallery', limit: 1 %}.
+# `limit` is fine as a render argument on Shopify; python-liquid reserves it
+# and refuses to parse. Stock Dawn, valid live — excluded rather than edited.
+PARSE_SKIP = {'sections/featured-product.liquid'}
+
+
+def parse_every_section(env):
+    problems = []
+    for path in sorted(glob.glob('sections/*.liquid')):
+        if path.replace(os.sep, '/') in PARSE_SKIP:
+            continue
+        source = SCHEMA_RE.sub('', open(path, encoding='utf-8').read())
+        for pattern, replacement in PLATFORM_TAGS:
+            source = re.sub(pattern, replacement, source, flags=re.S)
+        try:
+            env.from_string(source)
+        except Exception as exc:  # noqa: BLE001 — any parse error is a real one
+            first = str(exc).splitlines()[0]
+            problems.append(f'{path}: does not parse — {type(exc).__name__}: {first}')
+    return problems
 
 
 if __name__ == '__main__':

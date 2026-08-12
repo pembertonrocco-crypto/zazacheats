@@ -86,6 +86,37 @@ Import `products-fix.csv` (**Products → Import**, tick *Overwrite any current
 products that have the same handle*). Then paste the descriptions from
 `PRODUCT-DESCRIPTIONS.md`.
 
+## 7. Shopify branding — the three admin-side ones
+
+The theme no longer shows any Shopify branding (see *Shopify branding* in the
+README for the full list). Three pieces are outside the theme and need you:
+
+**Shop Pay at the checkout itself.** The theme no longer shows the purple
+*Buy with Shop Pay* button, but the checkout page is not part of the theme —
+Shop Pay still appears there until you turn it off in **Settings → Payments →
+Shop Pay → Deactivate**. Think before you do: it is a one-tap checkout for
+anyone who has used it on another store, and losing it costs sales. Off in the
+theme and on at the checkout is a reasonable place to stop.
+
+**The `.myshopify.com` address.** Your store answers on
+`<something>.myshopify.com` forever and that cannot be removed. What you can
+do is make sure it never gets seen: **Settings → Domains** — `resell-plug.uk`
+set as **primary**, with the myshopify address redirecting to it. Then every
+link, email and share preview uses your domain.
+
+**Order and shipping emails.** These come from **Settings → Notifications**,
+not the theme, and they carry your *store name* — which is why the store name
+matters (top of this file). Open the templates and check them once.
+
+### What you may still see, and can ignore
+
+- **The bar across the top with a bag icon, the theme name and a country
+  picker** — that is the theme *preview* bar. It only appears while you are
+  previewing an unpublished theme. Customers never see it.
+- **`Shopify` in the page source.** Shopify injects its own analytics and
+  checkout tokens into every page. It is invisible, it cannot be removed, and
+  removing it would break the cart.
+
 ---
 
 ## Checking a page is right

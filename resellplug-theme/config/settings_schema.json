@@ -1,11 +1,11 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "Dawn",
+    "theme_name": "Resell Plug",
     "theme_version": "15.4.1",
-    "theme_author": "Shopify",
-    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
-    "theme_support_url": "https://support.shopify.com/"
+    "theme_author": "Resell Plug UK",
+    "theme_documentation_url": "https://resell-plug.uk",
+    "theme_support_url": "https://t.me/repsreselling"
   },
   {
     "name": "Resell Plug — funnel links",
@@ -13,6 +13,13 @@
       {
         "type": "paragraph",
         "content": "These links power every button on the site. Change them here once and every section updates."
+      },
+      {
+        "type": "text",
+        "id": "rp_brand_name",
+        "label": "Brand name",
+        "default": "Resell Plug",
+        "info": "Used in the footer copyright. Leave blank to use the store name from Settings → Store details."
       },
       {
         "type": "url",

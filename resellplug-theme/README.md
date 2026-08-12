@@ -188,6 +188,36 @@ Four things it caught that reading the code did not:
   Normalise to a string and test `.size`.
 - An unset URL setting rendered a link tile with an empty `href`.
 
+## Shopify branding
+
+Every piece of Shopify branding a theme controls is off. What was there:
+
+| Where | What it was | Now |
+| --- | --- | --- |
+| Footer, every page | "Powered by Shopify" (`powered_by_link`) | removed |
+| Footer | "Follow on Shop" button | off, and the schema default flipped to `false` so it cannot come back |
+| Product page | *Buy with Shop Pay* / PayPal / Apple Pay | off |
+| Cart page | the same accelerated-checkout row | off, behind a new setting so it matches the product page |
+| Login page | *Log in with Shop* | off |
+| Password page | Shopify wordmark, "This shop will be powered by Shopify", and an "are you the store owner? log in" link | all three removed |
+| Theme list in admin | "Dawn — Shopify" | "Resell Plug — Resell Plug UK" |
+| `assets/` | `icon-shopify.svg` | deleted |
+
+Two of these are toggles rather than deletions, because they are the ones
+worth reconsidering: **Product → Buy buttons → Show Shop Pay / PayPal / Apple
+Pay** and the matching setting on **Cart**. Accelerated checkout buttons
+usually lift completion — this is the one bit of platform branding that pays
+for itself. If you turn one back on, turn on the other; showing them on the
+product page and not in the cart is worse than either choice alone.
+
+The footer copyright now reads **Theme settings → Brand name** and only falls
+back to `shop.name`, so it says "Resell Plug" whether or not the store name
+in the admin has been changed yet.
+
+Three things a theme cannot reach — Shop Pay at the checkout itself, the
+`.myshopify.com` fallback domain, and the notification emails. All three are
+admin settings and all three are in `SETUP.md` step 7.
+
 ## Not in this repo
 
 Prices, product names and descriptions live in the Shopify admin. So do

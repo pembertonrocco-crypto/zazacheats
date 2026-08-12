@@ -119,7 +119,14 @@
                 </button>
               </div>
 
-              {%- if additional_checkout_buttons -%}
+              {%- comment -%}
+                Same Shop Pay / PayPal / Apple Pay row as the product page,
+                and off for the same reason. Kept behind a setting rather
+                than deleted, so the two can be turned back on together —
+                showing them in one place and not the other is worse than
+                either choice on its own.
+              {%- endcomment -%}
+              {%- if section.settings.show_dynamic_checkout and additional_checkout_buttons -%}
                 <div class="cart__dynamic-checkout-buttons additional-checkout-buttons">
                   {{ content_for_additional_checkout_buttons }}
                 </div>
@@ -138,6 +145,13 @@
   "name": "t:sections.main-cart-footer.name",
   "class": "cart__footer-wrapper",
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "default": false,
+      "label": "Show Shop Pay / PayPal / Apple Pay buttons",
+      "info": "Off, to match the product page. If you turn this on, turn the matching setting on under Product → Buy buttons too."
+    },
     {
       "type": "color_scheme",
       "id": "color_scheme",

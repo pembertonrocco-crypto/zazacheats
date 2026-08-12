@@ -11,6 +11,7 @@
     "cart-footer": {
       "type": "main-cart-footer",
       "settings": {
+        "show_dynamic_checkout": false,
         "color_scheme": "scheme-1",
         "padding_top": 20,
         "padding_bottom": 40

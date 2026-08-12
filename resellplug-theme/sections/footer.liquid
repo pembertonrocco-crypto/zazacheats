@@ -299,10 +299,20 @@
     </div>
     <div class="footer__content-bottom-wrapper page-width{% if section.settings.enable_country_selector == false and section.settings.enable_language_selector == false %} footer__content-bottom-wrapper--center{% endif %}">
       <div class="footer__copyright caption">
+        {%- comment -%}
+          `powered_by_link` used to sit under this line. It is the "Powered by
+          Shopify" credit, it is not required, and a store that sells access to
+          a private community should not be advertising the platform it rents.
+
+          The copyright name comes from the brand setting first and only falls
+          back to `shop.name`, because `shop.name` is still "ZC Community"
+          until that is changed in Settings → Store details.
+        {%- endcomment -%}
+        {%- assign footer_brand = settings.rp_brand_name | default: shop.name -%}
         <small class="copyright__content"
-          >&copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url -}}
+          >&copy; {{ 'now' | date: '%Y' }},
+          <a href="{{ routes.root_url }}">{{ footer_brand | escape }}</a>
         </small>
-        <small class="copyright__content">{{ powered_by_link }}</small>
         {%- if section.settings.show_policy -%}
           <ul class="policies list-unstyled">
             {%- for policy in shop.policies -%}
@@ -454,9 +464,9 @@
     {
       "type": "checkbox",
       "id": "enable_follow_on_shop",
-      "default": true,
-      "label": "t:sections.footer.settings.enable_follow_on_shop.label",
-      "info": "t:sections.footer.settings.enable_follow_on_shop.info"
+      "default": false,
+      "label": "Show \"Follow on Shop\" button",
+      "info": "Off. It is a Shopify Shop-app button and it sends people to a Shopify-branded profile instead of your Telegram."
     },
     {
       "type": "checkbox",

@@ -7,15 +7,15 @@
         "heading": "Where resellers' problems actually get solved",
         "heading_accent": "actually get solved",
         "subheading": "I'm not another plug flogging recycled supplier lists. I sell what's working right now, I've ordered from all of it myself, and I'm on the other end of a message when you get stuck.",
-        "tag": "The one to start with",
-        "product": "",
-        "product_title": "",
-        "pitch": "Direct access to me, the suppliers I'm actually using, and help with the part everyone quits at — scaling it.",
+        "tag": "Lifetime access",
+        "product": "private-group-chat-lifetime-access",
+        "product_title": "The Private Group Chat",
+        "pitch": "150+ vetted suppliers, the products I'm actually running, and me on the other end of a message. One payment, yours for good.",
         "price_note": "one-off · lifetime access",
         "cta_label": "Get instant access",
-        "details_label": "What's inside",
+        "details_label": "See everything included",
         "reassure_1": "Delivered instantly",
-        "reassure_2": "Two years of public vouches",
+        "reassure_2": "15-minute money-back guarantee",
         "show_stats": true,
         "stat_1_label": "Years trading",
         "stat_2_label": "In the free group",
@@ -26,26 +26,33 @@
         "p1": {
           "type": "point",
           "settings": {
-            "text": "Me on the other end of a message when you're stuck"
+            "text": "150+ vetted suppliers, 10,000+ products, sorted by category"
           }
         },
         "p2": {
           "type": "point",
           "settings": {
-            "text": "The suppliers I'm ordering from right now, not a 2023 list"
+            "text": "The products currently selling in my own business"
           }
         },
         "p3": {
           "type": "point",
           "settings": {
-            "text": "The full agent and shipping walkthrough"
+            "text": "Freight forwarders, factories and the full agent walkthrough"
+          }
+        },
+        "p4": {
+          "type": "point",
+          "settings": {
+            "text": "Me on the other end of a message when you're stuck"
           }
         }
       },
       "block_order": [
         "p1",
         "p2",
-        "p3"
+        "p3",
+        "p4"
       ]
     },
     "rp_proof": {
@@ -292,6 +299,13 @@
         "tone": "raised"
       },
       "blocks": {
+        "qguarantee": {
+          "type": "qa",
+          "settings": {
+            "question": "What if I join and it's not for me?",
+            "answer": "<p>You get 15 minutes inside the group chat to look around and decide. If you want out, say so and you get a full refund — no argument, no questions.</p>"
+          }
+        },
         "q0": {
           "type": "qa",
           "settings": {
@@ -343,6 +357,7 @@
         }
       },
       "block_order": [
+        "qguarantee",
         "q0",
         "q1",
         "q2",

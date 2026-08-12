@@ -1465,3 +1465,58 @@ body { padding-bottom: var(--rp-stickybar); }
   border: 1px solid var(--rp-line);
   display: block;
 }
+
+/* Inline colours pasted into the admin.
+   ---------------------------------------------------------------------------
+   Every product description was written with each line wrapped in
+   <span style="color: #c6c3c3"> — a mid-grey chosen back when the theme was
+   white. Inline styles beat any stylesheet, so headings, bold text and list
+   items all rendered the same flat grey on black regardless of what .rp-rte
+   said. That is what "the descriptions look bugged" mostly is.
+
+   Neutralising only the colour lets the theme's own hierarchy come back
+   without touching the copy in the admin. It has to be !important because an
+   inline style cannot be beaten any other way. */
+.rp-rte [style*='color'],
+.rp-rte [style*='colour'] {
+  color: inherit !important;
+}
+
+.rp-rte h1[style],
+.rp-rte h2[style],
+.rp-rte h3[style],
+.rp-rte h4[style],
+.rp-rte strong[style],
+.rp-rte b[style] {
+  color: var(--rp-text) !important;
+}
+
+/* A description whose entire body was pasted inside one <li> — the 30-day
+   product — otherwise renders the whole thing indented under a single
+   bullet. An <li> containing block-level content is not a real list item. */
+.rp-rte li > h1,
+.rp-rte li > h2,
+.rp-rte li > h3,
+.rp-rte li > h4 {
+  margin-top: 0;
+}
+
+.rp-rte li:has(> ul),
+.rp-rte li:has(> h3),
+.rp-rte li:has(> h4) {
+  padding-left: 0;
+  list-style: none;
+}
+
+.rp-rte li:has(> ul)::before,
+.rp-rte li:has(> h3)::before,
+.rp-rte li:has(> h4)::before {
+  content: none;
+}
+
+/* Empty list items left behind by the editor render as stray bullets. */
+.rp-rte li:empty { display: none; }
+
+/* <h3> used as a paragraph wrapper with <br><br> inside renders enormous.
+   Cap it to something that reads as a lead-in rather than a page title. */
+.rp-rte h3 br + br { display: none; }

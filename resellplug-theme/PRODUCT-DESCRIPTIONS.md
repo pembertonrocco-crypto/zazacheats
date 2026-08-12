@@ -233,13 +233,25 @@ legitimate thing resellers need.
 
 ## products-fix.csv — the two admin fields, done in one import
 
-`products-fix.csv` sits next to this file. It carries three columns only —
-`Handle`, `Vendor`, `Variant Requires Shipping` — so importing it updates
-those fields and **leaves descriptions, images and prices untouched**.
-Shopify matches on handle and only writes columns that are present.
+`products-fix.csv` sits next to this file. Four columns —
+`Handle`, `Title`, `Vendor`, `Variant Requires Shipping` — so importing it
+updates those fields and **leaves descriptions, images and prices
+untouched**. Shopify matches on handle and only writes columns that are
+present.
+
+`Title` is in there because the importer refuses a file without one, even
+when every row is an update to a handle that already exists. The titles are
+unchanged from your export; the column exists to satisfy the validator.
 
 **Products → Import → choose products-fix.csv → tick "Overwrite any current
 products that have the same handle" → Import.**
+
+Leave *"Publish new products to all sales channels"* unticked — it only
+affects products the import creates, and this one creates none.
+
+When the results email lands it should say **5 products updated**. If it says
+*created*, the handles did not match and you now have duplicates — delete
+them and re-import the original export to restore.
 
 It sets every product to vendor `Resell Plug` and `Requires shipping = FALSE`,
 which is correct for all five — they are all digital.

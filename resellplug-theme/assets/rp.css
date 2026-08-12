@@ -1628,3 +1628,48 @@ body { padding-bottom: var(--rp-stickybar); }
   .rp-social__link { width: 92px; }
   .rp-social__label { font-size: 0.6875rem; }
 }
+
+/* --------------------------------------------------------------------------
+   Results counter
+   -------------------------------------------------------------------------- */
+
+.rp-counter__value {
+  font-family: var(--rp-font);
+  font-size: clamp(2.75rem, 13vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--rp-accent);
+  margin: 0 0 12px;
+  /* Digits change width as they animate; tabular figures stop the whole
+     line jittering left and right while it counts. */
+  font-variant-numeric: tabular-nums;
+}
+
+.rp-counter__label {
+  font-family: var(--rp-font);
+  font-size: clamp(1rem, 4vw, 1.25rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--rp-text);
+  margin: 0 0 14px;
+  text-wrap: balance;
+}
+
+.rp-counter__note {
+  max-width: 52ch;
+  margin: 0 auto;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--rp-muted);
+}
+
+.rp-counter__stamp {
+  margin: 12px 0 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6d6d6d;
+}

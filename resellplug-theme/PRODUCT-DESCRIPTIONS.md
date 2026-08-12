@@ -231,6 +231,23 @@ legitimate thing resellers need.
 
 ---
 
+## products-fix.csv — the two admin fields, done in one import
+
+`products-fix.csv` sits next to this file. It carries three columns only —
+`Handle`, `Vendor`, `Variant Requires Shipping` — so importing it updates
+those fields and **leaves descriptions, images and prices untouched**.
+Shopify matches on handle and only writes columns that are present.
+
+**Products → Import → choose products-fix.csv → tick "Overwrite any current
+products that have the same handle" → Import.**
+
+It sets every product to vendor `Resell Plug` and `Requires shipping = FALSE`,
+which is correct for all five — they are all digital.
+
+If you would rather not risk an import, the same two changes by hand take
+about twenty seconds: **Products → Winning Products →** change *Vendor* to
+`Resell Plug`, then untick **"This is a physical product"** in Shipping.
+
 ## Settings to fix in the admin
 
 These are product settings, not descriptions, and two of them are actively
@@ -238,9 +255,9 @@ costing you sales:
 
 | Product | Problem | Fix |
 | --- | --- | --- |
-| **Winning Products** | `Requires shipping` is **on**. It's a Telegram channel. | Uncheck it. Shopify is currently demanding a delivery address at checkout and may add shipping cost — on a digital product that reads as broken and loses the sale. |
-| **Winning Products** | Inventory tracked, **qty 10**, policy `deny` | Untick "Track quantity". At 10 sales it goes out of stock and stops selling. |
-| **Winning Products** | Vendor is `ZC Community` | Should be `Resell Plug`, like the other four. |
+| **Winning Products** | `Requires shipping` is **on**. It's a Telegram channel. | Fixed by `products-fix.csv`, or untick "This is a physical product". |
+| **Winning Products** | Vendor is `ZC Community` | Fixed by `products-fix.csv`, or edit the Vendor field. |
+| **Winning Products** | Inventory tracked, **qty 10**, policy `deny` | Owner is handling this. |
 | **Private GC — Lifetime** | No compare-at price | If "Discount for the next member" is meant to be real, set one. Otherwise the claim has nothing behind it. |
 | **All five** | Sit in collection `homepage` | Confirm all five are in it — the homepage grid reads that collection. |
 

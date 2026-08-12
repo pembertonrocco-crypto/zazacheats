@@ -1,0 +1,108 @@
+{%- comment -%}
+  Member profit counter.
+
+  The figure comes from a theme setting the owner maintains — it is not
+  generated. It animates up to that figure when it scrolls into view, which
+  is presentation; the number itself is whatever was typed in.
+
+  It is deliberately NOT a timer that adds a random amount every few hours.
+  See the note in the schema and README for why: a self-incrementing money
+  figure is an earnings claim with nothing behind it, and this page's entire
+  argument is that the receipts are real.
+
+  Updating it is a five-second job in the theme editor whenever the vouches
+  are tallied, and the "as of" date makes the figure a statement about a
+  point in time rather than an open-ended claim.
+{%- endcomment -%}
+
+{{ 'rp.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'rp.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign amount = section.settings.amount | default: '0'
+  # Strip formatting so the animation has a number to count to; the display
+  # string keeps whatever separators were typed.
+  assign raw = amount | replace: ',', '' | replace: ' ', '' | plus: 0
+-%}
+
+<div class="rp-section rp-section--{{ section.settings.tone | default: 'raised' }}" id="{{ section.settings.anchor | default: 'results' | handle }}">
+  <div class="rp-wrap rp-center">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="rp-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+
+    <p
+      class="rp-counter__value"
+      data-rp-counter="{{ raw }}"
+      data-rp-prefix="{{ section.settings.prefix | escape }}"
+    >
+      <span aria-hidden="true">{{ section.settings.prefix }}<span data-rp-counter-out>{{ amount }}</span>{{ section.settings.suffix }}</span>
+      <span class="visually-hidden">{{ section.settings.prefix }}{{ amount }}{{ section.settings.suffix }}</span>
+    </p>
+
+    {%- if section.settings.label != blank -%}
+      <p class="rp-counter__label">{{ section.settings.label | escape }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.note != blank -%}
+      <p class="rp-counter__note">{{ section.settings.note | escape }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.updated != blank -%}
+      <p class="rp-counter__stamp">Figures as of {{ section.settings.updated | escape }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "RP · Results counter",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The number you type here is the number shown. It animates up to it when scrolled into view, but nothing changes it on its own — update it yourself when you tally the vouches."
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Members' results" },
+    { "type": "text", "id": "prefix", "label": "Before the number", "default": "£" },
+    {
+      "type": "text",
+      "id": "amount",
+      "label": "Amount",
+      "default": "100,000",
+      "info": "Commas are fine. Only put a figure you could back up from your vouches."
+    },
+    { "type": "text", "id": "suffix", "label": "After the number", "default": "+" },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "What the number is",
+      "default": "Made by members using what's in the group"
+    },
+    {
+      "type": "textarea",
+      "id": "note",
+      "label": "Line underneath",
+      "default": "Totalled from vouches members have posted since 2024. Results depend entirely on the work you put in — no income is promised or guaranteed."
+    },
+    {
+      "type": "text",
+      "id": "updated",
+      "label": "Figures as of",
+      "info": "A month and year is enough. It makes the number a statement about a date rather than an open-ended claim, which is what keeps it defensible."
+    },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "results" },
+    {
+      "type": "select",
+      "id": "tone",
+      "label": "Background",
+      "default": "raised",
+      "options": [
+        { "value": "flat", "label": "Black" },
+        { "value": "raised", "label": "Raised" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "RP · Results counter" }]
+}
+{% endschema %}

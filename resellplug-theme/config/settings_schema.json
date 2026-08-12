@@ -42,7 +42,7 @@
         "type": "url",
         "id": "rp_linktree_url",
         "label": "Linktree link",
-        "info": "Your hub of every other account."
+        "info": "Your hub of every other account. Note: the handle has a capital I (resel-I-plug), not a lowercase L — confirmed correct, do not 'fix' it."
       },
       {
         "type": "header",

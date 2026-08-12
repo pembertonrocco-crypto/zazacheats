@@ -222,9 +222,70 @@
     );
   }
 
+  /* ---------------------------------------------------------------------
+     Results counter
+
+     Animates from zero up to the figure in the markup when it scrolls into
+     view. The target is whatever the owner typed into theme settings — this
+     only animates toward it, it never invents or advances it. Under reduced
+     motion the final figure is shown immediately.
+     --------------------------------------------------------------------- */
+
+  function initCounters(root) {
+    var nodes = root.querySelectorAll('[data-rp-counter]');
+    if (!nodes.length) return;
+
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function run(el) {
+      var out = el.querySelector('[data-rp-counter-out]');
+      var target = parseInt(el.getAttribute('data-rp-counter'), 10);
+      if (!out || !target || still) return;
+
+      var final = out.textContent;
+      var started = null;
+      var DURATION = 1400;
+
+      function frame(now) {
+        if (started === null) started = now;
+        var t = Math.min((now - started) / DURATION, 1);
+        // Ease out, so it decelerates into the real figure rather than
+        // stopping dead.
+        var eased = 1 - Math.pow(1 - t, 3);
+        if (t >= 1) {
+          out.textContent = final;
+          return;
+        }
+        out.textContent = Math.floor(target * eased).toLocaleString('en-GB');
+        requestAnimationFrame(frame);
+      }
+
+      out.textContent = '0';
+      requestAnimationFrame(frame);
+    }
+
+    if (!('IntersectionObserver' in window)) return;
+
+    var seen = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          seen.unobserve(entry.target);
+          run(entry.target);
+        });
+      },
+      { threshold: 0.4 }
+    );
+
+    Array.prototype.forEach.call(nodes, function (el) {
+      seen.observe(el);
+    });
+  }
+
   function init(root) {
     initFaq(root);
     initMarquees(root);
+    initCounters(root);
   }
 
   if (document.readyState === 'loading') {

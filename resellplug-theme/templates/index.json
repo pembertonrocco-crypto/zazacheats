@@ -10,8 +10,8 @@
         "tag": "Lifetime access",
         "product": "private-group-chat-lifetime-access",
         "product_title": "The Private Group Chat",
-        "pitch": "150+ vetted suppliers, the products I'm actually running, and me on the other end of a message. One payment, yours for good.",
-        "price_note": "one-off · lifetime access",
+        "pitch": "150+ vetted suppliers, the products I'm actually running, and me on the other end of a message. Members have made back the price of this on a single flip.",
+        "price_note": "one-off · lifetime · no subscription",
         "cta_label": "Get instant access",
         "details_label": "See everything included",
         "reassure_1": "Delivered instantly",
@@ -241,7 +241,7 @@
           "settings": {
             "icon": "message",
             "title": "You get me, not a PDF",
-            "text": "Stuck on agents, customs, or which product to run? Message me. Scaling is where people quit, and that's the part I actually help with."
+            "text": "Stuck on agents, customs, or which product to run? Message me. Members have built real numbers off this — scaling is where people quit, and it's the part I actually help with."
           }
         }
       },
@@ -252,8 +252,8 @@
       ],
       "settings": {
         "eyebrow": "The difference",
-        "heading": "Why I'm not like the other plugs",
-        "subheading": "Most of them sell you a list and disappear. That's the whole business model, and it's why nobody scales off it.",
+        "heading": "You're paying for the knowledge, not a file",
+        "subheading": "Anyone can send you a supplier list. What people actually get stuck on is everything after that — and that's the part the others go quiet on.",
         "anchor": "why",
         "show_cta": false,
         "tone": "flat"
@@ -304,6 +304,13 @@
           "settings": {
             "question": "What if I join and it's not for me?",
             "answer": "<p>You get 15 minutes inside the group chat to look around and decide. If you want out, say so and you get a full refund — no argument, no questions.</p>"
+          }
+        },
+        "qprice": {
+          "type": "qa",
+          "settings": {
+            "question": "Why is it £174.99?",
+            "answer": "<p>Because of what it's worth, not what it costs me to send. The supplier list alone would run to about £1,500 bought individually, and members have made multiples of the entry price back from what's in here.</p><p>It's one payment, it never expires, and you get 15 minutes inside to decide it's not for you and take a full refund. If it doesn't pay for itself you shouldn't be paying for it.</p>"
           }
         },
         "q0": {
@@ -358,6 +365,7 @@
       },
       "block_order": [
         "qguarantee",
+        "qprice",
         "q0",
         "q1",
         "q2",

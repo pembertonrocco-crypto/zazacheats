@@ -244,10 +244,40 @@ costing you sales:
 | **Private GC — Lifetime** | No compare-at price | If "Discount for the next member" is meant to be real, set one. Otherwise the claim has nothing behind it. |
 | **All five** | Sit in collection `homepage` | Confirm all five are in it — the homepage grid reads that collection. |
 
-## One more thing
+## Pricing: defend it, don't discount it
 
-The lifetime GC at £174.99 is the flagship and the site is built around it,
-but £174.99 is a big first purchase from a TikTok viewer. The £24.99 supplier
-list is the natural entry product — most people will buy that first, and the
-GC second once it's paid for itself. The homepage supports both: flagship at
-the top, the rest of the vault below it.
+The lifetime GC at £174.99 leads the site, and the page now argues for that
+price rather than tiptoeing around it. Members making thousands is the
+strongest thing this business can say, so it is said where the objection
+actually lands:
+
+- **The price note** reads *one-off · lifetime · no subscription* — the
+  comparison a buyer makes is against a monthly, and lifetime wins it.
+- **"Why is it £174.99?" is the second FAQ**, right under the refund
+  guarantee. It answers with the £1,500 standalone value of the list, the
+  return members have made, and the 15-minute get-out. A price objection
+  answered plainly converts better than a price that is quietly avoided.
+- **"You're paying for the knowledge, not a file"** is now the differentiator
+  heading. Anyone can send a supplier list; what people get stuck on is
+  everything after that.
+
+### What would make this much stronger
+
+Right now the results claim is general — "members have made back the price
+on a single flip". That is as far as I can go without your numbers. Send me
+any of these and I will put them on the page as concrete claims:
+
+- specific member results you can screenshot (profit on a flip, a month's
+  revenue, a payout)
+- how many members have hit a given number
+- your own numbers, if you're willing to show them
+
+Two rules when we do:
+
+1. **Only what you can evidence.** A screenshot in the vouches channel is
+   evidence. A number you remember is not, and it is the kind of thing that
+   gets a store reported.
+2. **The "no income guaranteed" line stays.** It is already in your
+   descriptions, which was the right instinct — results claims plus a clear
+   disclaimer is a legitimate way to sell this. Results claims without one is
+   what regulators go after.

@@ -8,13 +8,18 @@
       "type": "rp-cta",
       "settings": {
         "eyebrow": "Wrong turn",
-        "heading": "That page has gone — the free group hasn't",
-        "subheading": "Free supplier drops, straight answers, and every member's order posted as it lands.",
+        "heading": "That page has moved or never existed",
+        "subheading": "Nothing lost — everything on the site is one tap away.",
         "cta_label": "",
         "secondary_label": "Read the vouches",
         "secondary_link": "",
-        "reassure": "Free forever · leave whenever you like",
-        "anchor": "join-now"
+        "reassure": "Instant delivery · every supplier ordered from first",
+        "anchor": "join-now",
+        "primary_link": "/collections/all",
+        "primary_label": "See the suppliers",
+        "primary_target": "link",
+        "primary_icon": "cart",
+        "tone": "raised"
       }
     }
   },

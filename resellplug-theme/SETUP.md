@@ -2,15 +2,35 @@
 
 Do these in order. The whole thing takes about ten minutes.
 
-## Why a page can come out blank
+## Why a page can come out blank — or 404
 
-Four of the pages are **alternate templates**. Shopify does not apply those
-automatically — it only uses one when a page has been created *and* that
-template picked from a dropdown. A page left on "Default page" renders its
-title and its (empty) body, which looks like the page is broken when it is
-actually just pointing at the wrong template.
+The nav links to `/pages/vouches`, `/pages/faq` and `/pages/about`. Those
+pages do not exist until you create them, and their templates are
+**alternate templates** that Shopify never applies automatically.
 
-This is the single most likely reason something looks empty.
+Two different symptoms, two different causes:
+
+| What you see | What it means |
+| --- | --- |
+| **404 — page not found** | The page has not been created. Step 2. |
+| Page title and nothing else | The page exists but is on "Default page". Step 2, the template dropdown. |
+
+Both are admin-side. Nothing in the theme can create a page or detect that
+one is missing.
+
+## Fix the store name first
+
+The header currently reads **ZC Community** on the live site, because that
+is still the store's name in Shopify. The theme now overrides the wordmark
+to "Resell Plug", but `shop.name` also drives:
+
+- the browser tab and Google result titles
+- the Organization structured data
+- order confirmation emails and the checkout header
+
+**Settings → Store details → Store name → Resell Plug.** Worth doing before
+anything else, because it touches everything a customer sees after they
+buy.
 
 ---
 

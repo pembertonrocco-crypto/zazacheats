@@ -9,6 +9,14 @@
 (function () {
   'use strict';
 
+  // rp.js is loaded once from layout/theme.liquid. If it ever ends up on the
+  // page twice — a section adding its own tag, the theme editor re-injecting
+  // after an edit — a second run would bind a second set of listeners and
+  // observers over the same elements. That is not harmless: two counter
+  // observers raced each other and left the figure reading 0.
+  if (window.__rpInit) return;
+  window.__rpInit = true;
+
   /* ---------------------------------------------------------------------
      FAQ accordion
      One open at a time. max-height is set from scrollHeight so the panel
@@ -242,7 +250,16 @@
       var target = parseInt(el.getAttribute('data-rp-counter'), 10);
       if (!out || !target || still) return;
 
-      var final = out.textContent;
+      // Stashed on first sight, so the finishing value is always the figure
+      // the owner typed and never whatever the animation happened to be
+      // showing when this ran.
+      var final = out.getAttribute('data-rp-final');
+      if (final === null) {
+        final = out.textContent;
+        out.setAttribute('data-rp-final', final);
+      }
+      if (el.hasAttribute('data-rp-counted')) return;
+      el.setAttribute('data-rp-counted', '');
       var started = null;
       var DURATION = 1400;
 

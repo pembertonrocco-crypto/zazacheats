@@ -16,7 +16,6 @@
 {%- endcomment -%}
 
 {{ 'rp.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'rp.js' | asset_url }}" defer></script>
 
 {%- liquid
   assign amount = section.settings.amount | default: '0'

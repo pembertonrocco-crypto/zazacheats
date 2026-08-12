@@ -136,6 +136,26 @@ def check_wiring():
                     )
 
 
+def check_single_script():
+    """rp.js is loaded once, from layout/theme.liquid.
+
+    A section emitting its own <script src="rp.js"> makes the browser fetch
+    and execute the whole file a second time, binding a duplicate set of
+    listeners and observers. That is not cosmetic: two counter observers
+    raced each other and left the results figure showing 0 on the live site.
+    """
+    layout = open('layout/theme.liquid', encoding='utf-8').read()
+    if "'rp.js' | asset_url" not in layout:
+        errors.append('layout/theme.liquid: rp.js is not loaded — no rp-* behaviour will run')
+
+    for path in glob.glob('sections/*.liquid') + glob.glob('snippets/*.liquid'):
+        if "'rp.js' | asset_url" in open(path, encoding='utf-8').read():
+            errors.append(
+                f'{path}: loads rp.js again — theme.liquid already does, and a '
+                'second execution duplicates every listener'
+            )
+
+
 def check_funnel_links():
     """Every CTA and link tile on the site reads one of these. A blank one
     renders as a dead tile or a disabled placeholder button."""
@@ -160,10 +180,11 @@ check_json_parses()
 check_schemas()
 check_tag_balance()
 check_wiring()
+check_single_script()
 check_funnel_links()
 
 if errors:
     print('\n'.join(f'ERROR {e}' for e in errors))
     sys.exit(1)
 
-print('OK — JSON, schemas, tag balance, template wiring and funnel links all check out.')
+print('OK — JSON, schemas, tag balance, wiring, script loading and funnel links all check out.')

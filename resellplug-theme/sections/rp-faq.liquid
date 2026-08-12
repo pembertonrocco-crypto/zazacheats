@@ -12,7 +12,6 @@
 {%- endcomment -%}
 
 {{ 'rp.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'rp.js' | asset_url }}" defer></script>
 
 <div class="rp-section rp-section--{{ section.settings.tone | default: 'flat' }}" id="{{ section.settings.anchor | default: 'faq' | handle }}">
   <div class="rp-wrap rp-wrap--narrow">
